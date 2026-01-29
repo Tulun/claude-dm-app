@@ -428,18 +428,53 @@ export default function DMAdminTool() {
   const [dragOverIndex, setDragOverIndex] = useState(null);
 
   useEffect(() => {
-    try {
-      const savedParty = localStorage.getItem('dm-tool-party');
-      setParty(savedParty ? JSON.parse(savedParty) : defaultPartyData);
-    } catch { setParty(defaultPartyData); }
-    try {
-      const savedTemplates = localStorage.getItem('dm-tool-templates');
-      setTemplates(savedTemplates ? JSON.parse(savedTemplates) : defaultEnemyTemplates);
-    } catch { setTemplates(defaultEnemyTemplates); }
+    setParty(defaultPartyData);
+    setTemplates(defaultEnemyTemplates);
   }, []);
 
-  useEffect(() => { if (party.length > 0) localStorage.setItem('dm-tool-party', JSON.stringify(party)); }, [party]);
-  useEffect(() => { if (templates.length > 0) localStorage.setItem('dm-tool-templates', JSON.stringify(templates)); }, [templates]);
+  const saveParty = () => {
+    const blob = new Blob([JSON.stringify(party, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'party.json';
+    a.click();
+  };
+
+  const loadParty = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const data = JSON.parse(evt.target.result);
+        if (Array.isArray(data)) setParty(data);
+      } catch {}
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
+  const saveTemplates = () => {
+    const blob = new Blob([JSON.stringify(templates, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'templates.json';
+    a.click();
+  };
+
+  const loadTemplates = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const data = JSON.parse(evt.target.result);
+        if (Array.isArray(data)) setTemplates(data);
+      } catch {}
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
 
   const initiativeList = [...party, ...enemies].sort((a, b) => b.initiative - a.initiative);
 
@@ -453,29 +488,6 @@ export default function DMAdminTool() {
     else setEnemies(prev => prev.map(e => e.id === dragged.id ? { ...e, initiative: newInit } : e));
     setDragIndex(null);
     setDragOverIndex(null);
-  };
-
-  const exportData = () => {
-    const blob = new Blob([JSON.stringify({ party, enemies, templates }, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'dm-data.json';
-    a.click();
-  };
-
-  const importData = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      try {
-        const data = JSON.parse(evt.target.result);
-        if (data.party) setParty(data.party);
-        if (data.enemies) setEnemies(data.enemies);
-        if (data.templates) setTemplates(data.templates);
-      } catch {}
-    };
-    reader.readAsText(file);
   };
 
   return (
@@ -497,8 +509,6 @@ export default function DMAdminTool() {
                 <button onClick={() => setActiveTab('combat')} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'combat' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Sword /> Combat</button>
                 <button onClick={() => setActiveTab('templates')} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'templates' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Book /> Templates</button>
               </div>
-              <label className="flex items-center gap-2 px-3 py-2 rounded-lg bg-stone-800 hover:bg-stone-700 cursor-pointer text-sm"><Icons.Upload />Import<input type="file" accept=".json" onChange={importData} className="hidden" /></label>
-              <button onClick={exportData} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-stone-800 hover:bg-stone-700 text-sm"><Icons.Download />Export</button>
             </div>
           </div>
         </div>
@@ -510,6 +520,8 @@ export default function DMAdminTool() {
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-emerald-400 flex items-center gap-2"><Icons.Shield />Party & Allies</h2>
               <div className="flex gap-2">
+                <label className="flex items-center gap-1 px-2 py-1 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-xs cursor-pointer"><Icons.Upload />Load<input type="file" accept=".json" onChange={loadParty} className="hidden" /></label>
+                <button onClick={saveParty} className="flex items-center gap-1 px-2 py-1 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-xs"><Icons.Download />Save</button>
                 <button onClick={() => setParty(prev => prev.map(p => ({ ...p, resources: (p.resources || []).map(r => ({ ...r, current: r.max })) })))} className="flex items-center gap-1 px-2 py-1 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-xs"><Icons.Refresh />Rest</button>
                 <button onClick={() => setShowAddParty(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-emerald-800/50 hover:bg-emerald-700/50 text-emerald-300 text-sm"><Icons.Plus />Add</button>
               </div>
@@ -545,8 +557,14 @@ export default function DMAdminTool() {
       ) : (
         <main className="relative max-w-4xl mx-auto p-4">
           <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
-            <h2 className="text-xl font-bold text-amber-400 mb-4 flex items-center gap-2"><Icons.Book />Enemy & NPC Templates</h2>
-            <p className="text-stone-400 text-sm mb-6">Create and manage reusable templates. These are saved automatically.</p>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2"><Icons.Book />Enemy & NPC Templates</h2>
+              <div className="flex gap-2">
+                <label className="flex items-center gap-1 px-3 py-2 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-sm cursor-pointer"><Icons.Upload />Load<input type="file" accept=".json" onChange={loadTemplates} className="hidden" /></label>
+                <button onClick={saveTemplates} className="flex items-center gap-1 px-3 py-2 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-sm"><Icons.Download />Save</button>
+              </div>
+            </div>
+            <p className="text-stone-400 text-sm mb-6">Create and manage reusable templates. Use Save to export to a JSON file you can share across devices.</p>
             <TemplateEditor templates={templates} onUpdate={(u) => setTemplates(prev => prev.map(t => t.id === u.id ? u : t))} onDelete={(id) => setTemplates(prev => prev.filter(t => t.id !== id))} onCreate={(t) => setTemplates(prev => [...prev, t])} />
           </div>
         </main>
