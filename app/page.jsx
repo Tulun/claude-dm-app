@@ -281,15 +281,16 @@ const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
   );
 };
 
-const AddPartyModal = ({ isOpen, onClose, onAdd }) => {
+const AddPartyModal = ({ isOpen, onClose, onSave }) => {
   const [form, setForm] = useState({ name: '', class: 'Fighter', level: 1, ac: 10, maxHp: 10, speed: 30, notes: '', resources: [] });
   const classes = ['Barbarian', 'Bard', 'Cleric', 'Druid', 'Fighter', 'Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Warlock', 'Wizard', 'Artificer', 'NPC'];
 
   if (!isOpen) return null;
 
-  const handleAdd = () => {
+  const handleSave = () => {
     if (!form.name) return;
-    onAdd({ ...form, id: `party-${Date.now()}`, currentHp: form.maxHp, initiative: Math.floor(Math.random() * 20) + 1 });
+    const newMember = { ...form, id: `party-${Date.now()}`, currentHp: form.maxHp, initiative: Math.floor(Math.random() * 20) + 1 };
+    onSave(newMember); // Pass the new member to parent which handles both state update and save
     onClose();
     setForm({ name: '', class: 'Fighter', level: 1, ac: 10, maxHp: 10, speed: 30, notes: '', resources: [] });
   };
@@ -313,7 +314,7 @@ const AddPartyModal = ({ isOpen, onClose, onAdd }) => {
         </div>
         <div className="p-4 border-t border-stone-700 flex justify-end gap-3">
           <button onClick={onClose} className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600">Cancel</button>
-          <button onClick={handleAdd} disabled={!form.name} className="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 flex items-center gap-2"><Icons.Plus />Add</button>
+          <button onClick={handleSave} disabled={!form.name} className="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 flex items-center gap-2"><Icons.Download />Save</button>
         </div>
       </div>
     </div>
@@ -435,21 +436,26 @@ export default function DMAdminTool() {
   useEffect(() => {
     const loadData = async () => {
       try {
+        console.log('Loading data from API...');
         const [partyRes, templatesRes] = await Promise.all([
           fetch('/api/party'),
           fetch('/api/templates'),
         ]);
         
+        console.log('Party response status:', partyRes.status);
         if (partyRes.ok) {
           const partyData = await partyRes.json();
-          if (partyData && Array.isArray(partyData)) {
+          console.log('Party data loaded:', partyData);
+          if (partyData && Array.isArray(partyData) && partyData.length > 0) {
             setParty(partyData);
           }
         }
         
+        console.log('Templates response status:', templatesRes.status);
         if (templatesRes.ok) {
           const templatesData = await templatesRes.json();
-          if (templatesData && Array.isArray(templatesData)) {
+          console.log('Templates data loaded:', templatesData);
+          if (templatesData && Array.isArray(templatesData) && templatesData.length > 0) {
             setTemplates(templatesData);
           }
         }
@@ -476,6 +482,24 @@ export default function DMAdminTool() {
     }, 1000);
     return () => clearTimeout(timeout);
   }, [party, isLoaded]);
+
+  // Immediate save function (no debounce)
+  const savePartyNow = async (partyData) => {
+    try {
+      const res = await fetch('/api/party', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(partyData || party),
+      });
+      if (res.ok) {
+        setSaveStatus('Party saved');
+        setTimeout(() => setSaveStatus(''), 2000);
+      }
+    } catch (err) {
+      console.error('Error saving party:', err);
+      setSaveStatus('Error saving');
+    }
+  };
 
   // Auto-save templates when they change (debounced, only after initial load)
   useEffect(() => {
@@ -612,7 +636,23 @@ export default function DMAdminTool() {
       )}
 
       <AddEnemyModal isOpen={showAddEnemy} onClose={() => setShowAddEnemy(false)} onAdd={(e) => setEnemies(prev => [...prev, e])} templates={templates} />
-      <AddPartyModal isOpen={showAddParty} onClose={() => setShowAddParty(false)} onAdd={(m) => setParty(prev => [...prev, m])} />
+      <AddPartyModal 
+        isOpen={showAddParty} 
+        onClose={() => setShowAddParty(false)} 
+        onSave={(newMember) => {
+          const newParty = [...party, newMember];
+          setParty(newParty);
+          // Immediately save to file
+          fetch('/api/party', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newParty),
+          }).then(() => {
+            setSaveStatus('Party saved');
+            setTimeout(() => setSaveStatus(''), 2000);
+          }).catch(console.error);
+        }} 
+      />
     </div>
   );
 }
