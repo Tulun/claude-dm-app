@@ -1,0 +1,92 @@
+[
+  {
+    "id": "tpl-1",
+    "name": "Goblin",
+    "ac": 15,
+    "maxHp": 7,
+    "speed": 30,
+    "cr": "1/4",
+    "notes": "Nimble Escape. Pack tactics.",
+    "isNpc": false
+  },
+  {
+    "id": "tpl-2",
+    "name": "Orc",
+    "ac": 13,
+    "maxHp": 15,
+    "speed": 30,
+    "cr": "1/2",
+    "notes": "Aggressive. Greataxe +5 (1d12+3)",
+    "isNpc": false
+  },
+  {
+    "id": "tpl-3",
+    "name": "Skeleton",
+    "ac": 13,
+    "maxHp": 13,
+    "speed": 30,
+    "cr": "1/4",
+    "notes": "Vulnerable to bludgeoning.",
+    "isNpc": false
+  },
+  {
+    "id": "tpl-4",
+    "name": "Zombie",
+    "ac": 8,
+    "maxHp": 22,
+    "speed": 20,
+    "cr": "1/4",
+    "notes": "Undead Fortitude.",
+    "isNpc": false
+  },
+  {
+    "id": "tpl-5",
+    "name": "Wolf",
+    "ac": 13,
+    "maxHp": 11,
+    "speed": 40,
+    "cr": "1/4",
+    "notes": "Pack Tactics. Keen Senses.",
+    "isNpc": false
+  },
+  {
+    "id": "tpl-6",
+    "name": "Bandit",
+    "ac": 12,
+    "maxHp": 11,
+    "speed": 30,
+    "cr": "1/8",
+    "notes": "Scimitar +3, Light crossbow +3",
+    "isNpc": false
+  },
+  {
+    "id": "tpl-7",
+    "name": "Ogre",
+    "ac": 11,
+    "maxHp": 59,
+    "speed": 40,
+    "cr": "2",
+    "notes": "Greatclub +6 (2d8+4)",
+    "isNpc": false
+  },
+  {
+    "id": "tpl-8",
+    "name": "Town Guard",
+    "ac": 16,
+    "maxHp": 11,
+    "speed": 30,
+    "cr": "1/8",
+    "notes": "Spear +3 (1d6+1)",
+    "isNpc": true
+  },
+  {
+    "id": "tpl-9",
+    "name": "Commoner",
+    "ac": 10,
+    "maxHp": 4,
+    "speed": 30,
+    "cr": "0",
+    "notes": "Club +2 (1d4)",
+    "isNpc": true
+  }
+]
