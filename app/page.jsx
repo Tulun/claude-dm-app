@@ -9,15 +9,15 @@ const defaultPartyData = [
 ];
 
 const defaultEnemyTemplates = [
-  { id: 'tpl-1', name: 'Goblin', ac: 15, maxHp: 7, speed: 30, cr: '1/4', notes: 'Nimble Escape. Pack tactics.', isNpc: false },
-  { id: 'tpl-2', name: 'Orc', ac: 13, maxHp: 15, speed: 30, cr: '1/2', notes: 'Aggressive. Greataxe +5 (1d12+3)', isNpc: false },
-  { id: 'tpl-3', name: 'Skeleton', ac: 13, maxHp: 13, speed: 30, cr: '1/4', notes: 'Vulnerable to bludgeoning.', isNpc: false },
-  { id: 'tpl-4', name: 'Zombie', ac: 8, maxHp: 22, speed: 20, cr: '1/4', notes: 'Undead Fortitude.', isNpc: false },
-  { id: 'tpl-5', name: 'Wolf', ac: 13, maxHp: 11, speed: 40, cr: '1/4', notes: 'Pack Tactics. Keen Senses.', isNpc: false },
-  { id: 'tpl-6', name: 'Bandit', ac: 12, maxHp: 11, speed: 30, cr: '1/8', notes: 'Scimitar +3, Light crossbow +3', isNpc: false },
-  { id: 'tpl-7', name: 'Ogre', ac: 11, maxHp: 59, speed: 40, cr: '2', notes: 'Greatclub +6 (2d8+4)', isNpc: false },
-  { id: 'tpl-8', name: 'Town Guard', ac: 16, maxHp: 11, speed: 30, cr: '1/8', notes: 'Spear +3 (1d6+1)', isNpc: true },
-  { id: 'tpl-9', name: 'Commoner', ac: 10, maxHp: 4, speed: 30, cr: '0', notes: 'Club +2 (1d4)', isNpc: true },
+  { id: 'tpl-1', name: 'Goblin', ac: 15, maxHp: 7, speed: 30, cr: '1/4', notes: 'Nimble Escape. Pack tactics.', isNpc: false, str: 8, dex: 14, con: 10, int: 10, wis: 8, cha: 8, actions: [{ name: 'Scimitar', description: '+4 to hit, 5 ft., 1d6+2 slashing' }, { name: 'Shortbow', description: '+4 to hit, range 80/320 ft., 1d6+2 piercing' }] },
+  { id: 'tpl-2', name: 'Orc', ac: 13, maxHp: 15, speed: 30, cr: '1/2', notes: 'Aggressive: Bonus action to move toward enemy.', isNpc: false, str: 16, dex: 12, con: 16, int: 7, wis: 11, cha: 10, actions: [{ name: 'Greataxe', description: '+5 to hit, 5 ft., 1d12+3 slashing' }, { name: 'Javelin', description: '+5 to hit, range 30/120 ft., 1d6+3 piercing' }] },
+  { id: 'tpl-3', name: 'Skeleton', ac: 13, maxHp: 13, speed: 30, cr: '1/4', notes: 'Vulnerable to bludgeoning. Immune to poison.', isNpc: false, str: 10, dex: 14, con: 15, int: 6, wis: 8, cha: 5, actions: [{ name: 'Shortsword', description: '+4 to hit, 5 ft., 1d6+2 piercing' }, { name: 'Shortbow', description: '+4 to hit, range 80/320 ft., 1d6+2 piercing' }] },
+  { id: 'tpl-4', name: 'Zombie', ac: 8, maxHp: 22, speed: 20, cr: '1/4', notes: 'Undead Fortitude: CON save (5+dmg) to stay at 1 HP.', isNpc: false, str: 13, dex: 6, con: 16, int: 3, wis: 6, cha: 5, actions: [{ name: 'Slam', description: '+3 to hit, 5 ft., 1d6+1 bludgeoning' }] },
+  { id: 'tpl-5', name: 'Wolf', ac: 13, maxHp: 11, speed: 40, cr: '1/4', notes: 'Pack Tactics. Keen Hearing/Smell (adv on Perception).', isNpc: false, str: 12, dex: 15, con: 12, int: 3, wis: 12, cha: 6, actions: [{ name: 'Bite', description: '+4 to hit, 5 ft., 2d4+2 piercing. DC 11 STR or prone.' }] },
+  { id: 'tpl-6', name: 'Bandit', ac: 12, maxHp: 11, speed: 30, cr: '1/8', notes: '', isNpc: false, str: 11, dex: 12, con: 12, int: 10, wis: 10, cha: 10, actions: [{ name: 'Scimitar', description: '+3 to hit, 5 ft., 1d6+1 slashing' }, { name: 'Light Crossbow', description: '+3 to hit, range 80/320 ft., 1d8+1 piercing' }] },
+  { id: 'tpl-7', name: 'Ogre', ac: 11, maxHp: 59, speed: 40, cr: '2', notes: 'Large. Darkvision 60ft.', isNpc: false, str: 19, dex: 8, con: 16, int: 5, wis: 7, cha: 7, actions: [{ name: 'Greatclub', description: '+6 to hit, 5 ft., 2d8+4 bludgeoning' }, { name: 'Javelin', description: '+6 to hit, range 30/120 ft., 2d6+4 piercing' }] },
+  { id: 'tpl-8', name: 'Town Guard', ac: 16, maxHp: 11, speed: 30, cr: '1/8', notes: 'Chain shirt, shield.', isNpc: true, str: 13, dex: 12, con: 12, int: 10, wis: 11, cha: 10, actions: [{ name: 'Spear', description: '+3 to hit, 5 ft. or range 20/60 ft., 1d6+1 piercing' }] },
+  { id: 'tpl-9', name: 'Commoner', ac: 10, maxHp: 4, speed: 30, cr: '0', notes: '', isNpc: true, str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10, actions: [{ name: 'Club', description: '+2 to hit, 5 ft., 1d4 bludgeoning' }] },
 ];
 
 const Icons = {
@@ -414,6 +414,13 @@ const ActionTracker = ({ actions = [], onChange }) => {
 
 const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onToggleExpand, showResources }) => {
   const isDead = character.currentHp <= 0;
+  const hasStats = character.str || character.dex || character.con || character.int || character.wis || character.cha;
+
+  const getMod = (score) => {
+    const num = parseInt(score) || 10;
+    const mod = Math.floor((num - 10) / 2);
+    return mod >= 0 ? `+${mod}` : `${mod}`;
+  };
 
   return (
     <div className={`border rounded-lg overflow-hidden transition-all ${isDead ? 'border-red-900/50 bg-stone-900/30 opacity-60' : isEnemy ? 'border-red-800/50 bg-gradient-to-br from-red-950/40 to-stone-900/60' : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60'}`}>
@@ -432,6 +439,29 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
         </div>
       </div>
 
+      {/* Quick stats bar - always visible when collapsed and has stats */}
+      {!expanded && hasStats && (
+        <div className="px-3 pb-2 grid grid-cols-6 gap-1 text-center text-xs border-t border-stone-700/30 pt-2">
+          <div><span className="text-stone-600">STR</span> <span className="text-stone-400">{getMod(character.str)}</span></div>
+          <div><span className="text-stone-600">DEX</span> <span className="text-stone-400">{getMod(character.dex)}</span></div>
+          <div><span className="text-stone-600">CON</span> <span className="text-stone-400">{getMod(character.con)}</span></div>
+          <div><span className="text-stone-600">INT</span> <span className="text-stone-400">{getMod(character.int)}</span></div>
+          <div><span className="text-stone-600">WIS</span> <span className="text-stone-400">{getMod(character.wis)}</span></div>
+          <div><span className="text-stone-600">CHA</span> <span className="text-stone-400">{getMod(character.cha)}</span></div>
+        </div>
+      )}
+
+      {/* Quick actions preview - always visible when collapsed and has actions */}
+      {!expanded && character.actions?.length > 0 && (
+        <div className={`px-3 pb-2 text-xs ${hasStats ? '' : 'border-t border-stone-700/30 pt-2'}`}>
+          <div className="flex flex-wrap gap-1">
+            {character.actions.map((action, i) => (
+              <span key={i} className="bg-red-900/30 text-red-300 px-2 py-0.5 rounded">{action.name}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {expanded && (
         <div className="p-4 pt-0 border-t border-stone-700/50 space-y-4">
           <div>
@@ -444,6 +474,16 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
             <div><label className="text-xs text-stone-400">Initiative</label><EditableField value={character.initiative} onChange={(v) => onUpdate({ ...character, initiative: v })} type="number" className="block w-full" /></div>
             <div><label className="text-xs text-stone-400">Speed</label><div className="flex items-center gap-1"><Icons.Boot /><EditableField value={character.speed} onChange={(v) => onUpdate({ ...character, speed: v })} type="number" min={0} className="w-16" /><span className="text-stone-500">ft</span></div></div>
           </div>
+          {hasStats && (
+            <div className="grid grid-cols-6 gap-2 text-center text-xs bg-stone-800/50 rounded p-2">
+              <div><span className="text-stone-500">STR</span><div className="font-mono">{character.str || 10}<span className="text-stone-500 ml-1">({getMod(character.str)})</span></div></div>
+              <div><span className="text-stone-500">DEX</span><div className="font-mono">{character.dex || 10}<span className="text-stone-500 ml-1">({getMod(character.dex)})</span></div></div>
+              <div><span className="text-stone-500">CON</span><div className="font-mono">{character.con || 10}<span className="text-stone-500 ml-1">({getMod(character.con)})</span></div></div>
+              <div><span className="text-stone-500">INT</span><div className="font-mono">{character.int || 10}<span className="text-stone-500 ml-1">({getMod(character.int)})</span></div></div>
+              <div><span className="text-stone-500">WIS</span><div className="font-mono">{character.wis || 10}<span className="text-stone-500 ml-1">({getMod(character.wis)})</span></div></div>
+              <div><span className="text-stone-500">CHA</span><div className="font-mono">{character.cha || 10}<span className="text-stone-500 ml-1">({getMod(character.cha)})</span></div></div>
+            </div>
+          )}
           <div><label className="text-xs text-stone-400">Notes</label><EditableField value={character.notes} onChange={(v) => onUpdate({ ...character, notes: v })} className="block w-full text-sm" placeholder="Click to add notes..." /></div>
           {showResources && <ResourceTracker resources={character.resources || []} onChange={(resources) => onUpdate({ ...character, resources })} />}
           {showResources && <ItemTracker items={character.items || []} onChange={(items) => onUpdate({ ...character, items })} />}
@@ -594,18 +634,82 @@ const AddPartyModal = ({ isOpen, onClose, onSave }) => {
   );
 };
 
+const TemplateActionEditor = ({ actions = [], onChange }) => {
+  const [newName, setNewName] = useState('');
+  const [newDesc, setNewDesc] = useState('');
+
+  const addAction = () => {
+    if (!newName.trim()) return;
+    onChange([...actions, { name: newName, description: newDesc }]);
+    setNewName('');
+    setNewDesc('');
+  };
+
+  const removeAction = (index) => {
+    onChange(actions.filter((_, i) => i !== index));
+  };
+
+  const updateAction = (index, field, value) => {
+    const updated = [...actions];
+    updated[index] = { ...updated[index], [field]: value };
+    onChange(updated);
+  };
+
+  return (
+    <div className="space-y-2">
+      <label className="text-xs text-stone-400 flex items-center gap-1"><Icons.Sword /> Actions</label>
+      {actions.map((action, i) => (
+        <div key={i} className="bg-stone-900/50 rounded p-2 space-y-2">
+          <div className="flex items-center gap-2">
+            <input 
+              type="text" 
+              value={action.name} 
+              onChange={(e) => updateAction(i, 'name', e.target.value)} 
+              className="flex-1 bg-stone-800 border border-stone-600 rounded px-2 py-1 text-sm focus:outline-none focus:border-amber-500" 
+              placeholder="Action name"
+            />
+            <button onClick={() => removeAction(i)} className="w-6 h-6 rounded bg-red-900/50 hover:bg-red-800/50 text-red-300"><Icons.Trash /></button>
+          </div>
+          <textarea 
+            value={action.description} 
+            onChange={(e) => updateAction(i, 'description', e.target.value)} 
+            className="w-full bg-stone-800 border border-stone-600 rounded px-2 py-1 text-sm h-16 resize-none focus:outline-none focus:border-amber-500" 
+            placeholder="Description..."
+          />
+        </div>
+      ))}
+      <div className="space-y-2 pt-1 border-t border-stone-700/50">
+        <input type="text" placeholder="New action name..." value={newName} onChange={(e) => setNewName(e.target.value)} className="w-full bg-stone-900/50 border border-stone-700 rounded px-2 py-1 text-sm focus:outline-none focus:border-amber-500" />
+        <textarea placeholder="Description..." value={newDesc} onChange={(e) => setNewDesc(e.target.value)} className="w-full bg-stone-900/50 border border-stone-700 rounded px-2 py-1 text-sm h-12 resize-none focus:outline-none focus:border-amber-500" />
+        <button onClick={addAction} disabled={!newName.trim()} className="w-full px-2 py-1 rounded bg-red-800/50 hover:bg-red-700/50 text-red-300 disabled:opacity-50 text-sm flex items-center justify-center gap-1"><Icons.Plus /> Add Action</button>
+      </div>
+    </div>
+  );
+};
+
 const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [showCreate, setShowCreate] = useState(false);
-  const [createForm, setCreateForm] = useState({ name: '', ac: '10', maxHp: '10', speed: '30', cr: '1', notes: '', isNpc: false });
+  const [createForm, setCreateForm] = useState({ 
+    name: '', ac: '10', maxHp: '10', speed: '30', cr: '1', notes: '', isNpc: false,
+    str: '10', dex: '10', con: '10', int: '10', wis: '10', cha: '10',
+    actions: []
+  });
   const [filter, setFilter] = useState('all');
+  const [expandedTemplates, setExpandedTemplates] = useState({});
 
   const filtered = templates.filter(t => filter === 'all' || (filter === 'enemies' ? !t.isNpc : t.isNpc));
 
   const parseNum = (val, fallback) => {
     const num = parseInt(val);
     return isNaN(num) ? fallback : num;
+  };
+
+  const getMod = (score) => {
+    const num = parseNum(score, 10);
+    const mod = Math.floor((num - 10) / 2);
+    return mod >= 0 ? `+${mod}` : `${mod}`;
   };
 
   const handleCreate = () => {
@@ -616,8 +720,18 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
       ac: parseNum(createForm.ac, 10),
       maxHp: parseNum(createForm.maxHp, 10),
       speed: parseNum(createForm.speed, 30),
+      str: parseNum(createForm.str, 10),
+      dex: parseNum(createForm.dex, 10),
+      con: parseNum(createForm.con, 10),
+      int: parseNum(createForm.int, 10),
+      wis: parseNum(createForm.wis, 10),
+      cha: parseNum(createForm.cha, 10),
     });
-    setCreateForm({ name: '', ac: '10', maxHp: '10', speed: '30', cr: '1', notes: '', isNpc: false });
+    setCreateForm({ 
+      name: '', ac: '10', maxHp: '10', speed: '30', cr: '1', notes: '', isNpc: false,
+      str: '10', dex: '10', con: '10', int: '10', wis: '10', cha: '10',
+      actions: []
+    });
     setShowCreate(false);
   };
 
@@ -627,8 +741,18 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
       ac: parseNum(editForm.ac, 10),
       maxHp: parseNum(editForm.maxHp, 10),
       speed: parseNum(editForm.speed, 30),
+      str: parseNum(editForm.str, 10),
+      dex: parseNum(editForm.dex, 10),
+      con: parseNum(editForm.con, 10),
+      int: parseNum(editForm.int, 10),
+      wis: parseNum(editForm.wis, 10),
+      cha: parseNum(editForm.cha, 10),
     });
     setEditingId(null);
+  };
+
+  const toggleExpanded = (id) => {
+    setExpandedTemplates(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
   return (
@@ -658,7 +782,16 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
             <div><label className="text-xs text-stone-400">Speed</label><input type="text" value={createForm.speed} onChange={(e) => setCreateForm({ ...createForm, speed: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-3 py-2" /></div>
             <div><label className="text-xs text-stone-400">CR</label><input type="text" value={createForm.cr} onChange={(e) => setCreateForm({ ...createForm, cr: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-3 py-2" /></div>
           </div>
+          <div className="grid grid-cols-6 gap-2">
+            <div><label className="text-xs text-stone-400">STR</label><input type="text" value={createForm.str} onChange={(e) => setCreateForm({ ...createForm, str: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(createForm.str)}</div></div>
+            <div><label className="text-xs text-stone-400">DEX</label><input type="text" value={createForm.dex} onChange={(e) => setCreateForm({ ...createForm, dex: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(createForm.dex)}</div></div>
+            <div><label className="text-xs text-stone-400">CON</label><input type="text" value={createForm.con} onChange={(e) => setCreateForm({ ...createForm, con: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(createForm.con)}</div></div>
+            <div><label className="text-xs text-stone-400">INT</label><input type="text" value={createForm.int} onChange={(e) => setCreateForm({ ...createForm, int: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(createForm.int)}</div></div>
+            <div><label className="text-xs text-stone-400">WIS</label><input type="text" value={createForm.wis} onChange={(e) => setCreateForm({ ...createForm, wis: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(createForm.wis)}</div></div>
+            <div><label className="text-xs text-stone-400">CHA</label><input type="text" value={createForm.cha} onChange={(e) => setCreateForm({ ...createForm, cha: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(createForm.cha)}</div></div>
+          </div>
           <textarea placeholder="Notes" value={createForm.notes} onChange={(e) => setCreateForm({ ...createForm, notes: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-3 py-2 h-16 resize-none" />
+          <TemplateActionEditor actions={createForm.actions || []} onChange={(actions) => setCreateForm({ ...createForm, actions })} />
           <div className="flex justify-end gap-2">
             <button onClick={() => setShowCreate(false)} className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600">Cancel</button>
             <button onClick={handleCreate} disabled={!createForm.name.trim()} className="px-4 py-2 rounded-lg bg-amber-700 hover:bg-amber-600 disabled:opacity-50">Create</button>
@@ -668,9 +801,9 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
 
       <div className="space-y-2">
         {filtered.map((t) => (
-          <div key={t.id} className={`p-3 rounded-lg border ${t.isNpc ? 'bg-emerald-950/30 border-emerald-900/50' : 'bg-red-950/30 border-red-900/50'}`}>
+          <div key={t.id} className={`rounded-lg border ${t.isNpc ? 'bg-emerald-950/30 border-emerald-900/50' : 'bg-red-950/30 border-red-900/50'}`}>
             {editingId === t.id ? (
-              <div className="space-y-3">
+              <div className="p-3 space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <input type="text" value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} className="bg-stone-900 border border-stone-600 rounded px-3 py-2" />
                   <div className="flex items-center gap-2">
@@ -684,27 +817,67 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
                   <div><label className="text-xs text-stone-400">Speed</label><input type="text" value={editForm.speed} onChange={(e) => setEditForm({ ...editForm, speed: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-3 py-2" /></div>
                   <div><label className="text-xs text-stone-400">CR</label><input type="text" value={editForm.cr} onChange={(e) => setEditForm({ ...editForm, cr: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-3 py-2" /></div>
                 </div>
-                <textarea value={editForm.notes} onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-3 py-2 h-16 resize-none" />
+                <div className="grid grid-cols-6 gap-2">
+                  <div><label className="text-xs text-stone-400">STR</label><input type="text" value={editForm.str || '10'} onChange={(e) => setEditForm({ ...editForm, str: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(editForm.str || '10')}</div></div>
+                  <div><label className="text-xs text-stone-400">DEX</label><input type="text" value={editForm.dex || '10'} onChange={(e) => setEditForm({ ...editForm, dex: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(editForm.dex || '10')}</div></div>
+                  <div><label className="text-xs text-stone-400">CON</label><input type="text" value={editForm.con || '10'} onChange={(e) => setEditForm({ ...editForm, con: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(editForm.con || '10')}</div></div>
+                  <div><label className="text-xs text-stone-400">INT</label><input type="text" value={editForm.int || '10'} onChange={(e) => setEditForm({ ...editForm, int: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(editForm.int || '10')}</div></div>
+                  <div><label className="text-xs text-stone-400">WIS</label><input type="text" value={editForm.wis || '10'} onChange={(e) => setEditForm({ ...editForm, wis: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(editForm.wis || '10')}</div></div>
+                  <div><label className="text-xs text-stone-400">CHA</label><input type="text" value={editForm.cha || '10'} onChange={(e) => setEditForm({ ...editForm, cha: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(editForm.cha || '10')}</div></div>
+                </div>
+                <textarea value={editForm.notes} onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })} placeholder="Notes" className="w-full bg-stone-900 border border-stone-600 rounded px-3 py-2 h-16 resize-none" />
+                <TemplateActionEditor actions={editForm.actions || []} onChange={(actions) => setEditForm({ ...editForm, actions })} />
                 <div className="flex justify-end gap-2">
                   <button onClick={() => setEditingId(null)} className="px-3 py-1 rounded bg-stone-700 hover:bg-stone-600 text-sm">Cancel</button>
                   <button onClick={handleSaveEdit} className="px-3 py-1 rounded bg-amber-700 hover:bg-amber-600 text-sm">Save</button>
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded ${t.isNpc ? 'bg-emerald-900/50' : 'bg-red-900/50'}`}>{t.isNpc ? <Icons.Shield /> : <Icons.Skull />}</div>
-                  <div>
-                    <div className="font-medium">{t.name}</div>
-                    <div className="text-xs text-stone-400">CR {t.cr} • AC {t.ac} • HP {t.maxHp} • {t.speed}ft</div>
-                    {t.notes && <div className="text-xs text-stone-500 mt-1">{t.notes}</div>}
+              <>
+                <div 
+                  className="flex items-center justify-between p-3 cursor-pointer hover:bg-stone-800/30"
+                  onClick={() => toggleExpanded(t.id)}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded ${t.isNpc ? 'bg-emerald-900/50' : 'bg-red-900/50'}`}>{t.isNpc ? <Icons.Shield /> : <Icons.Skull />}</div>
+                    <div>
+                      <div className="font-medium">{t.name}</div>
+                      <div className="text-xs text-stone-400">CR {t.cr} • AC {t.ac} • HP {t.maxHp} • {t.speed}ft</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {(t.actions?.length > 0) && <span className="text-xs text-red-400">{t.actions.length} action{t.actions.length > 1 ? 's' : ''}</span>}
+                    <button onClick={(e) => { e.stopPropagation(); setEditingId(t.id); setEditForm({ ...t }); }} className="p-2 rounded bg-stone-700/50 hover:bg-stone-600/50"><Icons.Edit /></button>
+                    <button onClick={(e) => { e.stopPropagation(); onDelete(t.id); }} className="p-2 rounded bg-red-900/30 hover:bg-red-800/50 text-red-400"><Icons.Trash /></button>
+                    {expandedTemplates[t.id] ? <Icons.ChevronUp /> : <Icons.ChevronDown />}
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button onClick={() => { setEditingId(t.id); setEditForm({ ...t }); }} className="p-2 rounded bg-stone-700/50 hover:bg-stone-600/50"><Icons.Edit /></button>
-                  <button onClick={() => onDelete(t.id)} className="p-2 rounded bg-red-900/30 hover:bg-red-800/50 text-red-400"><Icons.Trash /></button>
-                </div>
-              </div>
+                {expandedTemplates[t.id] && (
+                  <div className="px-3 pb-3 border-t border-stone-700/50 pt-2 space-y-2">
+                    {(t.str || t.dex || t.con || t.int || t.wis || t.cha) && (
+                      <div className="grid grid-cols-6 gap-2 text-center text-xs">
+                        <div><span className="text-stone-500">STR</span><div className="font-mono">{t.str || 10} ({getMod(t.str || 10)})</div></div>
+                        <div><span className="text-stone-500">DEX</span><div className="font-mono">{t.dex || 10} ({getMod(t.dex || 10)})</div></div>
+                        <div><span className="text-stone-500">CON</span><div className="font-mono">{t.con || 10} ({getMod(t.con || 10)})</div></div>
+                        <div><span className="text-stone-500">INT</span><div className="font-mono">{t.int || 10} ({getMod(t.int || 10)})</div></div>
+                        <div><span className="text-stone-500">WIS</span><div className="font-mono">{t.wis || 10} ({getMod(t.wis || 10)})</div></div>
+                        <div><span className="text-stone-500">CHA</span><div className="font-mono">{t.cha || 10} ({getMod(t.cha || 10)})</div></div>
+                      </div>
+                    )}
+                    {t.notes && <div className="text-xs text-stone-400">{t.notes}</div>}
+                    {t.actions?.length > 0 && (
+                      <div className="space-y-1">
+                        <div className="text-xs text-stone-500 font-medium">Actions:</div>
+                        {t.actions.map((action, i) => (
+                          <div key={i} className="text-xs bg-stone-900/50 rounded p-2">
+                            <span className="text-red-300 font-medium">{action.name}.</span> {action.description}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </div>
         ))}
