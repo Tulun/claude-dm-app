@@ -62,7 +62,8 @@
         "current": 2,
         "max": 2
       }
-    ]
+    ],
+    "spellStat": "cha"
   },
   {
     "id": "party-3",

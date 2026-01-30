@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react';
 
 const defaultPartyData = [
-  { id: 'party-1', name: 'Thorin Ironforge', class: 'Fighter', level: 5, ac: 18, maxHp: 52, currentHp: 52, initiative: 0, speed: 30, notes: 'Battlemaster. Shield Bearer.', resources: [{ name: 'Second Wind', current: 1, max: 1 }, { name: 'Action Surge', current: 1, max: 1 }, { name: 'Superiority Dice', current: 4, max: 4 }] },
-  { id: 'party-2', name: 'Elara Moonwhisper', class: 'Wizard', level: 5, ac: 13, maxHp: 28, currentHp: 28, initiative: 0, speed: 30, notes: 'Evocation specialist. Low HP!', resources: [{ name: '1st Level Slots', current: 4, max: 4 }, { name: '2nd Level Slots', current: 3, max: 3 }, { name: '3rd Level Slots', current: 2, max: 2 }] },
-  { id: 'party-3', name: 'Bramble Thornfoot', class: 'Rogue', level: 5, ac: 15, maxHp: 38, currentHp: 38, initiative: 0, speed: 35, notes: 'Arcane Trickster. Sneak attack 3d6.', resources: [{ name: '1st Level Slots', current: 3, max: 3 }] },
+  { id: 'party-1', name: 'Thorin Ironforge', class: 'Fighter', level: 5, ac: 18, maxHp: 52, currentHp: 52, initiative: 0, speed: 30, notes: 'Battlemaster. Shield Bearer.', resources: [{ name: 'Second Wind', current: 1, max: 1 }, { name: 'Action Surge', current: 1, max: 1 }, { name: 'Superiority Dice', current: 4, max: 4 }], str: 18, dex: 14, con: 16, int: 10, wis: 12, cha: 8, spellStat: null },
+  { id: 'party-2', name: 'Elara Moonwhisper', class: 'Wizard', level: 5, ac: 13, maxHp: 28, currentHp: 28, initiative: 0, speed: 30, notes: 'Evocation specialist. Low HP!', resources: [{ name: '1st Level Slots', current: 4, max: 4 }, { name: '2nd Level Slots', current: 3, max: 3 }, { name: '3rd Level Slots', current: 2, max: 2 }], str: 8, dex: 14, con: 12, int: 18, wis: 13, cha: 10, spellStat: 'int' },
+  { id: 'party-3', name: 'Bramble Thornfoot', class: 'Rogue', level: 5, ac: 15, maxHp: 38, currentHp: 38, initiative: 0, speed: 35, notes: 'Arcane Trickster. Sneak attack 3d6.', resources: [{ name: '1st Level Slots', current: 3, max: 3 }], str: 10, dex: 18, con: 14, int: 14, wis: 12, cha: 10, spellStat: 'int' },
 ];
 
 const defaultEnemyTemplates = [
@@ -152,6 +152,27 @@ const ResourceTracker = ({ resources, onChange }) => {
   const [newName, setNewName] = useState('');
   const [newMax, setNewMax] = useState('1');
   const [editingIndex, setEditingIndex] = useState(null);
+  const [editValues, setEditValues] = useState({ current: '', max: '' });
+
+  const startEditing = (index) => {
+    setEditingIndex(index);
+    setEditValues({ 
+      current: String(resources[index].current), 
+      max: String(resources[index].max) 
+    });
+  };
+
+  const finishEditing = (index) => {
+    const updated = [...resources];
+    const currentNum = parseInt(editValues.current);
+    const maxNum = parseInt(editValues.max);
+    // Validate: use previous values if invalid, ensure max >= 1
+    const finalMax = isNaN(maxNum) || maxNum < 1 ? updated[index].max : maxNum;
+    const finalCurrent = isNaN(currentNum) ? updated[index].current : Math.max(0, currentNum);
+    updated[index] = { ...updated[index], current: finalCurrent, max: finalMax };
+    onChange(updated);
+    setEditingIndex(null);
+  };
 
   const updateResource = (index, field, value) => {
     const updated = [...resources];
@@ -200,21 +221,21 @@ const ResourceTracker = ({ resources, onChange }) => {
                 <label className="text-xs text-stone-400">Current:</label>
                 <input 
                   type="text" 
-                  value={resource.current} 
-                  onChange={(e) => updateResource(i, 'current', e.target.value)} 
+                  value={editValues.current} 
+                  onChange={(e) => setEditValues({ ...editValues, current: e.target.value })} 
                   className="w-16 bg-stone-900 border border-stone-600 rounded px-2 py-1 text-sm text-center focus:outline-none focus:border-amber-500" 
                 />
                 <label className="text-xs text-stone-400">Max:</label>
                 <input 
                   type="text" 
-                  value={resource.max} 
-                  onChange={(e) => updateResource(i, 'max', e.target.value)} 
+                  value={editValues.max} 
+                  onChange={(e) => setEditValues({ ...editValues, max: e.target.value })} 
                   className="w-16 bg-stone-900 border border-stone-600 rounded px-2 py-1 text-sm text-center focus:outline-none focus:border-amber-500" 
                 />
               </div>
               <div className="flex justify-end gap-2">
                 <button onClick={() => onChange(resources.filter((_, idx) => idx !== i))} className="px-2 py-1 rounded bg-red-900/50 hover:bg-red-800/50 text-red-300 text-xs">Delete</button>
-                <button onClick={() => setEditingIndex(null)} className="px-2 py-1 rounded bg-amber-700 hover:bg-amber-600 text-xs">Done</button>
+                <button onClick={() => finishEditing(i)} className="px-2 py-1 rounded bg-amber-700 hover:bg-amber-600 text-xs">Done</button>
               </div>
             </div>
           ) : (
@@ -223,7 +244,7 @@ const ResourceTracker = ({ resources, onChange }) => {
               <button onClick={() => updateResource(i, 'current', resource.current - 1)} className="w-6 h-6 rounded bg-red-900/50 hover:bg-red-800/50 text-red-300 text-sm">-</button>
               <span className="font-mono text-sm w-16 text-center">{resource.current}/{resource.max}</span>
               <button onClick={() => updateResource(i, 'current', Math.min(resource.max, resource.current + 1))} className="w-6 h-6 rounded bg-emerald-900/50 hover:bg-emerald-800/50 text-emerald-300 text-sm">+</button>
-              <button onClick={() => setEditingIndex(i)} className="w-6 h-6 rounded bg-stone-700/50 hover:bg-stone-600/50 text-stone-400"><Icons.Edit /></button>
+              <button onClick={() => startEditing(i)} className="w-6 h-6 rounded bg-stone-700/50 hover:bg-stone-600/50 text-stone-400"><Icons.Edit /></button>
             </div>
           )}
         </div>
@@ -422,6 +443,52 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
     return mod >= 0 ? `+${mod}` : `${mod}`;
   };
 
+  const getModNum = (score) => {
+    const num = parseInt(score) || 10;
+    return Math.floor((num - 10) / 2);
+  };
+
+  // Calculate proficiency bonus based on level or CR
+  const getProfBonus = () => {
+    if (character.level) {
+      const lvl = parseInt(character.level) || 1;
+      return Math.floor((lvl - 1) / 4) + 2;
+    }
+    if (character.cr) {
+      const cr = character.cr;
+      if (cr === '0' || cr === '1/8' || cr === '1/4' || cr === '1/2') return 2;
+      const crNum = parseInt(cr) || 1;
+      if (crNum <= 4) return 2;
+      if (crNum <= 8) return 3;
+      if (crNum <= 12) return 4;
+      if (crNum <= 16) return 5;
+      if (crNum <= 20) return 6;
+      if (crNum <= 24) return 7;
+      if (crNum <= 28) return 8;
+      return 9;
+    }
+    return 2;
+  };
+
+  // Calculate spell save DC: 8 + proficiency + spellcasting mod
+  const getSpellSaveDC = () => {
+    if (!character.spellStat) return null;
+    const statMap = { str: character.str, dex: character.dex, con: character.con, int: character.int, wis: character.wis, cha: character.cha };
+    const mod = getModNum(statMap[character.spellStat]);
+    return 8 + getProfBonus() + mod;
+  };
+
+  const getSpellAttackBonus = () => {
+    if (!character.spellStat) return null;
+    const statMap = { str: character.str, dex: character.dex, con: character.con, int: character.int, wis: character.wis, cha: character.cha };
+    const mod = getModNum(statMap[character.spellStat]);
+    const bonus = getProfBonus() + mod;
+    return bonus >= 0 ? `+${bonus}` : `${bonus}`;
+  };
+
+  const spellDC = getSpellSaveDC();
+  const spellAttack = getSpellAttackBonus();
+
   return (
     <div className={`border rounded-lg overflow-hidden transition-all ${isDead ? 'border-red-900/50 bg-stone-900/30 opacity-60' : isEnemy ? 'border-red-800/50 bg-gradient-to-br from-red-950/40 to-stone-900/60' : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60'}`}>
       <div className={`flex items-center justify-between p-3 cursor-pointer ${isEnemy ? 'hover:bg-red-900/20' : 'hover:bg-emerald-900/20'}`} onClick={onToggleExpand}>
@@ -435,6 +502,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 text-sm"><Icons.Shield /><span className="font-mono">{character.ac}</span></div>
           <div className="flex items-center gap-1 text-sm"><Icons.Heart /><span className={`font-mono ${isDead ? 'text-red-500' : ''}`}>{character.currentHp}/{character.maxHp}</span></div>
+          {spellDC && <div className="flex items-center gap-1 text-sm text-purple-400"><Icons.Sparkles /><span className="font-mono">{spellDC}</span></div>}
           {expanded ? <Icons.ChevronUp /> : <Icons.ChevronDown />}
         </div>
       </div>
@@ -474,16 +542,71 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
             <div><label className="text-xs text-stone-400">Initiative</label><EditableField value={character.initiative} onChange={(v) => onUpdate({ ...character, initiative: v })} type="number" className="block w-full" /></div>
             <div><label className="text-xs text-stone-400">Speed</label><div className="flex items-center gap-1"><Icons.Boot /><EditableField value={character.speed} onChange={(v) => onUpdate({ ...character, speed: v })} type="number" min={0} className="w-16" /><span className="text-stone-500">ft</span></div></div>
           </div>
-          {hasStats && (
-            <div className="grid grid-cols-6 gap-2 text-center text-xs bg-stone-800/50 rounded p-2">
-              <div><span className="text-stone-500">STR</span><div className="font-mono">{character.str || 10}<span className="text-stone-500 ml-1">({getMod(character.str)})</span></div></div>
-              <div><span className="text-stone-500">DEX</span><div className="font-mono">{character.dex || 10}<span className="text-stone-500 ml-1">({getMod(character.dex)})</span></div></div>
-              <div><span className="text-stone-500">CON</span><div className="font-mono">{character.con || 10}<span className="text-stone-500 ml-1">({getMod(character.con)})</span></div></div>
-              <div><span className="text-stone-500">INT</span><div className="font-mono">{character.int || 10}<span className="text-stone-500 ml-1">({getMod(character.int)})</span></div></div>
-              <div><span className="text-stone-500">WIS</span><div className="font-mono">{character.wis || 10}<span className="text-stone-500 ml-1">({getMod(character.wis)})</span></div></div>
-              <div><span className="text-stone-500">CHA</span><div className="font-mono">{character.cha || 10}<span className="text-stone-500 ml-1">({getMod(character.cha)})</span></div></div>
+          {/* Editable ability scores */}
+          <div className="grid grid-cols-6 gap-2 text-center text-xs bg-stone-800/50 rounded p-2">
+            <div>
+              <span className="text-stone-500">STR</span>
+              <EditableField value={character.str || 10} onChange={(v) => onUpdate({ ...character, str: v })} type="number" className="w-full text-center" />
+              <div className="text-stone-500">{getMod(character.str)}</div>
             </div>
-          )}
+            <div>
+              <span className="text-stone-500">DEX</span>
+              <EditableField value={character.dex || 10} onChange={(v) => onUpdate({ ...character, dex: v })} type="number" className="w-full text-center" />
+              <div className="text-stone-500">{getMod(character.dex)}</div>
+            </div>
+            <div>
+              <span className="text-stone-500">CON</span>
+              <EditableField value={character.con || 10} onChange={(v) => onUpdate({ ...character, con: v })} type="number" className="w-full text-center" />
+              <div className="text-stone-500">{getMod(character.con)}</div>
+            </div>
+            <div>
+              <span className="text-stone-500">INT</span>
+              <EditableField value={character.int || 10} onChange={(v) => onUpdate({ ...character, int: v })} type="number" className="w-full text-center" />
+              <div className="text-stone-500">{getMod(character.int)}</div>
+            </div>
+            <div>
+              <span className="text-stone-500">WIS</span>
+              <EditableField value={character.wis || 10} onChange={(v) => onUpdate({ ...character, wis: v })} type="number" className="w-full text-center" />
+              <div className="text-stone-500">{getMod(character.wis)}</div>
+            </div>
+            <div>
+              <span className="text-stone-500">CHA</span>
+              <EditableField value={character.cha || 10} onChange={(v) => onUpdate({ ...character, cha: v })} type="number" className="w-full text-center" />
+              <div className="text-stone-500">{getMod(character.cha)}</div>
+            </div>
+          </div>
+          {/* Spellcasting section */}
+          <div className="flex items-center gap-3 text-sm">
+            <div>
+              <label className="text-xs text-stone-400">Spellcasting Stat</label>
+              <select 
+                value={character.spellStat || ''} 
+                onChange={(e) => onUpdate({ ...character, spellStat: e.target.value || null })}
+                className="block w-full bg-stone-900/50 border border-stone-700 rounded px-2 py-1 text-sm focus:outline-none focus:border-purple-500"
+              >
+                <option value="">None</option>
+                <option value="int">Intelligence</option>
+                <option value="wis">Wisdom</option>
+                <option value="cha">Charisma</option>
+              </select>
+            </div>
+            {spellDC && (
+              <>
+                <div className="text-center">
+                  <label className="text-xs text-stone-400">Spell DC</label>
+                  <div className="font-mono text-purple-400 text-lg">{spellDC}</div>
+                </div>
+                <div className="text-center">
+                  <label className="text-xs text-stone-400">Spell Atk</label>
+                  <div className="font-mono text-purple-400 text-lg">{spellAttack}</div>
+                </div>
+                <div className="text-center">
+                  <label className="text-xs text-stone-400">Prof</label>
+                  <div className="font-mono text-stone-400 text-lg">+{getProfBonus()}</div>
+                </div>
+              </>
+            )}
+          </div>
           <div><label className="text-xs text-stone-400">Notes</label><EditableField value={character.notes} onChange={(v) => onUpdate({ ...character, notes: v })} className="block w-full text-sm" placeholder="Click to add notes..." /></div>
           {showResources && <ResourceTracker resources={character.resources || []} onChange={(resources) => onUpdate({ ...character, resources })} />}
           {showResources && <ItemTracker items={character.items || []} onChange={(items) => onUpdate({ ...character, items })} />}
@@ -581,7 +704,10 @@ const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
 };
 
 const AddPartyModal = ({ isOpen, onClose, onSave }) => {
-  const [form, setForm] = useState({ name: '', class: 'Fighter', level: '1', ac: '10', maxHp: '10', speed: '30', notes: '', resources: [] });
+  const [form, setForm] = useState({ 
+    name: '', class: 'Fighter', level: '1', ac: '10', maxHp: '10', speed: '30', notes: '', resources: [],
+    str: '10', dex: '10', con: '10', int: '10', wis: '10', cha: '10', spellStat: ''
+  });
   const classes = ['Barbarian', 'Bard', 'Cleric', 'Druid', 'Fighter', 'Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Warlock', 'Wizard', 'Artificer', 'NPC'];
 
   if (!isOpen) return null;
@@ -589,6 +715,12 @@ const AddPartyModal = ({ isOpen, onClose, onSave }) => {
   const parseNum = (val, fallback) => {
     const num = parseInt(val);
     return isNaN(num) ? fallback : num;
+  };
+
+  const getMod = (score) => {
+    const num = parseNum(score, 10);
+    const mod = Math.floor((num - 10) / 2);
+    return mod >= 0 ? `+${mod}` : `${mod}`;
   };
 
   const handleSave = () => {
@@ -600,17 +732,27 @@ const AddPartyModal = ({ isOpen, onClose, onSave }) => {
       ac: parseNum(form.ac, 10),
       maxHp: parseNum(form.maxHp, 10),
       speed: parseNum(form.speed, 30),
+      str: parseNum(form.str, 10),
+      dex: parseNum(form.dex, 10),
+      con: parseNum(form.con, 10),
+      int: parseNum(form.int, 10),
+      wis: parseNum(form.wis, 10),
+      cha: parseNum(form.cha, 10),
+      spellStat: form.spellStat || null,
       currentHp: parseNum(form.maxHp, 10), 
       initiative: Math.floor(Math.random() * 20) + 1 
     };
     onSave(newMember);
     onClose();
-    setForm({ name: '', class: 'Fighter', level: '1', ac: '10', maxHp: '10', speed: '30', notes: '', resources: [] });
+    setForm({ 
+      name: '', class: 'Fighter', level: '1', ac: '10', maxHp: '10', speed: '30', notes: '', resources: [],
+      str: '10', dex: '10', con: '10', int: '10', wis: '10', cha: '10', spellStat: ''
+    });
   };
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-stone-900 border border-emerald-800/50 rounded-xl max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-stone-900 border border-emerald-800/50 rounded-xl max-w-lg w-full max-h-[90vh] overflow-auto" onClick={(e) => e.stopPropagation()}>
         <div className="p-4 border-b border-stone-700"><h2 className="text-xl font-bold text-emerald-400">Add Party Member</h2></div>
         <div className="p-4 space-y-4">
           <input type="text" placeholder="Character Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full bg-stone-800 border border-stone-600 rounded px-3 py-2 focus:outline-none focus:border-emerald-500" />
@@ -622,6 +764,23 @@ const AddPartyModal = ({ isOpen, onClose, onSave }) => {
             <div><label className="text-xs text-stone-400">AC</label><input type="text" value={form.ac} onChange={(e) => setForm({ ...form, ac: e.target.value })} className="w-full bg-stone-800 border border-stone-600 rounded px-3 py-2" /></div>
             <div><label className="text-xs text-stone-400">Max HP</label><input type="text" value={form.maxHp} onChange={(e) => setForm({ ...form, maxHp: e.target.value })} className="w-full bg-stone-800 border border-stone-600 rounded px-3 py-2" /></div>
             <div><label className="text-xs text-stone-400">Speed</label><input type="text" value={form.speed} onChange={(e) => setForm({ ...form, speed: e.target.value })} className="w-full bg-stone-800 border border-stone-600 rounded px-3 py-2" /></div>
+          </div>
+          <div className="grid grid-cols-6 gap-2">
+            <div><label className="text-xs text-stone-400">STR</label><input type="text" value={form.str} onChange={(e) => setForm({ ...form, str: e.target.value })} className="w-full bg-stone-800 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(form.str)}</div></div>
+            <div><label className="text-xs text-stone-400">DEX</label><input type="text" value={form.dex} onChange={(e) => setForm({ ...form, dex: e.target.value })} className="w-full bg-stone-800 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(form.dex)}</div></div>
+            <div><label className="text-xs text-stone-400">CON</label><input type="text" value={form.con} onChange={(e) => setForm({ ...form, con: e.target.value })} className="w-full bg-stone-800 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(form.con)}</div></div>
+            <div><label className="text-xs text-stone-400">INT</label><input type="text" value={form.int} onChange={(e) => setForm({ ...form, int: e.target.value })} className="w-full bg-stone-800 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(form.int)}</div></div>
+            <div><label className="text-xs text-stone-400">WIS</label><input type="text" value={form.wis} onChange={(e) => setForm({ ...form, wis: e.target.value })} className="w-full bg-stone-800 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(form.wis)}</div></div>
+            <div><label className="text-xs text-stone-400">CHA</label><input type="text" value={form.cha} onChange={(e) => setForm({ ...form, cha: e.target.value })} className="w-full bg-stone-800 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(form.cha)}</div></div>
+          </div>
+          <div>
+            <label className="text-xs text-stone-400">Spellcasting Stat</label>
+            <select value={form.spellStat} onChange={(e) => setForm({ ...form, spellStat: e.target.value })} className="w-full bg-stone-800 border border-stone-600 rounded px-3 py-2">
+              <option value="">None</option>
+              <option value="int">Intelligence</option>
+              <option value="wis">Wisdom</option>
+              <option value="cha">Charisma</option>
+            </select>
           </div>
           <textarea placeholder="Notes" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} className="w-full bg-stone-800 border border-stone-600 rounded px-3 py-2 h-20 resize-none" />
         </div>
@@ -694,6 +853,7 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
   const [createForm, setCreateForm] = useState({ 
     name: '', ac: '10', maxHp: '10', speed: '30', cr: '1', notes: '', isNpc: false,
     str: '10', dex: '10', con: '10', int: '10', wis: '10', cha: '10',
+    spellStat: '',
     actions: []
   });
   const [filter, setFilter] = useState('all');
@@ -712,6 +872,26 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
     return mod >= 0 ? `+${mod}` : `${mod}`;
   };
 
+  const getSpellDC = (form) => {
+    if (!form.spellStat) return null;
+    const cr = form.cr || '1';
+    let profBonus = 2;
+    if (cr !== '0' && cr !== '1/8' && cr !== '1/4' && cr !== '1/2') {
+      const crNum = parseInt(cr) || 1;
+      if (crNum <= 4) profBonus = 2;
+      else if (crNum <= 8) profBonus = 3;
+      else if (crNum <= 12) profBonus = 4;
+      else if (crNum <= 16) profBonus = 5;
+      else if (crNum <= 20) profBonus = 6;
+      else if (crNum <= 24) profBonus = 7;
+      else if (crNum <= 28) profBonus = 8;
+      else profBonus = 9;
+    }
+    const statMap = { str: form.str, dex: form.dex, con: form.con, int: form.int, wis: form.wis, cha: form.cha };
+    const mod = Math.floor((parseNum(statMap[form.spellStat], 10) - 10) / 2);
+    return 8 + profBonus + mod;
+  };
+
   const handleCreate = () => {
     if (!createForm.name.trim()) return;
     onCreate({ 
@@ -726,10 +906,12 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
       int: parseNum(createForm.int, 10),
       wis: parseNum(createForm.wis, 10),
       cha: parseNum(createForm.cha, 10),
+      spellStat: createForm.spellStat || null,
     });
     setCreateForm({ 
       name: '', ac: '10', maxHp: '10', speed: '30', cr: '1', notes: '', isNpc: false,
       str: '10', dex: '10', con: '10', int: '10', wis: '10', cha: '10',
+      spellStat: '',
       actions: []
     });
     setShowCreate(false);
@@ -747,6 +929,7 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
       int: parseNum(editForm.int, 10),
       wis: parseNum(editForm.wis, 10),
       cha: parseNum(editForm.cha, 10),
+      spellStat: editForm.spellStat || null,
     });
     setEditingId(null);
   };
@@ -790,6 +973,23 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
             <div><label className="text-xs text-stone-400">WIS</label><input type="text" value={createForm.wis} onChange={(e) => setCreateForm({ ...createForm, wis: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(createForm.wis)}</div></div>
             <div><label className="text-xs text-stone-400">CHA</label><input type="text" value={createForm.cha} onChange={(e) => setCreateForm({ ...createForm, cha: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(createForm.cha)}</div></div>
           </div>
+          <div className="flex items-center gap-3">
+            <div>
+              <label className="text-xs text-stone-400">Spellcasting</label>
+              <select value={createForm.spellStat || ''} onChange={(e) => setCreateForm({ ...createForm, spellStat: e.target.value })} className="block bg-stone-900 border border-stone-600 rounded px-3 py-2 text-sm">
+                <option value="">None</option>
+                <option value="int">INT</option>
+                <option value="wis">WIS</option>
+                <option value="cha">CHA</option>
+              </select>
+            </div>
+            {createForm.spellStat && (
+              <div className="text-center">
+                <label className="text-xs text-stone-400">Spell DC</label>
+                <div className="font-mono text-purple-400 text-lg">{getSpellDC(createForm)}</div>
+              </div>
+            )}
+          </div>
           <textarea placeholder="Notes" value={createForm.notes} onChange={(e) => setCreateForm({ ...createForm, notes: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-3 py-2 h-16 resize-none" />
           <TemplateActionEditor actions={createForm.actions || []} onChange={(actions) => setCreateForm({ ...createForm, actions })} />
           <div className="flex justify-end gap-2">
@@ -824,6 +1024,23 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
                   <div><label className="text-xs text-stone-400">INT</label><input type="text" value={editForm.int || '10'} onChange={(e) => setEditForm({ ...editForm, int: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(editForm.int || '10')}</div></div>
                   <div><label className="text-xs text-stone-400">WIS</label><input type="text" value={editForm.wis || '10'} onChange={(e) => setEditForm({ ...editForm, wis: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(editForm.wis || '10')}</div></div>
                   <div><label className="text-xs text-stone-400">CHA</label><input type="text" value={editForm.cha || '10'} onChange={(e) => setEditForm({ ...editForm, cha: e.target.value })} className="w-full bg-stone-900 border border-stone-600 rounded px-2 py-1 text-center text-sm" /><div className="text-xs text-center text-stone-500">{getMod(editForm.cha || '10')}</div></div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div>
+                    <label className="text-xs text-stone-400">Spellcasting</label>
+                    <select value={editForm.spellStat || ''} onChange={(e) => setEditForm({ ...editForm, spellStat: e.target.value })} className="block bg-stone-900 border border-stone-600 rounded px-3 py-2 text-sm">
+                      <option value="">None</option>
+                      <option value="int">INT</option>
+                      <option value="wis">WIS</option>
+                      <option value="cha">CHA</option>
+                    </select>
+                  </div>
+                  {editForm.spellStat && (
+                    <div className="text-center">
+                      <label className="text-xs text-stone-400">Spell DC</label>
+                      <div className="font-mono text-purple-400 text-lg">{getSpellDC(editForm)}</div>
+                    </div>
+                  )}
                 </div>
                 <textarea value={editForm.notes} onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })} placeholder="Notes" className="w-full bg-stone-900 border border-stone-600 rounded px-3 py-2 h-16 resize-none" />
                 <TemplateActionEditor actions={editForm.actions || []} onChange={(actions) => setEditForm({ ...editForm, actions })} />
@@ -862,6 +1079,12 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
                         <div><span className="text-stone-500">INT</span><div className="font-mono">{t.int || 10} ({getMod(t.int || 10)})</div></div>
                         <div><span className="text-stone-500">WIS</span><div className="font-mono">{t.wis || 10} ({getMod(t.wis || 10)})</div></div>
                         <div><span className="text-stone-500">CHA</span><div className="font-mono">{t.cha || 10} ({getMod(t.cha || 10)})</div></div>
+                      </div>
+                    )}
+                    {t.spellStat && (
+                      <div className="flex items-center gap-4 text-xs">
+                        <span className="text-purple-400"><Icons.Sparkles /> Spellcasting ({t.spellStat.toUpperCase()})</span>
+                        <span className="text-purple-300">DC {getSpellDC(t)}</span>
                       </div>
                     )}
                     {t.notes && <div className="text-xs text-stone-400">{t.notes}</div>}
