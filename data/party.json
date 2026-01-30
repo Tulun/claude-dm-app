@@ -6,7 +6,7 @@
     "level": 5,
     "ac": 18,
     "maxHp": 52,
-    "currentHp": 52,
+    "currentHp": 25,
     "initiative": 0,
     "speed": 30,
     "notes": "Battlemaster. Shield Bearer.",
@@ -35,9 +35,9 @@
     "level": 5,
     "ac": 13,
     "maxHp": 28,
-    "currentHp": 28,
+    "currentHp": 20,
     "initiative": 0,
-    "speed": 30,
+    "speed": 25,
     "notes": "Evocation specialist. Low HP!",
     "resources": [
       {
