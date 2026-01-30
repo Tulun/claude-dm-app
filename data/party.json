@@ -26,6 +26,13 @@
         "current": 4,
         "max": 4
       }
+    ],
+    "items": [
+      {
+        "name": "Sword",
+        "description": "Stab",
+        "quantity": 1
+      }
     ]
   },
   {
