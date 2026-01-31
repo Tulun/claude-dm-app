@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import Icons from './components/Icons';
 import { defaultPartyData, defaultEnemyTemplates } from './components/defaultData';
 import CharacterCard from './components/CharacterCard';
@@ -10,7 +11,9 @@ import { AddEnemyModal, AddPartyModal } from './components/Modals';
 import TemplateEditor from './components/TemplateEditor';
 
 export default function DMAdminTool() {
-  const [activeTab, setActiveTab] = useState('combat');
+  const searchParams = useSearchParams();
+  const tabFromUrl = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState(tabFromUrl || 'combat');
   const [party, setParty] = useState(defaultPartyData);
   const [enemies, setEnemies] = useState([]);
   const [templates, setTemplates] = useState(defaultEnemyTemplates);
@@ -21,6 +24,13 @@ export default function DMAdminTool() {
   const [dragOverIndex, setDragOverIndex] = useState(null);
   const [saveStatus, setSaveStatus] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
+
+  // Update tab when URL changes
+  useEffect(() => {
+    if (tabFromUrl && ['combat', 'characters', 'templates'].includes(tabFromUrl)) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [tabFromUrl]);
 
   // Load data on mount
   useEffect(() => {
@@ -178,7 +188,7 @@ export default function DMAdminTool() {
               <button onClick={() => { setParty(prev => prev.map(p => ({ ...p, initiative: Math.floor(Math.random() * 20) + 1 }))); setEnemies(prev => prev.map(e => ({ ...e, initiative: Math.floor(Math.random() * 20) + 1 }))); }} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.Dice />Roll All</button>
             </div>
             <div className="space-y-2">
-              {initiativeList.map((c, i) => <InitiativeItem key={c.id} character={c} isEnemy={enemies.some(e => e.id === c.id)} index={i} onDragStart={(e, idx) => { setDragIndex(idx); e.dataTransfer.effectAllowed = 'move'; }} onDragOver={(e, idx) => { e.preventDefault(); setDragOverIndex(idx); }} onDrop={handleDrop} onDragEnd={() => { setDragIndex(null); setDragOverIndex(null); }} isDragging={dragIndex === i} dragOverIndex={dragOverIndex} />)}
+              {initiativeList.map((c, i) => <InitiativeItem key={c.id} character={c} isEnemy={enemies.some(e => e.id === c.id)} index={i} onDragStart={(e, idx) => { setDragIndex(idx); e.dataTransfer.effectAllowed = 'move'; }} onDragOver={(e, idx) => { e.preventDefault(); setDragOverIndex(idx); }} onDrop={handleDrop} onDragEnd={() => { setDragIndex(null); setDragOverIndex(null); }} isDragging={dragIndex === i} dragOverIndex={dragOverIndex} onUpdateInitiative={(id, newInit) => { if (party.some(p => p.id === id)) setParty(prev => prev.map(p => p.id === id ? { ...p, initiative: newInit } : p)); else setEnemies(prev => prev.map(e => e.id === id ? { ...e, initiative: newInit } : e)); }} />)}
               {!initiativeList.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">Add combatants to begin!</div>}
             </div>
           </div>

@@ -3,28 +3,33 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Icons from '../components/Icons';
-import { EditableField, HpBar } from '../components/ui';
-import { ResourceTracker, ItemTracker, ActionTracker } from '../components/Trackers';
+import { HpBar } from '../components/ui';
+
+const SKILLS = [
+  { name: 'Acrobatics', stat: 'dex' }, { name: 'Animal Handling', stat: 'wis' }, { name: 'Arcana', stat: 'int' },
+  { name: 'Athletics', stat: 'str' }, { name: 'Deception', stat: 'cha' }, { name: 'History', stat: 'int' },
+  { name: 'Insight', stat: 'wis' }, { name: 'Intimidation', stat: 'cha' }, { name: 'Investigation', stat: 'int' },
+  { name: 'Medicine', stat: 'wis' }, { name: 'Nature', stat: 'int' }, { name: 'Perception', stat: 'wis' },
+  { name: 'Performance', stat: 'cha' }, { name: 'Persuasion', stat: 'cha' }, { name: 'Religion', stat: 'int' },
+  { name: 'Sleight of Hand', stat: 'dex' }, { name: 'Stealth', stat: 'dex' }, { name: 'Survival', stat: 'wis' },
+];
 
 export default function CharacterPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = searchParams.get('id');
-  const type = searchParams.get('type'); // 'party' or 'template'
+  const type = searchParams.get('type');
   
   const [character, setCharacter] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState('');
   const [hasChanges, setHasChanges] = useState(false);
+  const [activeTab, setActiveTab] = useState('inventory');
+  const [showProfModal, setShowProfModal] = useState(false);
 
-  // Load character data
   useEffect(() => {
     const loadCharacter = async () => {
-      if (!id || !type) {
-        setLoading(false);
-        return;
-      }
-      
+      if (!id || !type) { setLoading(false); return; }
       try {
         const endpoint = type === 'party' ? '/api/party' : '/api/templates';
         const res = await fetch(endpoint);
@@ -32,404 +37,516 @@ export default function CharacterPage() {
           const data = await res.json();
           const found = data.find(c => c.id === id);
           if (found) {
+            if (!found.skillProficiencies) found.skillProficiencies = {};
+            if (!found.saveProficiencies) found.saveProficiencies = {};
+            if (!found.features) found.features = [];
+            if (!found.spells) found.spells = [];
+            if (!found.inventory) found.inventory = [];
             setCharacter(found);
           }
         }
-      } catch (err) {
-        console.error('Error loading character:', err);
-      }
+      } catch (err) { console.error('Error loading character:', err); }
       setLoading(false);
     };
     loadCharacter();
   }, [id, type]);
 
-  // Update character field
   const updateField = (field, value) => {
     setCharacter(prev => ({ ...prev, [field]: value }));
     setHasChanges(true);
   };
 
-  // Save character
   const saveCharacter = async () => {
     if (!character) return;
-    
     try {
       const endpoint = type === 'party' ? '/api/party' : '/api/templates';
       const res = await fetch(endpoint);
       if (res.ok) {
         const data = await res.json();
         const updated = data.map(c => c.id === character.id ? character : c);
-        
-        await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updated),
-        });
-        
+        await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updated) });
         setSaveStatus('Saved!');
         setHasChanges(false);
         setTimeout(() => setSaveStatus(''), 2000);
       }
-    } catch (err) {
-      console.error('Error saving character:', err);
-      setSaveStatus('Error saving');
-    }
+    } catch (err) { console.error('Error saving:', err); setSaveStatus('Error'); }
   };
 
-  // Auto-save after changes (debounced)
   useEffect(() => {
     if (!hasChanges || !character) return;
     const timeout = setTimeout(saveCharacter, 1500);
     return () => clearTimeout(timeout);
   }, [character, hasChanges]);
 
-  const getMod = (score) => {
-    const num = parseInt(score) || 10;
-    const mod = Math.floor((num - 10) / 2);
-    return mod >= 0 ? `+${mod}` : `${mod}`;
-  };
-
-  const getModNum = (score) => {
-    const num = parseInt(score) || 10;
-    return Math.floor((num - 10) / 2);
-  };
-
+  const getMod = (score) => Math.floor(((parseInt(score) || 10) - 10) / 2);
+  const formatMod = (mod) => mod >= 0 ? `+${mod}` : `${mod}`;
   const getProfBonus = () => {
-    if (character?.level) {
-      const lvl = parseInt(character.level) || 1;
-      return Math.floor((lvl - 1) / 4) + 2;
-    }
+    if (character?.level) return Math.floor((parseInt(character.level) - 1) / 4) + 2;
     if (character?.cr) {
       const cr = character.cr;
-      if (cr === '0' || cr === '1/8' || cr === '1/4' || cr === '1/2') return 2;
+      if (['0', '1/8', '1/4', '1/2'].includes(cr)) return 2;
       const crNum = parseInt(cr) || 1;
-      if (crNum <= 4) return 2;
-      if (crNum <= 8) return 3;
-      if (crNum <= 12) return 4;
-      if (crNum <= 16) return 5;
-      if (crNum <= 20) return 6;
-      return 7;
+      return crNum <= 4 ? 2 : crNum <= 8 ? 3 : crNum <= 12 ? 4 : crNum <= 16 ? 5 : crNum <= 20 ? 6 : 7;
     }
     return 2;
   };
+  const getSkillBonus = (skill) => getMod(character[skill.stat]) + ((character.skillProficiencies?.[skill.name] || 0) * getProfBonus());
+  const getSaveBonus = (stat) => getMod(character[stat]) + ((character.saveProficiencies?.[stat] || 0) * getProfBonus());
+  const setSkillProf = (name, value) => updateField('skillProficiencies', { ...character.skillProficiencies, [name]: value });
+  const setSaveProf = (stat, value) => updateField('saveProficiencies', { ...character.saveProficiencies, [stat]: value });
+  const getSpellDC = () => character?.spellStat ? 8 + getProfBonus() + getMod(character[character.spellStat]) : null;
+  const getSpellAttack = () => character?.spellStat ? getProfBonus() + getMod(character[character.spellStat]) : null;
 
-  const getSpellSaveDC = () => {
-    if (!character?.spellStat) return null;
-    const statMap = { str: character.str, dex: character.dex, con: character.con, int: character.int, wis: character.wis, cha: character.cha };
-    const mod = getModNum(statMap[character.spellStat]);
-    return 8 + getProfBonus() + mod;
+  // Feature helpers
+  const addFeature = () => {
+    const newFeature = { id: Date.now(), name: '', description: '', source: '' };
+    updateField('features', [...(character.features || []), newFeature]);
   };
-
-  const getSpellAttackBonus = () => {
-    if (!character?.spellStat) return null;
-    const statMap = { str: character.str, dex: character.dex, con: character.con, int: character.int, wis: character.wis, cha: character.cha };
-    const mod = getModNum(statMap[character.spellStat]);
-    const bonus = getProfBonus() + mod;
-    return bonus >= 0 ? `+${bonus}` : `${bonus}`;
+  const updateFeature = (id, field, value) => {
+    updateField('features', character.features.map(f => f.id === id ? { ...f, [field]: value } : f));
   };
+  const removeFeature = (id) => updateField('features', character.features.filter(f => f.id !== id));
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100 flex items-center justify-center">
-        <div className="text-stone-400">Loading...</div>
-      </div>
-    );
-  }
+  // Inventory helpers
+  const addItem = () => {
+    const newItem = { id: Date.now(), name: '', quantity: 1, weight: '', description: '' };
+    updateField('inventory', [...(character.inventory || []), newItem]);
+  };
+  const updateItem = (id, field, value) => {
+    updateField('inventory', character.inventory.map(i => i.id === id ? { ...i, [field]: value } : i));
+  };
+  const removeItem = (id) => updateField('inventory', character.inventory.filter(i => i.id !== id));
 
-  if (!character) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-stone-400 mb-4">Character not found</div>
-          <button onClick={() => router.push('/')} className="px-4 py-2 bg-amber-700 hover:bg-amber-600 rounded-lg">
-            Back to Combat
-          </button>
-        </div>
+  // Spell helpers
+  const addSpell = () => {
+    const newSpell = { id: Date.now(), name: '', level: 0, school: '', castTime: '1 action', range: '', duration: '', description: '' };
+    updateField('spells', [...(character.spells || []), newSpell]);
+  };
+  const updateSpell = (id, field, value) => {
+    updateField('spells', character.spells.map(s => s.id === id ? { ...s, [field]: value } : s));
+  };
+  const removeSpell = (id) => updateField('spells', character.spells.filter(s => s.id !== id));
+
+  if (loading) return <div className="min-h-screen bg-stone-950 text-stone-100 flex items-center justify-center">Loading...</div>;
+  if (!character) return (
+    <div className="min-h-screen bg-stone-950 text-stone-100 flex items-center justify-center">
+      <div className="text-center">
+        <div className="text-stone-400 mb-4">Character not found</div>
+        <button onClick={() => router.push('/?tab=characters')} className="px-4 py-2 bg-amber-700 rounded-lg">Back</button>
       </div>
-    );
-  }
+    </div>
+  );
 
   const isParty = type === 'party';
-  const spellDC = getSpellSaveDC();
-  const spellAttack = getSpellAttackBonus();
+  const profBonus = getProfBonus();
+  const spellDC = getSpellDC();
+  const spellAttack = getSpellAttack();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100">
-      <div className="fixed inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
-
-      {/* Header */}
-      <header className="relative border-b border-amber-900/30 bg-stone-900/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <button onClick={() => router.push('/')} className="p-2 rounded-lg bg-stone-800 hover:bg-stone-700">
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-              </button>
-              <div className={`p-3 rounded-lg ${isParty ? 'bg-emerald-900/50' : 'bg-red-900/50'}`}>
-                {isParty ? <Icons.Shield /> : <Icons.Skull />}
-              </div>
+    <div className="min-h-screen bg-stone-950 text-stone-100">
+      {/* Proficiency Modal */}
+      {showProfModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={() => setShowProfModal(false)}>
+          <div className="bg-stone-900 border border-stone-700 rounded-xl max-w-2xl w-full max-h-[80vh] overflow-auto m-4" onClick={e => e.stopPropagation()}>
+            <div className="p-4 border-b border-stone-700 flex items-center justify-between">
+              <h2 className="text-lg font-bold text-amber-400">Proficiencies & Expertise</h2>
+              <button onClick={() => setShowProfModal(false)} className="text-stone-400 hover:text-white text-xl">×</button>
+            </div>
+            <div className="p-4 grid grid-cols-2 gap-6">
+              {/* Saving Throws */}
               <div>
-                <h1 className="text-2xl font-bold">{character.name}</h1>
-                <p className="text-sm text-stone-400">
-                  {character.class ? `${character.class} ${character.level}` : `CR ${character.cr}`}
-                  {character.isNpc && ' • NPC'}
-                </p>
+                <h3 className="text-sm font-bold text-stone-400 mb-3">Saving Throws</h3>
+                <div className="space-y-2">
+                  {['str', 'dex', 'con', 'int', 'wis', 'cha'].map(stat => {
+                    const prof = character.saveProficiencies?.[stat] || 0;
+                    return (
+                      <div key={stat} className="flex items-center justify-between bg-stone-800 rounded px-3 py-2">
+                        <span className="uppercase font-medium">{stat}</span>
+                        <span className="text-stone-400 font-mono">{formatMod(getSaveBonus(stat))}</span>
+                        <div className="flex gap-1">
+                          <button onClick={() => setSaveProf(stat, 0)}
+                            className={`px-2 py-1 rounded text-xs ${prof === 0 ? 'bg-stone-600' : 'bg-stone-700 hover:bg-stone-600'}`}>None</button>
+                          <button onClick={() => setSaveProf(stat, 1)}
+                            className={`px-2 py-1 rounded text-xs ${prof === 1 ? 'bg-emerald-700' : 'bg-stone-700 hover:bg-stone-600'}`}>Prof</button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              
+              {/* Skills */}
+              <div>
+                <h3 className="text-sm font-bold text-stone-400 mb-3">Skills</h3>
+                <div className="space-y-1 max-h-[400px] overflow-y-auto">
+                  {SKILLS.map(skill => {
+                    const prof = character.skillProficiencies?.[skill.name] || 0;
+                    return (
+                      <div key={skill.name} className="flex items-center justify-between bg-stone-800 rounded px-3 py-1.5">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">{skill.name}</span>
+                          <span className="text-xs text-stone-500 uppercase">({skill.stat})</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-stone-400 font-mono text-sm w-8 text-right">{formatMod(getSkillBonus(skill))}</span>
+                          <div className="flex gap-1">
+                            <button onClick={() => setSkillProf(skill.name, 0)}
+                              className={`px-2 py-0.5 rounded text-xs ${prof === 0 ? 'bg-stone-600' : 'bg-stone-700 hover:bg-stone-600'}`}>○</button>
+                            <button onClick={() => setSkillProf(skill.name, 1)}
+                              className={`px-2 py-0.5 rounded text-xs ${prof === 1 ? 'bg-emerald-700' : 'bg-stone-700 hover:bg-stone-600'}`}>●</button>
+                            <button onClick={() => setSkillProf(skill.name, 2)}
+                              className={`px-2 py-0.5 rounded text-xs ${prof === 2 ? 'bg-amber-700' : 'bg-stone-700 hover:bg-stone-600'}`}>◆</button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              {saveStatus && <span className="text-xs text-amber-400 bg-amber-900/30 px-2 py-1 rounded">{saveStatus}</span>}
-              {hasChanges && <span className="text-xs text-stone-500">Unsaved changes...</span>}
-              <button onClick={saveCharacter} className="px-4 py-2 bg-amber-700 hover:bg-amber-600 rounded-lg flex items-center gap-2">
-                <Icons.Download /> Save
-              </button>
+            <div className="p-4 border-t border-stone-700 text-xs text-stone-500">
+              ○ = No proficiency | ● = Proficient (+{profBonus}) | ◆ = Expertise (+{profBonus * 2})
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Compact Header */}
+      <header className="border-b border-stone-800 bg-stone-900 sticky top-0 z-10">
+        <div className="max-w-[1800px] mx-auto px-4 py-2 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button onClick={() => router.push('/?tab=characters')} className="p-1.5 rounded bg-stone-800 hover:bg-stone-700">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            </button>
+            <div className={`p-1.5 rounded ${isParty ? 'bg-emerald-900/50' : 'bg-red-900/50'}`}>
+              {isParty ? <Icons.Shield /> : <Icons.Skull />}
+            </div>
+            <div>
+              <input type="text" value={character.name || ''} onChange={(e) => updateField('name', e.target.value)}
+                className="bg-transparent text-lg font-bold focus:outline-none border-b border-transparent hover:border-stone-600 focus:border-amber-500" />
+              <span className="text-xs text-stone-500 ml-2">{character.class ? `${character.class} ${character.level}` : `CR ${character.cr}`}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {saveStatus && <span className="text-xs text-amber-400">{saveStatus}</span>}
+            <button onClick={saveCharacter} className="px-3 py-1 bg-amber-700 hover:bg-amber-600 rounded text-sm">Save</button>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="relative max-w-4xl mx-auto p-4 space-y-6">
-        
-        {/* Basic Info Card */}
-        <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
-          <h2 className="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2">
-            <Icons.Edit /> Basic Information
-          </h2>
+      <div className="max-w-[1800px] mx-auto p-4">
+        <div className="grid grid-cols-12 gap-4">
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="text-xs text-stone-400 block mb-1">Name</label>
-              <input 
-                type="text" 
-                value={character.name || ''} 
-                onChange={(e) => updateField('name', e.target.value)}
-                className="w-full bg-stone-800 border border-stone-600 rounded-lg px-4 py-2 focus:outline-none focus:border-amber-500"
-              />
-            </div>
+          {/* Left Sidebar - Stats & Skills (3 cols) */}
+          <div className="col-span-3 space-y-3">
+            {/* HP */}
+            {isParty && (
+              <div className="bg-stone-900 rounded-lg p-3">
+                <HpBar current={character.currentHp} max={character.maxHp} onChange={(c, m) => { updateField('currentHp', c); updateField('maxHp', m); }} />
+              </div>
+            )}
             
-            {isParty ? (
-              <>
-                <div>
-                  <label className="text-xs text-stone-400 block mb-1">Class</label>
-                  <input 
-                    type="text" 
-                    value={character.class || ''} 
-                    onChange={(e) => updateField('class', e.target.value)}
-                    className="w-full bg-stone-800 border border-stone-600 rounded-lg px-4 py-2 focus:outline-none focus:border-amber-500"
-                  />
+            {/* Core Stats Row */}
+            <div className="bg-stone-900 rounded-lg p-3 grid grid-cols-4 gap-2 text-center">
+              <div className="bg-stone-800 rounded p-2">
+                <div className="text-xs text-stone-500">AC</div>
+                <input type="text" value={character.ac || ''} onChange={(e) => updateField('ac', parseInt(e.target.value) || 10)}
+                  className="w-full bg-transparent text-xl font-bold text-center focus:outline-none" />
+              </div>
+              <div className="bg-stone-800 rounded p-2">
+                <div className="text-xs text-stone-500">Speed</div>
+                <input type="text" value={character.speed || ''} onChange={(e) => updateField('speed', parseInt(e.target.value) || 30)}
+                  className="w-full bg-transparent text-xl font-bold text-center focus:outline-none" />
+              </div>
+              <div className="bg-amber-900/30 rounded p-2">
+                <div className="text-xs text-stone-500">Prof</div>
+                <div className="text-xl font-bold text-amber-400">+{profBonus}</div>
+              </div>
+              {spellDC ? (
+                <div className="bg-purple-900/30 rounded p-2">
+                  <div className="text-xs text-stone-500">DC</div>
+                  <div className="text-xl font-bold text-purple-400">{spellDC}</div>
                 </div>
-                <div>
-                  <label className="text-xs text-stone-400 block mb-1">Level</label>
-                  <input 
-                    type="text" 
-                    value={character.level || ''} 
-                    onChange={(e) => updateField('level', parseInt(e.target.value) || 1)}
-                    className="w-full bg-stone-800 border border-stone-600 rounded-lg px-4 py-2 focus:outline-none focus:border-amber-500"
-                  />
+              ) : (
+                <div className="bg-stone-800 rounded p-2">
+                  <div className="text-xs text-stone-500">Init</div>
+                  <div className="text-xl font-bold">{formatMod(getMod(character.dex))}</div>
                 </div>
-              </>
-            ) : (
-              <>
+              )}
+            </div>
+
+            {/* Ability Scores + Skills Side by Side */}
+            <div className="bg-stone-900 rounded-lg p-3">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-stone-500">Abilities & Skills</span>
+                <button onClick={() => setShowProfModal(true)} className="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1">
+                  <Icons.Edit /> Edit Proficiencies
+                </button>
+              </div>
+              
+              <div className="space-y-2">
+                {['str', 'dex', 'con', 'int', 'wis', 'cha'].map(stat => {
+                  const relatedSkills = SKILLS.filter(s => s.stat === stat);
+                  const saveProf = character.saveProficiencies?.[stat] || 0;
+                  return (
+                    <div key={stat} className="bg-stone-800 rounded p-2">
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="w-16">
+                          <div className="text-[10px] text-stone-500 uppercase">{stat}</div>
+                          <div className="flex items-baseline gap-1">
+                            <input type="text" value={character[stat] || 10} onChange={(e) => updateField(stat, parseInt(e.target.value) || 10)}
+                              className="w-8 bg-transparent text-lg font-bold focus:outline-none" />
+                            <span className="text-sm text-stone-400">{formatMod(getMod(character[stat]))}</span>
+                          </div>
+                        </div>
+                        <div className="flex-1 border-l border-stone-700 pl-2">
+                          <div className="flex items-center gap-1 text-xs mb-1">
+                            <span className={saveProf ? 'text-emerald-400' : 'text-stone-600'}>{saveProf ? '●' : '○'}</span>
+                            <span className="text-stone-500">Save</span>
+                            <span className={`font-mono ml-auto ${saveProf ? 'text-emerald-400' : ''}`}>{formatMod(getSaveBonus(stat))}</span>
+                          </div>
+                          {relatedSkills.map(skill => {
+                            const prof = character.skillProficiencies?.[skill.name] || 0;
+                            return (
+                              <div key={skill.name} className="flex items-center gap-1 text-xs">
+                                <span className={prof === 2 ? 'text-amber-400' : prof === 1 ? 'text-emerald-400' : 'text-stone-600'}>
+                                  {prof === 2 ? '◆' : prof === 1 ? '●' : '○'}
+                                </span>
+                                <span className="text-stone-300 truncate">{skill.name}</span>
+                                <span className={`font-mono ml-auto ${prof === 2 ? 'text-amber-400' : prof === 1 ? 'text-emerald-400' : ''}`}>
+                                  {formatMod(getSkillBonus(skill))}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content Area (9 cols) */}
+          <div className="col-span-9">
+            {/* Tab Navigation */}
+            <div className="flex gap-1 mb-3 border-b border-stone-800 pb-2">
+              {['inventory', 'spells', 'features', 'background', 'notes'].map(tab => (
+                <button key={tab} onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-2 rounded-t text-sm font-medium capitalize ${activeTab === tab ? 'bg-stone-800 text-amber-400' : 'text-stone-400 hover:text-stone-200'}`}>
+                  {tab}
+                </button>
+              ))}
+            </div>
+
+            {/* Tab Content */}
+            <div className="bg-stone-900 rounded-lg p-4 min-h-[500px]">
+
+              {/* INVENTORY TAB */}
+              {activeTab === 'inventory' && (
                 <div>
-                  <label className="text-xs text-stone-400 block mb-1">Challenge Rating</label>
-                  <input 
-                    type="text" 
-                    value={character.cr || ''} 
-                    onChange={(e) => updateField('cr', e.target.value)}
-                    className="w-full bg-stone-800 border border-stone-600 rounded-lg px-4 py-2 focus:outline-none focus:border-amber-500"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-stone-400 block mb-1">Type</label>
-                  <div className="flex gap-2">
-                    <button 
-                      onClick={() => updateField('isNpc', false)} 
-                      className={`flex-1 px-4 py-2 rounded-lg ${!character.isNpc ? 'bg-red-700' : 'bg-stone-700 hover:bg-stone-600'}`}
-                    >
-                      Enemy
-                    </button>
-                    <button 
-                      onClick={() => updateField('isNpc', true)} 
-                      className={`flex-1 px-4 py-2 rounded-lg ${character.isNpc ? 'bg-emerald-700' : 'bg-stone-700 hover:bg-stone-600'}`}
-                    >
-                      NPC
+                  <div className="flex justify-end mb-3">
+                    <button onClick={addItem} className="px-3 py-1 rounded bg-amber-800 hover:bg-amber-700 text-xs flex items-center gap-1">
+                      <Icons.Plus /> Add Item
                     </button>
                   </div>
+                  
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="text-left text-stone-500 border-b border-stone-700">
+                        <th className="pb-2 font-medium">Item</th>
+                        <th className="pb-2 font-medium w-16">Qty</th>
+                        <th className="pb-2 font-medium w-20">Weight</th>
+                        <th className="pb-2 font-medium">Description</th>
+                        <th className="pb-2 w-8"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(character.inventory || []).map(item => (
+                        <tr key={item.id} className="border-b border-stone-800 hover:bg-stone-800/50">
+                          <td className="py-2">
+                            <input type="text" value={item.name} onChange={(e) => updateItem(item.id, 'name', e.target.value)}
+                              className="bg-transparent focus:outline-none w-full" placeholder="Item name" />
+                          </td>
+                          <td>
+                            <input type="text" value={item.quantity} onChange={(e) => updateItem(item.id, 'quantity', e.target.value)}
+                              className="bg-stone-800 rounded px-2 py-1 w-12 text-center focus:outline-none" />
+                          </td>
+                          <td>
+                            <input type="text" value={item.weight} onChange={(e) => updateItem(item.id, 'weight', e.target.value)}
+                              className="bg-transparent focus:outline-none w-full text-center" placeholder="1 lb" />
+                          </td>
+                          <td>
+                            <input type="text" value={item.description} onChange={(e) => updateItem(item.id, 'description', e.target.value)}
+                              className="bg-transparent focus:outline-none w-full text-stone-400" placeholder="Description..." />
+                          </td>
+                          <td>
+                            <button onClick={() => removeItem(item.id)} className="text-red-500 hover:text-red-400">×</button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {(character.inventory || []).length === 0 && <div className="text-center text-stone-500 py-8">No items yet.</div>}
                 </div>
-              </>
-            )}
-          </div>
-        </div>
+              )}
 
-        {/* Combat Stats Card */}
-        <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
-          <h2 className="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2">
-            <Icons.Sword /> Combat Stats
-          </h2>
-          
-          {isParty && (
-            <div className="mb-6">
-              <label className="text-xs text-stone-400 block mb-2">Hit Points</label>
-              <HpBar 
-                current={character.currentHp} 
-                max={character.maxHp} 
-                onChange={(curr, max) => { updateField('currentHp', curr); updateField('maxHp', max); }} 
-              />
-            </div>
-          )}
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-stone-800/50 rounded-lg p-4 text-center">
-              <label className="text-xs text-stone-400 block mb-1">Armor Class</label>
-              <input 
-                type="text" 
-                value={character.ac || ''} 
-                onChange={(e) => updateField('ac', parseInt(e.target.value) || 10)}
-                className="w-full bg-transparent text-3xl font-bold text-center focus:outline-none"
-              />
-            </div>
-            
-            {!isParty && (
-              <div className="bg-stone-800/50 rounded-lg p-4 text-center">
-                <label className="text-xs text-stone-400 block mb-1">Hit Points</label>
-                <input 
-                  type="text" 
-                  value={character.maxHp || ''} 
-                  onChange={(e) => updateField('maxHp', parseInt(e.target.value) || 1)}
-                  className="w-full bg-transparent text-3xl font-bold text-center focus:outline-none"
-                />
-              </div>
-            )}
-            
-            <div className="bg-stone-800/50 rounded-lg p-4 text-center">
-              <label className="text-xs text-stone-400 block mb-1">Speed</label>
-              <div className="flex items-center justify-center gap-1">
-                <input 
-                  type="text" 
-                  value={character.speed || ''} 
-                  onChange={(e) => updateField('speed', parseInt(e.target.value) || 30)}
-                  className="w-16 bg-transparent text-3xl font-bold text-center focus:outline-none"
-                />
-                <span className="text-stone-500">ft</span>
-              </div>
-            </div>
-            
-            <div className="bg-stone-800/50 rounded-lg p-4 text-center">
-              <label className="text-xs text-stone-400 block mb-1">Proficiency</label>
-              <div className="text-3xl font-bold">+{getProfBonus()}</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Ability Scores Card */}
-        <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
-          <h2 className="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2">
-            <Icons.Dice /> Ability Scores
-          </h2>
-          
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
-            {['str', 'dex', 'con', 'int', 'wis', 'cha'].map(stat => (
-              <div key={stat} className="bg-stone-800/50 rounded-lg p-4 text-center">
-                <label className="text-xs text-stone-400 block mb-1">{stat.toUpperCase()}</label>
-                <input 
-                  type="text" 
-                  value={character[stat] || 10} 
-                  onChange={(e) => updateField(stat, parseInt(e.target.value) || 10)}
-                  className="w-full bg-transparent text-2xl font-bold text-center focus:outline-none"
-                />
-                <div className="text-lg text-stone-400">{getMod(character[stat])}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Spellcasting Card */}
-        <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
-          <h2 className="text-lg font-bold text-purple-400 mb-4 flex items-center gap-2">
-            <Icons.Sparkles /> Spellcasting
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
-              <label className="text-xs text-stone-400 block mb-1">Spellcasting Ability</label>
-              <select 
-                value={character.spellStat || ''} 
-                onChange={(e) => updateField('spellStat', e.target.value || null)}
-                className="w-full bg-stone-800 border border-stone-600 rounded-lg px-4 py-2 focus:outline-none focus:border-purple-500"
-              >
-                <option value="">None</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-              </select>
-            </div>
-            
-            {spellDC && (
-              <>
-                <div className="bg-purple-900/30 rounded-lg p-4 text-center">
-                  <label className="text-xs text-stone-400 block mb-1">Spell Save DC</label>
-                  <div className="text-3xl font-bold text-purple-400">{spellDC}</div>
+              {/* SPELLS TAB */}
+              {activeTab === 'spells' && (
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-4">
+                      <div className="text-sm">
+                        <span className="text-stone-500">Spellcasting: </span>
+                        <select value={character.spellStat || ''} onChange={(e) => updateField('spellStat', e.target.value || null)}
+                          className="bg-stone-800 rounded px-2 py-1 text-sm">
+                          <option value="">None</option>
+                          <option value="int">INT</option>
+                          <option value="wis">WIS</option>
+                          <option value="cha">CHA</option>
+                        </select>
+                      </div>
+                      {spellDC && <span className="text-purple-400 text-sm">DC {spellDC} | Attack {formatMod(spellAttack)}</span>}
+                    </div>
+                    <button onClick={addSpell} className="px-3 py-1 rounded bg-purple-800 hover:bg-purple-700 text-xs flex items-center gap-1">
+                      <Icons.Plus /> Add Spell
+                    </button>
+                  </div>
+                  
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="text-left text-stone-500 border-b border-stone-700">
+                        <th className="pb-2 font-medium">Spell</th>
+                        <th className="pb-2 font-medium w-16">Level</th>
+                        <th className="pb-2 font-medium w-24">Cast Time</th>
+                        <th className="pb-2 font-medium w-24">Range</th>
+                        <th className="pb-2 font-medium">Description</th>
+                        <th className="pb-2 w-8"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(character.spells || []).map(spell => (
+                        <tr key={spell.id} className="border-b border-stone-800 hover:bg-stone-800/50">
+                          <td className="py-2">
+                            <input type="text" value={spell.name} onChange={(e) => updateSpell(spell.id, 'name', e.target.value)}
+                              className="bg-transparent focus:outline-none w-full font-medium" placeholder="Spell name" />
+                          </td>
+                          <td>
+                            <input type="text" value={spell.level} onChange={(e) => updateSpell(spell.id, 'level', e.target.value)}
+                              className="bg-stone-800 rounded px-2 py-1 w-12 text-center focus:outline-none" placeholder="0" />
+                          </td>
+                          <td>
+                            <input type="text" value={spell.castTime} onChange={(e) => updateSpell(spell.id, 'castTime', e.target.value)}
+                              className="bg-transparent focus:outline-none w-full" placeholder="1 action" />
+                          </td>
+                          <td>
+                            <input type="text" value={spell.range} onChange={(e) => updateSpell(spell.id, 'range', e.target.value)}
+                              className="bg-transparent focus:outline-none w-full" placeholder="60 ft." />
+                          </td>
+                          <td>
+                            <input type="text" value={spell.description} onChange={(e) => updateSpell(spell.id, 'description', e.target.value)}
+                              className="bg-transparent focus:outline-none w-full text-stone-400" placeholder="Description..." />
+                          </td>
+                          <td>
+                            <button onClick={() => removeSpell(spell.id)} className="text-red-500 hover:text-red-400">×</button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {(character.spells || []).length === 0 && <div className="text-center text-stone-500 py-8">No spells yet.</div>}
                 </div>
-                <div className="bg-purple-900/30 rounded-lg p-4 text-center">
-                  <label className="text-xs text-stone-400 block mb-1">Spell Attack</label>
-                  <div className="text-3xl font-bold text-purple-400">{spellAttack}</div>
+              )}
+
+              {/* FEATURES TAB */}
+              {activeTab === 'features' && (
+                <div>
+                  <div className="flex justify-end mb-3">
+                    <button onClick={addFeature} className="px-3 py-1 rounded bg-emerald-800 hover:bg-emerald-700 text-xs flex items-center gap-1">
+                      <Icons.Plus /> Add Feature
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {(character.features || []).map(feature => (
+                      <div key={feature.id} className="bg-stone-800 rounded-lg p-3">
+                        <div className="flex items-start justify-between gap-2 mb-2">
+                          <input type="text" value={feature.name} onChange={(e) => updateFeature(feature.id, 'name', e.target.value)}
+                            className="bg-transparent font-bold focus:outline-none flex-1" placeholder="Feature name" />
+                          <input type="text" value={feature.source} onChange={(e) => updateFeature(feature.id, 'source', e.target.value)}
+                            className="bg-stone-700 rounded px-2 py-0.5 text-xs text-stone-400 w-32 focus:outline-none" placeholder="Source" />
+                          <button onClick={() => removeFeature(feature.id)} className="text-red-500 hover:text-red-400">×</button>
+                        </div>
+                        <textarea value={feature.description} onChange={(e) => updateFeature(feature.id, 'description', e.target.value)}
+                          className="w-full bg-transparent text-sm text-stone-300 focus:outline-none resize-none" rows={2} placeholder="Description..." />
+                      </div>
+                    ))}
+                  </div>
+                  {(character.features || []).length === 0 && <div className="text-center text-stone-500 py-8">No features yet.</div>}
                 </div>
-              </>
-            )}
+              )}
+
+              {/* BACKGROUND TAB */}
+              {activeTab === 'background' && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs text-stone-500">Background</label>
+                    <input type="text" value={character.background || ''} onChange={(e) => updateField('background', e.target.value)}
+                      className="w-full bg-stone-800 rounded px-3 py-2 focus:outline-none" placeholder="e.g., Soldier, Sage..." />
+                  </div>
+                  <div>
+                    <label className="text-xs text-stone-500">Race</label>
+                    <input type="text" value={character.race || ''} onChange={(e) => updateField('race', e.target.value)}
+                      className="w-full bg-stone-800 rounded px-3 py-2 focus:outline-none" placeholder="e.g., Human, Elf..." />
+                  </div>
+                  <div>
+                    <label className="text-xs text-stone-500">Alignment</label>
+                    <input type="text" value={character.alignment || ''} onChange={(e) => updateField('alignment', e.target.value)}
+                      className="w-full bg-stone-800 rounded px-3 py-2 focus:outline-none" placeholder="e.g., Neutral Good" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-stone-500">Languages</label>
+                    <input type="text" value={character.languages || ''} onChange={(e) => updateField('languages', e.target.value)}
+                      className="w-full bg-stone-800 rounded px-3 py-2 focus:outline-none" placeholder="Common, Elvish..." />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="text-xs text-stone-500">Personality Traits</label>
+                    <textarea value={character.personality || ''} onChange={(e) => updateField('personality', e.target.value)}
+                      className="w-full bg-stone-800 rounded px-3 py-2 h-20 resize-none focus:outline-none" placeholder="Personality traits..." />
+                  </div>
+                  <div>
+                    <label className="text-xs text-stone-500">Ideals</label>
+                    <textarea value={character.ideals || ''} onChange={(e) => updateField('ideals', e.target.value)}
+                      className="w-full bg-stone-800 rounded px-3 py-2 h-16 resize-none focus:outline-none" placeholder="Ideals..." />
+                  </div>
+                  <div>
+                    <label className="text-xs text-stone-500">Bonds</label>
+                    <textarea value={character.bonds || ''} onChange={(e) => updateField('bonds', e.target.value)}
+                      className="w-full bg-stone-800 rounded px-3 py-2 h-16 resize-none focus:outline-none" placeholder="Bonds..." />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="text-xs text-stone-500">Flaws</label>
+                    <textarea value={character.flaws || ''} onChange={(e) => updateField('flaws', e.target.value)}
+                      className="w-full bg-stone-800 rounded px-3 py-2 h-16 resize-none focus:outline-none" placeholder="Flaws..." />
+                  </div>
+                </div>
+              )}
+
+              {/* NOTES TAB */}
+              {activeTab === 'notes' && (
+                <div>
+                  <textarea value={character.notes || ''} onChange={(e) => updateField('notes', e.target.value)}
+                    className="w-full bg-stone-800 rounded px-4 py-3 h-[450px] resize-none focus:outline-none"
+                    placeholder="Session notes, character backstory, goals, etc..." />
+                </div>
+              )}
+
+            </div>
           </div>
+
         </div>
-
-        {/* Resources (Party only) */}
-        {isParty && (
-          <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
-            <h2 className="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2">
-              <Icons.Sparkles /> Resources
-            </h2>
-            <ResourceTracker 
-              resources={character.resources || []} 
-              onChange={(resources) => updateField('resources', resources)} 
-            />
-          </div>
-        )}
-
-        {/* Items (Party only) */}
-        {isParty && (
-          <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
-            <h2 className="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2">
-              <Icons.Book /> Items & Equipment
-            </h2>
-            <ItemTracker 
-              items={character.items || []} 
-              onChange={(items) => updateField('items', items)} 
-            />
-          </div>
-        )}
-
-        {/* Actions */}
-        <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
-          <h2 className="text-lg font-bold text-red-400 mb-4 flex items-center gap-2">
-            <Icons.Sword /> Actions & Abilities
-          </h2>
-          <ActionTracker 
-            actions={character.actions || []} 
-            onChange={(actions) => updateField('actions', actions)} 
-          />
-        </div>
-
-        {/* Notes */}
-        <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
-          <h2 className="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2">
-            <Icons.Book /> Notes
-          </h2>
-          <textarea 
-            value={character.notes || ''} 
-            onChange={(e) => updateField('notes', e.target.value)}
-            placeholder="Add notes about this character..."
-            className="w-full bg-stone-800 border border-stone-600 rounded-lg px-4 py-3 h-32 resize-none focus:outline-none focus:border-amber-500"
-          />
-        </div>
-
-      </main>
+      </div>
     </div>
   );
 }

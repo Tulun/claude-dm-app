@@ -7,7 +7,7 @@
     "ac": 13,
     "maxHp": 28,
     "currentHp": 20,
-    "initiative": 0,
+    "initiative": 25,
     "speed": 25,
     "notes": "Evocation specialist. Low HP!",
     "resources": [
@@ -27,7 +27,89 @@
         "max": 2
       }
     ],
-    "spellStat": "cha"
+    "spellStat": "cha",
+    "skillProficiencies": {
+      "Acrobatics": 0,
+      "Animal Handling": 0
+    },
+    "saveProficiencies": {
+      "str": 0
+    },
+    "items": [
+      {
+        "name": "Sword",
+        "description": "Stabby",
+        "quantity": 1
+      }
+    ],
+    "attacks": [
+      {
+        "id": 1769895486322,
+        "name": "",
+        "type": "Attack",
+        "range": "5 ft.",
+        "hit": "",
+        "damage": "",
+        "notes": ""
+      },
+      {
+        "id": 1769895487330,
+        "name": "",
+        "type": "Attack",
+        "range": "5 ft.",
+        "hit": "",
+        "damage": "",
+        "notes": ""
+      },
+      {
+        "id": 1769895488197,
+        "name": "",
+        "type": "Attack",
+        "range": "5 ft.",
+        "hit": "",
+        "damage": "",
+        "notes": ""
+      },
+      {
+        "id": 1769895495177,
+        "name": "",
+        "type": "Attack",
+        "range": "5 ft.",
+        "hit": "",
+        "damage": "",
+        "notes": ""
+      },
+      {
+        "id": 1769895495541,
+        "name": "",
+        "type": "Attack",
+        "range": "5 ft.",
+        "hit": "",
+        "damage": "",
+        "notes": ""
+      }
+    ],
+    "features": [
+      {
+        "id": 1769895583912,
+        "name": "",
+        "description": "",
+        "source": ""
+      }
+    ],
+    "spells": [
+      {
+        "id": 1769895491123,
+        "name": "",
+        "level": 0,
+        "school": "",
+        "castTime": "1 action",
+        "range": "",
+        "duration": "",
+        "description": ""
+      }
+    ],
+    "inventory": []
   },
   {
     "id": "party-3",
@@ -37,7 +119,7 @@
     "ac": 15,
     "maxHp": 38,
     "currentHp": 38,
-    "initiative": 0,
+    "initiative": 2,
     "speed": 35,
     "notes": "Arcane Trickster. Sneak attack 3d6.",
     "resources": [
