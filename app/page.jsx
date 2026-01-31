@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Icons from './components/Icons';
 import { defaultPartyData, defaultEnemyTemplates } from './components/defaultData';
 import CharacterCard from './components/CharacterCard';
@@ -148,6 +149,7 @@ export default function DMAdminTool() {
               {saveStatus && <span className="text-xs text-amber-400 bg-amber-900/30 px-2 py-1 rounded">{saveStatus}</span>}
               <div className="flex gap-1 bg-stone-800 rounded-lg p-1">
                 <button onClick={() => setActiveTab('combat')} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'combat' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Sword /> Combat</button>
+                <button onClick={() => setActiveTab('characters')} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'characters' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Shield /> Characters</button>
                 <button onClick={() => setActiveTab('templates')} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'templates' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Book /> Templates</button>
               </div>
             </div>
@@ -191,6 +193,41 @@ export default function DMAdminTool() {
             </div>
             {enemies.map(e => <CharacterCard key={e.id} character={e} isEnemy={!e.isNpc} onUpdate={(u) => setEnemies(prev => prev.map(x => x.id === u.id ? u : x))} onRemove={(id) => setEnemies(prev => prev.filter(x => x.id !== id))} expanded={expandedCards[e.id]} onToggleExpand={() => setExpandedCards(prev => ({ ...prev, [e.id]: !prev[e.id] }))} />)}
             {!enemies.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No enemies yet.</div>}
+          </div>
+        </main>
+      ) : activeTab === 'characters' ? (
+        <main className="relative max-w-4xl mx-auto p-4">
+          <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-emerald-400 flex items-center gap-2"><Icons.Shield /> Party Members</h2>
+              <div className="flex gap-2">
+                <button onClick={reloadParty} className="flex items-center gap-1 px-3 py-2 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-sm"><Icons.Refresh />Reload</button>
+                <button onClick={() => setShowAddParty(true)} className="flex items-center gap-1 px-3 py-2 rounded-lg bg-emerald-800/50 hover:bg-emerald-700/50 text-emerald-300 text-sm"><Icons.Plus />Add</button>
+              </div>
+            </div>
+            <p className="text-stone-400 text-sm mb-6">Click on a character to view and edit their full details.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {party.map(member => (
+                <Link 
+                  key={member.id} 
+                  href={`/character?id=${member.id}&type=party`}
+                  className="block p-4 rounded-lg border border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60 hover:border-emerald-600/50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-emerald-900/50"><Icons.Shield /></div>
+                    <div className="flex-1">
+                      <h3 className="font-bold">{member.name}</h3>
+                      <p className="text-xs text-stone-400">{member.class} {member.level}</p>
+                    </div>
+                    <div className="text-right text-sm">
+                      <div className="flex items-center gap-1 text-stone-400"><Icons.Shield /> {member.ac}</div>
+                      <div className="flex items-center gap-1 text-stone-400"><Icons.Heart /> {member.currentHp}/{member.maxHp}</div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            {!party.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No party members yet.</div>}
           </div>
         </main>
       ) : (

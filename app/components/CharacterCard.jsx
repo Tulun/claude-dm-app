@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import Icons from './Icons';
 import { EditableField, HpBar } from './ui';
 import { ResourceTracker, ItemTracker, ActionTracker } from './Trackers';
@@ -9,6 +10,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const isDead = character.currentHp <= 0;
   const hasStats = character.str || character.dex || character.con || character.int || character.wis || character.cha;
+  const characterType = character.class ? 'party' : 'template';
 
   const getMod = (score) => {
     const num = parseInt(score) || 10;
@@ -184,7 +186,13 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
           {showResources && <ResourceTracker resources={character.resources || []} onChange={(resources) => onUpdate({ ...character, resources })} />}
           {showResources && <ItemTracker items={character.items || []} onChange={(items) => onUpdate({ ...character, items })} />}
           <ActionTracker actions={character.actions || []} onChange={(actions) => onUpdate({ ...character, actions })} />
-          <div className="flex justify-end pt-2 border-t border-stone-700/30">
+          <div className="flex justify-between items-center pt-2 border-t border-stone-700/30">
+            <Link 
+              href={`/character?id=${character.id}&type=${characterType}`}
+              className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-amber-900/30 hover:bg-amber-800/50 text-amber-400"
+            >
+              <Icons.Edit /> Full Page
+            </Link>
             {showDeleteConfirm ? (
               <div className="flex items-center gap-2">
                 <span className="text-sm text-stone-400">Are you sure?</span>
