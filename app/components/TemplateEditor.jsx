@@ -60,6 +60,7 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [showCreate, setShowCreate] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   const [createForm, setCreateForm] = useState({ 
     name: '', ac: '10', maxHp: '10', speed: '30', cr: '1', notes: '', isNpc: false,
     str: '10', dex: '10', con: '10', int: '10', wis: '10', cha: '10',
@@ -275,7 +276,14 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
                   <div className="flex items-center gap-2">
                     {(t.actions?.length > 0) && <span className="text-xs text-red-400">{t.actions.length} action{t.actions.length > 1 ? 's' : ''}</span>}
                     <button onClick={(e) => { e.stopPropagation(); setEditingId(t.id); setEditForm({ ...t }); }} className="p-2 rounded bg-stone-700/50 hover:bg-stone-600/50"><Icons.Edit /></button>
-                    <button onClick={(e) => { e.stopPropagation(); onDelete(t.id); }} className="p-2 rounded bg-red-900/30 hover:bg-red-800/50 text-red-400"><Icons.Trash /></button>
+                    {deleteConfirmId === t.id ? (
+                      <>
+                        <button onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(null); }} className="px-2 py-1 rounded bg-stone-700 hover:bg-stone-600 text-xs">Cancel</button>
+                        <button onClick={(e) => { e.stopPropagation(); onDelete(t.id); setDeleteConfirmId(null); }} className="px-2 py-1 rounded bg-red-700 hover:bg-red-600 text-white text-xs">Delete</button>
+                      </>
+                    ) : (
+                      <button onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(t.id); }} className="p-2 rounded bg-red-900/30 hover:bg-red-800/50 text-red-400"><Icons.Trash /></button>
+                    )}
                     {expandedTemplates[t.id] ? <Icons.ChevronUp /> : <Icons.ChevronDown />}
                   </div>
                 </div>

@@ -1,41 +1,5 @@
 [
   {
-    "id": "party-1",
-    "name": "Thorin Ironforge",
-    "class": "Fighter",
-    "level": 5,
-    "ac": 18,
-    "maxHp": 52,
-    "currentHp": 25,
-    "initiative": 0,
-    "speed": 30,
-    "notes": "Battlemaster. Shield Bearer.",
-    "resources": [
-      {
-        "name": "Second Wind",
-        "current": 1,
-        "max": 1
-      },
-      {
-        "name": "Action Surge",
-        "current": 1,
-        "max": 1
-      },
-      {
-        "name": "Superiority Dice",
-        "current": 4,
-        "max": 4
-      }
-    ],
-    "items": [
-      {
-        "name": "Sword",
-        "description": "Stab",
-        "quantity": 1
-      }
-    ]
-  },
-  {
     "id": "party-2",
     "name": "Elara Moonwhisper",
     "class": "Wizard",
@@ -83,18 +47,5 @@
         "max": 3
       }
     ]
-  },
-  {
-    "name": "gregg mcegg",
-    "class": "Fighter",
-    "level": 1,
-    "ac": 10,
-    "maxHp": 10,
-    "speed": 30,
-    "notes": "",
-    "resources": [],
-    "id": "party-1769657713023",
-    "currentHp": 10,
-    "initiative": 19
   }
 ]

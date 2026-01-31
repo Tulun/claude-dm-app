@@ -1,10 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import Icons from './Icons';
 import { EditableField, HpBar } from './ui';
 import { ResourceTracker, ItemTracker, ActionTracker } from './Trackers';
 
 const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onToggleExpand, showResources }) => {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const isDead = character.currentHp <= 0;
   const hasStats = character.str || character.dex || character.con || character.int || character.wis || character.cha;
 
@@ -183,7 +185,15 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
           {showResources && <ItemTracker items={character.items || []} onChange={(items) => onUpdate({ ...character, items })} />}
           <ActionTracker actions={character.actions || []} onChange={(actions) => onUpdate({ ...character, actions })} />
           <div className="flex justify-end pt-2 border-t border-stone-700/30">
-            <button onClick={() => onRemove(character.id)} className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-red-900/30 hover:bg-red-800/50 text-red-400"><Icons.Trash />{isEnemy ? 'Kill' : 'Remove'}</button>
+            {showDeleteConfirm ? (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-stone-400">Are you sure?</span>
+                <button onClick={() => setShowDeleteConfirm(false)} className="px-3 py-1 rounded text-sm bg-stone-700 hover:bg-stone-600">Cancel</button>
+                <button onClick={() => onRemove(character.id)} className="px-3 py-1 rounded text-sm bg-red-700 hover:bg-red-600 text-white">Yes, {isEnemy ? 'Kill' : 'Remove'}</button>
+              </div>
+            ) : (
+              <button onClick={() => setShowDeleteConfirm(true)} className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-red-900/30 hover:bg-red-800/50 text-red-400"><Icons.Trash />{isEnemy ? 'Kill' : 'Remove'}</button>
+            )}
           </div>
         </div>
       )}
