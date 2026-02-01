@@ -8,7 +8,6 @@ import { EditableField, HpBar } from './ui';
 const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onToggleExpand, showResources }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const isDead = character.currentHp <= 0;
-  const hasStats = character.str || character.dex || character.con || character.int || character.wis || character.cha;
   const characterType = character.class ? 'party' : 'template';
 
   const getMod = (score) => {
@@ -81,21 +80,29 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
         </div>
       </div>
 
-      {/* Quick stats bar - always visible when collapsed and has stats */}
-      {!expanded && hasStats && (
-        <div className="px-3 pb-2 grid grid-cols-6 gap-1 text-center text-xs border-t border-stone-700/30 pt-2">
-          <div><span className="text-stone-600">STR</span> <span className="text-stone-400">{getMod(character.str)}</span></div>
-          <div><span className="text-stone-600">DEX</span> <span className="text-stone-400">{getMod(character.dex)}</span></div>
-          <div><span className="text-stone-600">CON</span> <span className="text-stone-400">{getMod(character.con)}</span></div>
-          <div><span className="text-stone-600">INT</span> <span className="text-stone-400">{getMod(character.int)}</span></div>
-          <div><span className="text-stone-600">WIS</span> <span className="text-stone-400">{getMod(character.wis)}</span></div>
-          <div><span className="text-stone-600">CHA</span> <span className="text-stone-400">{getMod(character.cha)}</span></div>
+      {/* Quick stats bar - always visible when collapsed */}
+      {!expanded && (
+        <div className="px-3 pb-2 grid grid-cols-6 gap-1 text-center border-t border-stone-700/30 pt-2">
+          {[
+            { label: 'STR', value: character.str },
+            { label: 'DEX', value: character.dex },
+            { label: 'CON', value: character.con },
+            { label: 'INT', value: character.int },
+            { label: 'WIS', value: character.wis },
+            { label: 'CHA', value: character.cha },
+          ].map(stat => (
+            <div key={stat.label} className="bg-stone-800/50 rounded p-1">
+              <div className="text-[10px] text-stone-500">{stat.label}</div>
+              <div className="text-sm font-bold">{stat.value || 10}</div>
+              <div className="text-xs text-stone-400">{getMod(stat.value)}</div>
+            </div>
+          ))}
         </div>
       )}
 
       {/* Quick actions preview - always visible when collapsed and has actions */}
       {!expanded && character.actions?.length > 0 && (
-        <div className={`px-3 pb-2 text-xs ${hasStats ? '' : 'border-t border-stone-700/30 pt-2'}`}>
+        <div className="px-3 pb-2 text-xs">
           <div className="flex flex-wrap gap-1">
             {character.actions.map((action, i) => (
               <span key={i} className="bg-red-900/30 text-red-300 px-2 py-0.5 rounded">{action.name}</span>
@@ -116,38 +123,22 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
             <div><label className="text-xs text-stone-400">Initiative</label><EditableField value={character.initiative} onChange={(v) => onUpdate({ ...character, initiative: v })} type="number" className="block w-full" /></div>
             <div><label className="text-xs text-stone-400">Speed</label><div className="flex items-center gap-1"><Icons.Boot /><EditableField value={character.speed} onChange={(v) => onUpdate({ ...character, speed: v })} type="number" min={0} className="w-16" /><span className="text-stone-500">ft</span></div></div>
           </div>
-          {/* Editable ability scores */}
-          <div className="grid grid-cols-6 gap-2 text-center text-xs bg-stone-800/50 rounded p-2">
-            <div>
-              <span className="text-stone-500">STR</span>
-              <EditableField value={character.str || 10} onChange={(v) => onUpdate({ ...character, str: v })} type="number" className="w-full text-center" />
-              <div className="text-stone-500">{getMod(character.str)}</div>
-            </div>
-            <div>
-              <span className="text-stone-500">DEX</span>
-              <EditableField value={character.dex || 10} onChange={(v) => onUpdate({ ...character, dex: v })} type="number" className="w-full text-center" />
-              <div className="text-stone-500">{getMod(character.dex)}</div>
-            </div>
-            <div>
-              <span className="text-stone-500">CON</span>
-              <EditableField value={character.con || 10} onChange={(v) => onUpdate({ ...character, con: v })} type="number" className="w-full text-center" />
-              <div className="text-stone-500">{getMod(character.con)}</div>
-            </div>
-            <div>
-              <span className="text-stone-500">INT</span>
-              <EditableField value={character.int || 10} onChange={(v) => onUpdate({ ...character, int: v })} type="number" className="w-full text-center" />
-              <div className="text-stone-500">{getMod(character.int)}</div>
-            </div>
-            <div>
-              <span className="text-stone-500">WIS</span>
-              <EditableField value={character.wis || 10} onChange={(v) => onUpdate({ ...character, wis: v })} type="number" className="w-full text-center" />
-              <div className="text-stone-500">{getMod(character.wis)}</div>
-            </div>
-            <div>
-              <span className="text-stone-500">CHA</span>
-              <EditableField value={character.cha || 10} onChange={(v) => onUpdate({ ...character, cha: v })} type="number" className="w-full text-center" />
-              <div className="text-stone-500">{getMod(character.cha)}</div>
-            </div>
+          {/* Editable ability scores - stacked format */}
+          <div className="grid grid-cols-6 gap-2 text-center">
+            {[
+              { label: 'STR', key: 'str' },
+              { label: 'DEX', key: 'dex' },
+              { label: 'CON', key: 'con' },
+              { label: 'INT', key: 'int' },
+              { label: 'WIS', key: 'wis' },
+              { label: 'CHA', key: 'cha' },
+            ].map(stat => (
+              <div key={stat.key} className="bg-stone-800/50 rounded p-2">
+                <div className="text-[10px] text-stone-500">{stat.label}</div>
+                <EditableField value={character[stat.key] || 10} onChange={(v) => onUpdate({ ...character, [stat.key]: v })} type="number" className="w-full text-center font-bold" />
+                <div className="text-xs text-stone-400">{getMod(character[stat.key])}</div>
+              </div>
+            ))}
           </div>
           {/* Spellcasting section */}
           <div className="flex items-center gap-3 text-sm">

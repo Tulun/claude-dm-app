@@ -130,7 +130,8 @@
         "weight": "",
         "description": "stabbs"
       }
-    ]
+    ],
+    "str": 10
   },
   {
     "id": "party-3",
