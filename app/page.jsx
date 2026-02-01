@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Icons from './components/Icons';
 import { defaultPartyData, defaultEnemyTemplates } from './components/defaultData';
 import CharacterCard from './components/CharacterCard';
@@ -12,6 +12,7 @@ import TemplateEditor from './components/TemplateEditor';
 
 export default function DMAdminTool() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const tabFromUrl = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState(tabFromUrl || 'combat');
   const [party, setParty] = useState(defaultPartyData);
@@ -168,9 +169,9 @@ export default function DMAdminTool() {
             <div className="flex items-center gap-4">
               {saveStatus && <span className="text-xs text-amber-400 bg-amber-900/30 px-2 py-1 rounded">{saveStatus}</span>}
               <div className="flex gap-1 bg-stone-800 rounded-lg p-1">
-                <button onClick={() => setActiveTab('combat')} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'combat' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Sword /> Combat</button>
-                <button onClick={() => setActiveTab('characters')} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'characters' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Shield /> Characters</button>
-                <button onClick={() => setActiveTab('templates')} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'templates' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Book /> Templates</button>
+                <button onClick={() => { setActiveTab('combat'); router.push('/'); }} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'combat' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Sword /> Combat</button>
+                <button onClick={() => { setActiveTab('characters'); router.push('/?tab=characters'); }} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'characters' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Shield /> Characters</button>
+                <button onClick={() => { setActiveTab('templates'); router.push('/?tab=templates'); }} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'templates' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Book /> Templates</button>
               </div>
             </div>
           </div>
