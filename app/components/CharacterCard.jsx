@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Icons from './Icons';
 import { EditableField, HpBar } from './ui';
-import { ResourceTracker, ItemTracker, ActionTracker } from './Trackers';
 
 const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onToggleExpand, showResources }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -183,9 +182,59 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
             )}
           </div>
           <div><label className="text-xs text-stone-400">Notes</label><EditableField value={character.notes} onChange={(v) => onUpdate({ ...character, notes: v })} className="block w-full text-sm" placeholder="Click to add notes..." /></div>
-          {showResources && <ResourceTracker resources={character.resources || []} onChange={(resources) => onUpdate({ ...character, resources })} />}
-          {showResources && <ItemTracker items={character.items || []} onChange={(items) => onUpdate({ ...character, items })} />}
-          <ActionTracker actions={character.actions || []} onChange={(actions) => onUpdate({ ...character, actions })} />
+          
+          {/* Resources with +/- controls */}
+          {showResources && (character.resources || []).length > 0 && (
+            <div className="space-y-2">
+              <label className="text-xs text-stone-400 flex items-center gap-1"><Icons.Sparkles /> Resources</label>
+              <div className="space-y-1">
+                {character.resources.map((r, i) => (
+                  <div key={i} className="bg-stone-800/50 rounded px-2 py-1.5 flex items-center justify-between">
+                    <span className="text-stone-300 text-sm">{r.name}</span>
+                    <div className="flex items-center gap-1">
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); const updated = [...character.resources]; updated[i] = { ...r, current: Math.max(0, r.current - 1) }; onUpdate({ ...character, resources: updated }); }}
+                        className="w-6 h-6 rounded bg-stone-700 hover:bg-stone-600 text-stone-300 flex items-center justify-center text-sm"
+                      >−</button>
+                      <span className="font-mono text-amber-400 w-12 text-center">{r.current}/{r.max}</span>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); const updated = [...character.resources]; updated[i] = { ...r, current: Math.min(r.max, r.current + 1) }; onUpdate({ ...character, resources: updated }); }}
+                        className="w-6 h-6 rounded bg-stone-700 hover:bg-stone-600 text-stone-300 flex items-center justify-center text-sm"
+                      >+</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Inventory summary */}
+          {showResources && (character.inventory || []).length > 0 && (
+            <div className="space-y-1">
+              <label className="text-xs text-stone-400 flex items-center gap-1"><Icons.Book /> Inventory</label>
+              <div className="flex flex-wrap gap-1">
+                {character.inventory.map((item, i) => (
+                  <span key={i} className="bg-stone-800/50 text-stone-300 rounded px-2 py-0.5 text-xs">
+                    {item.quantity > 1 && <span className="text-amber-400">{item.quantity}x </span>}
+                    {item.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Read-only display of actions */}
+          {(character.actions || []).length > 0 && (
+            <div className="space-y-1">
+              <label className="text-xs text-stone-400 flex items-center gap-1"><Icons.Sword /> Actions</label>
+              <div className="flex flex-wrap gap-1">
+                {character.actions.map((a, i) => (
+                  <span key={i} className="bg-red-900/30 text-red-300 rounded px-2 py-0.5 text-xs">{a.name}</span>
+                ))}
+              </div>
+            </div>
+          )}
+          
           <div className="flex justify-between items-center pt-2 border-t border-stone-700/30">
             <Link 
               href={`/character?id=${character.id}&type=${characterType}`}

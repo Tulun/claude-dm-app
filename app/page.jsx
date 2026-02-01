@@ -25,10 +25,16 @@ export default function DMAdminTool() {
   const [saveStatus, setSaveStatus] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Update tab when URL changes
+  // Update tab when URL changes and reload data (in case edited on character page)
   useEffect(() => {
     if (tabFromUrl && ['combat', 'characters', 'templates'].includes(tabFromUrl)) {
       setActiveTab(tabFromUrl);
+      // Reload data when returning from another page
+      if (isLoaded) {
+        fetch('/api/party').then(res => res.ok && res.json()).then(data => {
+          if (data && Array.isArray(data) && data.length > 0) setParty(data);
+        }).catch(console.error);
+      }
     }
   }, [tabFromUrl]);
 
@@ -36,25 +42,21 @@ export default function DMAdminTool() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        console.log('Loading data from API...');
         const [partyRes, templatesRes] = await Promise.all([
           fetch('/api/party'),
           fetch('/api/templates'),
         ]);
         
-        console.log('Party response status:', partyRes.status);
         if (partyRes.ok) {
           const partyData = await partyRes.json();
-          console.log('Party data loaded:', partyData);
+          // Only update if we got valid data, otherwise keep defaults
           if (partyData && Array.isArray(partyData) && partyData.length > 0) {
             setParty(partyData);
           }
         }
         
-        console.log('Templates response status:', templatesRes.status);
         if (templatesRes.ok) {
           const templatesData = await templatesRes.json();
-          console.log('Templates data loaded:', templatesData);
           if (templatesData && Array.isArray(templatesData) && templatesData.length > 0) {
             setTemplates(templatesData);
           }
@@ -104,7 +106,11 @@ export default function DMAdminTool() {
       const res = await fetch('/api/party');
       if (res.ok) {
         const data = await res.json();
-        if (data && Array.isArray(data)) setParty(data);
+        if (data && Array.isArray(data) && data.length > 0) {
+          setParty(data);
+        } else {
+          setParty(defaultPartyData);
+        }
         setSaveStatus('Party reloaded');
         setTimeout(() => setSaveStatus(''), 2000);
       }
@@ -118,7 +124,11 @@ export default function DMAdminTool() {
       const res = await fetch('/api/templates');
       if (res.ok) {
         const data = await res.json();
-        if (data && Array.isArray(data)) setTemplates(data);
+        if (data && Array.isArray(data) && data.length > 0) {
+          setTemplates(data);
+        } else {
+          setTemplates(defaultEnemyTemplates);
+        }
         setSaveStatus('Templates reloaded');
         setTimeout(() => setSaveStatus(''), 2000);
       }

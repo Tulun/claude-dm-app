@@ -13,7 +13,7 @@
     "resources": [
       {
         "name": "1st Level Slots",
-        "current": 4,
+        "current": 3,
         "max": 4
       },
       {
@@ -23,6 +23,12 @@
       },
       {
         "name": "3rd Level Slots",
+        "current": 2,
+        "max": 2
+      },
+      {
+        "id": 1769962313580,
+        "name": "4th Level Spell Slots",
         "current": 2,
         "max": 2
       }
@@ -109,7 +115,22 @@
         "description": ""
       }
     ],
-    "inventory": []
+    "inventory": [
+      {
+        "id": 1769957301558,
+        "name": "Sword",
+        "quantity": 1,
+        "weight": "",
+        "description": "Stabs"
+      },
+      {
+        "id": 1769957334382,
+        "name": "Big sword",
+        "quantity": 1,
+        "weight": "",
+        "description": "stabbs"
+      }
+    ]
   },
   {
     "id": "party-3",

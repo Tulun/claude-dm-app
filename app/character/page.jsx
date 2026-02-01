@@ -24,7 +24,7 @@ export default function CharacterPage() {
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState('');
   const [hasChanges, setHasChanges] = useState(false);
-  const [activeTab, setActiveTab] = useState('inventory');
+  const [activeTab, setActiveTab] = useState('resources');
   const [showProfModal, setShowProfModal] = useState(false);
 
   useEffect(() => {
@@ -107,6 +107,22 @@ export default function CharacterPage() {
   };
   const removeFeature = (id) => updateField('features', character.features.filter(f => f.id !== id));
 
+  // Resource helpers
+  const addResource = () => {
+    const newResource = { id: Date.now(), name: '', current: 1, max: 1 };
+    updateField('resources', [...(character.resources || []), newResource]);
+  };
+  const updateResource = (index, field, value) => {
+    const updated = [...(character.resources || [])];
+    updated[index] = { ...updated[index], [field]: value };
+    updateField('resources', updated);
+  };
+  const removeResource = (index) => {
+    const updated = [...(character.resources || [])];
+    updated.splice(index, 1);
+    updateField('resources', updated);
+  };
+
   // Inventory helpers
   const addItem = () => {
     const newItem = { id: Date.now(), name: '', quantity: 1, weight: '', description: '' };
@@ -132,7 +148,7 @@ export default function CharacterPage() {
     <div className="min-h-screen bg-stone-950 text-stone-100 flex items-center justify-center">
       <div className="text-center">
         <div className="text-stone-400 mb-4">Character not found</div>
-        <button onClick={() => router.push('/?tab=characters')} className="px-4 py-2 bg-amber-700 rounded-lg">Back</button>
+        <button onClick={() => router.back()} className="px-4 py-2 bg-amber-700 rounded-lg">Back</button>
       </div>
     </div>
   );
@@ -215,7 +231,7 @@ export default function CharacterPage() {
       <header className="border-b border-stone-800 bg-stone-900 sticky top-0 z-10">
         <div className="max-w-[1800px] mx-auto px-4 py-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => router.push('/?tab=characters')} className="p-1.5 rounded bg-stone-800 hover:bg-stone-700">
+            <button onClick={() => router.back()} className="p-1.5 rounded bg-stone-800 hover:bg-stone-700">
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
             </button>
             <div className={`p-1.5 rounded ${isParty ? 'bg-emerald-900/50' : 'bg-red-900/50'}`}>
@@ -332,7 +348,7 @@ export default function CharacterPage() {
           <div className="col-span-9">
             {/* Tab Navigation */}
             <div className="flex gap-1 mb-3 border-b border-stone-800 pb-2">
-              {['inventory', 'spells', 'features', 'background', 'notes'].map(tab => (
+              {['resources', 'inventory', 'spells', 'features', 'background', 'notes'].map(tab => (
                 <button key={tab} onClick={() => setActiveTab(tab)}
                   className={`px-4 py-2 rounded-t text-sm font-medium capitalize ${activeTab === tab ? 'bg-stone-800 text-amber-400' : 'text-stone-400 hover:text-stone-200'}`}>
                   {tab}
@@ -342,6 +358,44 @@ export default function CharacterPage() {
 
             {/* Tab Content */}
             <div className="bg-stone-900 rounded-lg p-4 min-h-[500px]">
+
+              {/* RESOURCES TAB */}
+              {activeTab === 'resources' && (
+                <div>
+                  <div className="flex justify-between items-center mb-3">
+                    <p className="text-sm text-stone-400">Track spell slots, abilities, wild shapes, and other limited-use resources.</p>
+                    <button onClick={addResource} className="px-3 py-1 rounded bg-amber-800 hover:bg-amber-700 text-xs flex items-center gap-1">
+                      <Icons.Plus /> Add Resource
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    {(character.resources || []).map((resource, i) => (
+                      <div key={resource.id || i} className="bg-stone-800 rounded-lg p-3 flex items-center gap-4">
+                        <input type="text" value={resource.name} onChange={(e) => updateResource(i, 'name', e.target.value)}
+                          className="flex-1 bg-transparent font-medium focus:outline-none" placeholder="Resource name (e.g., Wild Shape, Rage, Spell Slots)" />
+                        <div className="flex items-center gap-2">
+                          <button onClick={() => updateResource(i, 'current', Math.max(0, resource.current - 1))}
+                            className="w-8 h-8 rounded bg-stone-700 hover:bg-stone-600 text-lg">−</button>
+                          <div className="flex items-center gap-1">
+                            <input type="text" value={resource.current} onChange={(e) => updateResource(i, 'current', parseInt(e.target.value) || 0)}
+                              className="w-12 bg-stone-700 rounded px-2 py-1 text-center font-mono text-lg focus:outline-none" />
+                            <span className="text-stone-500">/</span>
+                            <input type="text" value={resource.max} onChange={(e) => updateResource(i, 'max', parseInt(e.target.value) || 1)}
+                              className="w-12 bg-stone-700 rounded px-2 py-1 text-center font-mono text-lg focus:outline-none" />
+                          </div>
+                          <button onClick={() => updateResource(i, 'current', Math.min(resource.max, resource.current + 1))}
+                            className="w-8 h-8 rounded bg-stone-700 hover:bg-stone-600 text-lg">+</button>
+                          <button onClick={() => updateResource(i, 'current', resource.max)}
+                            className="px-2 py-1 rounded bg-emerald-800 hover:bg-emerald-700 text-xs">Reset</button>
+                          <button onClick={() => removeResource(i)} className="text-red-500 hover:text-red-400 text-lg">×</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {(character.resources || []).length === 0 && <div className="text-center text-stone-500 py-8">No resources yet. Add things like spell slots, wild shapes, rage uses, etc.</div>}
+                </div>
+              )}
 
               {/* INVENTORY TAB */}
               {activeTab === 'inventory' && (
