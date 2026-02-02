@@ -2,8 +2,8 @@
   {
     "id": "party-2",
     "name": "Elara Moonwhisper",
-    "class": "Wizard",
-    "level": 5,
+    "class": null,
+    "level": null,
     "ac": 13,
     "maxHp": 28,
     "currentHp": 20,
@@ -136,6 +136,16 @@
     "str": 9,
     "advantages": [
       "Adv. vs Poisoned"
+    ],
+    "classes": [
+      {
+        "name": "Wizard",
+        "level": 5
+      },
+      {
+        "name": "Warlock",
+        "level": 1
+      }
     ]
   },
   {

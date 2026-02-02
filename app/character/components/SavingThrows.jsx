@@ -26,7 +26,7 @@ export default function SavingThrows({ character, onEditClick }) {
     <div className="bg-stone-900 rounded-lg overflow-hidden">
       <div className="p-2 border-b border-stone-700 flex items-center justify-between">
         <span className="text-xs text-stone-500 uppercase tracking-wide">Saving Throws</span>
-        <button onClick={onEditClick} className="text-xs text-amber-400 hover:text-amber-300">
+        <button onClick={onEditClick} className="text-xs text-amber-400 hover:text-amber-300 cursor-pointer hover:scale-110 transition-transform">
           <Icons.Edit />
         </button>
       </div>

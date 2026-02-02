@@ -10,12 +10,14 @@ import {
   Senses,
   SkillsList,
   ProficiencyModal,
+  ClassEditor,
   ResourcesTab,
   InventoryTab,
   SpellsTab,
   FeaturesTab,
   BackgroundTab,
   NotesTab,
+  formatClasses,
 } from './components';
 
 export default function CharacterPage() {
@@ -142,16 +144,14 @@ export default function CharacterPage() {
             <div className={`p-1.5 rounded ${isParty ? 'bg-emerald-900/50' : 'bg-red-900/50'}`}>
               {isParty ? <Icons.Shield /> : <Icons.Skull />}
             </div>
-            <div>
+            <div className="flex items-center gap-3">
               <input 
                 type="text" 
                 value={character.name || ''} 
                 onChange={(e) => updateField('name', e.target.value)}
                 className="bg-transparent text-lg font-bold focus:outline-none border-b border-transparent hover:border-stone-600 focus:border-amber-500" 
               />
-              <span className="text-xs text-stone-500 ml-2">
-                {character.class ? `${character.class} ${character.level}` : `CR ${character.cr}`}
-              </span>
+              <ClassEditor character={character} onUpdate={updateField} />
             </div>
           </div>
           <div className="flex items-center gap-2">

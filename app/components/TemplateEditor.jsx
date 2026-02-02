@@ -275,7 +275,7 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
                   </div>
                   <div className="flex items-center gap-2">
                     {(t.actions?.length > 0) && <span className="text-xs text-red-400">{t.actions.length} action{t.actions.length > 1 ? 's' : ''}</span>}
-                    <button onClick={(e) => { e.stopPropagation(); setEditingId(t.id); setEditForm({ ...t }); }} className="p-2 rounded bg-stone-700/50 hover:bg-stone-600/50"><Icons.Edit /></button>
+                    <button onClick={(e) => { e.stopPropagation(); setEditingId(t.id); setEditForm({ ...t }); }} className="p-2 rounded bg-stone-700/50 hover:bg-stone-600/50 cursor-pointer hover:text-amber-400 transition-colors"><Icons.Edit /></button>
                     {deleteConfirmId === t.id ? (
                       <>
                         <button onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(null); }} className="px-2 py-1 rounded bg-stone-700 hover:bg-stone-600 text-xs">Cancel</button>

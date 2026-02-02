@@ -99,7 +99,7 @@ export const ResourceTracker = ({ resources, onChange }) => {
               <button onClick={() => updateResource(i, 'current', resource.current - 1)} className="w-6 h-6 rounded bg-red-900/50 hover:bg-red-800/50 text-red-300 text-sm">-</button>
               <span className="font-mono text-sm w-16 text-center">{resource.current}/{resource.max}</span>
               <button onClick={() => updateResource(i, 'current', Math.min(resource.max, resource.current + 1))} className="w-6 h-6 rounded bg-emerald-900/50 hover:bg-emerald-800/50 text-emerald-300 text-sm">+</button>
-              <button onClick={() => startEditing(i)} className="w-6 h-6 rounded bg-stone-700/50 hover:bg-stone-600/50 text-stone-400"><Icons.Edit /></button>
+              <button onClick={() => startEditing(i)} className="w-6 h-6 rounded bg-stone-700/50 hover:bg-stone-600/50 text-stone-400 cursor-pointer hover:text-amber-400 transition-colors"><Icons.Edit /></button>
             </div>
           )}
         </div>
@@ -188,7 +188,7 @@ export const ItemTracker = ({ items = [], onChange }) => {
                 )}
                 <span className="flex-1 text-sm font-medium">{item.name}</span>
                 {item.quantity > 1 && <span className="text-xs text-stone-400">x{item.quantity}</span>}
-                <button onClick={(e) => { e.stopPropagation(); setEditingIndex(i); }} className="w-6 h-6 rounded bg-stone-700/50 hover:bg-stone-600/50 text-stone-400"><Icons.Edit /></button>
+                <button onClick={(e) => { e.stopPropagation(); setEditingIndex(i); }} className="w-6 h-6 rounded bg-stone-700/50 hover:bg-stone-600/50 text-stone-400 cursor-pointer hover:text-amber-400 transition-colors"><Icons.Edit /></button>
               </div>
               {expandedItems[i] && item.description && (
                 <div className="px-3 pb-2 text-xs text-stone-400 border-t border-stone-700/50 pt-2">
@@ -268,7 +268,7 @@ export const ActionTracker = ({ actions = [], onChange }) => {
                   </span>
                 )}
                 <span className="flex-1 text-sm font-medium text-red-300">{action.name}</span>
-                <button onClick={(e) => { e.stopPropagation(); setEditingIndex(i); }} className="w-6 h-6 rounded bg-stone-700/50 hover:bg-stone-600/50 text-stone-400"><Icons.Edit /></button>
+                <button onClick={(e) => { e.stopPropagation(); setEditingIndex(i); }} className="w-6 h-6 rounded bg-stone-700/50 hover:bg-stone-600/50 text-stone-400 cursor-pointer hover:text-amber-400 transition-colors"><Icons.Edit /></button>
               </div>
               {expandedActions[i] && action.description && (
                 <div className="px-3 pb-2 text-xs text-stone-400 border-t border-stone-700/50 pt-2 whitespace-pre-wrap">

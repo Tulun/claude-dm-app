@@ -1,4 +1,4 @@
-export { SKILLS, STATS, ADVANTAGE_OPTIONS, getMod, formatMod, getProfBonus, getSkillBonus, getSaveBonus, getSpellDC, getSpellAttack } from './constants';
+export { SKILLS, STATS, CLASSES, ADVANTAGE_OPTIONS, getMod, formatMod, getProfBonus, getSkillBonus, getSaveBonus, getSpellDC, getSpellAttack, getTotalLevel, formatClasses } from './constants';
 export { default as StatsBar } from './StatsBar';
 export { default as SavingThrows } from './SavingThrows';
 export { default as SavingThrowsModal } from './SavingThrowsModal';
@@ -6,4 +6,5 @@ export { default as Senses } from './Senses';
 export { default as SkillsList } from './SkillsList';
 export { default as ProficiencyModal } from './ProficiencyModal';
 export { default as ResourceRow } from './ResourceRow';
+export { default as ClassEditor } from './ClassEditor';
 export { ResourcesTab, InventoryTab, SpellsTab, FeaturesTab, BackgroundTab, NotesTab } from './TabContent';

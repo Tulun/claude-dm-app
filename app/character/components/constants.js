@@ -21,6 +21,11 @@ export const SKILLS = [
 
 export const STATS = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 
+export const CLASSES = [
+  'Artificer', 'Barbarian', 'Bard', 'Cleric', 'Druid', 'Fighter',
+  'Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Warlock', 'Wizard',
+];
+
 export const ADVANTAGE_OPTIONS = [
   { group: 'Saving Throw Advantages', options: [
     'Adv. on STR saves', 'Adv. on DEX saves', 'Adv. on CON saves',
@@ -46,8 +51,28 @@ export const ADVANTAGE_OPTIONS = [
 export const getMod = (score) => Math.floor(((parseInt(score) || 10) - 10) / 2);
 export const formatMod = (mod) => mod >= 0 ? `+${mod}` : `${mod}`;
 
+// Get total level from classes array or legacy level field
+export const getTotalLevel = (character) => {
+  if (character?.classes?.length > 0) {
+    return character.classes.reduce((sum, c) => sum + (parseInt(c.level) || 0), 0);
+  }
+  return parseInt(character?.level) || 0;
+};
+
+// Format class string for display (e.g., "Fighter 5 / Wizard 3")
+export const formatClasses = (character) => {
+  if (character?.classes?.length > 0) {
+    return character.classes.map(c => `${c.name} ${c.level}`).join(' / ');
+  }
+  if (character?.class) {
+    return `${character.class} ${character.level || 1}`;
+  }
+  return character?.cr ? `CR ${character.cr}` : '';
+};
+
 export const getProfBonus = (character) => {
-  if (character?.level) return Math.floor((parseInt(character.level) - 1) / 4) + 2;
+  const totalLevel = getTotalLevel(character);
+  if (totalLevel > 0) return Math.floor((totalLevel - 1) / 4) + 2;
   if (character?.cr) {
     const cr = character.cr;
     if (['0', '1/8', '1/4', '1/2'].includes(cr)) return 2;
