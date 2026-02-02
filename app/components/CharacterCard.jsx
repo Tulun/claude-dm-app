@@ -69,7 +69,15 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
           <div className={`p-2 rounded-lg ${isEnemy ? 'bg-red-900/50' : 'bg-emerald-900/50'}`}>{isEnemy ? <Icons.Skull /> : <Icons.Shield />}</div>
           <div>
             <h3 className={`font-bold ${isDead ? 'line-through text-stone-500' : ''}`}>{character.name}</h3>
-            <p className="text-xs text-stone-400">{character.class ? `${character.class} ${character.level}` : `CR ${character.cr}`}</p>
+            <p className="text-xs text-stone-400">
+              {character.classes?.length > 0 
+                ? character.classes.map(c => `${c.name} ${c.level}`).join(' / ')
+                : character.class 
+                  ? `${character.class} ${character.level || 1}` 
+                  : character.cr 
+                    ? `CR ${character.cr}`
+                    : ''}
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -190,38 +198,27 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
             </div>
           )}
 
-          {/* Spellcasting section */}
-          <div className="flex items-center gap-3 text-sm">
-            <div>
-              <label className="text-xs text-stone-400">Spellcasting Stat</label>
-              <select 
-                value={character.spellStat || ''} 
-                onChange={(e) => onUpdate({ ...character, spellStat: e.target.value || null })}
-                className="block w-full bg-stone-900/50 border border-stone-700 rounded px-2 py-1 text-sm focus:outline-none focus:border-purple-500"
-              >
-                <option value="">None</option>
-                <option value="int">Intelligence</option>
-                <option value="wis">Wisdom</option>
-                <option value="cha">Charisma</option>
-              </select>
+          {/* Spellcasting section - display only */}
+          {spellDC && (
+            <div className="flex items-center gap-4 text-sm bg-purple-900/20 rounded-lg p-3">
+              <div className="text-center">
+                <label className="text-xs text-stone-400">Spellcasting</label>
+                <div className="font-mono text-purple-400 text-sm uppercase">{character.spellStat}</div>
+              </div>
+              <div className="text-center">
+                <label className="text-xs text-stone-400">Spell DC</label>
+                <div className="font-mono text-purple-400 text-lg">{spellDC}</div>
+              </div>
+              <div className="text-center">
+                <label className="text-xs text-stone-400">Spell Atk</label>
+                <div className="font-mono text-purple-400 text-lg">{spellAttack}</div>
+              </div>
+              <div className="text-center">
+                <label className="text-xs text-stone-400">Prof</label>
+                <div className="font-mono text-stone-400 text-lg">+{getProfBonus()}</div>
+              </div>
             </div>
-            {spellDC && (
-              <>
-                <div className="text-center">
-                  <label className="text-xs text-stone-400">Spell DC</label>
-                  <div className="font-mono text-purple-400 text-lg">{spellDC}</div>
-                </div>
-                <div className="text-center">
-                  <label className="text-xs text-stone-400">Spell Atk</label>
-                  <div className="font-mono text-purple-400 text-lg">{spellAttack}</div>
-                </div>
-                <div className="text-center">
-                  <label className="text-xs text-stone-400">Prof</label>
-                  <div className="font-mono text-stone-400 text-lg">+{getProfBonus()}</div>
-                </div>
-              </>
-            )}
-          </div>
+          )}
           <div><label className="text-xs text-stone-400">Notes</label><EditableField value={character.notes} onChange={(v) => onUpdate({ ...character, notes: v })} className="block w-full text-sm" placeholder="Click to add notes..." /></div>
           
           {/* Resources with +/- controls */}
