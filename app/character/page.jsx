@@ -6,6 +6,7 @@ import Icons from '../components/Icons';
 import {
   StatsBar,
   SavingThrows,
+  SavingThrowsModal,
   Senses,
   SkillsList,
   ProficiencyModal,
@@ -29,6 +30,7 @@ export default function CharacterPage() {
   const [hasChanges, setHasChanges] = useState(false);
   const [activeTab, setActiveTab] = useState('resources');
   const [showProfModal, setShowProfModal] = useState(false);
+  const [showSavesModal, setShowSavesModal] = useState(false);
 
   // Load character on mount
   useEffect(() => {
@@ -110,12 +112,21 @@ export default function CharacterPage() {
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100">
-      {/* Proficiency Modal */}
+      {/* Proficiency Modal (Skills only) */}
       {showProfModal && (
         <ProficiencyModal 
           character={character} 
           onUpdate={updateField} 
           onClose={() => setShowProfModal(false)} 
+        />
+      )}
+
+      {/* Saving Throws Modal */}
+      {showSavesModal && (
+        <SavingThrowsModal 
+          character={character} 
+          onUpdate={updateField} 
+          onClose={() => setShowSavesModal(false)} 
         />
       )}
 
@@ -157,7 +168,7 @@ export default function CharacterPage() {
         <div className="grid grid-cols-12 gap-4">
           {/* Left Column - Saves & Senses */}
           <div className="col-span-2 space-y-3">
-            <SavingThrows character={character} />
+            <SavingThrows character={character} onEditClick={() => setShowSavesModal(true)} />
             <Senses character={character} />
             
             {/* Advantages (if any) */}

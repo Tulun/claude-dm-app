@@ -40,7 +40,8 @@
     },
     "saveProficiencies": {
       "str": 0,
-      "con": 0
+      "con": 0,
+      "dex": 0
     },
     "items": [
       {
@@ -132,7 +133,10 @@
         "description": "stabbs"
       }
     ],
-    "str": 9
+    "str": 9,
+    "advantages": [
+      "Adv. vs Poisoned"
+    ]
   },
   {
     "id": "party-3",
