@@ -263,64 +263,170 @@ export default function CharacterPage() {
       {/* Proficiency Modal */}
       {showProfModal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={() => setShowProfModal(false)}>
-          <div className="bg-stone-900 border border-stone-700 rounded-xl max-w-2xl w-full max-h-[80vh] overflow-auto m-4" onClick={e => e.stopPropagation()}>
-            <div className="p-4 border-b border-stone-700 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-amber-400">Proficiencies & Expertise</h2>
+          <div className="bg-stone-900 border border-stone-700 rounded-xl max-w-3xl w-full max-h-[85vh] overflow-auto m-4" onClick={e => e.stopPropagation()}>
+            <div className="p-4 border-b border-stone-700 flex items-center justify-between sticky top-0 bg-stone-900 z-10">
+              <h2 className="text-lg font-bold text-amber-400">Proficiencies, Skills & Advantages</h2>
               <button onClick={() => setShowProfModal(false)} className="text-stone-400 hover:text-white text-xl">×</button>
             </div>
-            <div className="p-4 grid grid-cols-2 gap-6">
+            
+            <div className="p-4 space-y-6">
               {/* Saving Throws */}
               <div>
-                <h3 className="text-sm font-bold text-stone-400 mb-3">Saving Throws</h3>
-                <div className="space-y-2">
+                <h3 className="text-sm font-bold text-stone-400 mb-3 uppercase tracking-wide">Saving Throws</h3>
+                <div className="grid grid-cols-6 gap-2">
                   {['str', 'dex', 'con', 'int', 'wis', 'cha'].map(stat => {
                     const prof = character.saveProficiencies?.[stat] || 0;
                     return (
-                      <div key={stat} className="flex items-center justify-between bg-stone-800 rounded px-3 py-2">
-                        <span className="uppercase font-medium">{stat}</span>
-                        <span className="text-stone-400 font-mono">{formatMod(getSaveBonus(stat))}</span>
-                        <div className="flex gap-1">
-                          <button onClick={() => setSaveProf(stat, 0)}
-                            className={`px-2 py-1 rounded text-xs ${prof === 0 ? 'bg-stone-600' : 'bg-stone-700 hover:bg-stone-600'}`}>None</button>
-                          <button onClick={() => setSaveProf(stat, 1)}
-                            className={`px-2 py-1 rounded text-xs ${prof === 1 ? 'bg-emerald-700' : 'bg-stone-700 hover:bg-stone-600'}`}>Prof</button>
-                        </div>
+                      <div 
+                        key={stat} 
+                        onClick={() => setSaveProf(stat, prof ? 0 : 1)}
+                        className={`rounded p-3 cursor-pointer text-center transition-colors ${prof ? 'bg-emerald-900/40 border border-emerald-700/50' : 'bg-stone-800 hover:bg-stone-700'}`}
+                      >
+                        <div className="text-xs text-stone-500 uppercase">{stat}</div>
+                        <div className={`text-lg font-bold ${prof ? 'text-emerald-400' : ''}`}>{formatMod(getSaveBonus(stat))}</div>
+                        <div className="text-xs text-stone-500">{prof ? '● Prof' : '○'}</div>
                       </div>
                     );
                   })}
                 </div>
               </div>
               
-              {/* Skills */}
+              {/* Skills - D&D Beyond Style */}
               <div>
-                <h3 className="text-sm font-bold text-stone-400 mb-3">Skills</h3>
-                <div className="space-y-1 max-h-[400px] overflow-y-auto">
-                  {SKILLS.map(skill => {
-                    const prof = character.skillProficiencies?.[skill.name] || 0;
-                    return (
-                      <div key={skill.name} className="flex items-center justify-between bg-stone-800 rounded px-3 py-1.5">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm">{skill.name}</span>
-                          <span className="text-xs text-stone-500 uppercase">({skill.stat})</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-stone-400 font-mono text-sm w-8 text-right">{formatMod(getSkillBonus(skill))}</span>
-                          <div className="flex gap-1">
-                            <button onClick={() => setSkillProf(skill.name, 0)}
-                              className={`px-2 py-0.5 rounded text-xs ${prof === 0 ? 'bg-stone-600' : 'bg-stone-700 hover:bg-stone-600'}`}>○</button>
-                            <button onClick={() => setSkillProf(skill.name, 1)}
-                              className={`px-2 py-0.5 rounded text-xs ${prof === 1 ? 'bg-emerald-700' : 'bg-stone-700 hover:bg-stone-600'}`}>●</button>
-                            <button onClick={() => setSkillProf(skill.name, 2)}
-                              className={`px-2 py-0.5 rounded text-xs ${prof === 2 ? 'bg-amber-700' : 'bg-stone-700 hover:bg-stone-600'}`}>◆</button>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-bold text-stone-400 uppercase tracking-wide">Skills</h3>
+                  <div className="text-xs text-stone-500">Click row to cycle: ○ → ● → ◆</div>
+                </div>
+                <div className="bg-stone-800 rounded-lg overflow-hidden">
+                  {/* Header */}
+                  <div className="grid grid-cols-12 gap-2 px-3 py-2 text-xs text-stone-500 uppercase border-b border-stone-700">
+                    <div className="col-span-1">Prof</div>
+                    <div className="col-span-2">Mod</div>
+                    <div className="col-span-7">Skill</div>
+                    <div className="col-span-2 text-right">Bonus</div>
+                  </div>
+                  {/* Skill Rows */}
+                  <div className="divide-y divide-stone-700/50">
+                    {SKILLS.map(skill => {
+                      const prof = character.skillProficiencies?.[skill.name] || 0;
+                      const bonus = getSkillBonus(skill);
+                      return (
+                        <div 
+                          key={skill.name} 
+                          onClick={() => setSkillProf(skill.name, (prof + 1) % 3)}
+                          className={`grid grid-cols-12 gap-2 px-3 py-2 cursor-pointer transition-colors hover:bg-stone-700/50 ${prof > 0 ? 'bg-stone-750' : ''}`}
+                        >
+                          <div className="col-span-1">
+                            <span className={prof === 2 ? 'text-amber-400' : prof === 1 ? 'text-emerald-400' : 'text-stone-600'}>
+                              {prof === 2 ? '●' : prof === 1 ? '●' : '○'}
+                            </span>
+                          </div>
+                          <div className="col-span-2 text-stone-500 uppercase text-sm font-medium">{skill.stat}</div>
+                          <div className={`col-span-7 ${prof > 0 ? 'font-medium' : 'text-stone-300'}`}>{skill.name}</div>
+                          <div className={`col-span-2 text-right font-mono ${prof === 2 ? 'text-amber-400 font-bold' : prof === 1 ? 'text-emerald-400 font-bold' : 'text-stone-400'}`}>
+                            <span className="inline-block border border-stone-600 rounded px-2 py-0.5 min-w-[3rem]">
+                              {bonus >= 0 ? '+' : ''}{bonus}
+                            </span>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Advantages & Resistances */}
+              <div>
+                <h3 className="text-sm font-bold text-stone-400 mb-3 uppercase tracking-wide">Advantages & Resistances</h3>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {(character.advantages || []).map((adv, i) => (
+                    <span 
+                      key={i} 
+                      className="bg-blue-900/40 text-blue-300 rounded px-3 py-1.5 text-sm flex items-center gap-2"
+                    >
+                      {adv}
+                      <button 
+                        onClick={() => updateField('advantages', character.advantages.filter((_, idx) => idx !== i))}
+                        className="text-blue-400 hover:text-blue-200"
+                      >×</button>
+                    </span>
+                  ))}
+                  {(character.advantages || []).length === 0 && (
+                    <span className="text-sm text-stone-500 italic">None added yet</span>
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <select 
+                    className="flex-1 bg-stone-800 border border-stone-600 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        const current = character.advantages || [];
+                        if (!current.includes(e.target.value)) {
+                          updateField('advantages', [...current, e.target.value]);
+                        }
+                        e.target.value = '';
+                      }
+                    }}
+                    defaultValue=""
+                  >
+                    <option value="">Add from list...</option>
+                    <optgroup label="Saving Throw Advantages">
+                      <option value="Adv. on STR saves">Adv. on STR saves</option>
+                      <option value="Adv. on DEX saves">Adv. on DEX saves</option>
+                      <option value="Adv. on CON saves">Adv. on CON saves</option>
+                      <option value="Adv. on INT saves">Adv. on INT saves</option>
+                      <option value="Adv. on WIS saves">Adv. on WIS saves</option>
+                      <option value="Adv. on CHA saves">Adv. on CHA saves</option>
+                    </optgroup>
+                    <optgroup label="Condition Advantages">
+                      <option value="Adv. vs Charmed">Adv. vs Charmed</option>
+                      <option value="Adv. vs Frightened">Adv. vs Frightened</option>
+                      <option value="Adv. vs Paralyzed">Adv. vs Paralyzed</option>
+                      <option value="Adv. vs Poisoned">Adv. vs Poisoned</option>
+                      <option value="Adv. vs Stunned">Adv. vs Stunned</option>
+                      <option value="Adv. vs Sleep">Adv. vs Sleep</option>
+                      <option value="Immune to Charmed">Immune to Charmed</option>
+                      <option value="Immune to Frightened">Immune to Frightened</option>
+                      <option value="Immune to Sleep">Immune to Sleep</option>
+                    </optgroup>
+                    <optgroup label="Damage Resistances">
+                      <option value="Resist Poison">Resist Poison</option>
+                      <option value="Resist Fire">Resist Fire</option>
+                      <option value="Resist Cold">Resist Cold</option>
+                      <option value="Resist Lightning">Resist Lightning</option>
+                      <option value="Resist Necrotic">Resist Necrotic</option>
+                      <option value="Resist Radiant">Resist Radiant</option>
+                      <option value="Resist Bludgeoning">Resist Bludgeoning</option>
+                      <option value="Resist Piercing">Resist Piercing</option>
+                      <option value="Resist Slashing">Resist Slashing</option>
+                    </optgroup>
+                    <optgroup label="Other">
+                      <option value="Adv. vs Magic">Adv. vs Magic</option>
+                      <option value="Adv. on Concentration">Adv. on Concentration</option>
+                      <option value="Adv. on Death Saves">Adv. on Death Saves</option>
+                      <option value="Darkvision 60ft">Darkvision 60ft</option>
+                      <option value="Darkvision 120ft">Darkvision 120ft</option>
+                    </optgroup>
+                  </select>
+                  <input 
+                    type="text" 
+                    placeholder="Or type custom..."
+                    className="flex-1 bg-stone-800 border border-stone-600 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && e.target.value.trim()) {
+                        const current = character.advantages || [];
+                        if (!current.includes(e.target.value.trim())) {
+                          updateField('advantages', [...current, e.target.value.trim()]);
+                        }
+                        e.target.value = '';
+                      }
+                    }}
+                  />
                 </div>
               </div>
             </div>
-            <div className="p-4 border-t border-stone-700 text-xs text-stone-500">
+
+            <div className="p-4 border-t border-stone-700 text-xs text-stone-500 sticky bottom-0 bg-stone-900">
               ○ = No proficiency | ● = Proficient (+{profBonus}) | ◆ = Expertise (+{profBonus * 2})
             </div>
           </div>
@@ -350,92 +456,174 @@ export default function CharacterPage() {
         </div>
       </header>
 
-      <div className="max-w-[1800px] mx-auto p-4">
-        <div className="grid grid-cols-12 gap-4">
-          
-          {/* Left Sidebar - Stats & Skills (3 cols) */}
-          <div className="col-span-3 space-y-3">
-            {/* HP */}
+      <div className="max-w-[1800px] mx-auto p-4 space-y-4">
+        
+        {/* Top Stats Bar - Horizontal */}
+        <div className="bg-stone-900 rounded-lg p-4">
+          <div className="flex items-center gap-6">
+            {/* HP (if party) */}
             {isParty && (
-              <div className="bg-stone-900 rounded-lg p-3">
+              <div className="w-48">
                 <HpBar current={character.currentHp} max={character.maxHp} onChange={(c, m) => { updateField('currentHp', c); updateField('maxHp', m); }} />
               </div>
             )}
             
-            {/* Core Stats Row */}
-            <div className="bg-stone-900 rounded-lg p-3 grid grid-cols-4 gap-2 text-center">
-              <div className="bg-stone-800 rounded p-2">
-                <div className="text-xs text-stone-500">AC</div>
+            {/* AC, Speed, Init */}
+            <div className="flex gap-2">
+              <div className="bg-stone-800 rounded p-2 text-center w-16">
+                <div className="text-[10px] text-stone-500">AC</div>
                 <input type="text" value={character.ac || ''} onChange={(e) => updateField('ac', parseInt(e.target.value) || 10)}
                   className="w-full bg-transparent text-xl font-bold text-center focus:outline-none" />
               </div>
-              <div className="bg-stone-800 rounded p-2">
-                <div className="text-xs text-stone-500">Speed</div>
+              <div className="bg-stone-800 rounded p-2 text-center w-16">
+                <div className="text-[10px] text-stone-500">Speed</div>
                 <input type="text" value={character.speed || ''} onChange={(e) => updateField('speed', parseInt(e.target.value) || 30)}
                   className="w-full bg-transparent text-xl font-bold text-center focus:outline-none" />
               </div>
-              <div className="bg-amber-900/30 rounded p-2">
-                <div className="text-xs text-stone-500">Prof</div>
-                <div className="text-xl font-bold text-amber-400">+{profBonus}</div>
+              <div className="bg-stone-800 rounded p-2 text-center w-16">
+                <div className="text-[10px] text-stone-500">Init</div>
+                <div className="text-xl font-bold">{formatMod(getMod(character.dex))}</div>
               </div>
-              {spellDC ? (
-                <div className="bg-purple-900/30 rounded p-2">
-                  <div className="text-xs text-stone-500">DC</div>
-                  <div className="text-xl font-bold text-purple-400">{spellDC}</div>
-                </div>
-              ) : (
-                <div className="bg-stone-800 rounded p-2">
-                  <div className="text-xs text-stone-500">Init</div>
-                  <div className="text-xl font-bold">{formatMod(getMod(character.dex))}</div>
-                </div>
-              )}
             </div>
 
-            {/* Ability Scores + Skills Side by Side */}
-            <div className="bg-stone-900 rounded-lg p-3">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-stone-500">Abilities & Skills</span>
+            {/* Divider */}
+            <div className="h-12 w-px bg-stone-700"></div>
+            
+            {/* Ability Scores - Horizontal */}
+            <div className="flex gap-2">
+              {['str', 'dex', 'con', 'int', 'wis', 'cha'].map(stat => {
+                const statMod = getMod(character[stat]);
+                return (
+                  <div key={stat} className="bg-stone-800 rounded p-2 text-center w-16">
+                    <div className="text-[10px] text-stone-500 uppercase">{stat}</div>
+                    <input type="text" value={character[stat] || 10} onChange={(e) => updateField(stat, parseInt(e.target.value) || 10)}
+                      className="w-full bg-transparent text-xl font-bold text-center focus:outline-none" />
+                    <div className="text-sm text-stone-400 font-mono">{formatMod(statMod)}</div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Divider */}
+            <div className="h-12 w-px bg-stone-700"></div>
+
+            {/* Prof Bonus & Spellcasting */}
+            <div className="flex gap-2">
+              <div className="bg-amber-900/30 rounded p-2 text-center w-16">
+                <div className="text-[10px] text-stone-500">Prof</div>
+                <div className="text-xl font-bold text-amber-400">+{profBonus}</div>
+              </div>
+              {spellDC && (
+                <>
+                  <div className="bg-purple-900/30 rounded p-2 text-center w-16">
+                    <div className="text-[10px] text-stone-500">Spell DC</div>
+                    <div className="text-xl font-bold text-purple-400">{spellDC}</div>
+                  </div>
+                  <div className="bg-purple-900/30 rounded p-2 text-center w-16">
+                    <div className="text-[10px] text-stone-500">Spell Atk</div>
+                    <div className="text-xl font-bold text-purple-400">{formatMod(spellAttack)}</div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-12 gap-4">
+          
+          {/* Left Column - Saves & Senses (2 cols) */}
+          <div className="col-span-2 space-y-3">
+            {/* Saving Throws Box */}
+            <div className="bg-stone-900 rounded-lg overflow-hidden">
+              <div className="p-2 border-b border-stone-700 text-center">
+                <span className="text-xs text-stone-500 uppercase tracking-wide">Saving Throws</span>
+              </div>
+              <div className="p-2 space-y-1">
+                {['str', 'dex', 'con', 'int', 'wis', 'cha'].map(stat => {
+                  const saveProf = character.saveProficiencies?.[stat] || 0;
+                  return (
+                    <div key={stat} className="flex items-center px-2 py-1 rounded hover:bg-stone-800/50">
+                      <span className={`w-4 ${saveProf ? 'text-emerald-400' : 'text-stone-600'}`}>{saveProf ? '●' : '○'}</span>
+                      <span className="text-sm text-stone-400 uppercase flex-1">{stat}</span>
+                      <span className={`font-mono text-sm ${saveProf ? 'text-emerald-400' : 'text-stone-400'}`}>{formatMod(getSaveBonus(stat))}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Passive Senses */}
+            <div className="bg-stone-900 rounded-lg overflow-hidden">
+              <div className="p-2 border-b border-stone-700 text-center">
+                <span className="text-xs text-stone-500 uppercase tracking-wide">Senses</span>
+              </div>
+              <div className="p-2 space-y-1">
+                <div className="flex items-center px-2 py-1 bg-stone-800 rounded">
+                  <span className="text-lg font-bold w-8">{10 + getSkillBonus(SKILLS.find(s => s.name === 'Perception'))}</span>
+                  <span className="text-xs text-stone-400 uppercase">Passive Perception</span>
+                </div>
+                <div className="flex items-center px-2 py-1 bg-stone-800 rounded">
+                  <span className="text-lg font-bold w-8">{10 + getSkillBonus(SKILLS.find(s => s.name === 'Investigation'))}</span>
+                  <span className="text-xs text-stone-400 uppercase">Passive Investigation</span>
+                </div>
+                <div className="flex items-center px-2 py-1 bg-stone-800 rounded">
+                  <span className="text-lg font-bold w-8">{10 + getSkillBonus(SKILLS.find(s => s.name === 'Insight'))}</span>
+                  <span className="text-xs text-stone-400 uppercase">Passive Insight</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Advantages (if any) */}
+            {(character.advantages || []).length > 0 && (
+              <div className="bg-stone-900 rounded-lg overflow-hidden">
+                <div className="p-2 border-b border-stone-700 text-center">
+                  <span className="text-xs text-stone-500 uppercase tracking-wide">Advantages</span>
+                </div>
+                <div className="p-2 flex flex-wrap gap-1">
+                  {character.advantages.map((adv, i) => (
+                    <span key={i} className="bg-blue-900/40 text-blue-300 rounded px-2 py-0.5 text-xs">{adv}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Skills Column (2 cols) */}
+          <div className="col-span-2">
+            <div className="bg-stone-900 rounded-lg overflow-hidden">
+              <div className="p-2 border-b border-stone-700 flex items-center justify-between">
+                <span className="text-xs text-stone-500 uppercase tracking-wide">Skills</span>
                 <button onClick={() => setShowProfModal(true)} className="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1">
-                  <Icons.Edit /> Edit Proficiencies
+                  <Icons.Edit />
                 </button>
               </div>
               
-              <div className="space-y-2">
-                {['str', 'dex', 'con', 'int', 'wis', 'cha'].map(stat => {
-                  const relatedSkills = SKILLS.filter(s => s.stat === stat);
-                  const saveProf = character.saveProficiencies?.[stat] || 0;
+              {/* Skills Header */}
+              <div className="grid grid-cols-12 gap-1 px-2 py-1 text-[10px] text-stone-500 uppercase border-b border-stone-800">
+                <div className="col-span-1">P</div>
+                <div className="col-span-2">Mod</div>
+                <div className="col-span-7">Skill</div>
+                <div className="col-span-2 text-right">+/-</div>
+              </div>
+              
+              {/* Skills List */}
+              <div className="divide-y divide-stone-800/50">
+                {SKILLS.map(skill => {
+                  const prof = character.skillProficiencies?.[skill.name] || 0;
+                  const bonus = getSkillBonus(skill);
                   return (
-                    <div key={stat} className="bg-stone-800 rounded p-2">
-                      <div className="flex items-center gap-2 mb-1">
-                        <div className="w-16">
-                          <div className="text-[10px] text-stone-500 uppercase">{stat}</div>
-                          <div className="flex items-baseline gap-1">
-                            <input type="text" value={character[stat] || 10} onChange={(e) => updateField(stat, parseInt(e.target.value) || 10)}
-                              className="w-8 bg-transparent text-lg font-bold focus:outline-none" />
-                            <span className="text-sm text-stone-400">{formatMod(getMod(character[stat]))}</span>
-                          </div>
-                        </div>
-                        <div className="flex-1 border-l border-stone-700 pl-2">
-                          <div className="flex items-center gap-1 text-xs mb-1">
-                            <span className={saveProf ? 'text-emerald-400' : 'text-stone-600'}>{saveProf ? '●' : '○'}</span>
-                            <span className="text-stone-500">Save</span>
-                            <span className={`font-mono ml-auto ${saveProf ? 'text-emerald-400' : ''}`}>{formatMod(getSaveBonus(stat))}</span>
-                          </div>
-                          {relatedSkills.map(skill => {
-                            const prof = character.skillProficiencies?.[skill.name] || 0;
-                            return (
-                              <div key={skill.name} className="flex items-center gap-1 text-xs">
-                                <span className={prof === 2 ? 'text-amber-400' : prof === 1 ? 'text-emerald-400' : 'text-stone-600'}>
-                                  {prof === 2 ? '◆' : prof === 1 ? '●' : '○'}
-                                </span>
-                                <span className="text-stone-300 truncate">{skill.name}</span>
-                                <span className={`font-mono ml-auto ${prof === 2 ? 'text-amber-400' : prof === 1 ? 'text-emerald-400' : ''}`}>
-                                  {formatMod(getSkillBonus(skill))}
-                                </span>
-                              </div>
-                            );
-                          })}
-                        </div>
+                    <div key={skill.name} className="grid grid-cols-12 gap-1 px-2 py-1.5 hover:bg-stone-800/30 items-center">
+                      <div className="col-span-1">
+                        <span className={prof === 2 ? 'text-amber-400' : prof === 1 ? 'text-emerald-400' : 'text-stone-600'}>
+                          {prof > 0 ? '●' : '○'}
+                        </span>
+                      </div>
+                      <div className="col-span-2 text-[10px] text-stone-500 uppercase font-medium">{skill.stat}</div>
+                      <div className={`col-span-7 text-sm truncate ${prof > 0 ? 'text-stone-200' : 'text-stone-400'}`}>{skill.name}</div>
+                      <div className={`col-span-2 text-right font-mono text-sm ${prof === 2 ? 'text-amber-400' : prof === 1 ? 'text-emerald-400' : 'text-stone-400'}`}>
+                        <span className="inline-block border border-stone-700 rounded px-1.5 min-w-[2rem] text-center">
+                          {bonus >= 0 ? '+' : ''}{bonus}
+                        </span>
                       </div>
                     </div>
                   );
@@ -444,8 +632,8 @@ export default function CharacterPage() {
             </div>
           </div>
 
-          {/* Main Content Area (9 cols) */}
-          <div className="col-span-9">
+          {/* Main Content Area (8 cols) */}
+          <div className="col-span-8">
             {/* Tab Navigation */}
             <div className="flex gap-1 mb-3 border-b border-stone-800 pb-2">
               {['resources', 'inventory', 'spells', 'features', 'background', 'notes'].map(tab => (

@@ -39,7 +39,8 @@
       "Animal Handling": 0
     },
     "saveProficiencies": {
-      "str": 0
+      "str": 0,
+      "con": 0
     },
     "items": [
       {

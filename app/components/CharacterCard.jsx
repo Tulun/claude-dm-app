@@ -140,6 +140,56 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               </div>
             ))}
           </div>
+          
+          {/* Saving Throws */}
+          <div>
+            <label className="text-xs text-stone-400 mb-2 block">Saving Throws (click to toggle proficiency)</label>
+            <div className="grid grid-cols-6 gap-2 text-center">
+              {[
+                { label: 'STR', key: 'str' },
+                { label: 'DEX', key: 'dex' },
+                { label: 'CON', key: 'con' },
+                { label: 'INT', key: 'int' },
+                { label: 'WIS', key: 'wis' },
+                { label: 'CHA', key: 'cha' },
+              ].map(stat => {
+                const saveProfs = character.saveProficiencies || {};
+                const isProf = saveProfs[stat.key] || 0;
+                const mod = getModNum(character[stat.key]);
+                const bonus = mod + (isProf ? getProfBonus() : 0);
+                const bonusStr = bonus >= 0 ? `+${bonus}` : `${bonus}`;
+                return (
+                  <div 
+                    key={stat.key} 
+                    onClick={() => onUpdate({ ...character, saveProficiencies: { ...saveProfs, [stat.key]: isProf ? 0 : 1 } })}
+                    className={`rounded p-2 cursor-pointer transition-colors ${isProf ? 'bg-emerald-900/40 border border-emerald-700/50' : 'bg-stone-800/50 hover:bg-stone-700/50'}`}
+                  >
+                    <div className="text-[10px] text-stone-500">{stat.label}</div>
+                    <div className={`text-sm font-bold ${isProf ? 'text-emerald-400' : ''}`}>{bonusStr}</div>
+                    <div className="text-[10px] text-stone-500">{isProf ? '● Prof' : '○'}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Advantages / Resistances - View Only */}
+          {(character.advantages || []).length > 0 && (
+            <div>
+              <label className="text-xs text-stone-400 mb-2 block">Advantages & Resistances</label>
+              <div className="flex flex-wrap gap-1">
+                {character.advantages.map((adv, i) => (
+                  <span 
+                    key={i} 
+                    className="bg-blue-900/40 text-blue-300 rounded px-2 py-1 text-xs"
+                  >
+                    {adv}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Spellcasting section */}
           <div className="flex items-center gap-3 text-sm">
             <div>
@@ -233,15 +283,44 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
             >
               <Icons.Edit /> Full Page
             </Link>
-            {showDeleteConfirm ? (
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-stone-400">Are you sure?</span>
-                <button onClick={() => setShowDeleteConfirm(false)} className="px-3 py-1 rounded text-sm bg-stone-700 hover:bg-stone-600">Cancel</button>
-                <button onClick={() => onRemove(character.id)} className="px-3 py-1 rounded text-sm bg-red-700 hover:bg-red-600 text-white">Yes, {isEnemy ? 'Kill' : 'Remove'}</button>
+            <button onClick={() => setShowDeleteConfirm(true)} className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-red-900/30 hover:bg-red-800/50 text-red-400">
+              <Icons.Trash />{isEnemy ? 'Kill' : 'Remove'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={() => setShowDeleteConfirm(false)}>
+          <div className="bg-stone-900 border border-stone-700 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center gap-3 mb-4">
+              <div className={`p-3 rounded-full ${isEnemy ? 'bg-red-900/50' : 'bg-emerald-900/50'}`}>
+                {isEnemy ? <Icons.Skull /> : <Icons.Shield />}
               </div>
-            ) : (
-              <button onClick={() => setShowDeleteConfirm(true)} className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-red-900/30 hover:bg-red-800/50 text-red-400"><Icons.Trash />{isEnemy ? 'Kill' : 'Remove'}</button>
-            )}
+              <div>
+                <h3 className="text-lg font-bold">{isEnemy ? 'Kill' : 'Remove'} {character.name}?</h3>
+                <p className="text-sm text-stone-400">
+                  {isEnemy 
+                    ? 'This will remove the enemy from combat.' 
+                    : 'This will remove the party member from your party.'}
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setShowDeleteConfirm(false)} 
+                className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600 text-sm"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => { onRemove(character.id); setShowDeleteConfirm(false); }} 
+                className="px-4 py-2 rounded-lg bg-red-700 hover:bg-red-600 text-white text-sm flex items-center gap-2"
+              >
+                <Icons.Trash /> Yes, {isEnemy ? 'Kill' : 'Remove'}
+              </button>
+            </div>
           </div>
         </div>
       )}
