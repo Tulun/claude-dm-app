@@ -5,26 +5,35 @@ import Link from 'next/link';
 import Icons from './Icons';
 import { EditableField, HpBar } from './ui';
 
-// Expandable inventory display with weapon stats
+// Expandable inventory display with weapon stats and armor
 const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
   const [expandedItem, setExpandedItem] = useState(null);
   
   // Mastery descriptions
   const MASTERY_DESC = {
-    'Cleave': 'Hit another creature within 5 ft',
+    'Cleave': 'Hit another creature within 5 ft (weapon dice only)',
     'Graze': 'Deal modifier damage on miss',
-    'Nick': 'Extra attack with light weapon',
-    'Push': 'Push target 10 ft away',
+    'Nick': 'Extra attack with light weapon (no mod to damage)',
+    'Push': 'Push Large or smaller target 10 ft away',
     'Sap': 'Target has disadvantage on next attack',
     'Slow': 'Reduce target speed by 10 ft',
-    'Topple': 'Target must save or fall prone',
+    'Topple': 'Target makes CON save or falls prone',
     'Vex': 'Gain advantage on next attack vs target',
+  };
+
+  // Armor type descriptions
+  const ARMOR_DESC = {
+    'Light': 'AC + full DEX modifier',
+    'Medium': 'AC + DEX modifier (max +2)',
+    'Heavy': 'AC only (no DEX)',
+    'Shield': '+2 AC bonus',
   };
   
   // Detect if item is a weapon and parse damage
   const parseWeapon = (item) => {
-    // Use explicit isWeapon flag, or fall back to detecting damage dice
-    if (!item.isWeapon && !item.damage && !item.description?.match(/\d+d\d+/)) return null;
+    // Use explicit itemType or legacy isWeapon flag
+    const isWeapon = item.itemType === 'weapon' || item.isWeapon;
+    if (!isWeapon && !item.damage && !item.description?.match(/\d+d\d+/)) return null;
     
     // Try to extract damage dice from item.damage or description
     const damageStr = item.damage || '';
@@ -32,15 +41,17 @@ const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
     const dice = damageStr || (descMatch ? descMatch[1] : null);
     
     // If marked as weapon but no dice, still show as weapon
-    if (!dice && !item.isWeapon) return null;
+    if (!dice && !isWeapon) return null;
+
+    // Check properties - handle both array and string formats
+    const props = Array.isArray(item.weaponProperties) 
+      ? item.weaponProperties.join(' ').toLowerCase()
+      : (item.properties || '').toLowerCase();
     
     // Determine stat modifier (default to STR, use DEX for finesse/ranged)
-    const isFinesse = item.properties?.toLowerCase()?.includes('finesse') || 
-                      item.description?.toLowerCase()?.includes('finesse');
-    const isRanged = item.properties?.toLowerCase()?.includes('range') || 
-                     item.properties?.toLowerCase()?.includes('ammunition') ||
-                     item.description?.toLowerCase()?.includes('ranged') ||
-                     item.type?.toLowerCase()?.includes('ranged');
+    const isFinesse = props.includes('finesse') || item.description?.toLowerCase()?.includes('finesse');
+    const isRanged = props.includes('range') || props.includes('ammunition') ||
+                     item.description?.toLowerCase()?.includes('ranged');
     
     let statMod = getModNum(character.str);
     let statName = 'STR';
@@ -49,7 +60,6 @@ const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
       statMod = getModNum(character.dex);
       statName = 'DEX';
     } else if (isFinesse) {
-      // Use higher of STR or DEX
       const strMod = getModNum(character.str);
       const dexMod = getModNum(character.dex);
       if (dexMod > strMod) {
@@ -64,12 +74,43 @@ const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
     return {
       dice: dice || '?',
       damageType: item.damageType || '',
+      properties: Array.isArray(item.weaponProperties) ? item.weaponProperties.join(', ') : item.properties,
       statMod,
       statName,
       profBonus,
       attackBonus,
       damageBonus: statMod,
       mastery: item.mastery || null
+    };
+  };
+
+  // Parse armor stats
+  const parseArmor = (item) => {
+    if (item.itemType !== 'armor') return null;
+    
+    const dexMod = getModNum(character.dex);
+    let ac = parseInt(item.baseAC) || 10;
+    let acCalc = `${item.baseAC || '?'}`;
+    
+    if (item.armorType === 'Light') {
+      ac += dexMod;
+      acCalc += ` + ${dexMod} DEX = ${ac}`;
+    } else if (item.armorType === 'Medium') {
+      const cappedDex = Math.min(2, dexMod);
+      ac += cappedDex;
+      acCalc += ` + ${cappedDex} DEX (max 2) = ${ac}`;
+    } else if (item.armorType === 'Shield') {
+      ac = 2;
+      acCalc = '+2 bonus';
+    }
+    // Heavy armor: no DEX bonus
+    
+    return {
+      ac,
+      acCalc,
+      type: item.armorType,
+      strRequired: item.strRequired,
+      stealthDisadv: item.stealthDisadv
     };
   };
   
@@ -79,26 +120,43 @@ const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
       <div className="space-y-1">
         {items.map((item, i) => {
           const weapon = parseWeapon(item);
+          const armor = parseArmor(item);
           const isExpanded = expandedItem === i;
-          const hasDetails = item.description || weapon || item.properties;
+          const hasDetails = item.description || weapon || armor;
           
           return (
-            <div key={i} className={`rounded overflow-hidden ${weapon ? 'bg-red-900/20 border border-red-900/30' : 'bg-stone-800/50'}`}>
+            <div key={i} className={`rounded overflow-hidden ${
+              weapon ? 'bg-red-900/20 border border-red-900/30' : 
+              armor ? 'bg-blue-900/20 border border-blue-900/30' :
+              'bg-stone-800/50'
+            }`}>
               <div 
                 className={`px-2 py-1.5 flex items-center justify-between text-xs ${hasDetails ? 'cursor-pointer hover:bg-stone-700/30' : ''}`}
                 onClick={() => hasDetails && setExpandedItem(isExpanded ? null : i)}
               >
                 <div className="flex items-center gap-2 flex-wrap">
                   {item.quantity > 1 && <span className="text-amber-400">{item.quantity}x</span>}
-                  <span className={weapon ? 'text-red-300 font-medium' : 'text-stone-300'}>{item.name}</span>
+                  <span className={weapon ? 'text-red-300 font-medium' : armor ? 'text-blue-300 font-medium' : 'text-stone-300'}>{item.name}</span>
+                  {/* Weapon stats badge */}
                   {weapon && weapon.dice !== '?' && (
                     <span className="text-red-400 font-mono text-[11px] bg-red-900/40 px-1.5 rounded">
                       +{weapon.attackBonus} | {weapon.dice}{weapon.damageBonus >= 0 ? '+' : ''}{weapon.damageBonus}
                     </span>
                   )}
                   {weapon?.mastery && (
-                    <span className="text-purple-400 text-[10px] bg-purple-900/40 px-1.5 rounded">
+                    <span className="text-purple-400 text-[10px] bg-purple-900/40 px-1.5 rounded" title={MASTERY_DESC[weapon.mastery]}>
                       {weapon.mastery}
+                    </span>
+                  )}
+                  {/* Armor stats badge */}
+                  {armor && (
+                    <span className="text-blue-400 font-mono text-[11px] bg-blue-900/40 px-1.5 rounded">
+                      AC {armor.ac}
+                    </span>
+                  )}
+                  {armor?.stealthDisadv && (
+                    <span className="text-orange-400 text-[10px] bg-orange-900/40 px-1.5 rounded" title="Disadvantage on Stealth">
+                      Stealth ⊘
                     </span>
                   )}
                 </div>
@@ -109,6 +167,7 @@ const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
               
               {isExpanded && (
                 <div className="px-2 py-2 border-t border-stone-700/50 bg-stone-900/50 space-y-1.5">
+                  {/* Weapon details */}
                   {weapon && (
                     <div className="text-xs text-stone-400 space-y-0.5">
                       <div className="flex flex-wrap gap-x-4 gap-y-0.5">
@@ -117,12 +176,23 @@ const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
                           <span>Damage: <span className="text-red-300 font-mono">{weapon.dice}{weapon.damageBonus >= 0 ? '+' : ''}{weapon.damageBonus}</span> {weapon.damageType && <span className="text-stone-500">{weapon.damageType}</span>}</span>
                         )}
                       </div>
-                      {item.properties && <div className="text-amber-400/80">Properties: {item.properties}</div>}
+                      {weapon.properties && <div className="text-amber-400/80">Properties: {weapon.properties}</div>}
                       {weapon.mastery && (
                         <div className="text-purple-400">
                           <span className="font-medium">{weapon.mastery}:</span> {MASTERY_DESC[weapon.mastery] || ''}
                         </div>
                       )}
+                    </div>
+                  )}
+                  {/* Armor details */}
+                  {armor && (
+                    <div className="text-xs text-stone-400 space-y-0.5">
+                      <div className="flex flex-wrap gap-x-4 gap-y-0.5">
+                        <span>AC: <span className="text-blue-300 font-mono">{armor.acCalc}</span></span>
+                        {armor.type && <span>Type: <span className="text-blue-300">{armor.type}</span> <span className="text-stone-500">({ARMOR_DESC[armor.type]})</span></span>}
+                      </div>
+                      {armor.strRequired && <div className="text-orange-400/80">Requires STR {armor.strRequired}</div>}
+                      {armor.stealthDisadv && <div className="text-orange-400/80">Disadvantage on Stealth checks</div>}
                     </div>
                   )}
                   {item.description && (

@@ -68,6 +68,20 @@
         "damageType": "Bludgeoning",
         "mastery": "Topple",
         "properties": "Versatile"
+      },
+      {
+        "id": 1770234839778,
+        "name": "Leather Armour",
+        "quantity": 1,
+        "weight": "",
+        "description": "",
+        "itemType": "armor",
+        "damage": "",
+        "damageType": "",
+        "mastery": "",
+        "weaponProperties": [],
+        "baseAC": "11",
+        "armorType": "Light"
       }
     ],
     "advantages": [
