@@ -7,7 +7,26 @@
     "maxHp": 35,
     "speed": 30,
     "notes": "",
-    "resources": [],
+    "resources": [
+      {
+        "id": 1770233816410,
+        "name": "Wild Shape",
+        "current": 2,
+        "max": 2
+      },
+      {
+        "id": 1770233861678,
+        "name": "1st Level Spell Slot",
+        "current": 4,
+        "max": 4
+      },
+      {
+        "id": 1770233883990,
+        "name": "2nd Level Spell Slot",
+        "current": 2,
+        "max": 2
+      }
+    ],
     "str": 10,
     "dex": 14,
     "con": 14,
@@ -30,13 +49,32 @@
     },
     "features": [],
     "spells": [],
-    "inventory": [],
+    "inventory": [
+      {
+        "id": 1770233425291,
+        "name": "Cloak of Thorns",
+        "quantity": 1,
+        "weight": "",
+        "description": "Requires attunement by a Druid. Bearer casts a free cast of Barkskin that refreshes on a short rest. They also add their WIS modifier to Thorn Whip."
+      },
+      {
+        "id": 1770233905528,
+        "name": "Staff",
+        "quantity": 1,
+        "weight": "",
+        "description": "1d6 / 1d8. Melee weapon. Simple, Versatile, Topple",
+        "isWeapon": true,
+        "damage": "1d6 / 1d8",
+        "damageType": "Bludgeoning",
+        "mastery": "Topple",
+        "properties": "Versatile"
+      }
+    ],
     "advantages": [
       "Adv. vs Poisoned"
     ],
     "classFeatures": {
       "Druid:Primal Order": "Magician"
-    },
-    "background": "Hermit"
+    }
   }
 ]

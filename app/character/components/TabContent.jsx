@@ -64,6 +64,29 @@ export function InventoryTab({ character, onUpdate }) {
     onUpdate('inventory', character.inventory.filter(i => i.id !== id));
   };
 
+  const toggleWeapon = (id) => {
+    const item = character.inventory.find(i => i.id === id);
+    updateItem(id, 'isWeapon', !item.isWeapon);
+  };
+
+  // Common weapon properties for quick selection
+  const WEAPON_PROPERTIES = [
+    'Ammunition', 'Finesse', 'Heavy', 'Light', 'Loading', 'Range', 'Reach', 
+    'Thrown', 'Two-Handed', 'Versatile'
+  ];
+
+  // 2024 Weapon Masteries
+  const WEAPON_MASTERIES = [
+    { name: 'Cleave', desc: 'Hit another creature within 5 ft' },
+    { name: 'Graze', desc: 'Deal modifier damage on miss' },
+    { name: 'Nick', desc: 'Extra attack with light weapon' },
+    { name: 'Push', desc: 'Push target 10 ft away' },
+    { name: 'Sap', desc: 'Target has disadvantage on next attack' },
+    { name: 'Slow', desc: 'Reduce target speed by 10 ft' },
+    { name: 'Topple', desc: 'Target must save or fall prone' },
+    { name: 'Vex', desc: 'Gain advantage on next attack vs target' },
+  ];
+
   return (
     <div>
       <div className="flex justify-end mb-3">
@@ -72,42 +95,143 @@ export function InventoryTab({ character, onUpdate }) {
         </button>
       </div>
       
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="text-left text-stone-500 border-b border-stone-700">
-            <th className="pb-2 font-medium">Item</th>
-            <th className="pb-2 font-medium w-16">Qty</th>
-            <th className="pb-2 font-medium w-20">Weight</th>
-            <th className="pb-2 font-medium">Description</th>
-            <th className="pb-2 w-8"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {(character.inventory || []).map(item => (
-            <tr key={item.id} className="border-b border-stone-800 hover:bg-stone-800/50">
-              <td className="py-2">
-                <input type="text" value={item.name} onChange={(e) => updateItem(item.id, 'name', e.target.value)}
-                  className="bg-transparent focus:outline-none w-full" placeholder="Item name" />
-              </td>
-              <td>
-                <input type="text" value={item.quantity} onChange={(e) => updateItem(item.id, 'quantity', e.target.value)}
-                  className="bg-stone-800 rounded px-2 py-1 w-12 text-center focus:outline-none" />
-              </td>
-              <td>
-                <input type="text" value={item.weight} onChange={(e) => updateItem(item.id, 'weight', e.target.value)}
-                  className="bg-transparent focus:outline-none w-full text-center" placeholder="1 lb" />
-              </td>
-              <td>
-                <input type="text" value={item.description} onChange={(e) => updateItem(item.id, 'description', e.target.value)}
-                  className="bg-transparent focus:outline-none w-full text-stone-400" placeholder="Description..." />
-              </td>
-              <td>
-                <button onClick={() => removeItem(item.id)} className="text-red-500 hover:text-red-400">×</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="space-y-3">
+        {(character.inventory || []).map(item => (
+          <div key={item.id} className={`rounded-lg overflow-hidden ${item.isWeapon ? 'bg-red-900/20 border border-red-800/50' : 'bg-stone-800'}`}>
+            {/* Main row */}
+            <div className="p-3 flex items-start gap-3">
+              {/* Weapon toggle */}
+              <button 
+                onClick={() => toggleWeapon(item.id)}
+                className={`mt-1 p-1 rounded ${item.isWeapon ? 'bg-red-800 text-red-200' : 'bg-stone-700 text-stone-400 hover:bg-stone-600'}`}
+                title={item.isWeapon ? 'Weapon' : 'Click to mark as weapon'}
+              >
+                <Icons.Sword />
+              </button>
+              
+              <div className="flex-1 space-y-2">
+                {/* Name, Qty, Weight row */}
+                <div className="flex items-center gap-3">
+                  <input 
+                    type="text" 
+                    value={item.name} 
+                    onChange={(e) => updateItem(item.id, 'name', e.target.value)}
+                    className="bg-transparent font-medium focus:outline-none flex-1" 
+                    placeholder="Item name" 
+                  />
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-stone-500">Qty:</span>
+                    <input 
+                      type="text" 
+                      value={item.quantity} 
+                      onChange={(e) => updateItem(item.id, 'quantity', e.target.value)}
+                      className="bg-stone-900 rounded px-2 py-0.5 w-12 text-center text-sm focus:outline-none" 
+                    />
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-stone-500">Wt:</span>
+                    <input 
+                      type="text" 
+                      value={item.weight || ''} 
+                      onChange={(e) => updateItem(item.id, 'weight', e.target.value)}
+                      className="bg-transparent text-sm focus:outline-none w-16 text-stone-400" 
+                      placeholder="1 lb" 
+                    />
+                  </div>
+                  <button onClick={() => removeItem(item.id)} className="text-red-500 hover:text-red-400 text-lg">×</button>
+                </div>
+
+                {/* Weapon stats row */}
+                {item.isWeapon && (
+                  <div className="flex flex-wrap items-center gap-3 text-sm">
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs text-red-400">Damage:</span>
+                      <input 
+                        type="text" 
+                        value={item.damage || ''} 
+                        onChange={(e) => updateItem(item.id, 'damage', e.target.value)}
+                        className="bg-stone-900 border border-red-800/50 rounded px-2 py-0.5 w-20 text-center text-red-300 focus:outline-none" 
+                        placeholder="1d8" 
+                      />
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs text-red-400">Type:</span>
+                      <select 
+                        value={item.damageType || ''} 
+                        onChange={(e) => updateItem(item.id, 'damageType', e.target.value)}
+                        className="bg-stone-900 border border-red-800/50 rounded px-2 py-0.5 text-sm text-red-300 focus:outline-none"
+                      >
+                        <option value="">--</option>
+                        <option value="Bludgeoning">Bludgeoning</option>
+                        <option value="Piercing">Piercing</option>
+                        <option value="Slashing">Slashing</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs text-purple-400">Mastery:</span>
+                      <select 
+                        value={item.mastery || ''} 
+                        onChange={(e) => updateItem(item.id, 'mastery', e.target.value)}
+                        className="bg-stone-900 border border-purple-800/50 rounded px-2 py-0.5 text-sm text-purple-300 focus:outline-none"
+                      >
+                        <option value="">None</option>
+                        {WEAPON_MASTERIES.map(m => (
+                          <option key={m.name} value={m.name}>{m.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                )}
+
+                {/* Properties row (for weapons) */}
+                {item.isWeapon && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs text-stone-500">Properties:</span>
+                    <div className="flex flex-wrap gap-1">
+                      {WEAPON_PROPERTIES.map(prop => {
+                        const isSelected = item.properties?.includes(prop);
+                        return (
+                          <button
+                            key={prop}
+                            onClick={() => {
+                              const current = item.properties || '';
+                              const props = current.split(',').map(p => p.trim()).filter(Boolean);
+                              if (isSelected) {
+                                updateItem(item.id, 'properties', props.filter(p => p !== prop).join(', '));
+                              } else {
+                                updateItem(item.id, 'properties', [...props, prop].join(', '));
+                              }
+                            }}
+                            className={`px-1.5 py-0.5 rounded text-xs ${isSelected ? 'bg-amber-800 text-amber-200' : 'bg-stone-700 text-stone-400 hover:bg-stone-600'}`}
+                          >
+                            {prop}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Mastery description */}
+                {item.isWeapon && item.mastery && (
+                  <div className="text-xs text-purple-400 bg-purple-900/20 rounded px-2 py-1">
+                    <span className="font-medium">{item.mastery}:</span> {WEAPON_MASTERIES.find(m => m.name === item.mastery)?.desc}
+                  </div>
+                )}
+
+                {/* Description */}
+                <input 
+                  type="text" 
+                  value={item.description || ''} 
+                  onChange={(e) => updateItem(item.id, 'description', e.target.value)}
+                  className="w-full bg-transparent text-sm text-stone-400 focus:outline-none" 
+                  placeholder="Description or notes..." 
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
       {(character.inventory || []).length === 0 && <div className="text-center text-stone-500 py-8">No items yet.</div>}
     </div>
   );
@@ -296,23 +420,6 @@ export function BackgroundTab({ character, onUpdate }) {
 
   const handleBackgroundChange = (backgroundName) => {
     onUpdate('background', backgroundName);
-    
-    // Optionally apply skill proficiencies from background
-    const bg = BACKGROUNDS.find(b => b.name === backgroundName);
-    if (bg && bg.skills) {
-      // Show which skills the background grants (user can apply them in proficiency modal)
-    }
-  };
-
-  const applyBackgroundSkills = () => {
-    if (!selectedBackground) return;
-    const currentProfs = { ...(character.skillProficiencies || {}) };
-    selectedBackground.skills.forEach(skill => {
-      if (!currentProfs[skill]) {
-        currentProfs[skill] = 1; // Set to proficient
-      }
-    });
-    onUpdate('skillProficiencies', currentProfs);
   };
 
   return (
@@ -348,17 +455,10 @@ export function BackgroundTab({ character, onUpdate }) {
         
         {selectedBackground && (
           <div className="mt-3 p-3 bg-stone-900 rounded-lg space-y-2">
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-xs text-stone-500">Skill Proficiencies: </span>
-                <span className="text-sm text-emerald-400">{selectedBackground.skills.join(', ')}</span>
-              </div>
-              <button 
-                onClick={applyBackgroundSkills}
-                className="px-3 py-1 rounded bg-emerald-800 hover:bg-emerald-700 text-xs text-emerald-200"
-              >
-                Apply Skills
-              </button>
+            <div>
+              <span className="text-xs text-stone-500">Skill Proficiencies: </span>
+              <span className="text-sm text-blue-400 font-medium">{selectedBackground.skills.join(', ')}</span>
+              <span className="text-xs text-stone-600 ml-2">(auto-applied)</span>
             </div>
             <div>
               <span className="text-xs text-stone-500">Origin Feat: </span>
