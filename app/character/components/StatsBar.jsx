@@ -1,12 +1,15 @@
 'use client';
 
+import { useState } from 'react';
 import { HpBar } from '../../components/ui';
-import { STATS, getMod, formatMod, getProfBonus, getSpellDC, getSpellAttack } from './constants';
+import { STATS, getMod, formatMod, getProfBonus, getSpellDC, getSpellAttack, calculateAC, AC_EFFECTS } from './constants';
 
 export default function StatsBar({ character, isParty, onUpdate }) {
   const profBonus = getProfBonus(character);
   const spellDC = getSpellDC(character);
   const spellAttack = getSpellAttack(character);
+  const acCalc = calculateAC(character);
+  const [showACTooltip, setShowACTooltip] = useState(false);
 
   return (
     <div className="bg-stone-900 rounded-lg p-4">
@@ -24,15 +27,78 @@ export default function StatsBar({ character, isParty, onUpdate }) {
         
         {/* AC, Speed, Init */}
         <div className="flex gap-2">
+          {/* AC with calculation */}
+          <div 
+            className="bg-stone-800 rounded p-2 text-center w-20 relative cursor-help"
+            onMouseEnter={() => setShowACTooltip(true)}
+            onMouseLeave={() => setShowACTooltip(false)}
+          >
+            <div className="text-[10px] text-stone-500 flex items-center justify-center gap-1">
+              AC
+              {acCalc.stealthDisadv && <span className="text-orange-400" title="Stealth Disadvantage">⊘</span>}
+            </div>
+            <div className={`text-xl font-bold ${acCalc.effect ? 'text-cyan-400' : ''}`}>
+              {character.acOverride || acCalc.total}
+            </div>
+            {acCalc.strWarning && (
+              <div className="text-[9px] text-orange-400">!</div>
+            )}
+            
+            {/* AC Tooltip */}
+            {showACTooltip && (
+              <div className="absolute top-full left-0 mt-1 w-64 bg-stone-800 border border-stone-600 rounded-lg p-3 text-left z-50 shadow-xl">
+                <div className="text-xs font-bold text-stone-300 mb-2">AC Calculation</div>
+                <div className="space-y-1 text-xs">
+                  {acCalc.breakdown.map((line, i) => (
+                    <div key={i} className="text-stone-400">{line}</div>
+                  ))}
+                  <div className="border-t border-stone-600 pt-1 mt-1 font-bold text-stone-200">
+                    Total: {acCalc.total}
+                  </div>
+                </div>
+                {acCalc.strWarning && (
+                  <div className="mt-2 text-orange-400 text-xs">{acCalc.strWarning}</div>
+                )}
+                {acCalc.stealthDisadv && (
+                  <div className="mt-1 text-orange-400 text-xs">Disadvantage on Stealth</div>
+                )}
+                {!acCalc.hasEquippedArmor && !acCalc.effect && (
+                  <div className="mt-2 text-stone-500 text-xs italic">
+                    Equip armor in Inventory tab
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Temp AC / Effect */}
+          <div className="bg-stone-800 rounded p-2 text-center w-24">
+            <div className="text-[10px] text-stone-500">AC Effect</div>
+            <select 
+              value={character.acEffect || ''} 
+              onChange={(e) => onUpdate('acEffect', e.target.value || null)}
+              className="w-full bg-transparent text-xs text-center focus:outline-none text-cyan-400 cursor-pointer"
+            >
+              {AC_EFFECTS.map(effect => (
+                <option key={effect.id} value={effect.id} className="bg-stone-800 text-stone-200">
+                  {effect.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Temp AC bonus */}
           <div className="bg-stone-800 rounded p-2 text-center w-16">
-            <div className="text-[10px] text-stone-500">AC</div>
+            <div className="text-[10px] text-stone-500">Temp</div>
             <input 
               type="text" 
-              value={character.ac || ''} 
-              onChange={(e) => onUpdate('ac', parseInt(e.target.value) || 10)}
-              className="w-full bg-transparent text-xl font-bold text-center focus:outline-none" 
+              value={character.tempAC || ''} 
+              onChange={(e) => onUpdate('tempAC', e.target.value)}
+              placeholder="+0"
+              className="w-full bg-transparent text-lg font-bold text-center focus:outline-none text-cyan-400 placeholder-stone-600" 
             />
           </div>
+
           <div className="bg-stone-800 rounded p-2 text-center w-16">
             <div className="text-[10px] text-stone-500">Speed</div>
             <input 

@@ -265,6 +265,62 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   const spellDC = getSpellSaveDC();
   const spellAttack = getSpellAttackBonus();
 
+  // Calculate AC from equipped items
+  const getCalculatedAC = () => {
+    const dexMod = getModNum(character.dex);
+    const inventory = character.inventory || [];
+    
+    const equippedArmor = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType !== 'Shield');
+    const equippedShield = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType === 'Shield');
+    const acBonusItems = inventory.filter(i => i.equipped && i.acBonus && i.itemType !== 'armor');
+    
+    let baseAC = 10;
+    let dexBonus = dexMod;
+    let shieldBonus = 0;
+    let itemBonuses = 0;
+    let tempBonus = parseInt(character.tempAC) || 0;
+    
+    // Check temp effects
+    if (character.acEffect === 'mageArmor') {
+      baseAC = 13;
+    } else if (character.acEffect === 'barkskin') {
+      const naturalCalc = 10 + dexMod;
+      if (naturalCalc < 16) {
+        baseAC = 16;
+        dexBonus = 0;
+      }
+    } else if (character.acEffect === 'unarmoredDefense') {
+      const conMod = getModNum(character.con);
+      const wisMod = getModNum(character.wis);
+      const classes = character.classes?.map(c => c.name.toLowerCase()) || [character.class?.toLowerCase()];
+      if (classes.includes('barbarian')) {
+        baseAC = 10 + conMod;
+      } else if (classes.includes('monk')) {
+        baseAC = 10 + wisMod;
+      }
+    } else if (equippedArmor) {
+      baseAC = parseInt(equippedArmor.baseAC) || 10;
+      if (equippedArmor.armorType === 'Medium') {
+        dexBonus = Math.min(2, dexMod);
+      } else if (equippedArmor.armorType === 'Heavy') {
+        dexBonus = 0;
+      }
+    }
+    
+    if (equippedShield) {
+      shieldBonus = parseInt(equippedShield.baseAC) || 2;
+    }
+    
+    acBonusItems.forEach(item => {
+      itemBonuses += parseInt(item.acBonus) || 0;
+    });
+    
+    return baseAC + dexBonus + shieldBonus + itemBonuses + tempBonus;
+  };
+
+  // Use calculated AC if no manual override, or if items are equipped
+  const displayAC = character.acOverride || getCalculatedAC() || character.ac;
+
   return (
     <div className={`border rounded-lg overflow-hidden transition-all ${isDead ? 'border-red-900/50 bg-stone-900/30 opacity-60' : isEnemy ? 'border-red-800/50 bg-gradient-to-br from-red-950/40 to-stone-900/60' : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60'}`}>
       <div className={`flex items-center justify-between p-3 cursor-pointer ${isEnemy ? 'hover:bg-red-900/20' : 'hover:bg-emerald-900/20'}`} onClick={onToggleExpand}>
@@ -284,7 +340,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1 text-sm"><Icons.Shield /><span className="font-mono">{character.ac}</span></div>
+          <div className={`flex items-center gap-1 text-sm ${character.acEffect ? 'text-cyan-400' : ''}`}><Icons.Shield /><span className="font-mono">{displayAC}</span></div>
           <div className="flex items-center gap-1 text-sm"><Icons.Heart /><span className={`font-mono ${isDead ? 'text-red-500' : ''}`}>{character.currentHp}/{character.maxHp}</span></div>
           {spellDC && <div className="flex items-center gap-1 text-sm text-purple-400"><Icons.Sparkles /><span className="font-mono">{spellDC}</span></div>}
           {expanded ? <Icons.ChevronUp /> : <Icons.ChevronDown />}
@@ -330,7 +386,13 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
           </div>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div><label className="text-xs text-stone-400">Name</label><EditableField value={character.name} onChange={(v) => onUpdate({ ...character, name: v })} className="block w-full" /></div>
-            <div><label className="text-xs text-stone-400">AC</label><EditableField value={character.ac} onChange={(v) => onUpdate({ ...character, ac: v })} type="number" min={0} className="block w-full" /></div>
+            <div>
+              <label className="text-xs text-stone-400">AC (calculated)</label>
+              <div className={`bg-stone-700/50 rounded px-2 py-1 font-mono ${character.acEffect ? 'text-cyan-400' : ''}`}>
+                {displayAC}
+                {character.acEffect && <span className="text-xs text-cyan-600 ml-2">({character.acEffect})</span>}
+              </div>
+            </div>
             <div><label className="text-xs text-stone-400">Initiative</label><EditableField value={character.initiative} onChange={(v) => onUpdate({ ...character, initiative: v })} type="number" className="block w-full" /></div>
             <div><label className="text-xs text-stone-400">Speed</label><div className="flex items-center gap-1"><Icons.Boot /><EditableField value={character.speed} onChange={(v) => onUpdate({ ...character, speed: v })} type="number" min={0} className="w-16" /><span className="text-stone-500">ft</span></div></div>
           </div>

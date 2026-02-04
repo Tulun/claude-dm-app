@@ -62,12 +62,22 @@
         "name": "Staff",
         "quantity": 1,
         "weight": "",
-        "description": "1d6 / 1d8. Melee weapon. Simple, Versatile, Topple",
+        "description": "1d6 / 1d8. Melee weapon. Simple, Versatile, Topple. Arcane focus.",
         "isWeapon": true,
         "damage": "1d6 / 1d8",
         "damageType": "Bludgeoning",
         "mastery": "Topple",
-        "properties": "Versatile"
+        "properties": "Versatile",
+        "equipped": true,
+        "itemType": "weapon",
+        "armorType": "",
+        "baseAC": "",
+        "stealthDisadv": false,
+        "strRequired": "",
+        "weaponProperties": [
+          "Simple",
+          "Versatile"
+        ]
       },
       {
         "id": 1770234839778,
@@ -81,7 +91,18 @@
         "mastery": "",
         "weaponProperties": [],
         "baseAC": "11",
-        "armorType": "Light"
+        "armorType": "Light",
+        "equipped": true
+      },
+      {
+        "id": 1770235883835,
+        "name": "Shield",
+        "quantity": 1,
+        "weight": "",
+        "description": "Requires 1 hand. Adds +2 to AC while equipped.",
+        "itemType": "gear",
+        "acBonus": "+2",
+        "equipped": true
       }
     ],
     "advantages": [

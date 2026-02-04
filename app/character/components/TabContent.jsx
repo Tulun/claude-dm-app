@@ -158,14 +158,16 @@ export function InventoryTab({ character, onUpdate }) {
           
           return (
             <div key={item.id} className={`rounded-lg overflow-hidden ${
+              item.equipped ? 'ring-2 ring-green-500/50' : ''
+            } ${
               isWeapon ? 'bg-red-900/20 border border-red-800/50' : 
               isArmor ? 'bg-blue-900/20 border border-blue-800/50' : 
               'bg-stone-800'
             }`}>
               {/* Main row */}
               <div className="p-3 flex items-start gap-3">
-                {/* Item type selector */}
-                <div className="flex flex-col gap-1">
+                {/* Item type selector + equipped toggle */}
+                <div className="flex flex-col gap-1 items-center">
                   <button 
                     onClick={() => setItemType(item.id, 'weapon')}
                     className={`p-1.5 rounded ${isWeapon ? 'bg-red-800 text-red-200' : 'bg-stone-700 text-stone-400 hover:bg-stone-600'}`}
@@ -180,6 +182,16 @@ export function InventoryTab({ character, onUpdate }) {
                   >
                     <Icons.Shield />
                   </button>
+                  {/* Equipped toggle for armor/weapons */}
+                  {(isArmor || isWeapon) && (
+                    <button 
+                      onClick={() => updateItem(item.id, 'equipped', !item.equipped)}
+                      className={`p-1 rounded text-[10px] font-bold ${item.equipped ? 'bg-green-700 text-green-200' : 'bg-stone-700 text-stone-500 hover:bg-stone-600'}`}
+                      title={item.equipped ? 'Equipped (click to unequip)' : 'Click to equip'}
+                    >
+                      {item.equipped ? 'ON' : 'EQ'}
+                    </button>
+                  )}
                 </div>
                 
                 <div className="flex-1 space-y-2">
@@ -336,6 +348,31 @@ export function InventoryTab({ character, onUpdate }) {
                         </div>
                       )}
                     </>
+                  )}
+
+                  {/* Generic item AC bonus (for rings, cloaks, etc.) */}
+                  {!isWeapon && !isArmor && (
+                    <div className="flex flex-wrap items-center gap-3 text-sm">
+                      <label className="flex items-center gap-1 cursor-pointer" title="Check if this item is currently equipped/attuned">
+                        <input 
+                          type="checkbox" 
+                          checked={item.equipped || false} 
+                          onChange={(e) => updateItem(item.id, 'equipped', e.target.checked)}
+                          className="rounded bg-stone-700"
+                        />
+                        <span className="text-xs text-stone-400">Equipped</span>
+                      </label>
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs text-cyan-400">AC Bonus:</span>
+                        <input 
+                          type="text" 
+                          value={item.acBonus || ''} 
+                          onChange={(e) => updateItem(item.id, 'acBonus', e.target.value)}
+                          className="bg-stone-900 border border-cyan-800/50 rounded px-2 py-0.5 w-14 text-center text-cyan-300 focus:outline-none" 
+                          placeholder="+1" 
+                        />
+                      </div>
+                    </div>
                   )}
 
                   {/* Description (all items) */}

@@ -10,6 +10,47 @@ import InitiativeItem from './components/InitiativeItem';
 import { AddEnemyModal, AddPartyModal } from './components/Modals';
 import TemplateEditor from './components/TemplateEditor';
 
+// Calculate AC from equipped items
+const getCalculatedAC = (character) => {
+  const getModNum = (score) => Math.floor(((parseInt(score) || 10) - 10) / 2);
+  const dexMod = getModNum(character.dex);
+  const inventory = character.inventory || [];
+  
+  // If no inventory, fall back to manual AC field
+  if (inventory.length === 0) return character.ac || 10;
+  
+  const equippedArmor = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType !== 'Shield');
+  const equippedShield = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType === 'Shield');
+  const acBonusItems = inventory.filter(i => i.equipped && i.acBonus && i.itemType !== 'armor');
+  
+  let baseAC = 10;
+  let dexBonus = dexMod;
+  let shieldBonus = 0;
+  let itemBonuses = 0;
+  let tempBonus = parseInt(character.tempAC) || 0;
+  
+  if (character.acEffect === 'mageArmor') {
+    baseAC = 13;
+  } else if (character.acEffect === 'barkskin') {
+    if (10 + dexMod < 16) { baseAC = 16; dexBonus = 0; }
+  } else if (character.acEffect === 'unarmoredDefense') {
+    const conMod = getModNum(character.con);
+    const wisMod = getModNum(character.wis);
+    const classes = character.classes?.map(c => c.name.toLowerCase()) || [character.class?.toLowerCase()];
+    if (classes.includes('barbarian')) baseAC = 10 + conMod;
+    else if (classes.includes('monk')) baseAC = 10 + wisMod;
+  } else if (equippedArmor) {
+    baseAC = parseInt(equippedArmor.baseAC) || 10;
+    if (equippedArmor.armorType === 'Medium') dexBonus = Math.min(2, dexMod);
+    else if (equippedArmor.armorType === 'Heavy') dexBonus = 0;
+  }
+  
+  if (equippedShield) shieldBonus = parseInt(equippedShield.baseAC) || 2;
+  acBonusItems.forEach(item => { itemBonuses += parseInt(item.acBonus) || 0; });
+  
+  return baseAC + dexBonus + shieldBonus + itemBonuses + tempBonus;
+};
+
 export default function DMAdminTool() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -241,7 +282,7 @@ export default function DMAdminTool() {
                       <p className="text-xs text-stone-400">{member.class} {member.level}</p>
                     </div>
                     <div className="text-right text-sm">
-                      <div className="flex items-center gap-1 text-stone-400"><Icons.Shield /> {member.ac}</div>
+                      <div className={`flex items-center gap-1 ${member.acEffect ? 'text-cyan-400' : 'text-stone-400'}`}><Icons.Shield /> {getCalculatedAC(member)}</div>
                       <div className="flex items-center gap-1 text-stone-400"><Icons.Heart /> {member.currentHp}/{member.maxHp}</div>
                     </div>
                   </div>

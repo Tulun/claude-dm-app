@@ -308,3 +308,143 @@ export const getSpellAttack = (character) => {
   if (!character?.spellStat) return null;
   return getProfBonus(character) + getMod(character[character.spellStat]);
 };
+
+// Calculate AC from equipped items
+export const calculateAC = (character) => {
+  const dexMod = getMod(character.dex);
+  const inventory = character.inventory || [];
+  
+  // Find equipped armor and shields
+  const equippedArmor = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType !== 'Shield');
+  const equippedShield = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType === 'Shield');
+  
+  // Find items that grant AC bonuses (rings, cloaks, etc.)
+  const acBonusItems = inventory.filter(i => i.equipped && i.acBonus && i.itemType !== 'armor');
+  
+  let baseAC = 10;
+  let dexBonus = dexMod;
+  let shieldBonus = 0;
+  let itemBonuses = 0;
+  let tempBonus = parseInt(character.tempAC) || 0;
+  let breakdown = [];
+  let stealthDisadv = false;
+  let strWarning = null;
+  
+  // Check for temp AC effects that replace base calculation
+  if (character.acEffect === 'mageArmor') {
+    baseAC = 13;
+    dexBonus = dexMod;
+    breakdown.push(`Mage Armor: 13`);
+    breakdown.push(`DEX: ${dexMod >= 0 ? '+' : ''}${dexMod}`);
+  } else if (character.acEffect === 'barkskin') {
+    // Barkskin sets AC to minimum 16
+    const naturalCalc = 10 + dexMod;
+    if (naturalCalc >= 16) {
+      baseAC = 10;
+      dexBonus = dexMod;
+      breakdown.push(`Base: 10`);
+      breakdown.push(`DEX: ${dexMod >= 0 ? '+' : ''}${dexMod}`);
+    } else {
+      baseAC = 16;
+      dexBonus = 0;
+      breakdown.push(`Barkskin: 16 (minimum)`);
+    }
+  } else if (character.acEffect === 'unarmoredDefense') {
+    // Barbarian/Monk unarmored defense
+    const conMod = getMod(character.con);
+    const wisMod = getMod(character.wis);
+    // Check if character has Barbarian or Monk
+    const classes = character.classes?.map(c => c.name.toLowerCase()) || [character.class?.toLowerCase()];
+    if (classes.includes('barbarian')) {
+      baseAC = 10;
+      dexBonus = dexMod;
+      breakdown.push(`Unarmored: 10`);
+      breakdown.push(`DEX: ${dexMod >= 0 ? '+' : ''}${dexMod}`);
+      breakdown.push(`CON: ${conMod >= 0 ? '+' : ''}${conMod}`);
+      baseAC += conMod;
+    } else if (classes.includes('monk')) {
+      baseAC = 10;
+      dexBonus = dexMod;
+      breakdown.push(`Unarmored: 10`);
+      breakdown.push(`DEX: ${dexMod >= 0 ? '+' : ''}${dexMod}`);
+      breakdown.push(`WIS: ${wisMod >= 0 ? '+' : ''}${wisMod}`);
+      baseAC += wisMod;
+    } else {
+      baseAC = 10;
+      dexBonus = dexMod;
+      breakdown.push(`Base: 10`);
+      breakdown.push(`DEX: ${dexMod >= 0 ? '+' : ''}${dexMod}`);
+    }
+  } else if (equippedArmor) {
+    // Standard armor calculation
+    const armorAC = parseInt(equippedArmor.baseAC) || 10;
+    baseAC = armorAC;
+    
+    if (equippedArmor.armorType === 'Light') {
+      dexBonus = dexMod;
+      breakdown.push(`${equippedArmor.name}: ${armorAC}`);
+      breakdown.push(`DEX: ${dexMod >= 0 ? '+' : ''}${dexMod}`);
+    } else if (equippedArmor.armorType === 'Medium') {
+      dexBonus = Math.min(2, dexMod);
+      breakdown.push(`${equippedArmor.name}: ${armorAC}`);
+      breakdown.push(`DEX: ${dexBonus >= 0 ? '+' : ''}${dexBonus} (max 2)`);
+    } else if (equippedArmor.armorType === 'Heavy') {
+      dexBonus = 0;
+      breakdown.push(`${equippedArmor.name}: ${armorAC}`);
+      // Check STR requirement
+      const strReq = parseInt(equippedArmor.strRequired) || 0;
+      if (strReq > 0 && (character.str || 10) < strReq) {
+        strWarning = `STR ${strReq} required (speed -10 ft)`;
+      }
+    }
+    
+    if (equippedArmor.stealthDisadv) {
+      stealthDisadv = true;
+    }
+  } else {
+    // No armor - base 10 + DEX
+    breakdown.push(`Base: 10`);
+    breakdown.push(`DEX: ${dexMod >= 0 ? '+' : ''}${dexMod}`);
+  }
+  
+  // Add shield
+  if (equippedShield) {
+    const shieldAC = parseInt(equippedShield.baseAC) || 2;
+    shieldBonus = shieldAC;
+    breakdown.push(`${equippedShield.name}: +${shieldAC}`);
+  }
+  
+  // Add item bonuses (rings, cloaks, etc.)
+  acBonusItems.forEach(item => {
+    const bonus = parseInt(item.acBonus) || 0;
+    if (bonus !== 0) {
+      itemBonuses += bonus;
+      breakdown.push(`${item.name}: ${bonus >= 0 ? '+' : ''}${bonus}`);
+    }
+  });
+  
+  // Add temp bonus
+  if (tempBonus !== 0) {
+    breakdown.push(`Temp: ${tempBonus >= 0 ? '+' : ''}${tempBonus}`);
+  }
+  
+  const totalAC = baseAC + dexBonus + shieldBonus + itemBonuses + tempBonus;
+  
+  return {
+    total: totalAC,
+    breakdown,
+    stealthDisadv,
+    strWarning,
+    hasEquippedArmor: !!equippedArmor || !!equippedShield,
+    effect: character.acEffect
+  };
+};
+
+// Common temporary AC effects
+export const AC_EFFECTS = [
+  { id: '', name: 'None', desc: 'Normal AC calculation' },
+  { id: 'mageArmor', name: 'Mage Armor', desc: 'Base AC becomes 13 + DEX' },
+  { id: 'barkskin', name: 'Barkskin', desc: 'AC cannot be less than 16' },
+  { id: 'unarmoredDefense', name: 'Unarmored Defense', desc: 'Barbarian: 10+DEX+CON, Monk: 10+DEX+WIS' },
+  { id: 'shield', name: 'Shield (spell)', desc: '+5 AC until start of next turn' },
+];
