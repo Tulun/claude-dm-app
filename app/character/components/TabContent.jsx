@@ -2,6 +2,7 @@
 
 import Icons from '../../components/Icons';
 import ResourceRow from './ResourceRow';
+import { BACKGROUNDS, CLASS_FEATURES } from './constants';
 
 // Resources Tab
 export function ResourcesTab({ character, onUpdate }) {
@@ -208,77 +209,214 @@ export function FeaturesTab({ character, onUpdate }) {
     onUpdate('features', character.features.filter(f => f.id !== id));
   };
 
+  // Get character's classes for class-specific features
+  const characterClasses = character.classes?.length > 0 
+    ? character.classes.map(c => c.name) 
+    : character.class ? [character.class] : [];
+
+  const updateClassFeature = (featureName, value) => {
+    onUpdate('classFeatures', { ...(character.classFeatures || {}), [featureName]: value });
+  };
+
   return (
-    <div>
-      <div className="flex justify-end mb-3">
-        <button onClick={addFeature} className="px-3 py-1 rounded bg-emerald-800 hover:bg-emerald-700 text-xs flex items-center gap-1">
-          <Icons.Plus /> Add Feature
-        </button>
-      </div>
-      
-      <div className="space-y-3">
-        {(character.features || []).map(feature => (
-          <div key={feature.id} className="bg-stone-800 rounded-lg p-3">
-            <div className="flex items-start justify-between gap-2 mb-2">
-              <input type="text" value={feature.name} onChange={(e) => updateFeature(feature.id, 'name', e.target.value)}
-                className="bg-transparent font-bold focus:outline-none flex-1" placeholder="Feature name" />
-              <input type="text" value={feature.source} onChange={(e) => updateFeature(feature.id, 'source', e.target.value)}
-                className="bg-stone-700 rounded px-2 py-0.5 text-xs text-stone-400 w-32 focus:outline-none" placeholder="Source" />
-              <button onClick={() => removeFeature(feature.id)} className="text-red-500 hover:text-red-400">×</button>
-            </div>
-            <textarea value={feature.description} onChange={(e) => updateFeature(feature.id, 'description', e.target.value)}
-              className="w-full bg-transparent text-sm text-stone-300 focus:outline-none resize-none" rows={2} placeholder="Description..." />
+    <div className="space-y-6">
+      {/* Class-Specific Features (2024 PHB) */}
+      {characterClasses.length > 0 && (
+        <div className="bg-stone-800 rounded-lg p-4">
+          <h3 className="text-sm font-bold text-amber-400 mb-3">Class Features (2024 PHB)</h3>
+          <div className="space-y-4">
+            {characterClasses.map(className => {
+              const classFeatures = CLASS_FEATURES[className];
+              if (!classFeatures) return null;
+              
+              return (
+                <div key={className} className="space-y-3">
+                  <div className="text-sm font-medium text-stone-300 border-b border-stone-700 pb-1">{className}</div>
+                  {Object.entries(classFeatures).map(([featureName, feature]) => (
+                    <div key={featureName} className="pl-2">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-sm text-stone-400">{featureName}</span>
+                        <span className="text-xs text-stone-600">(Level {feature.level})</span>
+                        {feature.note && <span className="text-xs text-stone-500 italic">- {feature.note}</span>}
+                      </div>
+                      {feature.options.length > 0 && (
+                        <select
+                          value={character.classFeatures?.[`${className}:${featureName}`] || ''}
+                          onChange={(e) => updateClassFeature(`${className}:${featureName}`, e.target.value)}
+                          className="w-full bg-stone-900 border border-stone-600 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-500"
+                        >
+                          <option value="">-- Select --</option>
+                          {feature.options.map(opt => (
+                            <option key={opt.name} value={opt.name}>{opt.name} - {opt.description}</option>
+                          ))}
+                        </select>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
           </div>
-        ))}
+        </div>
+      )}
+
+      {/* Custom Features */}
+      <div>
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="text-sm font-bold text-stone-400">Other Features & Traits</h3>
+          <button onClick={addFeature} className="px-3 py-1 rounded bg-emerald-800 hover:bg-emerald-700 text-xs flex items-center gap-1">
+            <Icons.Plus /> Add Feature
+          </button>
+        </div>
+        
+        <div className="space-y-3">
+          {(character.features || []).map(feature => (
+            <div key={feature.id} className="bg-stone-800 rounded-lg p-3">
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <input type="text" value={feature.name} onChange={(e) => updateFeature(feature.id, 'name', e.target.value)}
+                  className="bg-transparent font-bold focus:outline-none flex-1" placeholder="Feature name" />
+                <input type="text" value={feature.source} onChange={(e) => updateFeature(feature.id, 'source', e.target.value)}
+                  className="bg-stone-700 rounded px-2 py-0.5 text-xs text-stone-400 w-32 focus:outline-none" placeholder="Source" />
+                <button onClick={() => removeFeature(feature.id)} className="text-red-500 hover:text-red-400">×</button>
+              </div>
+              <textarea value={feature.description} onChange={(e) => updateFeature(feature.id, 'description', e.target.value)}
+                className="w-full bg-transparent text-sm text-stone-300 focus:outline-none resize-none" rows={2} placeholder="Description..." />
+            </div>
+          ))}
+        </div>
+        {(character.features || []).length === 0 && <div className="text-center text-stone-500 py-4">No custom features yet.</div>}
       </div>
-      {(character.features || []).length === 0 && <div className="text-center text-stone-500 py-8">No features yet.</div>}
     </div>
   );
 }
 
 // Background Tab
 export function BackgroundTab({ character, onUpdate }) {
+  const selectedBackground = BACKGROUNDS.find(b => b.name === character.background);
+
+  const handleBackgroundChange = (backgroundName) => {
+    onUpdate('background', backgroundName);
+    
+    // Optionally apply skill proficiencies from background
+    const bg = BACKGROUNDS.find(b => b.name === backgroundName);
+    if (bg && bg.skills) {
+      // Show which skills the background grants (user can apply them in proficiency modal)
+    }
+  };
+
+  const applyBackgroundSkills = () => {
+    if (!selectedBackground) return;
+    const currentProfs = { ...(character.skillProficiencies || {}) };
+    selectedBackground.skills.forEach(skill => {
+      if (!currentProfs[skill]) {
+        currentProfs[skill] = 1; // Set to proficient
+      }
+    });
+    onUpdate('skillProficiencies', currentProfs);
+  };
+
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <div>
-        <label className="text-xs text-stone-500">Background</label>
-        <input type="text" value={character.background || ''} onChange={(e) => onUpdate('background', e.target.value)}
-          className="w-full bg-stone-800 rounded px-3 py-2 focus:outline-none" placeholder="e.g., Soldier, Sage..." />
+    <div className="space-y-6">
+      {/* Background Selection */}
+      <div className="bg-stone-800 rounded-lg p-4">
+        <h3 className="text-sm font-bold text-amber-400 mb-3">Background (2024)</h3>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-xs text-stone-500">Select Background</label>
+            <select 
+              value={character.background || ''} 
+              onChange={(e) => handleBackgroundChange(e.target.value)}
+              className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 focus:outline-none focus:border-amber-500"
+            >
+              <option value="">-- Select --</option>
+              {BACKGROUNDS.map(bg => (
+                <option key={bg.name} value={bg.name}>{bg.name}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="text-xs text-stone-500">Or Custom</label>
+            <input 
+              type="text" 
+              value={character.background || ''} 
+              onChange={(e) => onUpdate('background', e.target.value)}
+              className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 focus:outline-none focus:border-amber-500" 
+              placeholder="Type custom background..." 
+            />
+          </div>
+        </div>
+        
+        {selectedBackground && (
+          <div className="mt-3 p-3 bg-stone-900 rounded-lg space-y-2">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-xs text-stone-500">Skill Proficiencies: </span>
+                <span className="text-sm text-emerald-400">{selectedBackground.skills.join(', ')}</span>
+              </div>
+              <button 
+                onClick={applyBackgroundSkills}
+                className="px-3 py-1 rounded bg-emerald-800 hover:bg-emerald-700 text-xs text-emerald-200"
+              >
+                Apply Skills
+              </button>
+            </div>
+            <div>
+              <span className="text-xs text-stone-500">Origin Feat: </span>
+              <span className="text-sm text-purple-400">{selectedBackground.feat}</span>
+            </div>
+            <div>
+              <span className="text-xs text-stone-500">Ability Score Options: </span>
+              <span className="text-xs text-amber-400">{selectedBackground.abilities.join(', ')}</span>
+              <span className="text-xs text-stone-600 ml-2">(+2/+1 or +1/+1/+1)</span>
+            </div>
+          </div>
+        )}
       </div>
-      <div>
-        <label className="text-xs text-stone-500">Race</label>
-        <input type="text" value={character.race || ''} onChange={(e) => onUpdate('race', e.target.value)}
-          className="w-full bg-stone-800 rounded px-3 py-2 focus:outline-none" placeholder="e.g., Human, Elf..." />
+
+      {/* Character Details */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="text-xs text-stone-500">Race / Species</label>
+          <input type="text" value={character.race || ''} onChange={(e) => onUpdate('race', e.target.value)}
+            className="w-full bg-stone-800 rounded px-3 py-2 focus:outline-none" placeholder="e.g., Human, Elf..." />
+        </div>
+        <div>
+          <label className="text-xs text-stone-500">Alignment</label>
+          <input type="text" value={character.alignment || ''} onChange={(e) => onUpdate('alignment', e.target.value)}
+            className="w-full bg-stone-800 rounded px-3 py-2 focus:outline-none" placeholder="e.g., Neutral Good" />
+        </div>
+        <div className="col-span-2">
+          <label className="text-xs text-stone-500">Languages</label>
+          <input type="text" value={character.languages || ''} onChange={(e) => onUpdate('languages', e.target.value)}
+            className="w-full bg-stone-800 rounded px-3 py-2 focus:outline-none" placeholder="Common, Elvish..." />
+        </div>
       </div>
-      <div>
-        <label className="text-xs text-stone-500">Alignment</label>
-        <input type="text" value={character.alignment || ''} onChange={(e) => onUpdate('alignment', e.target.value)}
-          className="w-full bg-stone-800 rounded px-3 py-2 focus:outline-none" placeholder="e.g., Neutral Good" />
-      </div>
-      <div>
-        <label className="text-xs text-stone-500">Languages</label>
-        <input type="text" value={character.languages || ''} onChange={(e) => onUpdate('languages', e.target.value)}
-          className="w-full bg-stone-800 rounded px-3 py-2 focus:outline-none" placeholder="Common, Elvish..." />
-      </div>
-      <div className="col-span-2">
-        <label className="text-xs text-stone-500">Personality Traits</label>
-        <textarea value={character.personality || ''} onChange={(e) => onUpdate('personality', e.target.value)}
-          className="w-full bg-stone-800 rounded px-3 py-2 h-20 resize-none focus:outline-none" placeholder="Personality traits..." />
-      </div>
-      <div>
-        <label className="text-xs text-stone-500">Ideals</label>
-        <textarea value={character.ideals || ''} onChange={(e) => onUpdate('ideals', e.target.value)}
-          className="w-full bg-stone-800 rounded px-3 py-2 h-16 resize-none focus:outline-none" placeholder="Ideals..." />
-      </div>
-      <div>
-        <label className="text-xs text-stone-500">Bonds</label>
-        <textarea value={character.bonds || ''} onChange={(e) => onUpdate('bonds', e.target.value)}
-          className="w-full bg-stone-800 rounded px-3 py-2 h-16 resize-none focus:outline-none" placeholder="Bonds..." />
-      </div>
-      <div className="col-span-2">
-        <label className="text-xs text-stone-500">Flaws</label>
-        <textarea value={character.flaws || ''} onChange={(e) => onUpdate('flaws', e.target.value)}
-          className="w-full bg-stone-800 rounded px-3 py-2 h-16 resize-none focus:outline-none" placeholder="Flaws..." />
+
+      {/* Personality */}
+      <div className="space-y-4">
+        <h3 className="text-sm font-bold text-stone-400">Personality</h3>
+        <div>
+          <label className="text-xs text-stone-500">Personality Traits</label>
+          <textarea value={character.personality || ''} onChange={(e) => onUpdate('personality', e.target.value)}
+            className="w-full bg-stone-800 rounded px-3 py-2 h-20 resize-none focus:outline-none" placeholder="Personality traits..." />
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-xs text-stone-500">Ideals</label>
+            <textarea value={character.ideals || ''} onChange={(e) => onUpdate('ideals', e.target.value)}
+              className="w-full bg-stone-800 rounded px-3 py-2 h-16 resize-none focus:outline-none" placeholder="Ideals..." />
+          </div>
+          <div>
+            <label className="text-xs text-stone-500">Bonds</label>
+            <textarea value={character.bonds || ''} onChange={(e) => onUpdate('bonds', e.target.value)}
+              className="w-full bg-stone-800 rounded px-3 py-2 h-16 resize-none focus:outline-none" placeholder="Bonds..." />
+          </div>
+        </div>
+        <div>
+          <label className="text-xs text-stone-500">Flaws</label>
+          <textarea value={character.flaws || ''} onChange={(e) => onUpdate('flaws', e.target.value)}
+            className="w-full bg-stone-800 rounded px-3 py-2 h-16 resize-none focus:outline-none" placeholder="Flaws..." />
+        </div>
       </div>
     </div>
   );

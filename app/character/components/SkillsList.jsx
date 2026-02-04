@@ -1,7 +1,7 @@
 'use client';
 
 import Icons from '../../components/Icons';
-import { SKILLS, getSkillBonus } from './constants';
+import { SKILLS, getSkillBonus, getSkillProficiency, getSkillProficiencySource, getSkillFeatureBonus } from './constants';
 
 export default function SkillsList({ character, onEditClick }) {
   return (
@@ -24,21 +24,34 @@ export default function SkillsList({ character, onEditClick }) {
       {/* Skills List */}
       <div className="divide-y divide-stone-800/50">
         {SKILLS.map(skill => {
-          const prof = character.skillProficiencies?.[skill.name] || 0;
+          const prof = getSkillProficiency(character, skill.name);
+          const source = getSkillProficiencySource(character, skill.name);
+          const featureBonus = getSkillFeatureBonus(character, skill.name);
           const bonus = getSkillBonus(character, skill);
+          const isFromBackground = source?.startsWith('Background');
+          const hasFeatureBonus = featureBonus.bonus > 0;
+          
+          // Build tooltip
+          let tooltip = source || '';
+          if (hasFeatureBonus) {
+            tooltip += (tooltip ? ' | ' : '') + featureBonus.sources.join(', ');
+          }
+          
           return (
-            <div key={skill.name} className="grid grid-cols-12 gap-1 px-2 py-1.5 hover:bg-stone-800/30 items-center">
+            <div key={skill.name} className="grid grid-cols-12 gap-1 px-2 py-1.5 hover:bg-stone-800/30 items-center group" title={tooltip}>
               <div className="col-span-1">
-                <span className={prof === 2 ? 'text-amber-400' : prof === 1 ? 'text-emerald-400' : 'text-stone-600'}>
+                <span className={prof === 2 ? 'text-amber-400' : prof === 1 ? (isFromBackground ? 'text-blue-400' : 'text-emerald-400') : 'text-stone-600'}>
                   {prof > 0 ? '●' : '○'}
                 </span>
               </div>
               <div className="col-span-2 text-[10px] text-stone-500 uppercase font-medium">{skill.stat}</div>
-              <div className={`col-span-7 text-sm truncate ${prof > 0 ? 'text-stone-200' : 'text-stone-400'}`}>
+              <div className={`col-span-7 text-sm truncate ${prof > 0 || hasFeatureBonus ? 'text-stone-200' : 'text-stone-400'}`}>
                 {skill.name}
+                {isFromBackground && <span className="text-[9px] text-blue-400 ml-1 opacity-0 group-hover:opacity-100">BG</span>}
+                {hasFeatureBonus && <span className="text-[9px] text-purple-400 ml-1">★</span>}
               </div>
-              <div className={`col-span-2 text-right font-mono text-sm ${prof === 2 ? 'text-amber-400' : prof === 1 ? 'text-emerald-400' : 'text-stone-400'}`}>
-                <span className="inline-block border border-stone-700 rounded px-1.5 min-w-[2rem] text-center">
+              <div className={`col-span-2 text-right font-mono text-sm ${hasFeatureBonus ? 'text-purple-400' : prof === 2 ? 'text-amber-400' : prof === 1 ? (isFromBackground ? 'text-blue-400' : 'text-emerald-400') : 'text-stone-400'}`}>
+                <span className={`inline-block border rounded px-1.5 min-w-[2rem] text-center ${hasFeatureBonus ? 'border-purple-700' : 'border-stone-700'}`}>
                   {bonus >= 0 ? '+' : ''}{bonus}
                 </span>
               </div>

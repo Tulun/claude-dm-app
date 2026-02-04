@@ -1,170 +1,42 @@
 [
   {
-    "id": "party-2",
-    "name": "Elara Moonwhisper",
-    "class": null,
-    "level": null,
-    "ac": 13,
-    "maxHp": 28,
-    "currentHp": 20,
-    "initiative": 25,
-    "speed": 25,
-    "notes": "Evocation specialist. Low HP!",
-    "resources": [
-      {
-        "name": "1st Level Slots",
-        "current": 3,
-        "max": 4
-      },
-      {
-        "name": "2nd Level Slots",
-        "current": 3,
-        "max": 3
-      },
-      {
-        "name": "3rd Level Slots",
-        "current": 2,
-        "max": 2
-      },
-      {
-        "id": 1769962313580,
-        "name": "4th Level Spell Slots",
-        "current": 2,
-        "max": 2
-      }
-    ],
-    "spellStat": "cha",
+    "name": "Efa Y Bryn",
+    "class": "Druid",
+    "level": 4,
+    "ac": 15,
+    "maxHp": 35,
+    "speed": 30,
+    "notes": "",
+    "resources": [],
+    "str": 10,
+    "dex": 14,
+    "con": 14,
+    "int": 14,
+    "wis": 16,
+    "cha": 8,
+    "spellStat": "wis",
+    "id": "party-1770062695464",
+    "currentHp": 35,
+    "initiative": 10,
     "skillProficiencies": {
-      "Acrobatics": 0,
-      "Animal Handling": 0
+      "Animal Handling": 1,
+      "Medicine": 1,
+      "Nature": 1,
+      "Religion": 1
     },
     "saveProficiencies": {
-      "str": 0,
-      "con": 0,
-      "dex": 0
+      "int": 1,
+      "wis": 1
     },
-    "items": [
-      {
-        "name": "Sword",
-        "description": "Stabby",
-        "quantity": 1
-      }
-    ],
-    "attacks": [
-      {
-        "id": 1769895486322,
-        "name": "",
-        "type": "Attack",
-        "range": "5 ft.",
-        "hit": "",
-        "damage": "",
-        "notes": ""
-      },
-      {
-        "id": 1769895487330,
-        "name": "",
-        "type": "Attack",
-        "range": "5 ft.",
-        "hit": "",
-        "damage": "",
-        "notes": ""
-      },
-      {
-        "id": 1769895488197,
-        "name": "",
-        "type": "Attack",
-        "range": "5 ft.",
-        "hit": "",
-        "damage": "",
-        "notes": ""
-      },
-      {
-        "id": 1769895495177,
-        "name": "",
-        "type": "Attack",
-        "range": "5 ft.",
-        "hit": "",
-        "damage": "",
-        "notes": ""
-      },
-      {
-        "id": 1769895495541,
-        "name": "",
-        "type": "Attack",
-        "range": "5 ft.",
-        "hit": "",
-        "damage": "",
-        "notes": ""
-      }
-    ],
-    "features": [
-      {
-        "id": 1769895583912,
-        "name": "",
-        "description": "",
-        "source": ""
-      }
-    ],
-    "spells": [
-      {
-        "id": 1769895491123,
-        "name": "",
-        "level": "0",
-        "school": "",
-        "castTime": "1 action",
-        "range": "",
-        "duration": "",
-        "description": ""
-      }
-    ],
-    "inventory": [
-      {
-        "id": 1769957301558,
-        "name": "Sword",
-        "quantity": 1,
-        "weight": "",
-        "description": "Stabs"
-      },
-      {
-        "id": 1769957334382,
-        "name": "Big sword",
-        "quantity": 1,
-        "weight": "",
-        "description": "stabbs"
-      }
-    ],
-    "str": 9,
+    "features": [],
+    "spells": [],
+    "inventory": [],
     "advantages": [
       "Adv. vs Poisoned"
     ],
-    "classes": [
-      {
-        "name": "Wizard",
-        "level": 5
-      },
-      {
-        "name": "Warlock",
-        "level": 1
-      }
-    ]
-  },
-  {
-    "id": "party-3",
-    "name": "Bramble Thornfoot",
-    "class": "Rogue",
-    "level": 5,
-    "ac": 15,
-    "maxHp": 38,
-    "currentHp": 38,
-    "initiative": 2,
-    "speed": 35,
-    "notes": "Arcane Trickster. Sneak attack 3d6.",
-    "resources": [
-      {
-        "name": "1st Level Slots",
-        "current": 3,
-        "max": 3
-      }
-    ]
+    "classFeatures": {
+      "Druid:Primal Order": "Magician"
+    },
+    "background": "Hermit"
   }
 ]
