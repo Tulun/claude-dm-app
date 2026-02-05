@@ -64,7 +64,7 @@
         "weight": "",
         "description": "1d6 / 1d8. Melee weapon. Simple, Versatile, Topple. Arcane focus.",
         "isWeapon": true,
-        "damage": "1d6 / 1d8",
+        "damage": "1d6",
         "damageType": "Bludgeoning",
         "mastery": "Topple",
         "properties": "Versatile",
@@ -77,7 +77,8 @@
         "weaponProperties": [
           "Simple",
           "Versatile"
-        ]
+        ],
+        "damage2h": "1d8"
       },
       {
         "id": 1770234839778,

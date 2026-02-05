@@ -71,8 +71,13 @@ const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
     const profBonus = getProfBonus();
     const attackBonus = statMod + profBonus;
     
+    // Check if versatile
+    const isVersatile = props.includes('versatile');
+    
     return {
       dice: dice || '?',
+      dice2h: item.damage2h || null,
+      isVersatile,
       damageType: item.damageType || '',
       properties: Array.isArray(item.weaponProperties) ? item.weaponProperties.join(', ') : item.properties,
       statMod,
@@ -140,7 +145,7 @@ const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
                   {/* Weapon stats badge */}
                   {weapon && weapon.dice !== '?' && (
                     <span className="text-red-400 font-mono text-[11px] bg-red-900/40 px-1.5 rounded">
-                      +{weapon.attackBonus} | {weapon.dice}{weapon.damageBonus >= 0 ? '+' : ''}{weapon.damageBonus}
+                      +{weapon.attackBonus} | {weapon.dice}{weapon.isVersatile && weapon.dice2h ? `/${weapon.dice2h}` : ''}{weapon.damageBonus >= 0 ? '+' : ''}{weapon.damageBonus}
                     </span>
                   )}
                   {weapon?.mastery && (
@@ -173,7 +178,11 @@ const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
                       <div className="flex flex-wrap gap-x-4 gap-y-0.5">
                         <span>Attack: <span className="text-red-300 font-mono">+{weapon.attackBonus}</span> <span className="text-stone-500">({weapon.statName} {weapon.statMod >= 0 ? '+' : ''}{weapon.statMod} + Prof +{weapon.profBonus})</span></span>
                         {weapon.dice !== '?' && (
-                          <span>Damage: <span className="text-red-300 font-mono">{weapon.dice}{weapon.damageBonus >= 0 ? '+' : ''}{weapon.damageBonus}</span> {weapon.damageType && <span className="text-stone-500">{weapon.damageType}</span>}</span>
+                          weapon.isVersatile && weapon.dice2h ? (
+                            <span>Damage: <span className="text-red-300 font-mono">{weapon.dice}{weapon.damageBonus >= 0 ? '+' : ''}{weapon.damageBonus}</span> <span className="text-stone-500">(1H)</span> / <span className="text-red-300 font-mono">{weapon.dice2h}{weapon.damageBonus >= 0 ? '+' : ''}{weapon.damageBonus}</span> <span className="text-stone-500">(2H)</span> {weapon.damageType && <span className="text-stone-500">{weapon.damageType}</span>}</span>
+                          ) : (
+                            <span>Damage: <span className="text-red-300 font-mono">{weapon.dice}{weapon.damageBonus >= 0 ? '+' : ''}{weapon.damageBonus}</span> {weapon.damageType && <span className="text-stone-500">{weapon.damageType}</span>}</span>
+                          )
                         )}
                       </div>
                       {weapon.properties && <div className="text-amber-400/80">Properties: {weapon.properties}</div>}
