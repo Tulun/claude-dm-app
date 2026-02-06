@@ -1,6 +1,62 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
+// Shared Tooltip component - uses fixed positioning to avoid container clipping
+export const Tooltip = ({ text, children }) => {
+  const [show, setShow] = useState(false);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const triggerRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    if (triggerRef.current && text) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      const tooltipWidth = 280;
+      
+      // Start position: above the element, aligned to left
+      let top = rect.top - 8;
+      let left = rect.left;
+      
+      // Prevent going off right edge of viewport
+      if (left + tooltipWidth > window.innerWidth - 16) {
+        left = window.innerWidth - tooltipWidth - 16;
+      }
+      
+      // Prevent going off left edge
+      if (left < 16) {
+        left = 16;
+      }
+      
+      setPosition({ top, left });
+      setShow(true);
+    }
+  };
+
+  return (
+    <span 
+      ref={triggerRef}
+      className="inline-block"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={() => setShow(false)}
+    >
+      {children}
+      {show && text && (
+        <span 
+          className="fixed px-2 py-1.5 bg-stone-900 border border-stone-600 rounded text-xs text-stone-200 shadow-xl pointer-events-none"
+          style={{ 
+            zIndex: 99999, 
+            top: position.top,
+            left: position.left,
+            transform: 'translateY(-100%)',
+            maxWidth: '280px',
+          }}
+        >
+          {text}
+        </span>
+      )}
+    </span>
+  );
+};
 
 export const EditableField = ({ value, onChange, type = 'text', className = '', min, max, placeholder }) => {
   const [editing, setEditing] = useState(false);

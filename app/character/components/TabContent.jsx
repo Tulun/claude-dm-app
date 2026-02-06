@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Icons from '../../components/Icons';
+import { Tooltip } from '../../components/ui';
 import ResourceRow from './ResourceRow';
 import { BACKGROUNDS, CLASS_FEATURES } from './constants';
 
@@ -131,8 +132,6 @@ export function InventoryTab({ character, onUpdate }) {
 
   // Property button component with styled tooltip
   const PropButton = ({ prop, isSelected, onClick, color = 'amber' }) => {
-    const [showTooltip, setShowTooltip] = useState(false);
-    
     const colorClasses = {
       amber: isSelected ? 'bg-amber-800 text-amber-200 ring-1 ring-amber-600' : 'bg-stone-700 text-stone-400 hover:bg-stone-600',
       red: isSelected ? 'bg-red-800 text-red-200 ring-1 ring-red-600' : 'bg-stone-700 text-stone-400 hover:bg-stone-600',
@@ -141,22 +140,14 @@ export function InventoryTab({ character, onUpdate }) {
     };
     
     return (
-      <div className="relative inline-block">
+      <Tooltip text={prop.desc}>
         <button
           onClick={onClick}
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
-          className={`px-1.5 py-0.5 rounded text-xs transition-colors ${colorClasses[color] || colorClasses.amber}`}
+          className={`px-1.5 py-0.5 rounded text-xs transition-colors cursor-pointer ${colorClasses[color] || colorClasses.amber}`}
         >
           {prop.name}
         </button>
-        {showTooltip && prop.desc && (
-          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-stone-950 border border-stone-600 rounded text-xs text-stone-200 whitespace-nowrap z-50 shadow-lg">
-            {prop.desc}
-            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-stone-600"></div>
-          </div>
-        )}
-      </div>
+      </Tooltip>
     );
   };
 

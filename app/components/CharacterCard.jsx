@@ -3,28 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Icons from './Icons';
-import { EditableField, HpBar } from './ui';
-
-// Tooltip component for hover descriptions
-const Tooltip = ({ text, children }) => {
-  const [show, setShow] = useState(false);
-  return (
-    <span 
-      className="relative inline-block"
-      onMouseEnter={() => setShow(true)}
-      onMouseLeave={() => setShow(false)}
-    >
-      {children}
-      {show && text && (
-        <span className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-stone-950 border border-stone-600 rounded text-xs text-stone-200 whitespace-nowrap z-[100] shadow-lg pointer-events-none"
-          style={{ minWidth: 'max-content' }}
-        >
-          {text}
-        </span>
-      )}
-    </span>
-  );
-};
+import { EditableField, HpBar, Tooltip } from './ui';
 
 // Expandable inventory display with weapon stats and armor
 const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
