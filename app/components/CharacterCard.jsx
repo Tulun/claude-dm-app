@@ -5,6 +5,27 @@ import Link from 'next/link';
 import Icons from './Icons';
 import { EditableField, HpBar } from './ui';
 
+// Tooltip component for hover descriptions
+const Tooltip = ({ text, children }) => {
+  const [show, setShow] = useState(false);
+  return (
+    <span 
+      className="relative inline-block"
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+    >
+      {children}
+      {show && text && (
+        <span className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-stone-950 border border-stone-600 rounded text-xs text-stone-200 whitespace-nowrap z-[100] shadow-lg pointer-events-none"
+          style={{ minWidth: 'max-content' }}
+        >
+          {text}
+        </span>
+      )}
+    </span>
+  );
+};
+
 // Expandable inventory display with weapon stats and armor
 const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
   const [expandedItem, setExpandedItem] = useState(null);
@@ -165,20 +186,26 @@ const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
                     </span>
                   )}
                   {weapon?.mastery && (
-                    <span className="text-purple-400 text-[10px] bg-purple-900/40 px-1.5 rounded" title={MASTERY_DESC[weapon.mastery]}>
-                      {weapon.mastery}
-                    </span>
+                    <Tooltip text={MASTERY_DESC[weapon.mastery]}>
+                      <span className="text-purple-400 text-[10px] bg-purple-900/40 px-1.5 rounded cursor-help">
+                        {weapon.mastery}
+                      </span>
+                    </Tooltip>
                   )}
                   {/* Armor stats badge */}
                   {armor && (
-                    <span className="text-blue-400 font-mono text-[11px] bg-blue-900/40 px-1.5 rounded">
-                      AC {armor.ac}
-                    </span>
+                    <Tooltip text={ARMOR_DESC[armor.type]}>
+                      <span className="text-blue-400 font-mono text-[11px] bg-blue-900/40 px-1.5 rounded cursor-help">
+                        AC {armor.ac}
+                      </span>
+                    </Tooltip>
                   )}
                   {armor?.stealthDisadv && (
-                    <span className="text-orange-400 text-[10px] bg-orange-900/40 px-1.5 rounded" title="Disadvantage on Stealth">
-                      Stealth ⊘
-                    </span>
+                    <Tooltip text="Disadvantage on Stealth checks while wearing this armor">
+                      <span className="text-orange-400 text-[10px] bg-orange-900/40 px-1.5 rounded cursor-help">
+                        Stealth ⊘
+                      </span>
+                    </Tooltip>
                   )}
                 </div>
                 {hasDetails && (
@@ -207,21 +234,21 @@ const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
                           {weapon.properties.split(',').map((prop, idx) => {
                             const trimmed = prop.trim();
                             return (
-                              <span 
-                                key={idx} 
-                                className="bg-amber-900/40 text-amber-300 px-1.5 py-0.5 rounded cursor-help"
-                                title={PROPERTY_DESC[trimmed] || trimmed}
-                              >
-                                {trimmed}
-                              </span>
+                              <Tooltip key={idx} text={PROPERTY_DESC[trimmed]}>
+                                <span className="bg-amber-900/40 text-amber-300 px-1.5 py-0.5 rounded cursor-help">
+                                  {trimmed}
+                                </span>
+                              </Tooltip>
                             );
                           })}
                         </div>
                       )}
                       {weapon.mastery && (
-                        <div className="text-purple-400">
-                          <span className="font-medium">{weapon.mastery}:</span> {MASTERY_DESC[weapon.mastery] || ''}
-                        </div>
+                        <Tooltip text={MASTERY_DESC[weapon.mastery]}>
+                          <span className="text-purple-400 cursor-help">
+                            <span className="font-medium">{weapon.mastery}</span>
+                          </span>
+                        </Tooltip>
                       )}
                     </div>
                   )}

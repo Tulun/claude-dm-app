@@ -56,9 +56,9 @@ export default function DMAdminTool() {
   const router = useRouter();
   const tabFromUrl = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState(tabFromUrl || 'combat');
-  const [party, setParty] = useState(defaultPartyData);
+  const [party, setParty] = useState(null); // Start with null to detect loading
   const [enemies, setEnemies] = useState([]);
-  const [templates, setTemplates] = useState(defaultEnemyTemplates);
+  const [templates, setTemplates] = useState(null); // Start with null to detect loading
   const [expandedCards, setExpandedCards] = useState({});
   const [showAddEnemy, setShowAddEnemy] = useState(false);
   const [showAddParty, setShowAddParty] = useState(false);
@@ -74,7 +74,7 @@ export default function DMAdminTool() {
       // Reload data when returning from another page
       if (isLoaded) {
         fetch('/api/party').then(res => res.ok && res.json()).then(data => {
-          if (data && Array.isArray(data) && data.length > 0) setParty(data);
+          if (data && Array.isArray(data)) setParty(data.length > 0 ? data : defaultPartyData);
         }).catch(console.error);
       }
     }
@@ -91,20 +91,23 @@ export default function DMAdminTool() {
         
         if (partyRes.ok) {
           const partyData = await partyRes.json();
-          // Only update if we got valid data, otherwise keep defaults
-          if (partyData && Array.isArray(partyData) && partyData.length > 0) {
-            setParty(partyData);
-          }
+          // Use loaded data or fall back to defaults
+          setParty(partyData && Array.isArray(partyData) && partyData.length > 0 ? partyData : defaultPartyData);
+        } else {
+          setParty(defaultPartyData);
         }
         
         if (templatesRes.ok) {
           const templatesData = await templatesRes.json();
-          if (templatesData && Array.isArray(templatesData) && templatesData.length > 0) {
-            setTemplates(templatesData);
-          }
+          setTemplates(templatesData && Array.isArray(templatesData) && templatesData.length > 0 ? templatesData : defaultEnemyTemplates);
+        } else {
+          setTemplates(defaultEnemyTemplates);
         }
       } catch (err) {
         console.error('Error loading data:', err);
+        // Fall back to defaults on error
+        setParty(defaultPartyData);
+        setTemplates(defaultEnemyTemplates);
       }
       setIsLoaded(true);
     };
@@ -179,7 +182,7 @@ export default function DMAdminTool() {
     }
   };
 
-  const initiativeList = [...party, ...enemies].sort((a, b) => b.initiative - a.initiative);
+  const initiativeList = [...(party || []), ...enemies].sort((a, b) => b.initiative - a.initiative);
 
   const handleDrop = (e, dropIndex) => {
     e.preventDefault();
@@ -226,21 +229,26 @@ export default function DMAdminTool() {
               <h2 className="text-lg font-bold text-emerald-400 flex items-center gap-2"><Icons.Shield />Party & Allies</h2>
               <div className="flex gap-2">
                 <button onClick={reloadParty} className="flex items-center gap-1 px-2 py-1 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-xs"><Icons.Refresh />Reload</button>
-                <button onClick={() => setParty(prev => prev.map(p => ({ ...p, resources: (p.resources || []).map(r => ({ ...r, current: r.max })) })))} className="flex items-center gap-1 px-2 py-1 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-xs"><Icons.Refresh />Rest</button>
+                <button onClick={() => setParty(prev => (prev || []).map(p => ({ ...p, resources: (p.resources || []).map(r => ({ ...r, current: r.max })) })))} className="flex items-center gap-1 px-2 py-1 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-xs"><Icons.Refresh />Rest</button>
                 <button onClick={() => setShowAddParty(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-emerald-800/50 hover:bg-emerald-700/50 text-emerald-300 text-sm"><Icons.Plus />Add</button>
               </div>
             </div>
-            {party.map(m => <CharacterCard key={m.id} character={m} isEnemy={false} onUpdate={(u) => setParty(prev => prev.map(p => p.id === u.id ? u : p))} onRemove={(id) => setParty(prev => prev.filter(p => p.id !== id))} expanded={expandedCards[m.id]} onToggleExpand={() => setExpandedCards(prev => ({ ...prev, [m.id]: !prev[m.id] }))} showResources />)}
-            {!party.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No party members yet.</div>}
+            {!party ? (
+              <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg animate-pulse">Loading party...</div>
+            ) : party.length > 0 ? (
+              party.map(m => <CharacterCard key={m.id} character={m} isEnemy={false} onUpdate={(u) => setParty(prev => prev.map(p => p.id === u.id ? u : p))} onRemove={(id) => setParty(prev => prev.filter(p => p.id !== id))} expanded={expandedCards[m.id]} onToggleExpand={() => setExpandedCards(prev => ({ ...prev, [m.id]: !prev[m.id] }))} showResources />)
+            ) : (
+              <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No party members yet.</div>
+            )}
           </div>
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-amber-400 flex items-center gap-2"><Icons.Sword />Initiative</h2>
-              <button onClick={() => { setParty(prev => prev.map(p => ({ ...p, initiative: Math.floor(Math.random() * 20) + 1 }))); setEnemies(prev => prev.map(e => ({ ...e, initiative: Math.floor(Math.random() * 20) + 1 }))); }} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.Dice />Roll All</button>
+              <button onClick={() => { setParty(prev => (prev || []).map(p => ({ ...p, initiative: Math.floor(Math.random() * 20) + 1 }))); setEnemies(prev => prev.map(e => ({ ...e, initiative: Math.floor(Math.random() * 20) + 1 }))); }} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.Dice />Roll All</button>
             </div>
             <div className="space-y-2">
-              {initiativeList.map((c, i) => <InitiativeItem key={c.id} character={c} isEnemy={enemies.some(e => e.id === c.id)} index={i} onDragStart={(e, idx) => { setDragIndex(idx); e.dataTransfer.effectAllowed = 'move'; }} onDragOver={(e, idx) => { e.preventDefault(); setDragOverIndex(idx); }} onDrop={handleDrop} onDragEnd={() => { setDragIndex(null); setDragOverIndex(null); }} isDragging={dragIndex === i} dragOverIndex={dragOverIndex} onUpdateInitiative={(id, newInit) => { if (party.some(p => p.id === id)) setParty(prev => prev.map(p => p.id === id ? { ...p, initiative: newInit } : p)); else setEnemies(prev => prev.map(e => e.id === id ? { ...e, initiative: newInit } : e)); }} />)}
+              {initiativeList.map((c, i) => <InitiativeItem key={c.id} character={c} isEnemy={enemies.some(e => e.id === c.id)} index={i} onDragStart={(e, idx) => { setDragIndex(idx); e.dataTransfer.effectAllowed = 'move'; }} onDragOver={(e, idx) => { e.preventDefault(); setDragOverIndex(idx); }} onDrop={handleDrop} onDragEnd={() => { setDragIndex(null); setDragOverIndex(null); }} isDragging={dragIndex === i} dragOverIndex={dragOverIndex} onUpdateInitiative={(id, newInit) => { if ((party || []).some(p => p.id === id)) setParty(prev => prev.map(p => p.id === id ? { ...p, initiative: newInit } : p)); else setEnemies(prev => prev.map(e => e.id === id ? { ...e, initiative: newInit } : e)); }} />)}
               {!initiativeList.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">Add combatants to begin!</div>}
             </div>
           </div>
@@ -268,28 +276,33 @@ export default function DMAdminTool() {
               </div>
             </div>
             <p className="text-stone-400 text-sm mb-6">Click on a character to view and edit their full details.</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {party.map(member => (
-                <Link 
-                  key={member.id} 
-                  href={`/character?id=${member.id}&type=party`}
-                  className="block p-4 rounded-lg border border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60 hover:border-emerald-600/50 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-emerald-900/50"><Icons.Shield /></div>
-                    <div className="flex-1">
-                      <h3 className="font-bold">{member.name}</h3>
-                      <p className="text-xs text-stone-400">{member.class} {member.level}</p>
+            {!party ? (
+              <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg animate-pulse">Loading party...</div>
+            ) : party.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {party.map(member => (
+                  <Link 
+                    key={member.id} 
+                    href={`/character?id=${member.id}&type=party`}
+                    className="block p-4 rounded-lg border border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60 hover:border-emerald-600/50 transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-emerald-900/50"><Icons.Shield /></div>
+                      <div className="flex-1">
+                        <h3 className="font-bold">{member.name}</h3>
+                        <p className="text-xs text-stone-400">{member.class} {member.level}</p>
+                      </div>
+                      <div className="text-right text-sm">
+                        <div className={`flex items-center gap-1 ${member.acEffect ? 'text-cyan-400' : 'text-stone-400'}`}><Icons.Shield /> {getCalculatedAC(member)}</div>
+                        <div className="flex items-center gap-1 text-stone-400"><Icons.Heart /> {member.currentHp}/{member.maxHp}</div>
+                      </div>
                     </div>
-                    <div className="text-right text-sm">
-                      <div className={`flex items-center gap-1 ${member.acEffect ? 'text-cyan-400' : 'text-stone-400'}`}><Icons.Shield /> {getCalculatedAC(member)}</div>
-                      <div className="flex items-center gap-1 text-stone-400"><Icons.Heart /> {member.currentHp}/{member.maxHp}</div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-            {!party.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No party members yet.</div>}
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No party members yet.</div>
+            )}
           </div>
         </main>
       ) : (
@@ -300,17 +313,21 @@ export default function DMAdminTool() {
               <button onClick={reloadTemplates} className="flex items-center gap-1 px-3 py-2 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-sm"><Icons.Refresh />Reload</button>
             </div>
             <p className="text-stone-400 text-sm mb-6">Create and manage reusable templates. Changes auto-save to <code className="bg-stone-800 px-1 rounded">data/templates.json</code></p>
-            <TemplateEditor templates={templates} onUpdate={(u) => setTemplates(prev => prev.map(t => t.id === u.id ? u : t))} onDelete={(id) => setTemplates(prev => prev.filter(t => t.id !== id))} onCreate={(t) => setTemplates(prev => [...prev, t])} />
+            {!templates ? (
+              <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg animate-pulse">Loading templates...</div>
+            ) : (
+              <TemplateEditor templates={templates} onUpdate={(u) => setTemplates(prev => prev.map(t => t.id === u.id ? u : t))} onDelete={(id) => setTemplates(prev => prev.filter(t => t.id !== id))} onCreate={(t) => setTemplates(prev => [...prev, t])} />
+            )}
           </div>
         </main>
       )}
 
-      <AddEnemyModal isOpen={showAddEnemy} onClose={() => setShowAddEnemy(false)} onAdd={(e) => setEnemies(prev => [...prev, e])} templates={templates} />
+      <AddEnemyModal isOpen={showAddEnemy} onClose={() => setShowAddEnemy(false)} onAdd={(e) => setEnemies(prev => [...prev, e])} templates={templates || []} />
       <AddPartyModal 
         isOpen={showAddParty} 
         onClose={() => setShowAddParty(false)} 
         onSave={(newMember) => {
-          const newParty = [...party, newMember];
+          const newParty = [...(party || []), newMember];
           setParty(newParty);
           // Immediately save to file
           fetch('/api/party', {
