@@ -21,6 +21,22 @@ const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
     'Vex': 'Gain advantage on next attack vs target',
   };
 
+  // Weapon property descriptions
+  const PROPERTY_DESC = {
+    'Ammunition': 'Requires ammunition to fire. Drawing ammo is part of the attack.',
+    'Finesse': 'Use STR or DEX for attack and damage rolls.',
+    'Heavy': 'Small creatures have disadvantage on attacks.',
+    'Light': 'Can engage in two-weapon fighting.',
+    'Loading': 'Only one attack per action, bonus action, or reaction.',
+    'Range': 'Can attack at a distance. Two numbers: normal/long range.',
+    'Reach': 'Adds 5 ft to your reach when attacking.',
+    'Thrown': 'Can be thrown for a ranged attack using same modifier.',
+    'Two-Handed': 'Requires two hands to use.',
+    'Versatile': 'Can be used with one or two hands (larger damage die).',
+    'Simple': 'Simple weapon - most classes are proficient.',
+    'Martial': 'Martial weapon - requires proficiency.',
+  };
+
   // Armor type descriptions
   const ARMOR_DESC = {
     'Light': 'AC + full DEX modifier',
@@ -185,7 +201,23 @@ const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
                           )
                         )}
                       </div>
-                      {weapon.properties && <div className="text-amber-400/80">Properties: {weapon.properties}</div>}
+                      {weapon.properties && (
+                        <div className="flex flex-wrap items-center gap-1">
+                          <span className="text-stone-500">Properties:</span>
+                          {weapon.properties.split(',').map((prop, idx) => {
+                            const trimmed = prop.trim();
+                            return (
+                              <span 
+                                key={idx} 
+                                className="bg-amber-900/40 text-amber-300 px-1.5 py-0.5 rounded cursor-help"
+                                title={PROPERTY_DESC[trimmed] || trimmed}
+                              >
+                                {trimmed}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      )}
                       {weapon.mastery && (
                         <div className="text-purple-400">
                           <span className="font-medium">{weapon.mastery}:</span> {MASTERY_DESC[weapon.mastery] || ''}
