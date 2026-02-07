@@ -36,7 +36,7 @@
     "spellStat": "wis",
     "id": "party-1770062695464",
     "currentHp": 35,
-    "initiative": 10,
+    "initiative": 8,
     "skillProficiencies": {
       "Animal Handling": 1,
       "Medicine": 1,
@@ -111,6 +111,47 @@
     ],
     "classFeatures": {
       "Druid:Primal Order": "Magician"
-    }
+    },
+    "classes": [
+      {
+        "name": "Druid",
+        "level": 4,
+        "subclass": "Circle of the Shepherd*"
+      }
+    ]
+  },
+  {
+    "name": "Braadlei",
+    "class": "Bard",
+    "level": 4,
+    "ac": 10,
+    "maxHp": 43,
+    "speed": 35,
+    "notes": "",
+    "resources": [],
+    "str": 9,
+    "dex": 12,
+    "con": 16,
+    "int": 10,
+    "wis": 14,
+    "cha": 14,
+    "spellStat": "cha",
+    "id": "party-1770417737904",
+    "currentHp": 43,
+    "initiative": 7,
+    "skillProficiencies": {},
+    "saveProficiencies": {},
+    "features": [],
+    "spells": [],
+    "inventory": [],
+    "advantages": [],
+    "background": "Farmer",
+    "classes": [
+      {
+        "name": "Bard",
+        "level": 4,
+        "subclass": "College of Lore"
+      }
+    ]
   }
 ]

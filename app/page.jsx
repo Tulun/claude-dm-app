@@ -182,16 +182,36 @@ export default function DMAdminTool() {
     }
   };
 
-  const initiativeList = [...(party || []), ...enemies].sort((a, b) => b.initiative - a.initiative);
+  // Manual initiative order - stores IDs in display order
+  const [initiativeOrder, setInitiativeOrder] = useState([]);
+  
+  // Build the initiative list based on manual order or default to all combatants
+  const allCombatants = [...(party || []), ...enemies];
+  
+  // If we have a manual order, use it (filtering out any removed combatants)
+  // Then append any new combatants not yet in the order
+  const orderedIds = initiativeOrder.filter(id => allCombatants.some(c => c.id === id));
+  const newCombatantIds = allCombatants.filter(c => !orderedIds.includes(c.id)).map(c => c.id);
+  const fullOrderIds = [...orderedIds, ...newCombatantIds];
+  
+  const fullInitiativeList = fullOrderIds.map(id => allCombatants.find(c => c.id === id)).filter(Boolean);
+
+  // Sort by initiative values
+  const sortByInitiative = () => {
+    const sorted = [...allCombatants].sort((a, b) => b.initiative - a.initiative);
+    setInitiativeOrder(sorted.map(c => c.id));
+  };
 
   const handleDrop = (e, dropIndex) => {
     e.preventDefault();
     if (dragIndex === null || dragIndex === dropIndex) return;
-    const dragged = initiativeList[dragIndex];
-    const target = initiativeList[dropIndex];
-    const newInit = target.initiative + (dragIndex > dropIndex ? 0.5 : -0.5);
-    if (party.some(p => p.id === dragged.id)) setParty(prev => prev.map(p => p.id === dragged.id ? { ...p, initiative: newInit } : p));
-    else setEnemies(prev => prev.map(e => e.id === dragged.id ? { ...e, initiative: newInit } : e));
+    
+    // Reorder without changing initiative values
+    const currentOrder = fullOrderIds.length > 0 ? [...fullOrderIds] : allCombatants.map(c => c.id);
+    const [draggedId] = currentOrder.splice(dragIndex, 1);
+    currentOrder.splice(dropIndex, 0, draggedId);
+    setInitiativeOrder(currentOrder);
+    
     setDragIndex(null);
     setDragOverIndex(null);
   };
@@ -245,11 +265,11 @@ export default function DMAdminTool() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-amber-400 flex items-center gap-2"><Icons.Sword />Initiative</h2>
-              <button onClick={() => { setParty(prev => (prev || []).map(p => ({ ...p, initiative: Math.floor(Math.random() * 20) + 1 }))); setEnemies(prev => prev.map(e => ({ ...e, initiative: Math.floor(Math.random() * 20) + 1 }))); }} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.Dice />Roll All</button>
+              <button onClick={sortByInitiative} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.Refresh />Sort by Init</button>
             </div>
             <div className="space-y-2">
-              {initiativeList.map((c, i) => <InitiativeItem key={c.id} character={c} isEnemy={enemies.some(e => e.id === c.id)} index={i} onDragStart={(e, idx) => { setDragIndex(idx); e.dataTransfer.effectAllowed = 'move'; }} onDragOver={(e, idx) => { e.preventDefault(); setDragOverIndex(idx); }} onDrop={handleDrop} onDragEnd={() => { setDragIndex(null); setDragOverIndex(null); }} isDragging={dragIndex === i} dragOverIndex={dragOverIndex} onUpdateInitiative={(id, newInit) => { if ((party || []).some(p => p.id === id)) setParty(prev => prev.map(p => p.id === id ? { ...p, initiative: newInit } : p)); else setEnemies(prev => prev.map(e => e.id === id ? { ...e, initiative: newInit } : e)); }} />)}
-              {!initiativeList.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">Add combatants to begin!</div>}
+              {fullInitiativeList.map((c, i) => <InitiativeItem key={c.id} character={c} isEnemy={enemies.some(e => e.id === c.id)} index={i} onDragStart={(e, idx) => { setDragIndex(idx); e.dataTransfer.effectAllowed = 'move'; }} onDragOver={(e, idx) => { e.preventDefault(); setDragOverIndex(idx); }} onDrop={handleDrop} onDragEnd={() => { setDragIndex(null); setDragOverIndex(null); }} isDragging={dragIndex === i} dragOverIndex={dragOverIndex} onUpdateInitiative={(id, newInit) => { if ((party || []).some(p => p.id === id)) setParty(prev => prev.map(p => p.id === id ? { ...p, initiative: newInit } : p)); else setEnemies(prev => prev.map(e => e.id === id ? { ...e, initiative: newInit } : e)); }} />)}
+              {!fullInitiativeList.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">Add combatants to begin!</div>}
             </div>
           </div>
 

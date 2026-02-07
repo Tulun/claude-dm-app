@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Icons from '../../components/Icons';
 import { Tooltip } from '../../components/ui';
 import ResourceRow from './ResourceRow';
-import { BACKGROUNDS, CLASS_FEATURES } from './constants';
+import { BACKGROUNDS, CLASS_FEATURES, SUBCLASS_FEATURES } from './constants';
 
 // Resources Tab
 export function ResourcesTab({ character, onUpdate }) {
@@ -513,13 +513,17 @@ export function FeaturesTab({ character, onUpdate }) {
     onUpdate('features', character.features.filter(f => f.id !== id));
   };
 
-  // Get character's classes for class-specific features
+  // Get character's classes with full info (name, level, subclass)
   const characterClasses = character.classes?.length > 0 
-    ? character.classes.map(c => c.name) 
-    : character.class ? [character.class] : [];
+    ? character.classes 
+    : character.class ? [{ name: character.class, level: character.level || 1, subclass: character.subclass }] : [];
 
   const updateClassFeature = (featureName, value) => {
     onUpdate('classFeatures', { ...(character.classFeatures || {}), [featureName]: value });
+  };
+
+  const updateSubclassChoice = (choiceKey, value) => {
+    onUpdate('subclassChoices', { ...(character.subclassChoices || {}), [choiceKey]: value });
   };
 
   return (
@@ -529,13 +533,13 @@ export function FeaturesTab({ character, onUpdate }) {
         <div className="bg-stone-800 rounded-lg p-4">
           <h3 className="text-sm font-bold text-amber-400 mb-3">Class Features (2024 PHB)</h3>
           <div className="space-y-4">
-            {characterClasses.map(className => {
-              const classFeatures = CLASS_FEATURES[className];
+            {characterClasses.map(cls => {
+              const classFeatures = CLASS_FEATURES[cls.name];
               if (!classFeatures) return null;
               
               return (
-                <div key={className} className="space-y-3">
-                  <div className="text-sm font-medium text-stone-300 border-b border-stone-700 pb-1">{className}</div>
+                <div key={cls.name} className="space-y-3">
+                  <div className="text-sm font-medium text-stone-300 border-b border-stone-700 pb-1">{cls.name}</div>
                   {Object.entries(classFeatures).map(([featureName, feature]) => (
                     <div key={featureName} className="pl-2">
                       <div className="flex items-center gap-2 mb-1">
@@ -545,8 +549,8 @@ export function FeaturesTab({ character, onUpdate }) {
                       </div>
                       {feature.options.length > 0 && (
                         <select
-                          value={character.classFeatures?.[`${className}:${featureName}`] || ''}
-                          onChange={(e) => updateClassFeature(`${className}:${featureName}`, e.target.value)}
+                          value={character.classFeatures?.[`${cls.name}:${featureName}`] || ''}
+                          onChange={(e) => updateClassFeature(`${cls.name}:${featureName}`, e.target.value)}
                           className="w-full bg-stone-900 border border-stone-600 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-500"
                         >
                           <option value="">-- Select --</option>
@@ -557,6 +561,83 @@ export function FeaturesTab({ character, onUpdate }) {
                       )}
                     </div>
                   ))}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Subclass Features */}
+      {characterClasses.some(cls => cls.subclass && SUBCLASS_FEATURES[cls.subclass]) && (
+        <div className="bg-purple-900/30 border border-purple-800/50 rounded-lg p-4">
+          <h3 className="text-sm font-bold text-purple-400 mb-3">Subclass Features</h3>
+          <div className="space-y-4">
+            {characterClasses.map(cls => {
+              if (!cls.subclass) return null;
+              const subclassData = SUBCLASS_FEATURES[cls.subclass];
+              if (!subclassData) return null;
+              
+              const classLevel = cls.level || 1;
+              
+              return (
+                <div key={cls.subclass} className="space-y-3">
+                  <div className="text-sm font-medium text-purple-300 border-b border-purple-800/50 pb-1">
+                    {cls.subclass} <span className="text-stone-500">({cls.name} {classLevel})</span>
+                  </div>
+                  
+                  {/* Features list */}
+                  {subclassData.features
+                    .filter(feature => feature.level <= classLevel)
+                    .map((feature, idx) => (
+                    <div key={idx} className="pl-2 border-l-2 border-purple-800/50">
+                      <div className="flex items-start gap-2 mb-1">
+                        <span className="text-sm font-medium text-purple-200">{feature.name}</span>
+                        <span className="text-xs text-purple-600 bg-purple-900/50 px-1.5 rounded">Lv {feature.level}</span>
+                      </div>
+                      <p className="text-xs text-stone-400 mb-2">{feature.description}</p>
+                      
+                      {/* Feature choice dropdown */}
+                      {feature.choice && subclassData.choices?.[feature.choice] && (
+                        <div className="mt-2">
+                          <label className="text-xs text-purple-400 mb-1 block">
+                            {subclassData.choices[feature.choice].label}:
+                          </label>
+                          <select
+                            value={character.subclassChoices?.[`${cls.subclass}:${feature.choice}`] || ''}
+                            onChange={(e) => updateSubclassChoice(`${cls.subclass}:${feature.choice}`, e.target.value)}
+                            className="w-full bg-stone-900 border border-purple-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-purple-500"
+                          >
+                            <option value="">-- Select --</option>
+                            {subclassData.choices[feature.choice].options.map(opt => (
+                              <option key={opt.name} value={opt.name}>{opt.name}</option>
+                            ))}
+                          </select>
+                          {/* Show selected choice description */}
+                          {character.subclassChoices?.[`${cls.subclass}:${feature.choice}`] && (
+                            <p className="text-xs text-purple-300 mt-1 bg-purple-900/30 rounded p-2">
+                              {subclassData.choices[feature.choice].options.find(
+                                o => o.name === character.subclassChoices[`${cls.subclass}:${feature.choice}`]
+                              )?.description}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  
+                  {/* Show locked future features */}
+                  {subclassData.features.filter(f => f.level > classLevel).length > 0 && (
+                    <div className="mt-3 pt-2 border-t border-purple-900/50">
+                      <span className="text-xs text-stone-600">Future features: </span>
+                      <span className="text-xs text-stone-500">
+                        {subclassData.features
+                          .filter(f => f.level > classLevel)
+                          .map(f => `${f.name} (Lv ${f.level})`)
+                          .join(', ')}
+                      </span>
+                    </div>
+                  )}
                 </div>
               );
             })}
