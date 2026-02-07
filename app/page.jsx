@@ -16,9 +16,6 @@ const getCalculatedAC = (character) => {
   const dexMod = getModNum(character.dex);
   const inventory = character.inventory || [];
   
-  // If no inventory, fall back to manual AC field
-  if (inventory.length === 0) return character.ac || 10;
-  
   const equippedArmor = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType !== 'Shield');
   const equippedShield = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType === 'Shield');
   const acBonusItems = inventory.filter(i => i.equipped && i.acBonus && i.itemType !== 'armor');
@@ -39,10 +36,17 @@ const getCalculatedAC = (character) => {
     const classes = character.classes?.map(c => c.name.toLowerCase()) || [character.class?.toLowerCase()];
     if (classes.includes('barbarian')) baseAC = 10 + conMod;
     else if (classes.includes('monk')) baseAC = 10 + wisMod;
+  } else if (character.acEffect === 'draconicResilience') {
+    // Draconic Sorcerer: 10 + DEX + CHA
+    const chaMod = getModNum(character.cha);
+    baseAC = 10 + chaMod;
   } else if (equippedArmor) {
     baseAC = parseInt(equippedArmor.baseAC) || 10;
     if (equippedArmor.armorType === 'Medium') dexBonus = Math.min(2, dexMod);
     else if (equippedArmor.armorType === 'Heavy') dexBonus = 0;
+  } else if (inventory.length === 0 && !character.acEffect) {
+    // No inventory and no effect, fall back to manual AC field
+    return character.ac || 10;
   }
   
   if (equippedShield) shieldBonus = parseInt(equippedShield.baseAC) || 2;

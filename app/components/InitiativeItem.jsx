@@ -37,6 +37,10 @@ const getCalculatedAC = (character) => {
     } else if (classes.includes('monk')) {
       baseAC = 10 + wisMod;
     }
+  } else if (character.acEffect === 'draconicResilience') {
+    // Draconic Sorcerer: 10 + DEX + CHA
+    const chaMod = getModNum(character.cha);
+    baseAC = 10 + chaMod;
   } else if (equippedArmor) {
     baseAC = parseInt(equippedArmor.baseAC) || 10;
     if (equippedArmor.armorType === 'Medium') {
@@ -44,6 +48,9 @@ const getCalculatedAC = (character) => {
     } else if (equippedArmor.armorType === 'Heavy') {
       dexBonus = 0;
     }
+  } else if (inventory.length === 0 && !character.acEffect) {
+    // No inventory and no effect, return null to fall back to manual AC
+    return null;
   }
   
   if (equippedShield) {
@@ -62,8 +69,9 @@ const InitiativeItem = ({ character, isEnemy, index, onDragStart, onDragOver, on
   const [editing, setEditing] = useState(false);
   const [initValue, setInitValue] = useState(String(character.initiative));
 
-  // Calculate AC - use calculated value, fall back to manual ac field for enemies/NPCs without inventory
-  const displayAC = character.inventory?.length > 0 ? getCalculatedAC(character) : (character.ac || 10);
+  // Calculate AC - use calculated value if available, fall back to manual ac field
+  const calculatedAC = getCalculatedAC(character);
+  const displayAC = calculatedAC !== null ? calculatedAC : (character.ac || 10);
 
   const handleInitChange = (e) => {
     setInitValue(e.target.value);
