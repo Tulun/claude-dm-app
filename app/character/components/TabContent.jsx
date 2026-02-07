@@ -8,6 +8,9 @@ import { BACKGROUNDS, CLASS_FEATURES, SUBCLASS_FEATURES } from './constants';
 
 // Resources Tab
 export function ResourcesTab({ character, onUpdate }) {
+  const [draggedIndex, setDraggedIndex] = useState(null);
+  const [dragOverIndex, setDragOverIndex] = useState(null);
+
   const addResource = () => {
     const newResource = { id: Date.now(), name: '', current: 1, max: 1 };
     onUpdate('resources', [...(character.resources || []), newResource]);
@@ -25,6 +28,44 @@ export function ResourcesTab({ character, onUpdate }) {
     onUpdate('resources', updated);
   };
 
+  const handleDragStart = (e, index) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    if (draggedIndex !== index) {
+      setDragOverIndex(index);
+    }
+  };
+
+  const handleDragLeave = () => {
+    setDragOverIndex(null);
+  };
+
+  const handleDrop = (e, dropIndex) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === dropIndex) {
+      setDraggedIndex(null);
+      setDragOverIndex(null);
+      return;
+    }
+
+    const updated = [...(character.resources || [])];
+    const [draggedItem] = updated.splice(draggedIndex, 1);
+    updated.splice(dropIndex, 0, draggedItem);
+    onUpdate('resources', updated);
+    
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-3">
@@ -36,12 +77,31 @@ export function ResourcesTab({ character, onUpdate }) {
       
       <div className="space-y-2">
         {(character.resources || []).map((resource, i) => (
-          <ResourceRow 
-            key={resource.id || i} 
-            resource={resource} 
-            onUpdate={(field, value) => updateResource(i, field, value)}
-            onRemove={() => removeResource(i)}
-          />
+          <div
+            key={resource.id || i}
+            draggable
+            onDragStart={(e) => handleDragStart(e, i)}
+            onDragOver={(e) => handleDragOver(e, i)}
+            onDragLeave={handleDragLeave}
+            onDrop={(e) => handleDrop(e, i)}
+            onDragEnd={handleDragEnd}
+            className={`flex items-center gap-2 transition-all ${
+              draggedIndex === i ? 'opacity-50' : ''
+            } ${
+              dragOverIndex === i ? 'border-t-2 border-amber-500 pt-1' : ''
+            }`}
+          >
+            <div className="cursor-grab active:cursor-grabbing text-stone-600 hover:text-stone-400 px-1">
+              <Icons.GripVertical />
+            </div>
+            <div className="flex-1">
+              <ResourceRow 
+                resource={resource} 
+                onUpdate={(field, value) => updateResource(i, field, value)}
+                onRemove={() => removeResource(i)}
+              />
+            </div>
+          </div>
         ))}
       </div>
       {(character.resources || []).length === 0 && (
@@ -498,6 +558,125 @@ export function SpellsTab({ character, onUpdate }) {
   );
 }
 
+// Multi-select component with tooltip support
+function MultiSelectWithTooltips({ 
+  feature, featureKey, selectedOptions, maxSelections, currentValue, 
+  isExpanded, toggleExpanded, toggleMultiSelectOption 
+}) {
+  const [tooltipInfo, setTooltipInfo] = useState(null);
+
+  const handleMouseEnter = (e, opt) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setTooltipInfo({
+      text: opt.description,
+      x: rect.left,
+      y: rect.top - 4,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setTooltipInfo(null);
+  };
+
+  return (
+    <div className="bg-stone-900 border border-amber-700 rounded overflow-hidden">
+      {/* Tooltip */}
+      {tooltipInfo && (
+        <div 
+          className="fixed z-[99999] bg-stone-950 border border-stone-600 rounded px-3 py-2 text-xs text-stone-200 shadow-xl pointer-events-none"
+          style={{ 
+            left: Math.min(tooltipInfo.x, window.innerWidth - 300),
+            top: tooltipInfo.y,
+            transform: 'translateY(-100%)',
+            maxWidth: 280,
+          }}
+        >
+          {tooltipInfo.text}
+        </div>
+      )}
+
+      {/* Header - always visible, shows selected items */}
+      <button
+        onClick={() => toggleExpanded(featureKey)}
+        className="w-full px-3 py-2 flex items-center justify-between hover:bg-stone-800 transition-colors"
+      >
+        <div className="flex-1 text-left">
+          {selectedOptions.length === 0 ? (
+            <span className="text-stone-500 text-sm">Click to select options...</span>
+          ) : (
+            <div className="flex flex-wrap gap-1">
+              {selectedOptions.map(name => {
+                const opt = feature.options.find(o => o.name === name);
+                return (
+                  <span 
+                    key={name} 
+                    className="text-xs bg-amber-700 text-amber-100 px-2 py-0.5 rounded cursor-help"
+                    onMouseEnter={(e) => { e.stopPropagation(); handleMouseEnter(e, opt); }}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    {name}
+                  </span>
+                );
+              })}
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-2 ml-2">
+          <span className={`text-xs px-1.5 py-0.5 rounded ${
+            selectedOptions.length === maxSelections 
+              ? 'bg-emerald-900/50 text-emerald-400' 
+              : 'bg-cyan-900/30 text-cyan-400'
+          }`}>
+            {selectedOptions.length}/{maxSelections}
+          </span>
+          <span className={`text-stone-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}>
+            ▼
+          </span>
+        </div>
+      </button>
+      
+      {/* Expanded options list */}
+      {isExpanded && (
+        <div className="border-t border-stone-700 p-2 space-y-1 max-h-64 overflow-y-auto">
+          {feature.options.map(opt => {
+            const isSelected = selectedOptions.includes(opt.name);
+            const canSelect = isSelected || selectedOptions.length < maxSelections;
+            
+            return (
+              <label 
+                key={opt.name} 
+                className={`flex items-start gap-2 p-2 rounded cursor-pointer transition-colors ${
+                  isSelected 
+                    ? 'bg-amber-900/50 border border-amber-700' 
+                    : canSelect 
+                      ? 'hover:bg-stone-800 border border-transparent' 
+                      : 'opacity-40 cursor-not-allowed border border-transparent'
+                }`}
+                onMouseEnter={(e) => handleMouseEnter(e, opt)}
+                onMouseLeave={handleMouseLeave}
+              >
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  disabled={!canSelect}
+                  onChange={() => toggleMultiSelectOption(featureKey, opt.name, currentValue, maxSelections)}
+                  className="mt-0.5 accent-amber-500"
+                />
+                <div className="flex-1 min-w-0">
+                  <span className={`text-sm ${isSelected ? 'text-amber-200 font-medium' : 'text-stone-300'}`}>
+                    {opt.name}
+                  </span>
+                  <p className="text-xs text-stone-500">{opt.description}</p>
+                </div>
+              </label>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Features Tab
 export function FeaturesTab({ character, onUpdate }) {
   const addFeature = () => {
@@ -526,6 +705,49 @@ export function FeaturesTab({ character, onUpdate }) {
     onUpdate('subclassChoices', { ...(character.subclassChoices || {}), [choiceKey]: value });
   };
 
+  // Helper to calculate max selections for multiSelect features
+  const getMaxSelections = (multiSelect, classLevel) => {
+    if (!multiSelect) return 1;
+    
+    // Handle simple format like { base: 2, level10: 3, level17: 4 }
+    if (multiSelect.base !== undefined) {
+      if (classLevel >= 17 && multiSelect.level17) return multiSelect.level17;
+      if (classLevel >= 10 && multiSelect.level10) return multiSelect.level10;
+      return multiSelect.base;
+    }
+    
+    // Handle level-based format like { level1: 1, level2: 3, level5: 4, ... }
+    let max = 0;
+    Object.entries(multiSelect).forEach(([key, value]) => {
+      const level = parseInt(key.replace('level', ''));
+      if (classLevel >= level) max = value;
+    });
+    return max;
+  };
+
+  // Toggle a multiSelect option
+  const toggleMultiSelectOption = (featureKey, optionName, currentSelections, maxSelections) => {
+    const selections = currentSelections ? currentSelections.split(',').filter(Boolean) : [];
+    const index = selections.indexOf(optionName);
+    
+    if (index >= 0) {
+      // Remove
+      selections.splice(index, 1);
+    } else if (selections.length < maxSelections) {
+      // Add
+      selections.push(optionName);
+    }
+    
+    updateClassFeature(featureKey, selections.join(','));
+  };
+
+  // Track which multi-selects are expanded
+  const [expandedMultiSelects, setExpandedMultiSelects] = useState({});
+  
+  const toggleExpanded = (featureKey) => {
+    setExpandedMultiSelects(prev => ({ ...prev, [featureKey]: !prev[featureKey] }));
+  };
+
   return (
     <div className="space-y-6">
       {/* Class-Specific Features (2024 PHB) */}
@@ -537,30 +759,73 @@ export function FeaturesTab({ character, onUpdate }) {
               const classFeatures = CLASS_FEATURES[cls.name];
               if (!classFeatures) return null;
               
+              const classLevel = cls.level || 1;
+              const unlockedFeatures = Object.entries(classFeatures).filter(([, f]) => f.level <= classLevel);
+              const lockedFeatures = Object.entries(classFeatures).filter(([, f]) => f.level > classLevel);
+              
               return (
                 <div key={cls.name} className="space-y-3">
-                  <div className="text-sm font-medium text-stone-300 border-b border-stone-700 pb-1">{cls.name}</div>
-                  {Object.entries(classFeatures).map(([featureName, feature]) => (
-                    <div key={featureName} className="pl-2">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm text-stone-400">{featureName}</span>
-                        <span className="text-xs text-stone-600">(Level {feature.level})</span>
-                        {feature.note && <span className="text-xs text-stone-500 italic">- {feature.note}</span>}
+                  <div className="text-sm font-medium text-stone-300 border-b border-stone-700 pb-1">
+                    {cls.name} <span className="text-stone-500">Level {classLevel}</span>
+                  </div>
+                  
+                  {/* Unlocked features */}
+                  {unlockedFeatures.map(([featureName, feature]) => {
+                    const featureKey = `${cls.name}:${featureName}`;
+                    const isMultiSelect = feature.multiSelect;
+                    const maxSelections = isMultiSelect ? getMaxSelections(feature.multiSelect, classLevel) : 1;
+                    const currentValue = character.classFeatures?.[featureKey] || '';
+                    const selectedOptions = currentValue ? currentValue.split(',').filter(Boolean) : [];
+                    const isExpanded = expandedMultiSelects[featureKey];
+                    
+                    return (
+                      <div key={featureName} className="pl-2 border-l-2 border-amber-800/50">
+                        <div className="flex items-start gap-2 mb-1">
+                          <span className="text-sm font-medium text-amber-200">{featureName}</span>
+                          <span className="text-xs text-amber-600 bg-amber-900/50 px-1.5 rounded">Lv {feature.level}</span>
+                        </div>
+                        {feature.note && <p className="text-xs text-stone-400 mb-2">{feature.note}</p>}
+                        
+                        {/* Single select dropdown */}
+                        {feature.options && feature.options.length > 0 && !isMultiSelect && (
+                          <select
+                            value={currentValue}
+                            onChange={(e) => updateClassFeature(featureKey, e.target.value)}
+                            className="w-full bg-stone-900 border border-amber-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-500"
+                          >
+                            <option value="">-- Select --</option>
+                            {feature.options.map(opt => (
+                              <option key={opt.name} value={opt.name}>{opt.name} - {opt.description}</option>
+                            ))}
+                          </select>
+                        )}
+                        
+                        {/* Multi-select collapsible */}
+                        {feature.options && feature.options.length > 0 && isMultiSelect && (
+                          <MultiSelectWithTooltips
+                            feature={feature}
+                            featureKey={featureKey}
+                            selectedOptions={selectedOptions}
+                            maxSelections={maxSelections}
+                            currentValue={currentValue}
+                            isExpanded={isExpanded}
+                            toggleExpanded={toggleExpanded}
+                            toggleMultiSelectOption={toggleMultiSelectOption}
+                          />
+                        )}
                       </div>
-                      {feature.options.length > 0 && (
-                        <select
-                          value={character.classFeatures?.[`${cls.name}:${featureName}`] || ''}
-                          onChange={(e) => updateClassFeature(`${cls.name}:${featureName}`, e.target.value)}
-                          className="w-full bg-stone-900 border border-stone-600 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-500"
-                        >
-                          <option value="">-- Select --</option>
-                          {feature.options.map(opt => (
-                            <option key={opt.name} value={opt.name}>{opt.name} - {opt.description}</option>
-                          ))}
-                        </select>
-                      )}
+                    );
+                  })}
+                  
+                  {/* Locked future features */}
+                  {lockedFeatures.length > 0 && (
+                    <div className="mt-2 pt-2 border-t border-stone-700">
+                      <span className="text-xs text-stone-600">Future: </span>
+                      <span className="text-xs text-stone-500">
+                        {lockedFeatures.map(([name, f]) => `${name} (Lv ${f.level})`).join(', ')}
+                      </span>
                     </div>
-                  ))}
+                  )}
                 </div>
               );
             })}

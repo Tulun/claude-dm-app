@@ -604,29 +604,12 @@ export const SUBCLASS_FEATURES = {
   },
   'Draconic Sorcery': {
     features: [
-      { level: 3, name: 'Draconic Resilience', description: 'HP max increases by 3 and by 1 whenever you gain a Sorcerer level. Your AC equals 10 + DEX + CHA when not wearing armor.' },
-      { level: 3, name: 'Dragon Ancestor', description: 'Choose a dragon type. You can speak, read, and write Draconic. Double your PB for CHA checks when interacting with dragons.', choice: 'dragon_ancestor' },
-      { level: 6, name: 'Elemental Affinity', description: 'When you cast a spell that deals damage of your dragon\'s type, add CHA mod to one damage roll. You can spend 1 Sorcery Point to gain resistance to that damage type for 1 hour.' },
-      { level: 14, name: 'Dragon Wings', description: 'Bonus Action: manifest dragon wings, gaining a flying speed equal to your walking speed. Lasts until you dismiss them. Can\'t manifest if wearing armor unless it\'s made to accommodate them.' },
-      { level: 18, name: 'Draconic Presence', description: 'Action: spend 5 Sorcery Points to create a 60-ft aura of awe or fear. Hostile creatures that start their turn in the aura must make WIS save or be Charmed (awe) or Frightened (fear) until they leave. Once they leave, can\'t be affected for 24 hours.' },
+      { level: 3, name: 'Draconic Resilience', description: 'HP max increases by 3 and by 1 whenever you gain a Sorcerer level. Parts of your skin are covered by dragon-like scales. While not wearing armor, your AC equals 10 + DEX + CHA.' },
+      { level: 3, name: 'Draconic Spells', description: 'Always prepared: Alter Self, Chromatic Orb, Command, Dragon\'s Breath (Lv 3), Fear, Fly (Lv 5), Arcane Eye, Charm Monster (Lv 7), Legend Lore, Summon Dragon (Lv 9).' },
+      { level: 6, name: 'Elemental Affinity', description: 'When you cast a spell that deals a damage type from the Draconic Spells list (Acid, Cold, Fire, Lightning, or Poison), add CHA mod to one damage roll. You can spend 1 Sorcery Point to gain resistance to that damage type for 1 hour.' },
+      { level: 14, name: 'Dragon Wings', description: 'Bonus Action: manifest spectral dragon wings, gaining a flying speed equal to your walking speed. Lasts until you dismiss them (no action). Can\'t manifest if wearing armor unless made to accommodate them.' },
+      { level: 18, name: 'Dragon Companion', description: 'You can cast Summon Dragon without a spell slot. When you cast it this way, it doesn\'t require Concentration, and the dragon\'s hit points are increased by your Sorcerer level. Once per Long Rest.' },
     ],
-    choices: {
-      'dragon_ancestor': {
-        label: 'Dragon Ancestor',
-        options: [
-          { name: 'Black (Acid)', description: 'Acid damage' },
-          { name: 'Blue (Lightning)', description: 'Lightning damage' },
-          { name: 'Brass (Fire)', description: 'Fire damage' },
-          { name: 'Bronze (Lightning)', description: 'Lightning damage' },
-          { name: 'Copper (Acid)', description: 'Acid damage' },
-          { name: 'Gold (Fire)', description: 'Fire damage' },
-          { name: 'Green (Poison)', description: 'Poison damage' },
-          { name: 'Red (Fire)', description: 'Fire damage' },
-          { name: 'Silver (Cold)', description: 'Cold damage' },
-          { name: 'White (Cold)', description: 'Cold damage' },
-        ],
-      },
-    },
   },
   'Wild Magic Sorcery': {
     features: [
@@ -719,6 +702,103 @@ export const SUBCLASS_FEATURES = {
 
 // 2024 PHB Class-specific features and choices
 export const CLASS_FEATURES = {
+  Barbarian: {
+    'Rage': {
+      level: 1,
+      note: 'Bonus Action, Advantage on STR checks/saves, rage damage bonus, resistance to B/P/S',
+      options: []
+    },
+    'Unarmored Defense': {
+      level: 1,
+      note: 'AC = 10 + DEX + CON when not wearing armor',
+      options: []
+    },
+    'Reckless Attack': {
+      level: 2,
+      note: 'Advantage on STR attacks, but attacks against you have Advantage',
+      options: []
+    },
+    'Danger Sense': {
+      level: 2,
+      note: 'Advantage on DEX saves vs effects you can see',
+      options: []
+    },
+    'Extra Attack': {
+      level: 5,
+      note: 'Attack twice when taking Attack action',
+      options: []
+    },
+    'Feral Instinct': {
+      level: 7,
+      note: 'Advantage on Initiative, can act normally if surprised (if you rage)',
+      options: []
+    },
+    'Brutal Strike': {
+      level: 9,
+      note: 'Forgo Advantage for extra damage or special effects',
+      options: [
+        { name: 'Forceful Blow', description: 'Deal extra 1d10 damage and push Large or smaller 15 ft.' },
+        { name: 'Hamstring Blow', description: 'Deal extra 1d10 damage and reduce speed by 15 ft.' },
+      ]
+    },
+    'Relentless Rage': {
+      level: 11,
+      note: 'When reduced to 0 HP while raging, DC 10 CON save to drop to 1 HP instead',
+      options: []
+    },
+    'Persistent Rage': {
+      level: 15,
+      note: 'Rage only ends early if you choose or fall unconscious',
+      options: []
+    },
+    'Indomitable Might': {
+      level: 18,
+      note: 'STR checks minimum = STR score',
+      options: []
+    },
+    'Primal Champion': {
+      level: 20,
+      note: '+4 STR and CON (max 25)',
+      options: []
+    },
+  },
+  Bard: {
+    'Bardic Inspiration': {
+      level: 1,
+      note: 'Bonus Action, give ally a die to add to one roll. CHA mod uses per Long Rest (PB per Short Rest at 5th)',
+      options: []
+    },
+    'Expertise': {
+      level: 2,
+      note: 'Double proficiency bonus for two skills (two more at 9th)',
+      options: []
+    },
+    'Jack of All Trades': {
+      level: 2,
+      note: 'Add half PB (round down) to ability checks without proficiency',
+      options: []
+    },
+    'Extra Attack': {
+      level: 5,
+      note: 'Attack twice when taking Attack action',
+      options: []
+    },
+    'Font of Inspiration': {
+      level: 5,
+      note: 'Regain all Bardic Inspiration uses on Short or Long Rest',
+      options: []
+    },
+    'Countercharm': {
+      level: 7,
+      note: 'Action: allies within 30 ft have Advantage vs Charmed/Frightened for 1 minute',
+      options: []
+    },
+    'Superior Inspiration': {
+      level: 20,
+      note: 'Regain 1 Bardic Inspiration use when you roll Initiative and have none',
+      options: []
+    },
+  },
   Cleric: {
     'Divine Order': {
       level: 1,
@@ -727,12 +807,27 @@ export const CLASS_FEATURES = {
         { name: 'Thaumaturge', description: 'Extra cantrip, add WIS to Arcana/Religion checks' },
       ]
     },
+    'Channel Divinity': {
+      level: 2,
+      note: 'Divine Spark (damage/heal 1d8 × PB) and Turn Undead. 1 use, more at higher levels.',
+      options: []
+    },
     'Blessed Strikes': {
       level: 7,
       options: [
         { name: 'Divine Strike', description: '+1d8 Radiant/Necrotic on weapon hit (1/turn)' },
         { name: 'Potent Spellcasting', description: 'Add WIS modifier to cantrip damage' },
       ]
+    },
+    'Divine Intervention': {
+      level: 10,
+      note: 'Call on deity for aid. 2d4 days recharge (no recharge at 20th)',
+      options: []
+    },
+    'Greater Divine Intervention': {
+      level: 20,
+      note: 'Divine Intervention: choose Wish spell effect',
+      options: []
     },
   },
   Druid: {
@@ -743,12 +838,32 @@ export const CLASS_FEATURES = {
         { name: 'Warden', description: 'Proficiency with Martial weapons and Medium armor' },
       ]
     },
+    'Wild Shape': {
+      level: 2,
+      note: 'Transform into beast (CR = PB ÷ 3). PB uses per Long Rest. Bonus Action.',
+      options: []
+    },
+    'Wild Companion': {
+      level: 2,
+      note: 'Expend Wild Shape use to cast Find Familiar without material components',
+      options: []
+    },
     'Elemental Fury': {
       level: 7,
       options: [
         { name: 'Potent Spellcasting', description: 'Add WIS modifier to cantrip damage' },
         { name: 'Primal Strike', description: '+1d8 elemental damage on attacks (1/turn)' },
       ]
+    },
+    'Elemental Shapes': {
+      level: 15,
+      note: 'Expend 2 Wild Shape uses to become Air, Earth, Fire, or Water Elemental',
+      options: []
+    },
+    'Archdruid': {
+      level: 20,
+      note: 'Unlimited Wild Shape uses. Ignore V/S components for Druid spells.',
+      options: []
     },
   },
   Fighter: {
@@ -767,12 +882,144 @@ export const CLASS_FEATURES = {
         { name: 'Unarmed Fighting', description: '1d6/1d8 unarmed damage' },
       ]
     },
+    'Second Wind': {
+      level: 1,
+      note: 'Bonus Action: heal 1d10 + Fighter level. PB uses per Long Rest.',
+      options: []
+    },
+    'Action Surge': {
+      level: 2,
+      note: 'Take one additional action. 1 use per Short/Long Rest (2 at 17th).',
+      options: []
+    },
+    'Extra Attack': {
+      level: 5,
+      note: 'Attack twice (three times at 11th, four at 20th)',
+      options: []
+    },
+    'Tactical Mind': {
+      level: 2,
+      note: 'When failing an ability check, expend Second Wind use to add 1d10',
+      options: []
+    },
+    'Indomitable': {
+      level: 9,
+      note: 'Reroll a failed save. 1 use per Long Rest (2 at 13th, 3 at 17th).',
+      options: []
+    },
+    'Studied Attacks': {
+      level: 13,
+      note: 'When you miss, gain Advantage on next attack vs same target this turn',
+      options: []
+    },
+  },
+  Monk: {
+    'Martial Arts': {
+      level: 1,
+      note: 'Unarmed strikes use DEX. Martial Arts die (d6→d12). Bonus Action unarmed strike.',
+      options: []
+    },
+    'Unarmored Defense': {
+      level: 1,
+      note: 'AC = 10 + DEX + WIS when not wearing armor',
+      options: []
+    },
+    'Focus': {
+      level: 2,
+      note: 'Focus Points = Monk level. Regain on Short/Long Rest.',
+      options: []
+    },
+    'Flurry of Blows': {
+      level: 2,
+      note: '1 Focus: two unarmed strikes as Bonus Action',
+      options: []
+    },
+    'Patient Defense': {
+      level: 2,
+      note: '1 Focus: Disengage and Dodge as Bonus Action',
+      options: []
+    },
+    'Step of the Wind': {
+      level: 2,
+      note: '1 Focus: Dash as Bonus Action, jump distance doubled',
+      options: []
+    },
+    'Uncanny Metabolism': {
+      level: 2,
+      note: 'When you roll Initiative and have no Focus Points, regain all Focus Points',
+      options: []
+    },
+    'Unarmored Movement': {
+      level: 2,
+      note: '+10 ft speed (increases at higher levels). At 9th, run on walls/water.',
+      options: []
+    },
+    'Deflect Attacks': {
+      level: 3,
+      note: 'Reaction: reduce ranged attack damage by 1d10 + DEX + Monk level',
+      options: []
+    },
+    'Slow Fall': {
+      level: 4,
+      note: 'Reaction: reduce falling damage by 5 × Monk level',
+      options: []
+    },
+    'Extra Attack': {
+      level: 5,
+      note: 'Attack twice when taking Attack action',
+      options: []
+    },
+    'Stunning Strike': {
+      level: 5,
+      note: '1 Focus when you hit: target CON save or Stunned until your next turn',
+      options: []
+    },
+    'Evasion': {
+      level: 7,
+      note: 'DEX saves for half damage: take none on success, half on failure',
+      options: []
+    },
+    'Acrobatic Movement': {
+      level: 9,
+      note: 'Climb and move on liquids without falling during movement',
+      options: []
+    },
+    'Self-Restoration': {
+      level: 10,
+      note: 'End Charmed or Frightened at start of turn. Cure one disease/poison on Short Rest.',
+      options: []
+    },
+    'Perfect Focus': {
+      level: 15,
+      note: 'When you roll Initiative with fewer than 4 Focus Points, regain up to 4',
+      options: []
+    },
+    'Superior Defense': {
+      level: 18,
+      note: 'Spend 3 Focus when hit: gain Resistance to all damage except Force until next turn',
+      options: []
+    },
+    'Body and Mind': {
+      level: 20,
+      note: '+4 DEX and WIS (max 25)',
+      options: []
+    },
   },
   Paladin: {
+    'Lay on Hands': {
+      level: 1,
+      note: 'Pool of HP = 5 × Paladin level. Restore HP or cure disease/poison (5 HP each).',
+      options: []
+    },
+    'Spellcasting': {
+      level: 1,
+      note: 'Half-caster (CHA). Prepare spells from Paladin list.',
+      options: []
+    },
     'Fighting Style': {
       level: 2,
       options: [
-        { name: 'Blessed Warrior', description: 'Two Cleric cantrips (WIS-based)' },
+        { name: 'Blessed Warrior', description: 'Two Cleric cantrips (CHA-based)' },
         { name: 'Blind Fighting', description: 'Blindsight 10 ft.' },
         { name: 'Defense', description: '+1 AC while wearing armor' },
         { name: 'Dueling', description: '+2 damage with one-handed weapon' },
@@ -781,8 +1028,58 @@ export const CLASS_FEATURES = {
         { name: 'Protection', description: 'Impose disadvantage on attack vs ally' },
       ]
     },
+    'Divine Smite': {
+      level: 2,
+      note: 'When you hit, expend spell slot for +2d8 Radiant (+1d8 per slot above 1st, +1d8 vs Undead/Fiend). Max 5d8.',
+      options: []
+    },
+    'Channel Divinity': {
+      level: 3,
+      note: 'Divine Sense (detect celestials/fiends/undead) and subclass options. PB uses per Long Rest.',
+      options: []
+    },
+    'Extra Attack': {
+      level: 5,
+      note: 'Attack twice when taking Attack action',
+      options: []
+    },
+    'Aura of Protection': {
+      level: 6,
+      note: 'You and allies within 10 ft (30 ft at 18th) add your CHA mod to saves',
+      options: []
+    },
+    'Aura of Courage': {
+      level: 10,
+      note: 'You and allies within 10 ft (30 ft at 18th) can\'t be Frightened while you\'re conscious',
+      options: []
+    },
+    'Radiant Strikes': {
+      level: 11,
+      note: 'Your weapon attacks deal +1d8 Radiant damage',
+      options: []
+    },
+    'Restoring Touch': {
+      level: 14,
+      note: 'When you use Lay on Hands, can also end one spell on the target',
+      options: []
+    },
   },
   Ranger: {
+    'Favored Enemy': {
+      level: 1,
+      note: 'Hunter\'s Mark always prepared, cast without slot once per Long Rest',
+      options: []
+    },
+    'Spellcasting': {
+      level: 1,
+      note: 'Half-caster (WIS). Prepare spells from Ranger list.',
+      options: []
+    },
+    'Expertise': {
+      level: 1,
+      note: 'Double proficiency bonus for two skills',
+      options: []
+    },
     'Fighting Style': {
       level: 2,
       options: [
@@ -795,50 +1092,219 @@ export const CLASS_FEATURES = {
         { name: 'Two-Weapon Fighting', description: 'Add ability mod to off-hand damage' },
       ]
     },
-    'Favored Enemy': {
+    'Deft Explorer': {
       level: 1,
-      options: [
-        { name: 'Hunter\'s Mark', description: 'Always prepared, cast once free/LR' },
-      ]
+      note: 'Two language proficiencies, Expertise in one skill (another at 9th)',
+      options: []
+    },
+    'Extra Attack': {
+      level: 5,
+      note: 'Attack twice when taking Attack action',
+      options: []
+    },
+    'Roving': {
+      level: 6,
+      note: '+10 ft speed, gain Climb and Swim speed equal to walking speed',
+      options: []
+    },
+    'Tireless': {
+      level: 10,
+      note: 'Action: gain 1d8 + WIS THP (PB times/LR). Reduce Exhaustion by 1 on Short Rest.',
+      options: []
+    },
+    'Nature\'s Veil': {
+      level: 14,
+      note: 'Bonus Action: become Invisible until start of next turn. PB uses per Long Rest.',
+      options: []
+    },
+    'Feral Senses': {
+      level: 18,
+      note: 'Blindsight 30 ft.',
+      options: []
+    },
+    'Foe Slayer': {
+      level: 20,
+      note: 'Once per turn, add WIS mod to attack or damage roll',
+      options: []
+    },
+  },
+  Rogue: {
+    'Expertise': {
+      level: 1,
+      note: 'Double proficiency bonus for two skills (two more at 6th)',
+      options: []
+    },
+    'Sneak Attack': {
+      level: 1,
+      note: 'Once per turn, +1d6 damage with Finesse/Ranged weapon if you have Advantage or ally within 5 ft. Scales with level.',
+      options: []
+    },
+    'Thieves\' Cant': {
+      level: 1,
+      note: 'Secret language and coded messages',
+      options: []
+    },
+    'Cunning Action': {
+      level: 2,
+      note: 'Bonus Action: Dash, Disengage, or Hide',
+      options: []
+    },
+    'Steady Aim': {
+      level: 3,
+      note: 'Bonus Action (if you haven\'t moved): gain Advantage on next attack, but speed is 0',
+      options: []
+    },
+    'Uncanny Dodge': {
+      level: 5,
+      note: 'Reaction when hit by attack you can see: halve the damage',
+      options: []
+    },
+    'Evasion': {
+      level: 7,
+      note: 'DEX saves for half damage: take none on success, half on failure',
+      options: []
+    },
+    'Reliable Talent': {
+      level: 11,
+      note: 'Minimum roll of 10 on proficient ability checks',
+      options: []
+    },
+    'Blindsense': {
+      level: 14,
+      note: 'Blindsight 10 ft.',
+      options: []
+    },
+    'Slippery Mind': {
+      level: 15,
+      note: 'Proficiency in WIS saves',
+      options: []
+    },
+    'Elusive': {
+      level: 18,
+      note: 'Attacks against you can\'t have Advantage unless you\'re Incapacitated',
+      options: []
+    },
+    'Stroke of Luck': {
+      level: 20,
+      note: 'Turn a missed attack into a hit, or treat a failed ability check as a 20. Once per Short/Long Rest.',
+      options: []
     },
   },
   Sorcerer: {
-    'Sorcerous Origin': {
+    'Innate Sorcery': {
       level: 1,
-      note: 'Subclass selected at level 1',
+      note: 'Bonus Action: for 1 minute, +1 to spell attack rolls and save DCs, Advantage on Sorcerer spell attack rolls. PB uses per Long Rest.',
+      options: []
+    },
+    'Font of Magic': {
+      level: 2,
+      note: 'Sorcery Points = Sorcerer level. Convert to/from spell slots.',
+      options: []
+    },
+    'Metamagic': {
+      level: 2,
+      note: 'Choose 2 options (3 at 10th, 4 at 17th) to enhance spells',
+      multiSelect: { base: 2, level10: 3, level17: 4 },
       options: [
-        { name: 'Aberrant Sorcery', description: 'Psionic spells, telepathy' },
-        { name: 'Clockwork Soul', description: 'Order magic, restore balance' },
-        { name: 'Draconic Sorcery', description: 'Dragon ancestor, elemental affinity' },
-        { name: 'Wild Magic', description: 'Chaotic surges, Tides of Chaos' },
+        { name: 'Careful Spell', description: '1 SP: chosen creatures auto-succeed on spell save' },
+        { name: 'Distant Spell', description: '1 SP: double range or make Touch become 30 ft' },
+        { name: 'Empowered Spell', description: '1 SP: reroll up to CHA mod damage dice' },
+        { name: 'Extended Spell', description: '1 SP: double duration (max 24 hours)' },
+        { name: 'Heightened Spell', description: '2 SP: one target has Disadvantage on first save' },
+        { name: 'Quickened Spell', description: '2 SP: cast as Bonus Action' },
+        { name: 'Seeking Spell', description: '1 SP: reroll missed spell attack' },
+        { name: 'Subtle Spell', description: '1 SP: no V/S components' },
+        { name: 'Transmuted Spell', description: '1 SP: change damage type (acid/cold/fire/lightning/poison/thunder)' },
+        { name: 'Twinned Spell', description: '1 SP: target second creature with single-target spell' },
       ]
+    },
+    'Sorcerous Restoration': {
+      level: 5,
+      note: 'Regain 1 SP when you finish Short Rest',
+      options: []
+    },
+    'Arcane Apotheosis': {
+      level: 20,
+      note: 'While Innate Sorcery is active, you can use one Metamagic without spending SP (once per turn)',
+      options: []
     },
   },
   Warlock: {
+    'Pact Magic': {
+      level: 1,
+      note: 'Short rest spell slots. All slots same level (up to 5th). Separate from Mystic Arcanum.',
+      options: []
+    },
     'Eldritch Invocations': {
       level: 1,
-      note: 'Includes Pact Boons',
+      note: 'Learn invocations (1 at 1st, 3 at 2nd, +1 at 5th/7th/9th/12th/15th/18th). Can swap on level up.',
+      multiSelect: { level1: 1, level2: 3, level5: 4, level7: 5, level9: 6, level12: 7, level15: 8, level18: 9 },
       options: [
-        { name: 'Pact of the Blade', description: 'Summon bonded weapon' },
-        { name: 'Pact of the Chain', description: 'Find Familiar with special forms' },
-        { name: 'Pact of the Tome', description: 'Book of Shadows with cantrips' },
-        { name: 'Eldritch Spear', description: 'Eldritch Blast range 300 ft.' },
         { name: 'Agonizing Blast', description: 'Add CHA to Eldritch Blast damage' },
-        { name: 'Repelling Blast', description: 'Push 10 ft. with Eldritch Blast' },
+        { name: 'Armor of Shadows', description: 'Cast Mage Armor on self at will' },
+        { name: 'Devil\'s Sight', description: 'See in magical and nonmagical darkness 120 ft' },
+        { name: 'Eldritch Mind', description: 'Advantage on concentration saves' },
+        { name: 'Eldritch Spear', description: 'Eldritch Blast range 300 ft' },
+        { name: 'Fiendish Vigor', description: 'Cast False Life at will (no slot)' },
+        { name: 'Gaze of Two Minds', description: 'Perceive through touched humanoid\'s senses' },
+        { name: 'Mask of Many Faces', description: 'Cast Disguise Self at will' },
+        { name: 'Misty Visions', description: 'Cast Silent Image at will' },
+        { name: 'Repelling Blast', description: 'Push 10 ft with Eldritch Blast' },
+        { name: 'Pact of the Blade', description: 'Create bonded weapon, use CHA for attacks' },
+        { name: 'Pact of the Chain', description: 'Find Familiar with special forms (imp, pseudodragon, quasit, sprite)' },
+        { name: 'Pact of the Tome', description: 'Book of Shadows: 3 cantrips from any list' },
       ]
     },
-  },
-  Monk: {
-    'Warrior of Mercy': {
-      level: 3,
-      note: 'Subclass abilities',
+    'Magical Cunning': {
+      level: 2,
+      note: 'Once per Long Rest, regain half your Pact Magic slots (round up)',
+      options: []
+    },
+    'Contact Patron': {
+      level: 9,
+      note: 'Cast Contact Other Plane to reach your patron without using a slot. Always succeeds.',
+      options: []
+    },
+    'Mystic Arcanum': {
+      level: 11,
+      note: 'Gain one spell each: 6th (11th), 7th (13th), 8th (15th), 9th (17th). Cast once per Long Rest.',
+      options: []
+    },
+    'Eldritch Master': {
+      level: 20,
+      note: 'Spend 1 minute entreating patron to regain all Pact Magic slots (once per Long Rest)',
       options: []
     },
   },
   Wizard: {
     'Arcane Recovery': {
       level: 1,
-      note: 'Recover spell slots on short rest',
+      note: 'Once per Long Rest, recover spell slots (total levels ≤ half Wizard level) on Short Rest',
+      options: []
+    },
+    'Spellbook': {
+      level: 1,
+      note: 'Record spells. Prepare INT mod + Wizard level spells per day.',
+      options: []
+    },
+    'Scholar': {
+      level: 2,
+      note: 'Expertise in Arcana. Change one prepared spell after Short Rest.',
+      options: []
+    },
+    'Memorize Spell': {
+      level: 5,
+      note: 'After Short Rest, prepare one spell that can be cast without a slot (up to 4th level)',
+      options: []
+    },
+    'Spell Mastery': {
+      level: 18,
+      note: 'Choose one 1st and one 2nd level spell: cast at lowest level without spending a slot',
+      options: []
+    },
+    'Signature Spells': {
+      level: 20,
+      note: 'Two 3rd-level spells always prepared, cast once each at 3rd level without slot per Short/Long Rest',
       options: []
     },
   },
@@ -982,11 +1448,26 @@ export const getSkillFeatureBonus = (character, skillName) => {
   return { bonus, sources };
 };
 
+// Check if character has Jack of All Trades (Bard level 2+)
+export const hasJackOfAllTrades = (character) => {
+  const classes = character.classes || (character.class ? [{ name: character.class, level: character.level || 1 }] : []);
+  const bardClass = classes.find(c => c.name === 'Bard');
+  return bardClass && bardClass.level >= 2;
+};
+
 export const getSkillBonus = (character, skill) => {
   const profBonus = getProfBonus(character);
   const profLevel = getSkillProficiency(character, skill.name);
   const featureBonus = getSkillFeatureBonus(character, skill.name);
-  return getMod(character[skill.stat]) + (profLevel * profBonus) + featureBonus.bonus;
+  
+  let bonus = getMod(character[skill.stat]) + (profLevel * profBonus) + featureBonus.bonus;
+  
+  // Jack of All Trades: add half proficiency (round down) to non-proficient skills
+  if (profLevel === 0 && hasJackOfAllTrades(character)) {
+    bonus += Math.floor(profBonus / 2);
+  }
+  
+  return bonus;
 };
 
 export const getSaveBonus = (character, stat) => {
@@ -1070,6 +1551,15 @@ export const calculateAC = (character) => {
       breakdown.push(`Base: 10`);
       breakdown.push(`DEX: ${dexMod >= 0 ? '+' : ''}${dexMod}`);
     }
+  } else if (character.acEffect === 'draconicResilience') {
+    // Draconic Sorcerer: 10 + DEX + CHA (while not wearing armor)
+    const chaMod = getMod(character.cha);
+    baseAC = 10;
+    dexBonus = dexMod;
+    breakdown.push(`Draconic Resilience: 10`);
+    breakdown.push(`DEX: ${dexMod >= 0 ? '+' : ''}${dexMod}`);
+    breakdown.push(`CHA: ${chaMod >= 0 ? '+' : ''}${chaMod}`);
+    baseAC += chaMod;
   } else if (equippedArmor) {
     // Standard armor calculation
     const armorAC = parseInt(equippedArmor.baseAC) || 10;
@@ -1141,5 +1631,6 @@ export const AC_EFFECTS = [
   { id: 'mageArmor', name: 'Mage Armor', desc: 'Base AC becomes 13 + DEX' },
   { id: 'barkskin', name: 'Barkskin', desc: 'AC cannot be less than 16' },
   { id: 'unarmoredDefense', name: 'Unarmored Defense', desc: 'Barbarian: 10+DEX+CON, Monk: 10+DEX+WIS' },
+  { id: 'draconicResilience', name: 'Draconic Resilience', desc: 'Sorcerer: 10+DEX+CHA (no armor)' },
   { id: 'shield', name: 'Shield (spell)', desc: '+5 AC until start of next turn' },
 ];

@@ -345,6 +345,10 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
       } else if (classes.includes('monk')) {
         baseAC = 10 + wisMod;
       }
+    } else if (character.acEffect === 'draconicResilience') {
+      // Draconic Sorcerer: 10 + DEX + CHA
+      const chaMod = getModNum(character.cha);
+      baseAC = 10 + chaMod;
     } else if (equippedArmor) {
       baseAC = parseInt(equippedArmor.baseAC) || 10;
       if (equippedArmor.armorType === 'Medium') {
@@ -434,10 +438,23 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div><label className="text-xs text-stone-400">Name</label><EditableField value={character.name} onChange={(v) => onUpdate({ ...character, name: v })} className="block w-full" /></div>
             <div>
-              <label className="text-xs text-stone-400">AC (calculated)</label>
-              <div className={`bg-stone-700/50 rounded px-2 py-1 font-mono ${character.acEffect ? 'text-cyan-400' : ''}`}>
-                {displayAC}
-                {character.acEffect && <span className="text-xs text-cyan-600 ml-2">({character.acEffect})</span>}
+              <label className="text-xs text-stone-400">AC</label>
+              <div className="flex items-center gap-2">
+                <div className={`bg-stone-700/50 rounded px-2 py-1 font-mono flex-1 ${character.acEffect ? 'text-cyan-400' : ''}`}>
+                  {displayAC}
+                  {character.acEffect && <span className="text-xs text-cyan-600 ml-1">({character.acEffect.replace(/([A-Z])/g, ' $1').trim()})</span>}
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-xs text-stone-500">+</span>
+                  <input
+                    type="number"
+                    value={character.tempAC || ''}
+                    onChange={(e) => onUpdate({ ...character, tempAC: e.target.value })}
+                    placeholder="0"
+                    className="w-10 bg-stone-700 rounded px-1 py-1 text-center text-sm font-mono focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                    title="Bonus AC (Shield spell, cover, etc.)"
+                  />
+                </div>
               </div>
             </div>
             <div><label className="text-xs text-stone-400">Initiative</label><EditableField value={character.initiative} onChange={(v) => onUpdate({ ...character, initiative: v })} type="number" className="block w-full" /></div>

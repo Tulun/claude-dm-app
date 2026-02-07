@@ -11,20 +11,20 @@
       {
         "id": 1770233816410,
         "name": "Wild Shape",
-        "current": 2,
+        "current": 0,
         "max": 2
       },
       {
         "id": 1770233861678,
         "name": "1st Level Spell Slot",
-        "current": 4,
+        "current": 0,
         "max": 4
       },
       {
         "id": 1770233883990,
         "name": "2nd Level Spell Slot",
-        "current": 2,
-        "max": 2
+        "current": 0,
+        "max": 3
       }
     ],
     "str": 10,
@@ -118,7 +118,8 @@
         "level": 4,
         "subclass": "Circle of the Shepherd*"
       }
-    ]
+    ],
+    "tempAC": "0"
   },
   {
     "name": "Braadlei",
@@ -127,8 +128,27 @@
     "ac": 10,
     "maxHp": 43,
     "speed": 35,
-    "notes": "",
-    "resources": [],
+    "notes": "1 free Misty step.",
+    "resources": [
+      {
+        "id": 1770429647251,
+        "name": "Bardic Inspiration",
+        "current": 0,
+        "max": 2
+      },
+      {
+        "id": 1770429662062,
+        "name": "1st Level Spell Slots",
+        "current": 0,
+        "max": 4
+      },
+      {
+        "id": 1770429677549,
+        "name": "2nd Level Spell Slots",
+        "current": 1,
+        "max": 2
+      }
+    ],
     "str": 9,
     "dex": 12,
     "con": 16,
@@ -139,11 +159,84 @@
     "id": "party-1770417737904",
     "currentHp": 43,
     "initiative": 7,
-    "skillProficiencies": {},
+    "skillProficiencies": {
+      "History": 1,
+      "Insight": 1,
+      "Investigation": 1,
+      "Perception": 1,
+      "Performance": 2,
+      "Persuasion": 1,
+      "Intimidation": 2
+    },
     "saveProficiencies": {},
     "features": [],
     "spells": [],
-    "inventory": [],
+    "inventory": [
+      {
+        "id": 1770433222146,
+        "name": "Dagger +1",
+        "quantity": 1,
+        "weight": "",
+        "description": "Range 20/60",
+        "itemType": "weapon",
+        "armorType": "",
+        "baseAC": "",
+        "stealthDisadv": false,
+        "strRequired": "",
+        "damage": "1d4+1",
+        "damageType": "Piercing",
+        "weaponProperties": [
+          "Finesse",
+          "Light",
+          "Thrown"
+        ],
+        "mastery": "Nick"
+      },
+      {
+        "id": 1770433345695,
+        "name": "Dagger",
+        "quantity": 1,
+        "weight": "",
+        "description": "Range 20/60",
+        "itemType": "weapon",
+        "armorType": "",
+        "baseAC": "",
+        "stealthDisadv": false,
+        "strRequired": "",
+        "damage": "1d4",
+        "damageType": "Piercing",
+        "mastery": "Nick",
+        "weaponProperties": [
+          "Finesse",
+          "Light",
+          "Thrown"
+        ]
+      },
+      {
+        "id": 1770433401657,
+        "name": "Leather Armour",
+        "quantity": 1,
+        "weight": "",
+        "description": "",
+        "itemType": "armor",
+        "equipped": true,
+        "damage": "",
+        "damageType": "",
+        "mastery": "",
+        "weaponProperties": [],
+        "baseAC": "11",
+        "armorType": "Light"
+      },
+      {
+        "id": 1770433434941,
+        "name": "Hat of Disguise",
+        "quantity": 1,
+        "weight": "",
+        "description": "While wearing this hat, you can cast the Disguise Self spell. The spell ends if the hat is removed.",
+        "itemType": "gear",
+        "equipped": true
+      }
+    ],
     "advantages": [],
     "background": "Farmer",
     "classes": [
@@ -153,5 +246,98 @@
         "subclass": "College of Lore"
       }
     ]
+  },
+  {
+    "name": "Marshuh",
+    "class": "Sorcerer",
+    "level": 4,
+    "ac": 10,
+    "maxHp": 30,
+    "speed": 30,
+    "notes": "Two free acid breaths from mushroom boon.",
+    "resources": [
+      {
+        "id": 1770433645271,
+        "name": "Sorcery Points",
+        "current": 1,
+        "max": 3
+      },
+      {
+        "id": 1770433792223,
+        "name": "Innate Sorcery",
+        "current": 0,
+        "max": 2
+      },
+      {
+        "id": 1770433656573,
+        "name": "1st Level Spell Slots",
+        "current": 0,
+        "max": 4
+      },
+      {
+        "id": 1770433735059,
+        "name": "2nd Level Spell Slots",
+        "current": 3,
+        "max": 3
+      }
+    ],
+    "str": 10,
+    "dex": 13,
+    "con": 14,
+    "int": 10,
+    "wis": 12,
+    "cha": 17,
+    "spellStat": "cha",
+    "id": "party-1770431961400",
+    "currentHp": 30,
+    "initiative": 18,
+    "skillProficiencies": {
+      "Deception": 1,
+      "History": 1,
+      "Perception": 1,
+      "Persuasion": 1,
+      "Sleight of Hand": 1,
+      "Stealth": 1,
+      "Investigation": 1
+    },
+    "saveProficiencies": {
+      "con": 1,
+      "cha": 1
+    },
+    "features": [],
+    "spells": [],
+    "inventory": [
+      {
+        "id": 1770434211655,
+        "name": "Javelin of Lightning",
+        "quantity": 1,
+        "weight": "",
+        "description": "Range 30/120.  Each time you make an attack roll with this magic weapon and hit, you can have it deal Lightning damage instead of Piercing damage.  Lightning Bolt. When you throw this weapon at a target no farther than 120 feet from you, you can forgo making a ranged attack roll and instead turn the weapon into a bolt of lightning. This bolt forms a 5-foot-wide Line between you and the target. The target and each other creature in the Line (excluding you) makes a DC 13 Dexterity saving throw, taking 4d6 Lightning damage on a failed save or half as much damage on a successful one. Immediately after dealing this damage, the weapon reappears in your hand. This property can’t be used again until the next dawn.",
+        "itemType": "weapon",
+        "armorType": "",
+        "baseAC": "",
+        "stealthDisadv": false,
+        "strRequired": "",
+        "damage": "1d6",
+        "damageType": "Piercing",
+        "mastery": "Slow",
+        "weaponProperties": [
+          "Thrown",
+          "Simple"
+        ]
+      }
+    ],
+    "advantages": [],
+    "classes": [
+      {
+        "name": "Sorcerer",
+        "level": 4,
+        "subclass": "Draconic Sorcery"
+      }
+    ],
+    "classFeatures": {
+      "Sorcerer:Metamagic": "Quickened Spell,Twinned Spell"
+    },
+    "acEffect": "draconicResilience"
   }
 ]
