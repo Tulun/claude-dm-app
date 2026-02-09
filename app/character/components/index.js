@@ -7,4 +7,4 @@ export { default as SkillsList } from './SkillsList';
 export { default as ProficiencyModal } from './ProficiencyModal';
 export { default as ResourceRow } from './ResourceRow';
 export { default as ClassEditor } from './ClassEditor';
-export { ResourcesTab, InventoryTab, SpellsTab, FeaturesTab, BackgroundTab, NotesTab, CompanionsTab } from './TabContent';
+export { ResourcesTab, InventoryTab, SpellsTab, FeaturesTab, BackgroundTab, NotesTab, CompanionsTab } from './tabs';
