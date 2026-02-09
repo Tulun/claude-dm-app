@@ -189,8 +189,24 @@ export default function DMAdminTool() {
   // Manual initiative order - stores IDs in display order
   const [initiativeOrder, setInitiativeOrder] = useState([]);
   
+  // Extract active companions from party members that are marked for combat
+  const partyCompanions = (party || []).flatMap(member => 
+    (member.companions || [])
+      .filter(c => c.active && c.inCombat)
+      .map(c => ({
+        ...c,
+        id: `companion-${member.id}-${c.id}`,
+        ownerId: member.id,
+        ownerName: member.name,
+        isCompanion: true,
+        initiative: c.initiative || 0,
+        currentHp: c.currentHp || c.maxHp || 1,
+        maxHp: c.maxHp || 1,
+      }))
+  );
+  
   // Build the initiative list based on manual order or default to all combatants
-  const allCombatants = [...(party || []), ...enemies];
+  const allCombatants = [...(party || []), ...partyCompanions, ...enemies];
   
   // If we have a manual order, use it (filtering out any removed combatants)
   // Then append any new combatants not yet in the order
@@ -272,7 +288,30 @@ export default function DMAdminTool() {
               <button onClick={sortByInitiative} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.Refresh />Sort by Init</button>
             </div>
             <div className="space-y-2">
-              {fullInitiativeList.map((c, i) => <InitiativeItem key={c.id} character={c} isEnemy={enemies.some(e => e.id === c.id)} index={i} onDragStart={(e, idx) => { setDragIndex(idx); e.dataTransfer.effectAllowed = 'move'; }} onDragOver={(e, idx) => { e.preventDefault(); setDragOverIndex(idx); }} onDrop={handleDrop} onDragEnd={() => { setDragIndex(null); setDragOverIndex(null); }} isDragging={dragIndex === i} dragOverIndex={dragOverIndex} onUpdateInitiative={(id, newInit) => { if ((party || []).some(p => p.id === id)) setParty(prev => prev.map(p => p.id === id ? { ...p, initiative: newInit } : p)); else setEnemies(prev => prev.map(e => e.id === id ? { ...e, initiative: newInit } : e)); }} />)}
+              {fullInitiativeList.map((c, i) => <InitiativeItem key={c.id} character={c} isEnemy={enemies.some(e => e.id === c.id)} isCompanion={c.isCompanion} index={i} onDragStart={(e, idx) => { setDragIndex(idx); e.dataTransfer.effectAllowed = 'move'; }} onDragOver={(e, idx) => { e.preventDefault(); setDragOverIndex(idx); }} onDrop={handleDrop} onDragEnd={() => { setDragIndex(null); setDragOverIndex(null); }} isDragging={dragIndex === i} dragOverIndex={dragOverIndex} onUpdateInitiative={(id, newInit) => { 
+                if (id.startsWith('companion-')) {
+                  // Update companion initiative - extract owner and companion IDs
+                  const parts = id.split('-');
+                  const ownerId = parts[1];
+                  const companionId = parseInt(parts[2]);
+                  setParty(prev => prev.map(p => p.id === ownerId ? { 
+                    ...p, 
+                    companions: (p.companions || []).map(comp => comp.id === companionId ? { ...comp, initiative: newInit } : comp)
+                  } : p));
+                } else if ((party || []).some(p => p.id === id)) {
+                  setParty(prev => prev.map(p => p.id === id ? { ...p, initiative: newInit } : p));
+                } else {
+                  setEnemies(prev => prev.map(e => e.id === id ? { ...e, initiative: newInit } : e));
+                }
+              }} onUpdateHp={c.isCompanion ? (id, hp) => {
+                const parts = id.split('-');
+                const ownerId = parts[1];
+                const companionId = parseInt(parts[2]);
+                setParty(prev => prev.map(p => p.id === ownerId ? {
+                  ...p,
+                  companions: (p.companions || []).map(comp => comp.id === companionId ? { ...comp, currentHp: hp } : comp)
+                } : p));
+              } : undefined} />)}
               {!fullInitiativeList.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">Add combatants to begin!</div>}
             </div>
           </div>

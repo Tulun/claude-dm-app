@@ -64,10 +64,12 @@ const getCalculatedAC = (character) => {
   return baseAC + dexBonus + shieldBonus + itemBonuses + tempBonus;
 };
 
-const InitiativeItem = ({ character, isEnemy, index, onDragStart, onDragOver, onDrop, onDragEnd, isDragging, dragOverIndex, onUpdateInitiative }) => {
+const InitiativeItem = ({ character, isEnemy, isCompanion, index, onDragStart, onDragOver, onDrop, onDragEnd, isDragging, dragOverIndex, onUpdateInitiative, onUpdateHp }) => {
   const isDead = character.currentHp <= 0;
   const [editing, setEditing] = useState(false);
-  const [initValue, setInitValue] = useState(String(character.initiative));
+  const [initValue, setInitValue] = useState(String(character.initiative || 0));
+  const [editingHp, setEditingHp] = useState(false);
+  const [hpValue, setHpValue] = useState(String(character.currentHp));
 
   // Calculate AC - use calculated value if available, fall back to manual ac field
   const calculatedAC = getCalculatedAC(character);
@@ -83,7 +85,7 @@ const InitiativeItem = ({ character, isEnemy, index, onDragStart, onDragOver, on
     if (!isNaN(num) && onUpdateInitiative) {
       onUpdateInitiative(character.id, num);
     } else {
-      setInitValue(String(character.initiative));
+      setInitValue(String(character.initiative || 0));
     }
   };
 
@@ -91,23 +93,40 @@ const InitiativeItem = ({ character, isEnemy, index, onDragStart, onDragOver, on
     if (e.key === 'Enter') {
       e.target.blur();
     } else if (e.key === 'Escape') {
-      setInitValue(String(character.initiative));
+      setInitValue(String(character.initiative || 0));
       setEditing(false);
+    }
+  };
+
+  const handleHpBlur = () => {
+    setEditingHp(false);
+    const num = parseInt(hpValue);
+    if (!isNaN(num) && onUpdateHp) {
+      onUpdateHp(character.id, Math.max(0, num));
+    } else {
+      setHpValue(String(character.currentHp));
     }
   };
 
   return (
     <div
-      draggable={!editing}
-      onDragStart={(e) => !editing && onDragStart(e, index)}
+      draggable={!editing && !editingHp}
+      onDragStart={(e) => !editing && !editingHp && onDragStart(e, index)}
       onDragOver={(e) => onDragOver(e, index)}
       onDrop={(e) => onDrop(e, index)}
       onDragEnd={onDragEnd}
-      className={`flex items-center gap-3 p-3 rounded-lg transition-all ${!editing ? 'cursor-grab active:cursor-grabbing' : ''} ${isDead ? 'bg-stone-900/30 border border-stone-700/30 opacity-50' : isEnemy ? 'bg-red-950/30 border border-red-900/30 hover:border-red-700/50' : 'bg-emerald-950/30 border border-emerald-900/30 hover:border-emerald-700/50'} ${isDragging ? 'opacity-50' : ''} ${dragOverIndex === index ? 'border-amber-400 border-2' : ''}`}
+      className={`flex items-center gap-3 p-3 rounded-lg transition-all ${!editing && !editingHp ? 'cursor-grab active:cursor-grabbing' : ''} ${
+        isDead ? 'bg-stone-900/30 border border-stone-700/30 opacity-50' : 
+        isCompanion ? 'bg-purple-950/30 border border-purple-900/30 hover:border-purple-700/50' :
+        isEnemy ? 'bg-red-950/30 border border-red-900/30 hover:border-red-700/50' : 
+        'bg-emerald-950/30 border border-emerald-900/30 hover:border-emerald-700/50'
+      } ${isDragging ? 'opacity-50' : ''} ${dragOverIndex === index ? 'border-amber-400 border-2' : ''}`}
     >
       <Icons.Grip />
       <div 
-        className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg ${isEnemy ? 'bg-red-900/50' : 'bg-emerald-900/50'} ${!editing ? 'cursor-pointer hover:ring-2 hover:ring-amber-500/50' : ''}`}
+        className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg ${
+          isCompanion ? 'bg-purple-900/50' : isEnemy ? 'bg-red-900/50' : 'bg-emerald-900/50'
+        } ${!editing ? 'cursor-pointer hover:ring-2 hover:ring-amber-500/50' : ''}`}
         onClick={() => !editing && setEditing(true)}
       >
         {editing ? (
@@ -121,16 +140,44 @@ const InitiativeItem = ({ character, isEnemy, index, onDragStart, onDragOver, on
             className="w-full h-full bg-transparent text-center font-bold focus:outline-none"
           />
         ) : (
-          Math.floor(character.initiative) === character.initiative 
-            ? character.initiative 
-            : character.initiative.toFixed(1)
+          character.initiative !== undefined && character.initiative !== null
+            ? (Math.floor(character.initiative) === character.initiative 
+                ? character.initiative 
+                : character.initiative.toFixed(1))
+            : '—'
         )}
       </div>
       <div className="flex-1 min-w-0">
-        <div className={`font-medium truncate ${isDead ? 'line-through text-stone-500' : ''}`}>{character.name}</div>
+        <div className={`font-medium truncate ${isDead ? 'line-through text-stone-500' : ''}`}>
+          {character.name}
+          {isCompanion && character.ownerName && (
+            <span className="text-xs text-purple-400 ml-2">({character.ownerName}'s {character.form || 'companion'})</span>
+          )}
+        </div>
         <div className="text-xs text-stone-400 flex items-center gap-2">
           <span className={`flex items-center gap-1 ${character.acEffect ? 'text-cyan-400' : ''}`}><Icons.Shield /> {displayAC}</span>
-          <span className={`flex items-center gap-1 ${isDead ? 'text-red-500' : ''}`}><Icons.Heart /> {character.currentHp}/{character.maxHp}</span>
+          {isCompanion && onUpdateHp ? (
+            <span 
+              className={`flex items-center gap-1 cursor-pointer hover:text-purple-300 ${isDead ? 'text-red-500' : ''}`}
+              onClick={() => setEditingHp(true)}
+            >
+              <Icons.Heart />
+              {editingHp ? (
+                <input
+                  type="number"
+                  value={hpValue}
+                  onChange={(e) => setHpValue(e.target.value)}
+                  onBlur={handleHpBlur}
+                  onKeyDown={(e) => { if (e.key === 'Enter') e.target.blur(); }}
+                  autoFocus
+                  className="w-12 bg-transparent text-center focus:outline-none"
+                />
+              ) : character.currentHp}
+              /{character.maxHp}
+            </span>
+          ) : (
+            <span className={`flex items-center gap-1 ${isDead ? 'text-red-500' : ''}`}><Icons.Heart /> {character.currentHp}/{character.maxHp}</span>
+          )}
         </div>
       </div>
     </div>

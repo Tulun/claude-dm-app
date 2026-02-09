@@ -17,6 +17,7 @@ import {
   FeaturesTab,
   BackgroundTab,
   NotesTab,
+  CompanionsTab,
   formatClasses,
 } from './components';
 
@@ -110,7 +111,8 @@ export default function CharacterPage() {
   }
 
   const isParty = type === 'party';
-  const tabs = ['resources', 'inventory', 'spells', 'features', 'background', 'notes'];
+  const tabs = ['resources', 'inventory', 'companions', 'spells', 'features', 'background', 'notes'];
+  console.log('TABS:', tabs); // Check browser console
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100">
@@ -210,6 +212,7 @@ export default function CharacterPage() {
             <div className="bg-stone-900 rounded-lg p-4 min-h-[500px]">
               {activeTab === 'resources' && <ResourcesTab character={character} onUpdate={updateField} />}
               {activeTab === 'inventory' && <InventoryTab character={character} onUpdate={updateField} />}
+              {activeTab === 'companions' && <CompanionsTab character={character} onUpdate={updateField} />}
               {activeTab === 'spells' && <SpellsTab character={character} onUpdate={updateField} />}
               {activeTab === 'features' && <FeaturesTab character={character} onUpdate={updateField} />}
               {activeTab === 'background' && <BackgroundTab character={character} onUpdate={updateField} />}
