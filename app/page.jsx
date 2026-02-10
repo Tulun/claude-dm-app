@@ -70,6 +70,7 @@ export default function DMAdminTool() {
   const [dragOverIndex, setDragOverIndex] = useState(null);
   const [saveStatus, setSaveStatus] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
+  const [encounterLoaded, setEncounterLoaded] = useState(false);
 
   // Update tab when URL changes and reload data (in case edited on character page)
   useEffect(() => {
@@ -88,9 +89,10 @@ export default function DMAdminTool() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [partyRes, templatesRes] = await Promise.all([
+        const [partyRes, templatesRes, encounterRes] = await Promise.all([
           fetch('/api/party'),
           fetch('/api/templates'),
+          fetch('/api/encounter'),
         ]);
         
         if (partyRes.ok) {
@@ -107,11 +109,20 @@ export default function DMAdminTool() {
         } else {
           setTemplates(defaultEnemyTemplates);
         }
+
+        if (encounterRes.ok) {
+          const encounterData = await encounterRes.json();
+          if (encounterData && Array.isArray(encounterData.enemies) && encounterData.enemies.length > 0) {
+            setEnemies(encounterData.enemies);
+          }
+        }
+        setEncounterLoaded(true);
       } catch (err) {
         console.error('Error loading data:', err);
         // Fall back to defaults on error
         setParty(defaultPartyData);
         setTemplates(defaultEnemyTemplates);
+        setEncounterLoaded(true);
       }
       setIsLoaded(true);
     };
@@ -149,6 +160,22 @@ export default function DMAdminTool() {
     }, 1000);
     return () => clearTimeout(timeout);
   }, [templates, isLoaded]);
+
+  // Auto-save encounter (enemies) when it changes (debounced, only after initial load)
+  useEffect(() => {
+    if (!encounterLoaded) return;
+    const timeout = setTimeout(() => {
+      fetch('/api/encounter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enemies }),
+      }).then(() => {
+        setSaveStatus('Encounter saved');
+        setTimeout(() => setSaveStatus(''), 2000);
+      }).catch(console.error);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [enemies, encounterLoaded]);
 
   const reloadParty = async () => {
     try {
@@ -320,7 +347,7 @@ export default function DMAdminTool() {
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-red-400 flex items-center gap-2"><Icons.Skull />Enemies</h2>
               <div className="flex gap-2">
-                {enemies.length > 0 && <button onClick={() => setEnemies([])} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-sm"><Icons.Trash />Clear</button>}
+                {enemies.length > 0 && <button onClick={() => { setEnemies([]); fetch('/api/encounter', { method: 'DELETE' }); }} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-sm"><Icons.Trash />Clear</button>}
                 <button onClick={() => setShowAddEnemy(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-red-800/50 hover:bg-red-700/50 text-red-300 text-sm"><Icons.Plus />Add</button>
               </div>
             </div>

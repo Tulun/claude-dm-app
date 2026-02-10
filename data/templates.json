@@ -1,5 +1,5 @@
 {
-  "_version": 3,
+  "_version": 4,
   "templates": [
     {
       "id": "mm-awakened-shrub",
@@ -1211,6 +1211,605 @@
       ]
     },
     {
+      "id": "mm-acolyte",
+      "name": "Acolyte",
+      "type": "Medium Humanoid",
+      "ac": 10,
+      "maxHp": 9,
+      "hitDice": "2d8",
+      "speed": 30,
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 10,
+      "dex": 10,
+      "con": 10,
+      "int": 10,
+      "wis": 14,
+      "cha": 11,
+      "skills": "Medicine +4, Religion +2",
+      "senses": "Passive Perception 12",
+      "languages": "Common",
+      "isNpc": true,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Club",
+          "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 2 (1d4) Bludgeoning damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "Casts one of the following spells using Wisdom as the spellcasting ability (spell save DC 12). At will: Light, Thaumaturgy. 1/day each: Bless, Sanctuary."
+        }
+      ]
+    },
+    {
+      "id": "mm-axe-beak",
+      "name": "Axe Beak",
+      "type": "Large Beast",
+      "ac": 11,
+      "maxHp": 19,
+      "hitDice": "3d10+3",
+      "speed": 50,
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 14,
+      "dex": 12,
+      "con": 12,
+      "int": 2,
+      "wis": 10,
+      "cha": 5,
+      "senses": "Passive Perception 10",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Beak",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8+2) Slashing damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-blink-dog",
+      "name": "Blink Dog",
+      "type": "Medium Fey",
+      "ac": 13,
+      "maxHp": 22,
+      "hitDice": "4d8+4",
+      "speed": 40,
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 12,
+      "dex": 17,
+      "con": 12,
+      "int": 10,
+      "wis": 13,
+      "cha": 11,
+      "skills": "Perception +3, Stealth +5",
+      "senses": "Passive Perception 13",
+      "languages": "Blink Dog, understands Sylvan",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Keen Hearing and Smell",
+          "description": "Advantage on Perception checks that rely on hearing or smell."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Piercing damage."
+        },
+        {
+          "name": "Teleport (Recharge 4-6)",
+          "description": "Teleports up to 40 ft to an unoccupied space it can see. Before or after teleporting, can make one Bite attack."
+        }
+      ]
+    },
+    {
+      "id": "mm-boar",
+      "name": "Boar",
+      "type": "Medium Beast",
+      "ac": 11,
+      "maxHp": 11,
+      "hitDice": "2d8+2",
+      "speed": 40,
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 13,
+      "dex": 11,
+      "con": 12,
+      "int": 2,
+      "wis": 9,
+      "cha": 5,
+      "senses": "Passive Perception 9",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Charge",
+          "description": "If moves 20+ ft straight toward target then hits with Tusk, +3 (1d6) Slashing and DC 11 STR or Prone."
+        },
+        {
+          "name": "Relentless (Recharges after Short/Long Rest)",
+          "description": "If reduced to 0 HP by damage that isn't a critical hit, drops to 1 HP instead."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Tusk",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Slashing damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-constrictor-snake",
+      "name": "Constrictor Snake",
+      "type": "Large Beast",
+      "ac": 12,
+      "maxHp": 13,
+      "hitDice": "2d10+2",
+      "speed": "30, swim 30",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 15,
+      "dex": 14,
+      "con": 12,
+      "int": 1,
+      "wis": 10,
+      "cha": 3,
+      "senses": "Blindsight 10 ft., Passive Perception 10",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing damage."
+        },
+        {
+          "name": "Constrict",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8+2) Bludgeoning. Target is Grappled (escape DC 14). Until grapple ends, target is Restrained, and snake can't Constrict another target."
+        }
+      ]
+    },
+    {
+      "id": "mm-draft-horse",
+      "name": "Draft Horse",
+      "type": "Large Beast",
+      "ac": 10,
+      "maxHp": 19,
+      "hitDice": "3d10+3",
+      "speed": 40,
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 18,
+      "dex": 10,
+      "con": 12,
+      "int": 2,
+      "wis": 11,
+      "cha": 7,
+      "senses": "Passive Perception 10",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Hooves",
+          "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 9 (2d4+4) Bludgeoning damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-drow",
+      "name": "Drow",
+      "type": "Medium Humanoid (Elf)",
+      "ac": 15,
+      "maxHp": 13,
+      "hitDice": "3d8",
+      "speed": 30,
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 10,
+      "dex": 14,
+      "con": 10,
+      "int": 11,
+      "wis": 11,
+      "cha": 12,
+      "skills": "Perception +2, Stealth +4",
+      "senses": "Darkvision 120 ft., Passive Perception 12",
+      "languages": "Common, Elvish",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Fey Ancestry",
+          "description": "Advantage on saves against Charmed, and magic can't put the drow to sleep."
+        },
+        {
+          "name": "Sunlight Sensitivity",
+          "description": "Disadvantage on attack rolls and Perception checks that rely on sight when in sunlight."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Shortsword",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing damage."
+        },
+        {
+          "name": "Hand Crossbow",
+          "description": "Ranged Attack Roll: +4, range 30/120 ft. Hit: 5 (1d6+2) Piercing. DC 13 CON or Poisoned 1 hour. If fails by 5+, also Unconscious while Poisoned."
+        }
+      ],
+      "notes": "Chain Shirt. Innate Spellcasting (CHA, DC 11): At will: Dancing Lights. 1/day: Darkness, Faerie Fire."
+    },
+    {
+      "id": "mm-elk",
+      "name": "Elk",
+      "type": "Large Beast",
+      "ac": 10,
+      "maxHp": 13,
+      "hitDice": "2d10+2",
+      "speed": 50,
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 16,
+      "dex": 10,
+      "con": 12,
+      "int": 2,
+      "wis": 10,
+      "cha": 6,
+      "senses": "Passive Perception 10",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Charge",
+          "description": "If moves 20+ ft straight toward target then hits with Ram, +7 (2d6) damage and DC 13 STR or Prone."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Ram",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6+3) Bludgeoning damage."
+        },
+        {
+          "name": "Hooves",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (2d4+3) Bludgeoning damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-flying-sword",
+      "name": "Flying Sword",
+      "type": "Small Construct",
+      "ac": 17,
+      "maxHp": 17,
+      "hitDice": "5d6",
+      "speed": "0, fly 50 ft. (hover)",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 12,
+      "dex": 15,
+      "con": 11,
+      "int": 1,
+      "wis": 5,
+      "cha": 1,
+      "savingThrows": "Dex +4",
+      "immunities": "Poison, Psychic; Blinded, Charmed, Deafened, Frightened, Paralyzed, Petrified, Poisoned",
+      "senses": "Blindsight 60 ft. (blind beyond), Passive Perception 7",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Antimagic Susceptibility",
+          "description": "Incapacitated while in Antimagic Field. Targeted by Dispel Magic: DC 10 CON or unconscious 1 minute."
+        },
+        {
+          "name": "False Appearance",
+          "description": "While motionless, indistinguishable from normal sword."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Longsword",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 5 (1d8+1) Slashing damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-giant-badger",
+      "name": "Giant Badger",
+      "type": "Medium Beast",
+      "ac": 10,
+      "maxHp": 13,
+      "hitDice": "2d8+4",
+      "speed": "30, burrow 10",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 13,
+      "dex": 10,
+      "con": 15,
+      "int": 2,
+      "wis": 12,
+      "cha": 5,
+      "senses": "Darkvision 30 ft., Passive Perception 11",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Keen Smell",
+          "description": "Advantage on Perception checks that rely on smell."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Makes one Bite and one Claws attack."
+        },
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Piercing damage."
+        },
+        {
+          "name": "Claws",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 6 (2d4+1) Slashing damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-giant-bat",
+      "name": "Giant Bat",
+      "type": "Large Beast",
+      "ac": 13,
+      "maxHp": 22,
+      "hitDice": "4d10",
+      "speed": "10, fly 60",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 15,
+      "dex": 16,
+      "con": 11,
+      "int": 2,
+      "wis": 12,
+      "cha": 6,
+      "senses": "Blindsight 60 ft., Passive Perception 11",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Echolocation",
+          "description": "Can't use Blindsight while Deafened."
+        },
+        {
+          "name": "Keen Hearing",
+          "description": "Advantage on Perception checks that rely on hearing."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-giant-centipede",
+      "name": "Giant Centipede",
+      "type": "Small Beast",
+      "ac": 13,
+      "maxHp": 4,
+      "hitDice": "1d6+1",
+      "speed": "30, climb 30",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 5,
+      "dex": 14,
+      "con": 12,
+      "int": 1,
+      "wis": 7,
+      "cha": 3,
+      "senses": "Blindsight 30 ft., Passive Perception 8",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Piercing. DC 11 CON or 10 (3d6) Poison (half on save). If Poison reduces to 0 HP, stable but Poisoned 1 hour and Paralyzed while Poisoned."
+        }
+      ]
+    },
+    {
+      "id": "mm-giant-frog",
+      "name": "Giant Frog",
+      "type": "Medium Beast",
+      "ac": 11,
+      "maxHp": 18,
+      "hitDice": "4d8",
+      "speed": "30, swim 30",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 12,
+      "dex": 13,
+      "con": 11,
+      "int": 2,
+      "wis": 10,
+      "cha": 3,
+      "skills": "Perception +2, Stealth +3",
+      "senses": "Darkvision 30 ft., Passive Perception 12",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Amphibious",
+          "description": "Can breathe air and water."
+        },
+        {
+          "name": "Standing Leap",
+          "description": "Long jump up to 20 ft, high jump up to 10 ft."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Piercing. Target is Grappled (escape DC 11). Until grapple ends, target is Restrained, and frog can't Bite another target."
+        },
+        {
+          "name": "Swallow",
+          "description": "One Small or smaller creature frog is grappling. Target is swallowed, Blinded and Restrained, Total Cover, 5 (2d4) Acid at start of each frog's turns. If frog dies, target is no longer swallowed."
+        }
+      ]
+    },
+    {
+      "id": "mm-giant-lizard",
+      "name": "Giant Lizard",
+      "type": "Large Beast",
+      "ac": 12,
+      "maxHp": 19,
+      "hitDice": "3d10+3",
+      "speed": "30, climb 30",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 15,
+      "dex": 12,
+      "con": 13,
+      "int": 2,
+      "wis": 10,
+      "cha": 5,
+      "senses": "Darkvision 30 ft., Passive Perception 10",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8+2) Piercing damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-giant-owl",
+      "name": "Giant Owl",
+      "type": "Large Beast",
+      "ac": 12,
+      "maxHp": 19,
+      "hitDice": "3d10+3",
+      "speed": "5, fly 60",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 13,
+      "dex": 15,
+      "con": 12,
+      "int": 8,
+      "wis": 13,
+      "cha": 10,
+      "skills": "Perception +5, Stealth +4",
+      "senses": "Darkvision 120 ft., Passive Perception 15",
+      "languages": "Giant Owl, understands Common, Elvish, Sylvan",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Flyby",
+          "description": "Doesn't provoke Opportunity Attacks when flying out of reach."
+        },
+        {
+          "name": "Keen Hearing and Sight",
+          "description": "Advantage on Perception checks that rely on hearing or sight."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Talons",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 8 (2d6+1) Slashing damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-giant-poisonous-snake",
+      "name": "Giant Poisonous Snake",
+      "type": "Medium Beast",
+      "ac": 14,
+      "maxHp": 11,
+      "hitDice": "2d8+2",
+      "speed": "30, swim 30",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 10,
+      "dex": 18,
+      "con": 13,
+      "int": 2,
+      "wis": 10,
+      "cha": 3,
+      "senses": "Blindsight 10 ft., Passive Perception 10",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 6 (1d4+4) Piercing. DC 11 CON or 10 (3d6) Poison (half on save)."
+        }
+      ]
+    },
+    {
+      "id": "mm-giant-wolf-spider",
+      "name": "Giant Wolf Spider",
+      "type": "Medium Beast",
+      "ac": 13,
+      "maxHp": 11,
+      "hitDice": "2d8+2",
+      "speed": "40, climb 40",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 12,
+      "dex": 16,
+      "con": 13,
+      "int": 3,
+      "wis": 12,
+      "cha": 4,
+      "skills": "Perception +3, Stealth +7",
+      "senses": "Blindsight 10 ft., Darkvision 60 ft., Passive Perception 13",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Spider Climb",
+          "description": "Can climb difficult surfaces including ceilings."
+        },
+        {
+          "name": "Web Sense",
+          "description": "Knows location of creatures touching same web."
+        },
+        {
+          "name": "Web Walker",
+          "description": "Ignores movement restrictions from webs."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Piercing. DC 11 CON or 7 (2d6) Poison (half on save). If Poison reduces to 0 HP, stable but Poisoned 1 hour and Paralyzed while Poisoned."
+        }
+      ]
+    },
+    {
       "id": "mm-goblin",
       "name": "Goblin",
       "type": "Small Humanoid",
@@ -1249,6 +1848,402 @@
       ]
     },
     {
+      "id": "mm-grimlock",
+      "name": "Grimlock",
+      "type": "Medium Humanoid",
+      "ac": 11,
+      "maxHp": 11,
+      "hitDice": "2d8+2",
+      "speed": 30,
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 16,
+      "dex": 12,
+      "con": 12,
+      "int": 9,
+      "wis": 8,
+      "cha": 6,
+      "skills": "Athletics +5, Perception +3, Stealth +3",
+      "immunities": "Blinded",
+      "senses": "Blindsight 30 ft. (blind beyond), Passive Perception 13",
+      "languages": "Undercommon",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Keen Hearing and Smell",
+          "description": "Advantage on Perception checks that rely on hearing or smell."
+        },
+        {
+          "name": "Stone Camouflage",
+          "description": "Advantage on Stealth checks in rocky terrain."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Spiked Bone Club",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 5 (1d4+3) Bludgeoning plus 2 (1d4) Piercing damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-kenku",
+      "name": "Kenku",
+      "type": "Medium Humanoid",
+      "ac": 13,
+      "maxHp": 13,
+      "hitDice": "3d8",
+      "speed": 30,
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 10,
+      "dex": 16,
+      "con": 10,
+      "int": 11,
+      "wis": 10,
+      "cha": 10,
+      "skills": "Deception +4, Perception +2, Stealth +5",
+      "senses": "Passive Perception 12",
+      "languages": "Common, Auran",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Ambusher",
+          "description": "Advantage on attack rolls against Surprised creatures."
+        },
+        {
+          "name": "Mimicry",
+          "description": "Can mimic sounds it has heard. DC 14 Insight to tell it's an imitation."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Shortsword",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6+3) Piercing damage."
+        },
+        {
+          "name": "Shortbow",
+          "description": "Ranged Attack Roll: +5, range 80/320 ft. Hit: 6 (1d6+3) Piercing damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-kuo-toa",
+      "name": "Kuo-toa",
+      "type": "Medium Humanoid",
+      "ac": 13,
+      "maxHp": 18,
+      "hitDice": "4d8",
+      "speed": "30, swim 30",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 13,
+      "dex": 10,
+      "con": 11,
+      "int": 11,
+      "wis": 10,
+      "cha": 8,
+      "skills": "Perception +4",
+      "senses": "Darkvision 120 ft., Passive Perception 14",
+      "languages": "Undercommon",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Amphibious",
+          "description": "Can breathe air and water."
+        },
+        {
+          "name": "Otherworldly Perception",
+          "description": "Can sense presence of any creature within 30 ft that is Invisible or on Ethereal Plane."
+        },
+        {
+          "name": "Slippery",
+          "description": "Advantage on ability checks and saves to escape grapple."
+        },
+        {
+          "name": "Sunlight Sensitivity",
+          "description": "Disadvantage on attack rolls and Perception checks in sunlight."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 3 (1d4+1) Piercing damage."
+        },
+        {
+          "name": "Spear",
+          "description": "Melee or Ranged Attack Roll: +3, reach 5 ft. or range 20/60 ft. Hit: 4 (1d6+1) Piercing (5 (1d8+1) if two-handed melee)."
+        },
+        {
+          "name": "Net",
+          "description": "Ranged Attack Roll: +3, range 5/15 ft. Hit: Target is Restrained. DC 10 STR to escape. Dealing 5 slashing damage (AC 10) frees target."
+        }
+      ],
+      "notes": "Shield, Sticky Shield: creature hit by shield is stuck to it, DC 11 STR to pull free."
+    },
+    {
+      "id": "mm-mud-mephit",
+      "name": "Mud Mephit",
+      "type": "Small Elemental",
+      "ac": 11,
+      "maxHp": 27,
+      "hitDice": "6d6+6",
+      "speed": "20, fly 20, swim 20",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 8,
+      "dex": 12,
+      "con": 12,
+      "int": 9,
+      "wis": 11,
+      "cha": 7,
+      "skills": "Stealth +3",
+      "immunities": "Poison; Poisoned",
+      "senses": "Darkvision 60 ft., Passive Perception 10",
+      "languages": "Aquan, Terran",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Death Burst",
+          "description": "When dies, explodes in burst of mud. Creatures within 5 ft: DC 11 DEX or Restrained until end of next turn."
+        },
+        {
+          "name": "False Appearance",
+          "description": "While motionless, indistinguishable from pool of mud."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Fists",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Bludgeoning damage."
+        },
+        {
+          "name": "Mud Breath (Recharge 6)",
+          "description": "Exhales mud in 15-foot Cone. DC 11 DEX or Restrained until end of next turn."
+        }
+      ]
+    },
+    {
+      "id": "mm-needle-blight",
+      "name": "Needle Blight",
+      "type": "Medium Plant",
+      "ac": 12,
+      "maxHp": 11,
+      "hitDice": "2d8+2",
+      "speed": 30,
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 12,
+      "dex": 12,
+      "con": 13,
+      "int": 4,
+      "wis": 8,
+      "cha": 3,
+      "immunities": "Blinded, Deafened",
+      "senses": "Blindsight 60 ft. (blind beyond), Passive Perception 9",
+      "languages": "Understands Common but can't speak",
+      "isNpc": false,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Claws",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 6 (2d4+1) Piercing damage."
+        },
+        {
+          "name": "Needles",
+          "description": "Ranged Attack Roll: +3, range 30/60 ft. Hit: 8 (2d6+1) Piercing damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-panther",
+      "name": "Panther",
+      "type": "Medium Beast",
+      "ac": 12,
+      "maxHp": 13,
+      "hitDice": "3d8",
+      "speed": "50, climb 40",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 14,
+      "dex": 15,
+      "con": 10,
+      "int": 3,
+      "wis": 14,
+      "cha": 7,
+      "skills": "Perception +4, Stealth +6",
+      "senses": "Passive Perception 14",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Keen Smell",
+          "description": "Advantage on Perception checks that rely on smell."
+        },
+        {
+          "name": "Pounce",
+          "description": "If moves 20+ ft straight toward target then hits with Claw, DC 12 STR or Prone. If Prone, can make one Bite as Bonus Action."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing damage."
+        },
+        {
+          "name": "Claw",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Slashing damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-pixie",
+      "name": "Pixie",
+      "type": "Tiny Fey",
+      "ac": 15,
+      "maxHp": 1,
+      "hitDice": "1d4-1",
+      "speed": "10, fly 30",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 2,
+      "dex": 20,
+      "con": 8,
+      "int": 10,
+      "wis": 14,
+      "cha": 15,
+      "skills": "Perception +4, Stealth +7",
+      "senses": "Passive Perception 14",
+      "languages": "Sylvan",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Magic Resistance",
+          "description": "Advantage on saves against spells and magical effects."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Spellcasting",
+          "description": "Casts one of the following spells requiring no material components, using Charisma as spellcasting ability (spell save DC 12). At will: Druidcraft. 1/day each: Confusion, Dancing Lights, Detect Evil and Good, Detect Thoughts, Dispel Magic, Entangle, Fly, Phantasmal Force, Polymorph, Sleep."
+        }
+      ]
+    },
+    {
+      "id": "mm-pseudodragon",
+      "name": "Pseudodragon",
+      "type": "Tiny Dragon",
+      "ac": 13,
+      "maxHp": 7,
+      "hitDice": "2d4+2",
+      "speed": "15, fly 60",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 6,
+      "dex": 15,
+      "con": 13,
+      "int": 10,
+      "wis": 12,
+      "cha": 10,
+      "skills": "Perception +3, Stealth +4",
+      "senses": "Blindsight 10 ft., Darkvision 60 ft., Passive Perception 13",
+      "languages": "Understands Common and Draconic",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Keen Senses",
+          "description": "Advantage on Perception checks."
+        },
+        {
+          "name": "Magic Resistance",
+          "description": "Advantage on saves against spells and magical effects."
+        },
+        {
+          "name": "Limited Telepathy",
+          "description": "Can communicate simple ideas, emotions, images telepathically within 100 ft."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Piercing damage."
+        },
+        {
+          "name": "Sting",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Piercing. DC 11 CON or Poisoned 1 hour. If fails by 5+, also Unconscious until Poisoned ends, or takes damage, or someone uses action to shake awake."
+        }
+      ]
+    },
+    {
+      "id": "mm-pteranodon",
+      "name": "Pteranodon",
+      "type": "Medium Beast",
+      "ac": 13,
+      "maxHp": 13,
+      "hitDice": "3d8",
+      "speed": "10, fly 60",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 12,
+      "dex": 15,
+      "con": 10,
+      "int": 2,
+      "wis": 9,
+      "cha": 5,
+      "skills": "Perception +1",
+      "senses": "Passive Perception 11",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Flyby",
+          "description": "Doesn't provoke Opportunity Attacks when flying out of reach."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 6 (2d4+1) Piercing damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-riding-horse",
+      "name": "Riding Horse",
+      "type": "Large Beast",
+      "ac": 10,
+      "maxHp": 13,
+      "hitDice": "2d10+2",
+      "speed": 60,
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 16,
+      "dex": 10,
+      "con": 12,
+      "int": 2,
+      "wis": 11,
+      "cha": 7,
+      "senses": "Passive Perception 10",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Hooves",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (2d4+3) Bludgeoning damage."
+        }
+      ]
+    },
+    {
       "id": "mm-skeleton",
       "name": "Skeleton",
       "type": "Medium Undead",
@@ -1283,37 +2278,340 @@
       ]
     },
     {
-      "id": "mm-zombie",
-      "name": "Zombie",
-      "type": "Medium Undead",
-      "ac": 8,
+      "id": "mm-smoke-mephit",
+      "name": "Smoke Mephit",
+      "type": "Small Elemental",
+      "ac": 12,
       "maxHp": 22,
-      "hitDice": "3d8+9",
-      "speed": 20,
+      "hitDice": "5d6+5",
+      "speed": "30, fly 30",
       "cr": "1/4",
       "xp": 50,
       "profBonus": 2,
-      "str": 13,
-      "dex": 6,
-      "con": 16,
-      "int": 3,
-      "wis": 6,
-      "cha": 5,
-      "savingThrows": "Wis +0",
-      "immunities": "Poison; Poisoned",
-      "senses": "Darkvision 60 ft., Passive Perception 8",
-      "languages": "Understands languages it knew in life",
+      "str": 6,
+      "dex": 14,
+      "con": 12,
+      "int": 10,
+      "wis": 10,
+      "cha": 11,
+      "skills": "Perception +2, Stealth +4",
+      "immunities": "Fire, Poison; Poisoned",
+      "senses": "Darkvision 60 ft., Passive Perception 12",
+      "languages": "Auran, Ignan",
       "isNpc": false,
       "traits": [
         {
-          "name": "Undead Fortitude",
-          "description": "If reduced to 0 HP, DC 5+damage CON save to drop to 1 HP instead (unless Radiant or Critical Hit)."
+          "name": "Death Burst",
+          "description": "When dies, leaves behind cloud of smoke that heavily obscures 5-ft radius for 1 minute. Wind disperses it."
         }
       ],
       "actions": [
         {
-          "name": "Slam",
-          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Bludgeoning damage."
+          "name": "Claws",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Slashing damage."
+        },
+        {
+          "name": "Cinder Breath (Recharge 6)",
+          "description": "15-foot Cone of smoke. DC 10 CON or Blinded until end of mephit's next turn."
+        }
+      ]
+    },
+    {
+      "id": "mm-sprite",
+      "name": "Sprite",
+      "type": "Tiny Fey",
+      "ac": 15,
+      "maxHp": 2,
+      "hitDice": "1d4",
+      "speed": "10, fly 40",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 3,
+      "dex": 18,
+      "con": 10,
+      "int": 14,
+      "wis": 13,
+      "cha": 11,
+      "skills": "Perception +3, Stealth +8",
+      "senses": "Passive Perception 13",
+      "languages": "Common, Elvish, Sylvan",
+      "isNpc": false,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Longsword",
+          "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 1 Slashing damage."
+        },
+        {
+          "name": "Shortbow",
+          "description": "Ranged Attack Roll: +6, range 40/160 ft. Hit: 1 Piercing. DC 10 CON or Poisoned 1 minute. If fails by 5+, also Unconscious until Poisoned ends, or takes damage, or someone uses action to shake awake."
+        },
+        {
+          "name": "Heart Sight",
+          "description": "Touches creature and knows its emotional state. If fails DC 10 CHA save, also knows alignment."
+        },
+        {
+          "name": "Invisibility",
+          "description": "Magically turns Invisible until attacks, casts spell, or concentration ends."
+        }
+      ]
+    },
+    {
+      "id": "mm-steam-mephit",
+      "name": "Steam Mephit",
+      "type": "Small Elemental",
+      "ac": 10,
+      "maxHp": 21,
+      "hitDice": "6d6",
+      "speed": "30, fly 30",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 5,
+      "dex": 11,
+      "con": 10,
+      "int": 11,
+      "wis": 10,
+      "cha": 12,
+      "immunities": "Fire, Poison; Poisoned",
+      "senses": "Darkvision 60 ft., Passive Perception 10",
+      "languages": "Aquan, Ignan",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Death Burst",
+          "description": "When dies, explodes in cloud of steam. Creatures within 5 ft: DC 10 DEX or 4 (1d8) Fire damage."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Claws",
+          "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 2 (1d4) Slashing damage plus 2 (1d4) Fire damage."
+        },
+        {
+          "name": "Steam Breath (Recharge 6)",
+          "description": "15-foot Cone of steam. DC 10 DEX or 4 (1d8) Fire damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-stirge",
+      "name": "Stirge",
+      "type": "Tiny Beast",
+      "ac": 14,
+      "maxHp": 2,
+      "hitDice": "1d4",
+      "speed": "10, fly 40",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 4,
+      "dex": 16,
+      "con": 11,
+      "int": 2,
+      "wis": 8,
+      "cha": 6,
+      "senses": "Darkvision 60 ft., Passive Perception 9",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Blood Drain",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 5 (1d4+3) Piercing and attaches. While attached, doesn't attack. Instead, at start of each turn, target loses 5 (1d4+3) HP. Detaches after draining 10 HP, or target dies. Target or creature within 5 ft can use action to detach it."
+        }
+      ]
+    },
+    {
+      "id": "mm-swarm-of-bats",
+      "name": "Swarm of Bats",
+      "type": "Medium Swarm of Tiny Beasts",
+      "ac": 12,
+      "maxHp": 22,
+      "hitDice": "5d8",
+      "speed": "0, fly 30",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 5,
+      "dex": 15,
+      "con": 10,
+      "int": 2,
+      "wis": 12,
+      "cha": 4,
+      "resistances": "Bludgeoning, Piercing, Slashing",
+      "immunities": "Charmed, Frightened, Grappled, Paralyzed, Petrified, Prone, Restrained, Stunned",
+      "senses": "Blindsight 60 ft., Passive Perception 11",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Echolocation",
+          "description": "Can't use Blindsight while Deafened."
+        },
+        {
+          "name": "Keen Hearing",
+          "description": "Advantage on Perception checks that rely on hearing."
+        },
+        {
+          "name": "Swarm",
+          "description": "Can occupy another creature's space and vice versa. Can move through any opening large enough for Tiny creature. Can't regain HP or gain Temp HP."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bites",
+          "description": "Melee Attack Roll: +4, reach 0 ft. (creatures in swarm's space). Hit: 5 (2d4) Piercing, or 2 (1d4) Piercing if swarm has half HP or fewer."
+        }
+      ]
+    },
+    {
+      "id": "mm-swarm-of-rats",
+      "name": "Swarm of Rats",
+      "type": "Medium Swarm of Tiny Beasts",
+      "ac": 10,
+      "maxHp": 24,
+      "hitDice": "7d8-7",
+      "speed": 30,
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 9,
+      "dex": 11,
+      "con": 9,
+      "int": 2,
+      "wis": 10,
+      "cha": 3,
+      "resistances": "Bludgeoning, Piercing, Slashing",
+      "immunities": "Charmed, Frightened, Grappled, Paralyzed, Petrified, Prone, Restrained, Stunned",
+      "senses": "Darkvision 30 ft., Passive Perception 10",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Keen Smell",
+          "description": "Advantage on Perception checks that rely on smell."
+        },
+        {
+          "name": "Swarm",
+          "description": "Can occupy another creature's space and vice versa. Can move through any opening large enough for Tiny creature. Can't regain HP or gain Temp HP."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bites",
+          "description": "Melee Attack Roll: +2, reach 0 ft. (creatures in swarm's space). Hit: 7 (2d6) Piercing, or 3 (1d6) Piercing if swarm has half HP or fewer."
+        }
+      ]
+    },
+    {
+      "id": "mm-swarm-of-ravens",
+      "name": "Swarm of Ravens",
+      "type": "Medium Swarm of Tiny Beasts",
+      "ac": 12,
+      "maxHp": 24,
+      "hitDice": "7d8-7",
+      "speed": "10, fly 50",
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 6,
+      "dex": 14,
+      "con": 8,
+      "int": 3,
+      "wis": 12,
+      "cha": 6,
+      "skills": "Perception +5",
+      "resistances": "Bludgeoning, Piercing, Slashing",
+      "immunities": "Charmed, Frightened, Grappled, Paralyzed, Petrified, Prone, Restrained, Stunned",
+      "senses": "Passive Perception 15",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Swarm",
+          "description": "Can occupy another creature's space and vice versa. Can move through any opening large enough for Tiny creature. Can't regain HP or gain Temp HP."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Beaks",
+          "description": "Melee Attack Roll: +4, reach 5 ft. (creatures in swarm's space). Hit: 7 (2d6) Piercing, or 3 (1d6) Piercing if swarm has half HP or fewer."
+        }
+      ]
+    },
+    {
+      "id": "mm-twig-blight",
+      "name": "Twig Blight",
+      "type": "Small Plant",
+      "ac": 13,
+      "maxHp": 4,
+      "hitDice": "1d6+1",
+      "speed": 20,
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 6,
+      "dex": 13,
+      "con": 12,
+      "int": 4,
+      "wis": 8,
+      "cha": 3,
+      "skills": "Stealth +3",
+      "vulnerabilities": "Fire",
+      "immunities": "Blinded, Deafened",
+      "senses": "Blindsight 60 ft. (blind beyond), Passive Perception 9",
+      "languages": "Understands Common but can't speak",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "False Appearance",
+          "description": "While motionless, indistinguishable from dead shrub."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Claws",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 3 (1d4+1) Piercing damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-violet-fungus",
+      "name": "Violet Fungus",
+      "type": "Medium Plant",
+      "ac": 5,
+      "maxHp": 18,
+      "hitDice": "4d8",
+      "speed": 5,
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 3,
+      "dex": 1,
+      "con": 10,
+      "int": 1,
+      "wis": 3,
+      "cha": 1,
+      "immunities": "Blinded, Deafened, Frightened",
+      "senses": "Blindsight 30 ft. (blind beyond), Passive Perception 6",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "False Appearance",
+          "description": "While motionless, indistinguishable from ordinary fungus."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Makes 1d4 Rotting Touch attacks."
+        },
+        {
+          "name": "Rotting Touch",
+          "description": "Melee Attack Roll: +2, reach 10 ft. Hit: 4 (1d8) Necrotic damage."
         }
       ]
     },
@@ -1352,6 +2650,41 @@
         {
           "name": "Bite",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4+2) Piercing. DC 11 STR save or Prone."
+        }
+      ]
+    },
+    {
+      "id": "mm-zombie",
+      "name": "Zombie",
+      "type": "Medium Undead",
+      "ac": 8,
+      "maxHp": 22,
+      "hitDice": "3d8+9",
+      "speed": 20,
+      "cr": "1/4",
+      "xp": 50,
+      "profBonus": 2,
+      "str": 13,
+      "dex": 6,
+      "con": 16,
+      "int": 3,
+      "wis": 6,
+      "cha": 5,
+      "savingThrows": "Wis +0",
+      "immunities": "Poison; Poisoned",
+      "senses": "Darkvision 60 ft., Passive Perception 8",
+      "languages": "Understands languages it knew in life",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Undead Fortitude",
+          "description": "If reduced to 0 HP, DC 5+damage CON save to drop to 1 HP instead (unless Radiant or Critical Hit)."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Slam",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Bludgeoning damage."
         }
       ]
     },
@@ -1515,6 +2848,1048 @@
         {
           "name": "Strength Drain",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 9 (2d6+2) Necrotic. Target STR reduced by 1d4. Dies if STR reaches 0. Humanoid slain rises as shadow in 1d4 hours."
+        }
+      ]
+    },
+    {
+      "id": "mm-ape",
+      "name": "Ape",
+      "type": "Medium Beast",
+      "ac": 12,
+      "maxHp": 19,
+      "hitDice": "3d8+6",
+      "speed": "30, climb 30",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 16,
+      "dex": 14,
+      "con": 14,
+      "int": 6,
+      "wis": 12,
+      "cha": 7,
+      "skills": "Athletics +5, Perception +3",
+      "senses": "Passive Perception 13",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Makes two Fist attacks."
+        },
+        {
+          "name": "Fist",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6+3) Bludgeoning damage."
+        },
+        {
+          "name": "Rock",
+          "description": "Ranged Attack Roll: +5, range 25/50 ft. Hit: 6 (1d6+3) Bludgeoning damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-black-bear",
+      "name": "Black Bear",
+      "type": "Medium Beast",
+      "ac": 11,
+      "maxHp": 19,
+      "hitDice": "3d8+6",
+      "speed": "40, climb 30",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 15,
+      "dex": 10,
+      "con": 14,
+      "int": 2,
+      "wis": 12,
+      "cha": 7,
+      "skills": "Perception +3",
+      "senses": "Passive Perception 13",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Keen Smell",
+          "description": "Advantage on Perception checks that rely on smell."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Makes one Bite and one Claws attack."
+        },
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing damage."
+        },
+        {
+          "name": "Claws",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4+2) Slashing damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-cockatrice",
+      "name": "Cockatrice",
+      "type": "Small Monstrosity",
+      "ac": 11,
+      "maxHp": 27,
+      "hitDice": "6d6+6",
+      "speed": "20, fly 40",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 6,
+      "dex": 12,
+      "con": 12,
+      "int": 2,
+      "wis": 13,
+      "cha": 5,
+      "senses": "Darkvision 60 ft., Passive Perception 11",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 3 (1d4+1) Piercing. DC 11 CON or Restrained (turning to stone). End of next turn: success ends, failure = Petrified 24 hours."
+        }
+      ]
+    },
+    {
+      "id": "mm-crocodile",
+      "name": "Crocodile",
+      "type": "Large Beast",
+      "ac": 12,
+      "maxHp": 19,
+      "hitDice": "3d10+3",
+      "speed": "20, swim 30",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 15,
+      "dex": 10,
+      "con": 13,
+      "int": 2,
+      "wis": 10,
+      "cha": 5,
+      "skills": "Stealth +2",
+      "senses": "Passive Perception 10",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Hold Breath",
+          "description": "Can hold breath for 15 minutes."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (1d10+2) Piercing. Target Grappled (escape DC 12), Restrained until grapple ends."
+        }
+      ]
+    },
+    {
+      "id": "mm-darkmantle",
+      "name": "Darkmantle",
+      "type": "Small Monstrosity",
+      "ac": 11,
+      "maxHp": 22,
+      "hitDice": "5d6+5",
+      "speed": "10, fly 30",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 16,
+      "dex": 12,
+      "con": 13,
+      "int": 2,
+      "wis": 10,
+      "cha": 5,
+      "skills": "Stealth +3",
+      "senses": "Blindsight 60 ft., Passive Perception 10",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Echolocation",
+          "description": "Can't use Blindsight while Deafened."
+        },
+        {
+          "name": "False Appearance",
+          "description": "While on ceiling and motionless, looks like cave formation."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Crush",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6+3) Bludgeoning. Medium or smaller: attached and Blinded. DC 13 STR to detach."
+        },
+        {
+          "name": "Darkness Aura (1/Day)",
+          "description": "15-ft radius magical Darkness, 10 min (concentration)."
+        }
+      ]
+    },
+    {
+      "id": "mm-dust-mephit",
+      "name": "Dust Mephit",
+      "type": "Small Elemental",
+      "ac": 12,
+      "maxHp": 17,
+      "hitDice": "5d6",
+      "speed": "30, fly 30",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 5,
+      "dex": 14,
+      "con": 10,
+      "int": 9,
+      "wis": 11,
+      "cha": 10,
+      "skills": "Perception +2, Stealth +4",
+      "vulnerabilities": "Fire",
+      "immunities": "Poison; Poisoned",
+      "senses": "Darkvision 60 ft., Passive Perception 12",
+      "languages": "Auran, Terran",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Death Burst",
+          "description": "When dies, creatures within 5 ft: DC 10 CON or Blinded 1 minute (save ends)."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Claws",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Slashing damage."
+        },
+        {
+          "name": "Blinding Breath (Recharge 6)",
+          "description": "15-foot Cone. DC 10 DEX or Blinded 1 minute (save ends)."
+        }
+      ]
+    },
+    {
+      "id": "mm-giant-goat",
+      "name": "Giant Goat",
+      "type": "Large Beast",
+      "ac": 11,
+      "maxHp": 19,
+      "hitDice": "3d10+3",
+      "speed": 40,
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 17,
+      "dex": 11,
+      "con": 12,
+      "int": 3,
+      "wis": 12,
+      "cha": 6,
+      "senses": "Passive Perception 11",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Charge",
+          "description": "If moves 20+ ft then hits with Ram, +5 (2d4) damage and DC 13 STR or Prone."
+        },
+        {
+          "name": "Sure-Footed",
+          "description": "Advantage on saves vs Prone."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Ram",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (2d4+3) Bludgeoning damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-giant-sea-horse",
+      "name": "Giant Sea Horse",
+      "type": "Large Beast",
+      "ac": 13,
+      "maxHp": 16,
+      "hitDice": "3d10",
+      "speed": "0, swim 40",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 12,
+      "dex": 15,
+      "con": 11,
+      "int": 2,
+      "wis": 12,
+      "cha": 5,
+      "senses": "Passive Perception 11",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Charge",
+          "description": "If swims 20+ ft then hits with Ram, +7 (2d6) damage and DC 11 STR or Prone."
+        },
+        {
+          "name": "Water Breathing",
+          "description": "Can breathe only underwater."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Ram",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Bludgeoning damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-giant-wasp",
+      "name": "Giant Wasp",
+      "type": "Medium Beast",
+      "ac": 12,
+      "maxHp": 13,
+      "hitDice": "3d8",
+      "speed": "10, fly 50",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 10,
+      "dex": 14,
+      "con": 10,
+      "int": 1,
+      "wis": 10,
+      "cha": 3,
+      "senses": "Passive Perception 10",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Sting",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing. DC 11 CON or 10 (3d6) Poison (half on save). If reduces to 0 HP, stable but Poisoned 1 hour and Paralyzed."
+        }
+      ]
+    },
+    {
+      "id": "mm-gray-ooze",
+      "name": "Gray Ooze",
+      "type": "Medium Ooze",
+      "ac": 8,
+      "maxHp": 22,
+      "hitDice": "3d8+9",
+      "speed": "10, climb 10",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 12,
+      "dex": 6,
+      "con": 16,
+      "int": 1,
+      "wis": 6,
+      "cha": 2,
+      "skills": "Stealth +2",
+      "resistances": "Acid, Cold, Fire",
+      "immunities": "Blinded, Charmed, Deafened, Exhaustion, Frightened, Prone",
+      "senses": "Blindsight 60 ft. (blind beyond), Passive Perception 8",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Amorphous",
+          "description": "Can move through 1 inch gaps."
+        },
+        {
+          "name": "Corrode Metal",
+          "description": "Nonmagical weapon that hits: -1 damage (destroyed at -5). Armor/shield: -1 AC (destroyed at AC 10)."
+        },
+        {
+          "name": "False Appearance",
+          "description": "While motionless, looks like oily pool or wet rock."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Pseudopod",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Bludgeoning plus 7 (2d6) Acid."
+        }
+      ]
+    },
+    {
+      "id": "mm-ice-mephit",
+      "name": "Ice Mephit",
+      "type": "Small Elemental",
+      "ac": 11,
+      "maxHp": 21,
+      "hitDice": "6d6",
+      "speed": "30, fly 30",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 7,
+      "dex": 13,
+      "con": 10,
+      "int": 9,
+      "wis": 11,
+      "cha": 12,
+      "skills": "Perception +2, Stealth +3",
+      "vulnerabilities": "Bludgeoning, Fire",
+      "immunities": "Cold, Poison; Poisoned",
+      "senses": "Darkvision 60 ft., Passive Perception 12",
+      "languages": "Aquan, Auran",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Death Burst",
+          "description": "When dies, creatures within 5 ft: DC 10 DEX or 4 (1d8) Slashing."
+        },
+        {
+          "name": "False Appearance",
+          "description": "While motionless, looks like ordinary ice."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Claws",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 3 (1d4+1) Slashing plus 2 (1d4) Cold."
+        },
+        {
+          "name": "Frost Breath (Recharge 6)",
+          "description": "15-foot Cone. DC 10 DEX or 5 (2d4) Cold."
+        }
+      ]
+    },
+    {
+      "id": "mm-jackalwere",
+      "name": "Jackalwere",
+      "type": "Medium Humanoid (Shapechanger)",
+      "ac": 12,
+      "maxHp": 18,
+      "hitDice": "4d8",
+      "speed": 40,
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 11,
+      "dex": 15,
+      "con": 11,
+      "int": 13,
+      "wis": 11,
+      "cha": 10,
+      "skills": "Deception +4, Perception +2, Stealth +4",
+      "immunities": "Bludgeoning, Piercing, Slashing from nonmagical non-silvered attacks",
+      "senses": "Passive Perception 12",
+      "languages": "Common (can't speak in jackal form)",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Shapechanger",
+          "description": "Can polymorph into jackal-humanoid hybrid, jackal, or humanoid."
+        },
+        {
+          "name": "Keen Hearing and Smell",
+          "description": "Advantage on Perception (hearing/smell)."
+        },
+        {
+          "name": "Pack Tactics",
+          "description": "Advantage if ally within 5 ft of target."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite (Jackal/Hybrid)",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Piercing."
+        },
+        {
+          "name": "Scimitar (Human/Hybrid)",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Slashing."
+        },
+        {
+          "name": "Sleep Gaze",
+          "description": "One creature within 30 ft: DC 10 WIS or Unconscious 10 min."
+        }
+      ]
+    },
+    {
+      "id": "mm-lizardfolk",
+      "name": "Lizardfolk",
+      "type": "Medium Humanoid",
+      "ac": 15,
+      "maxHp": 22,
+      "hitDice": "4d8+4",
+      "speed": "30, swim 30",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 15,
+      "dex": 10,
+      "con": 13,
+      "int": 7,
+      "wis": 12,
+      "cha": 7,
+      "skills": "Perception +3, Stealth +4, Survival +5",
+      "senses": "Passive Perception 13",
+      "languages": "Draconic",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Hold Breath",
+          "description": "Can hold breath for 15 minutes."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Two attacks, one can be Bite."
+        },
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing."
+        },
+        {
+          "name": "Heavy Club",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Bludgeoning."
+        },
+        {
+          "name": "Javelin",
+          "description": "Melee/Ranged Attack Roll: +4, range 30/120 ft. Hit: 5 (1d6+2) Piercing."
+        }
+      ],
+      "notes": "Natural Armor, Shield"
+    },
+    {
+      "id": "mm-magma-mephit",
+      "name": "Magma Mephit",
+      "type": "Small Elemental",
+      "ac": 11,
+      "maxHp": 22,
+      "hitDice": "5d6+5",
+      "speed": "30, fly 30",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 8,
+      "dex": 12,
+      "con": 12,
+      "int": 7,
+      "wis": 10,
+      "cha": 10,
+      "skills": "Stealth +3",
+      "vulnerabilities": "Cold",
+      "immunities": "Fire, Poison; Poisoned",
+      "senses": "Darkvision 60 ft., Passive Perception 10",
+      "languages": "Ignan, Terran",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Death Burst",
+          "description": "When dies, creatures within 5 ft: DC 11 DEX or 7 (2d6) Fire."
+        },
+        {
+          "name": "False Appearance",
+          "description": "While motionless, looks like mound of magma."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Claws",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 3 (1d4+1) Slashing plus 2 (1d4) Fire."
+        },
+        {
+          "name": "Fire Breath (Recharge 6)",
+          "description": "15-foot Cone. DC 11 DEX or 7 (2d6) Fire (half on save)."
+        }
+      ]
+    },
+    {
+      "id": "mm-magmin",
+      "name": "Magmin",
+      "type": "Small Elemental",
+      "ac": 14,
+      "maxHp": 9,
+      "hitDice": "2d6+2",
+      "speed": 30,
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 7,
+      "dex": 15,
+      "con": 12,
+      "int": 8,
+      "wis": 11,
+      "cha": 10,
+      "resistances": "Bludgeoning, Piercing, Slashing from nonmagical attacks",
+      "immunities": "Fire",
+      "senses": "Darkvision 60 ft., Passive Perception 10",
+      "languages": "Ignan",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Death Burst",
+          "description": "When dies, creatures within 10 ft: DC 11 DEX or 7 (2d6) Fire. Flammables ignite."
+        },
+        {
+          "name": "Ignited Illumination",
+          "description": "Sheds bright light 10 ft, dim light 10 ft more."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Touch",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d6) Fire. Target ignites, taking 3 (1d6) Fire per turn until doused."
+        }
+      ]
+    },
+    {
+      "id": "mm-myconid-adult",
+      "name": "Myconid Adult",
+      "type": "Medium Plant",
+      "ac": 12,
+      "maxHp": 22,
+      "hitDice": "4d8+4",
+      "speed": 20,
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 10,
+      "dex": 10,
+      "con": 12,
+      "int": 10,
+      "wis": 13,
+      "cha": 7,
+      "senses": "Darkvision 120 ft., Passive Perception 11",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Distress Spores",
+          "description": "When damaged, myconids within 240 ft sense it."
+        },
+        {
+          "name": "Sun Sickness",
+          "description": "In sunlight, Disadvantage on all d20 rolls. Dies after 1 hour."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Fist",
+          "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 5 (2d4) Bludgeoning plus 5 (2d4) Poison."
+        },
+        {
+          "name": "Pacifying Spores (3/Day)",
+          "description": "One creature within 5 ft: DC 11 CON or Stunned 1 min (save ends)."
+        },
+        {
+          "name": "Rapport Spores",
+          "description": "20-ft radius. DC 11 CON or telepathically linked 1 hour."
+        }
+      ]
+    },
+    {
+      "id": "mm-piercer",
+      "name": "Piercer",
+      "type": "Medium Monstrosity",
+      "ac": 15,
+      "maxHp": 22,
+      "hitDice": "3d8+9",
+      "speed": "5, climb 5",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 10,
+      "dex": 13,
+      "con": 16,
+      "int": 1,
+      "wis": 7,
+      "cha": 3,
+      "skills": "Stealth +5",
+      "senses": "Blindsight 30 ft., Darkvision 60 ft., Passive Perception 8",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "False Appearance",
+          "description": "On ceiling, looks like stalactite."
+        },
+        {
+          "name": "Spider Climb",
+          "description": "Climbs difficult surfaces including ceilings."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Drop",
+          "description": "Creature below: 3 (1d6) Piercing per 10 ft fallen, max 21 (6d6). DC 15 DEX to avoid."
+        }
+      ]
+    },
+    {
+      "id": "mm-reef-shark",
+      "name": "Reef Shark",
+      "type": "Medium Beast",
+      "ac": 12,
+      "maxHp": 22,
+      "hitDice": "4d8+4",
+      "speed": "0, swim 40",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 14,
+      "dex": 13,
+      "con": 13,
+      "int": 1,
+      "wis": 10,
+      "cha": 4,
+      "skills": "Perception +2",
+      "senses": "Blindsight 30 ft., Passive Perception 12",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Pack Tactics",
+          "description": "Advantage if ally within 5 ft of target."
+        },
+        {
+          "name": "Water Breathing",
+          "description": "Breathes only underwater."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8+2) Piercing."
+        }
+      ]
+    },
+    {
+      "id": "mm-rust-monster",
+      "name": "Rust Monster",
+      "type": "Medium Monstrosity",
+      "ac": 14,
+      "maxHp": 27,
+      "hitDice": "5d8+5",
+      "speed": 40,
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 13,
+      "dex": 12,
+      "con": 13,
+      "int": 2,
+      "wis": 13,
+      "cha": 6,
+      "senses": "Darkvision 60 ft., Passive Perception 11",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Iron Scent",
+          "description": "Pinpoints ferrous metal within 30 ft."
+        },
+        {
+          "name": "Rust Metal",
+          "description": "Nonmagical ferrous weapon hitting it: -1 damage (destroyed at -5). Armor/shield: -1 AC (destroyed at AC 10)."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 5 (1d8+1) Piercing."
+        },
+        {
+          "name": "Antennae",
+          "description": "Touch nonmagical ferrous metal. If worn/carried: DC 11 DEX or corrodes."
+        }
+      ]
+    },
+    {
+      "id": "mm-sahuagin",
+      "name": "Sahuagin",
+      "type": "Medium Humanoid",
+      "ac": 12,
+      "maxHp": 22,
+      "hitDice": "4d8+4",
+      "speed": "30, swim 40",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 13,
+      "dex": 11,
+      "con": 12,
+      "int": 12,
+      "wis": 13,
+      "cha": 9,
+      "skills": "Perception +5",
+      "senses": "Darkvision 120 ft., Passive Perception 15",
+      "languages": "Sahuagin",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Blood Frenzy",
+          "description": "Advantage vs creatures missing HP."
+        },
+        {
+          "name": "Limited Amphibiousness",
+          "description": "Needs water every 4 hours."
+        },
+        {
+          "name": "Shark Telepathy",
+          "description": "Commands sharks within 120 ft."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "One Bite and one Claw or Spear."
+        },
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 3 (1d4+1) Piercing."
+        },
+        {
+          "name": "Claws",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 3 (1d4+1) Slashing."
+        },
+        {
+          "name": "Spear",
+          "description": "Melee/Ranged Attack Roll: +3, range 20/60 ft. Hit: 4 (1d6+1) Piercing."
+        }
+      ],
+      "notes": "Natural Armor"
+    },
+    {
+      "id": "mm-satyr",
+      "name": "Satyr",
+      "type": "Medium Fey",
+      "ac": 14,
+      "maxHp": 31,
+      "hitDice": "7d8",
+      "speed": 40,
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 12,
+      "dex": 16,
+      "con": 11,
+      "int": 12,
+      "wis": 10,
+      "cha": 14,
+      "skills": "Perception +2, Performance +6, Stealth +5",
+      "senses": "Passive Perception 12",
+      "languages": "Common, Elvish, Sylvan",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Magic Resistance",
+          "description": "Advantage on saves vs spells/magic."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Ram",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 6 (2d4+1) Bludgeoning."
+        },
+        {
+          "name": "Shortsword",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6+3) Piercing."
+        },
+        {
+          "name": "Shortbow",
+          "description": "Ranged Attack Roll: +5, range 80/320 ft. Hit: 6 (1d6+3) Piercing."
+        }
+      ],
+      "notes": "Leather Armor"
+    },
+    {
+      "id": "mm-scout",
+      "name": "Scout",
+      "type": "Medium Humanoid",
+      "ac": 13,
+      "maxHp": 16,
+      "hitDice": "3d8+3",
+      "speed": 30,
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 11,
+      "dex": 14,
+      "con": 12,
+      "int": 11,
+      "wis": 13,
+      "cha": 11,
+      "skills": "Nature +4, Perception +5, Stealth +6, Survival +5",
+      "senses": "Passive Perception 15",
+      "languages": "Common",
+      "isNpc": true,
+      "traits": [
+        {
+          "name": "Keen Hearing and Sight",
+          "description": "Advantage on Perception (hearing/sight)."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Two Shortsword attacks."
+        },
+        {
+          "name": "Shortsword",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing."
+        },
+        {
+          "name": "Longbow",
+          "description": "Ranged Attack Roll: +4, range 150/600 ft. Hit: 6 (1d8+2) Piercing."
+        }
+      ],
+      "notes": "Leather Armor"
+    },
+    {
+      "id": "mm-swarm-of-insects",
+      "name": "Swarm of Insects",
+      "type": "Medium Swarm of Tiny Beasts",
+      "ac": 12,
+      "maxHp": 22,
+      "hitDice": "5d8",
+      "speed": "20, climb 20",
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 3,
+      "dex": 13,
+      "con": 10,
+      "int": 1,
+      "wis": 7,
+      "cha": 1,
+      "resistances": "Bludgeoning, Piercing, Slashing",
+      "immunities": "Charmed, Frightened, Grappled, Paralyzed, Petrified, Prone, Restrained, Stunned",
+      "senses": "Blindsight 10 ft., Passive Perception 8",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Swarm",
+          "description": "Occupies another's space. Moves through Tiny gaps. Can't regain HP."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bites",
+          "description": "Melee Attack Roll: +3, reach 0 ft. Hit: 10 (4d4) Piercing, or 5 (2d4) if half HP or less."
+        }
+      ]
+    },
+    {
+      "id": "mm-thug",
+      "name": "Thug",
+      "type": "Medium Humanoid",
+      "ac": 11,
+      "maxHp": 32,
+      "hitDice": "5d8+10",
+      "speed": 30,
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 15,
+      "dex": 11,
+      "con": 14,
+      "int": 10,
+      "wis": 10,
+      "cha": 11,
+      "skills": "Intimidation +2",
+      "senses": "Passive Perception 10",
+      "languages": "Common",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Pack Tactics",
+          "description": "Advantage if ally within 5 ft of target."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Two Mace attacks."
+        },
+        {
+          "name": "Mace",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Bludgeoning."
+        },
+        {
+          "name": "Heavy Crossbow",
+          "description": "Ranged Attack Roll: +2, range 100/400 ft. Hit: 5 (1d10) Piercing."
+        }
+      ],
+      "notes": "Leather Armor"
+    },
+    {
+      "id": "mm-warhorse",
+      "name": "Warhorse",
+      "type": "Large Beast",
+      "ac": 11,
+      "maxHp": 19,
+      "hitDice": "3d10+3",
+      "speed": 60,
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 18,
+      "dex": 12,
+      "con": 13,
+      "int": 2,
+      "wis": 12,
+      "cha": 7,
+      "senses": "Passive Perception 11",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Trampling Charge",
+          "description": "If moves 20+ ft then hits with Hooves, DC 14 STR or Prone. Can Hooves as Bonus Action vs Prone."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Hooves",
+          "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 11 (2d6+4) Bludgeoning."
+        }
+      ]
+    },
+    {
+      "id": "mm-worg",
+      "name": "Worg",
+      "type": "Large Monstrosity",
+      "ac": 13,
+      "maxHp": 26,
+      "hitDice": "4d10+4",
+      "speed": 50,
+      "cr": "1/2",
+      "xp": 100,
+      "profBonus": 2,
+      "str": 16,
+      "dex": 13,
+      "con": 13,
+      "int": 7,
+      "wis": 11,
+      "cha": 8,
+      "skills": "Perception +4",
+      "senses": "Darkvision 60 ft., Passive Perception 14",
+      "languages": "Goblin, Worg",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Keen Hearing and Smell",
+          "description": "Advantage on Perception (hearing/smell)."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6+3) Piercing. DC 13 STR or Prone."
         }
       ]
     },

@@ -1,0 +1,86 @@
+{
+  "enemies": [
+    {
+      "id": "enemy-1770752910259-0",
+      "name": "Bugbear 1",
+      "type": "Medium Humanoid",
+      "ac": 16,
+      "maxHp": 27,
+      "hitDice": "5d8+5",
+      "speed": 30,
+      "cr": "1",
+      "xp": 200,
+      "profBonus": 2,
+      "str": 15,
+      "dex": 14,
+      "con": 13,
+      "int": 8,
+      "wis": 11,
+      "cha": 9,
+      "skills": "Stealth +6, Survival +2",
+      "senses": "Darkvision 60 ft., Passive Perception 10",
+      "languages": "Common, Goblin",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Surprise Attack",
+          "description": "If hitting a Surprised creature, +7 (2d6) damage."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Morningstar",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 11 (2d8+2) Piercing damage."
+        },
+        {
+          "name": "Javelin",
+          "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 30/120 ft. Hit: 9 (2d6+2) Piercing damage."
+        }
+      ],
+      "notes": "Hide Armor, Shield",
+      "currentHp": 27,
+      "initiative": 14
+    },
+    {
+      "id": "enemy-1770752910259-1",
+      "name": "Bugbear 2",
+      "type": "Medium Humanoid",
+      "ac": 16,
+      "maxHp": 27,
+      "hitDice": "5d8+5",
+      "speed": 30,
+      "cr": "1",
+      "xp": 200,
+      "profBonus": 2,
+      "str": 15,
+      "dex": 14,
+      "con": 13,
+      "int": 8,
+      "wis": 11,
+      "cha": 9,
+      "skills": "Stealth +6, Survival +2",
+      "senses": "Darkvision 60 ft., Passive Perception 10",
+      "languages": "Common, Goblin",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Surprise Attack",
+          "description": "If hitting a Surprised creature, +7 (2d6) damage."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Morningstar",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 11 (2d8+2) Piercing damage."
+        },
+        {
+          "name": "Javelin",
+          "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 30/120 ft. Hit: 9 (2d6+2) Piercing damage."
+        }
+      ],
+      "notes": "Hide Armor, Shield",
+      "currentHp": 27,
+      "initiative": 20
+    }
+  ]
+}

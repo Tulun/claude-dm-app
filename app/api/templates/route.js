@@ -5,7 +5,7 @@ import { defaultEnemyTemplates } from '../../components/defaultData';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const TEMPLATES_FILE = path.join(DATA_DIR, 'templates.json');
-const TEMPLATES_VERSION = 3; // Increment this to force refresh
+const TEMPLATES_VERSION = 4; // Increment this to force refresh
 
 function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) {
