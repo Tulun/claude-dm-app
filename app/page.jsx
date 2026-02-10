@@ -243,13 +243,13 @@ export default function DMAdminTool() {
       <header className="relative border-b border-amber-900/30 bg-stone-900/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center shadow-lg"><Icons.Dice /></div>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">DM&apos;s Toolkit</h1>
                 <p className="text-xs text-stone-400">5th Edition Combat Manager</p>
               </div>
-            </div>
+            </Link>
             <div className="flex items-center gap-4">
               {saveStatus && <span className="text-xs text-amber-400 bg-amber-900/30 px-2 py-1 rounded">{saveStatus}</span>}
               <div className="flex gap-1 bg-stone-800 rounded-lg p-1">

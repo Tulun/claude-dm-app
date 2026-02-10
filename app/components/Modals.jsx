@@ -1,16 +1,73 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Icons from './Icons';
+
+// Common CR values for filtering
+const CR_OPTIONS = [
+  { value: '0', label: 'CR 0' },
+  { value: '1/8', label: 'CR 1/8' },
+  { value: '1/4', label: 'CR 1/4' },
+  { value: '1/2', label: 'CR 1/2' },
+  { value: '1', label: 'CR 1' },
+  { value: '2', label: 'CR 2' },
+  { value: '3', label: 'CR 3' },
+  { value: '4', label: 'CR 4' },
+  { value: '5', label: 'CR 5' },
+  { value: '6', label: 'CR 6' },
+  { value: '7', label: 'CR 7' },
+  { value: '8', label: 'CR 8' },
+  { value: '9', label: 'CR 9' },
+  { value: '10', label: 'CR 10' },
+  { value: '11+', label: 'CR 11+' },
+];
 
 export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
   const [selected, setSelected] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [filter, setFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCRs, setSelectedCRs] = useState([]);
+  const [showCRDropdown, setShowCRDropdown] = useState(false);
+
+  const matchesCR = (templateCR) => {
+    if (selectedCRs.length === 0) return true;
+    const crStr = String(templateCR);
+    
+    // Handle 11+ case
+    if (selectedCRs.includes('11+')) {
+      const numCR = parseFloat(crStr);
+      if (!isNaN(numCR) && numCR >= 11) return true;
+    }
+    
+    return selectedCRs.includes(crStr);
+  };
+
+  const filtered = useMemo(() => {
+    return (templates || []).filter(t => {
+      // Type filter
+      if (typeFilter === 'enemies' && t.isNpc) return false;
+      if (typeFilter === 'npcs' && !t.isNpc) return false;
+      
+      // Search filter
+      if (searchQuery && !t.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      
+      // CR filter
+      if (!matchesCR(t.cr)) return false;
+      
+      return true;
+    });
+  }, [templates, typeFilter, searchQuery, selectedCRs]);
 
   if (!isOpen) return null;
 
-  const filtered = templates.filter(t => filter === 'all' || (filter === 'enemies' ? !t.isNpc : t.isNpc));
+  const toggleCR = (cr) => {
+    setSelectedCRs(prev => 
+      prev.includes(cr) ? prev.filter(c => c !== cr) : [...prev, cr]
+    );
+  };
+
+  const clearCRFilter = () => setSelectedCRs([]);
 
   const handleAdd = () => {
     const template = templates.find(t => t.id === selected);
@@ -21,39 +78,138 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
     onClose();
     setSelected(null);
     setQuantity(1);
+    setSearchQuery('');
+    setSelectedCRs([]);
+  };
+
+  const handleClose = () => {
+    onClose();
+    setSelected(null);
+    setQuantity(1);
+    setSearchQuery('');
+    setSelectedCRs([]);
+    setShowCRDropdown(false);
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-stone-900 border border-amber-800/50 rounded-xl max-w-lg w-full max-h-[90vh] overflow-auto" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={handleClose}>
+      <div className="bg-stone-900 border border-amber-800/50 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-auto" onClick={(e) => { e.stopPropagation(); setShowCRDropdown(false); }}>
         <div className="p-4 border-b border-stone-700">
           <h2 className="text-xl font-bold text-amber-400">Add to Encounter</h2>
-          <div className="flex gap-2 mt-3">
-            {['all', 'enemies', 'npcs'].map((f) => (
-              <button key={f} onClick={() => setFilter(f)} className={`px-3 py-1 rounded-lg text-sm capitalize ${filter === f ? 'bg-amber-700' : 'bg-stone-700 hover:bg-stone-600'}`}>{f}</button>
-            ))}
+          
+          {/* Search Input */}
+          <div className="mt-3 relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by name..."
+              className="w-full bg-stone-800 border border-stone-700 rounded-lg px-4 py-2 pl-10 text-sm focus:outline-none focus:border-amber-600"
+            />
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-500 hover:text-stone-300">×</button>
+            )}
+          </div>
+
+          {/* Filters Row */}
+          <div className="flex flex-wrap items-center gap-3 mt-3">
+            {/* Type Filter */}
+            <div className="flex gap-1">
+              {['all', 'enemies', 'npcs'].map((f) => (
+                <button key={f} onClick={() => setTypeFilter(f)} className={`px-3 py-1 rounded-lg text-sm capitalize ${typeFilter === f ? 'bg-amber-700' : 'bg-stone-700 hover:bg-stone-600'}`}>{f}</button>
+              ))}
+            </div>
+
+            {/* CR Filter Dropdown */}
+            <div className="relative" onClick={(e) => e.stopPropagation()}>
+              <button 
+                onClick={() => setShowCRDropdown(!showCRDropdown)}
+                className={`px-3 py-1 rounded-lg text-sm flex items-center gap-2 ${selectedCRs.length > 0 ? 'bg-purple-700' : 'bg-stone-700 hover:bg-stone-600'}`}
+              >
+                <span>CR Filter</span>
+                {selectedCRs.length > 0 && (
+                  <span className="bg-purple-900 px-1.5 py-0.5 rounded text-xs">{selectedCRs.length}</span>
+                )}
+                <span className={`transition-transform ${showCRDropdown ? 'rotate-180' : ''}`}>▼</span>
+              </button>
+              
+              {showCRDropdown && (
+                <div className="absolute top-full left-0 mt-1 bg-stone-800 border border-stone-600 rounded-lg shadow-xl z-10 min-w-[200px]">
+                  <div className="p-2 border-b border-stone-700 flex justify-between items-center">
+                    <span className="text-xs text-stone-400">Select Challenge Ratings</span>
+                    {selectedCRs.length > 0 && (
+                      <button onClick={clearCRFilter} className="text-xs text-red-400 hover:text-red-300">Clear</button>
+                    )}
+                  </div>
+                  <div className="p-2 grid grid-cols-3 gap-1 max-h-48 overflow-y-auto">
+                    {CR_OPTIONS.map(cr => (
+                      <button
+                        key={cr.value}
+                        onClick={() => toggleCR(cr.value)}
+                        className={`px-2 py-1 rounded text-xs text-center transition-colors ${
+                          selectedCRs.includes(cr.value) 
+                            ? 'bg-purple-700 text-purple-100' 
+                            : 'bg-stone-700 hover:bg-stone-600 text-stone-300'
+                        }`}
+                      >
+                        {cr.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Selected CR Tags - fixed height area */}
+          <div className="mt-2 min-h-[28px] flex flex-wrap gap-1 items-center">
+            {selectedCRs.length > 0 ? selectedCRs.map(cr => (
+              <span key={cr} className="px-2 py-0.5 bg-purple-900/50 text-purple-300 rounded text-xs flex items-center gap-1">
+                CR {cr}
+                <button onClick={() => toggleCR(cr)} className="hover:text-white">×</button>
+              </span>
+            )) : (
+              <span className="text-xs text-stone-600">No CR filter applied</span>
+            )}
           </div>
         </div>
+
         <div className="p-4 space-y-4">
-          <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
-            {filtered.map((t) => (
-              <button key={t.id} onClick={() => setSelected(t.id)} className={`p-3 rounded-lg text-left ${selected === t.id ? (t.isNpc ? 'bg-emerald-800/50 border-2 border-emerald-500' : 'bg-red-800/50 border-2 border-red-500') : 'bg-stone-800 border border-stone-700 hover:border-stone-500'}`}>
+          {/* Results Count */}
+          <div className="text-xs text-stone-500">
+            {filtered.length} {filtered.length === 1 ? 'result' : 'results'}
+            {(searchQuery || selectedCRs.length > 0) && ' (filtered)'}
+          </div>
+
+          {/* Template Grid - fixed height */}
+          <div className="grid grid-cols-2 gap-2 h-64 overflow-y-auto content-start">
+            {filtered.length > 0 ? filtered.map((t) => (
+              <button key={t.id} onClick={() => setSelected(t.id)} className={`p-3 rounded-lg text-left h-fit ${selected === t.id ? (t.isNpc ? 'bg-emerald-800/50 border-2 border-emerald-500' : 'bg-red-800/50 border-2 border-red-500') : 'bg-stone-800 border border-stone-700 hover:border-stone-500'}`}>
                 <div className="flex items-center gap-2">{t.isNpc ? <Icons.Shield /> : <Icons.Skull />}<span className="font-medium">{t.name}</span></div>
                 <div className="text-xs text-stone-400 mt-1">CR {t.cr} • AC {t.ac} • HP {t.maxHp}</div>
               </button>
-            ))}
+            )) : (
+              <div className="col-span-2 text-center py-8 text-stone-500">
+                No templates match your filters.
+              </div>
+            )}
           </div>
-          {selected && (
-            <div className="flex items-center gap-3 p-3 bg-stone-800 rounded-lg">
-              <label>Quantity:</label>
-              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-8 h-8 rounded bg-stone-700 hover:bg-stone-600">-</button>
-              <span className="w-8 text-center font-bold">{quantity}</span>
-              <button onClick={() => setQuantity(quantity + 1)} className="w-8 h-8 rounded bg-stone-700 hover:bg-stone-600">+</button>
-            </div>
-          )}
+
+          {/* Quantity Selector - always visible */}
+          <div className={`flex items-center gap-3 p-3 bg-stone-800 rounded-lg transition-opacity ${selected ? 'opacity-100' : 'opacity-40 pointer-events-none'}`}>
+            <label>Quantity:</label>
+            <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-8 h-8 rounded bg-stone-700 hover:bg-stone-600">-</button>
+            <span className="w-8 text-center font-bold">{quantity}</span>
+            <button onClick={() => setQuantity(quantity + 1)} className="w-8 h-8 rounded bg-stone-700 hover:bg-stone-600">+</button>
+            {!selected && <span className="text-xs text-stone-500 ml-2">Select a template first</span>}
+          </div>
         </div>
+
         <div className="p-4 border-t border-stone-700 flex justify-end gap-3">
-          <button onClick={onClose} className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600">Cancel</button>
+          <button onClick={handleClose} className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600">Cancel</button>
           <button onClick={handleAdd} disabled={!selected} className="px-4 py-2 rounded-lg bg-amber-700 hover:bg-amber-600 disabled:opacity-50 flex items-center gap-2"><Icons.Plus />Add</button>
         </div>
       </div>

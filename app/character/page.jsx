@@ -34,6 +34,7 @@ export default function CharacterPage() {
   const [activeTab, setActiveTab] = useState('resources');
   const [showProfModal, setShowProfModal] = useState(false);
   const [showSavesModal, setShowSavesModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // Load character on mount
   useEffect(() => {
@@ -86,6 +87,21 @@ export default function CharacterPage() {
     } catch (err) { console.error('Error saving:', err); setSaveStatus('Error'); }
   };
 
+  // Delete character
+  const deleteCharacter = async () => {
+    if (!character) return;
+    try {
+      const endpoint = type === 'party' ? '/api/party' : '/api/templates';
+      const res = await fetch(endpoint);
+      if (res.ok) {
+        const data = await res.json();
+        const updated = data.filter(c => c.id !== character.id);
+        await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updated) });
+        router.push('/');
+      }
+    } catch (err) { console.error('Error deleting:', err); }
+  };
+
   // Auto-save with debounce
   useEffect(() => {
     if (!hasChanges || !character) return;
@@ -112,7 +128,6 @@ export default function CharacterPage() {
 
   const isParty = type === 'party';
   const tabs = ['resources', 'inventory', 'companions', 'spells', 'features', 'background', 'notes'];
-  console.log('TABS:', tabs); // Check browser console
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100">
@@ -159,9 +174,46 @@ export default function CharacterPage() {
           <div className="flex items-center gap-2">
             {saveStatus && <span className="text-xs text-amber-400">{saveStatus}</span>}
             <button onClick={saveCharacter} className="px-3 py-1 bg-amber-700 hover:bg-amber-600 rounded text-sm">Save</button>
+            <button onClick={() => setShowDeleteModal(true)} className="px-3 py-1 bg-red-900 hover:bg-red-800 rounded text-sm text-red-200">
+              <Icons.Trash />
+            </button>
           </div>
         </div>
       </header>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={() => setShowDeleteModal(false)}>
+          <div className="bg-stone-900 border border-red-800 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-red-900/50 rounded-full">
+                <Icons.Trash />
+              </div>
+              <h2 className="text-xl font-bold text-red-400">Delete Character</h2>
+            </div>
+            <p className="text-stone-300 mb-2">
+              Are you sure you want to delete <span className="font-bold text-white">{character.name}</span>?
+            </p>
+            <p className="text-stone-500 text-sm mb-6">
+              This action cannot be undone. All character data will be permanently removed.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button 
+                onClick={() => setShowDeleteModal(false)} 
+                className="px-4 py-2 bg-stone-700 hover:bg-stone-600 rounded-lg text-sm"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={deleteCharacter} 
+                className="px-4 py-2 bg-red-700 hover:bg-red-600 rounded-lg text-sm text-white font-medium"
+              >
+                Delete Forever
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-[1800px] mx-auto p-4 space-y-4">
         {/* Top Stats Bar */}
