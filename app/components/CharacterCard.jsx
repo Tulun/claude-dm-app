@@ -435,8 +435,13 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
             <label className="text-xs text-stone-400 mb-1 block">Hit Points</label>
             <HpBar current={character.currentHp} max={character.maxHp} onChange={(curr, max) => onUpdate({ ...character, currentHp: curr, maxHp: max })} />
           </div>
+          
+          {/* Read-only stat block for enemies */}
           <div className="grid grid-cols-2 gap-3 text-sm">
-            <div><label className="text-xs text-stone-400">Name</label><EditableField value={character.name} onChange={(v) => onUpdate({ ...character, name: v })} className="block w-full" /></div>
+            <div>
+              <label className="text-xs text-stone-400">Name</label>
+              <div className="bg-stone-800/30 rounded px-2 py-1">{character.name}</div>
+            </div>
             <div>
               <label className="text-xs text-stone-400">AC</label>
               <div className="flex items-center gap-2">
@@ -457,10 +462,21 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                 </div>
               </div>
             </div>
-            <div><label className="text-xs text-stone-400">Initiative</label><EditableField value={character.initiative} onChange={(v) => onUpdate({ ...character, initiative: v })} type="number" className="block w-full" /></div>
-            <div><label className="text-xs text-stone-400">Speed</label><div className="flex items-center gap-1"><Icons.Boot /><EditableField value={character.speed} onChange={(v) => onUpdate({ ...character, speed: v })} type="number" min={0} className="w-16" /><span className="text-stone-500">ft</span></div></div>
+            <div>
+              <label className="text-xs text-stone-400">Initiative</label>
+              <EditableField value={character.initiative} onChange={(v) => onUpdate({ ...character, initiative: v })} type="number" className="block w-full" />
+            </div>
+            <div>
+              <label className="text-xs text-stone-400">Speed</label>
+              <div className="flex items-center gap-1 bg-stone-800/30 rounded px-2 py-1">
+                <Icons.Boot />
+                <span>{character.speed}</span>
+                {typeof character.speed === 'number' && <span className="text-stone-500">ft</span>}
+              </div>
+            </div>
           </div>
-          {/* Editable ability scores - stacked format */}
+
+          {/* Read-only ability scores */}
           <div className="grid grid-cols-6 gap-2 text-center">
             {[
               { label: 'STR', key: 'str' },
@@ -472,15 +488,15 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
             ].map(stat => (
               <div key={stat.key} className="bg-stone-800/50 rounded p-2">
                 <div className="text-[10px] text-stone-500">{stat.label}</div>
-                <EditableField value={character[stat.key] || 10} onChange={(v) => onUpdate({ ...character, [stat.key]: v })} type="number" className="w-full text-center font-bold" />
+                <div className="font-bold">{character[stat.key] || 10}</div>
                 <div className="text-xs text-stone-400">{getMod(character[stat.key])}</div>
               </div>
             ))}
           </div>
           
-          {/* Saving Throws */}
+          {/* Saving Throws - read only */}
           <div>
-            <label className="text-xs text-stone-400 mb-2 block">Saving Throws (click to toggle proficiency)</label>
+            <label className="text-xs text-stone-400 mb-2 block">Saving Throws</label>
             <div className="grid grid-cols-6 gap-2 text-center">
               {[
                 { label: 'STR', key: 'str' },
@@ -498,19 +514,41 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                 return (
                   <div 
                     key={stat.key} 
-                    onClick={() => onUpdate({ ...character, saveProficiencies: { ...saveProfs, [stat.key]: isProf ? 0 : 1 } })}
-                    className={`rounded p-2 cursor-pointer transition-colors ${isProf ? 'bg-emerald-900/40 border border-emerald-700/50' : 'bg-stone-800/50 hover:bg-stone-700/50'}`}
+                    className={`rounded p-2 ${isProf ? 'bg-emerald-900/40 border border-emerald-700/50' : 'bg-stone-800/50'}`}
                   >
                     <div className="text-[10px] text-stone-500">{stat.label}</div>
                     <div className={`text-sm font-bold ${isProf ? 'text-emerald-400' : ''}`}>{bonusStr}</div>
-                    <div className="text-[10px] text-stone-500">{isProf ? '● Prof' : '○'}</div>
+                    {isProf && <div className="text-[10px] text-emerald-500">Prof</div>}
                   </div>
                 );
               })}
             </div>
           </div>
 
-          {/* Advantages / Resistances - View Only */}
+          {/* Defenses - Vulnerabilities, Resistances, Immunities */}
+          {(character.vulnerabilities || character.resistances || character.immunities) && (
+            <div className="space-y-2 text-xs">
+              {character.vulnerabilities && (
+                <div><span className="text-yellow-500 font-semibold">Vulnerabilities:</span> <span className="text-yellow-300">{character.vulnerabilities}</span></div>
+              )}
+              {character.resistances && (
+                <div><span className="text-blue-500 font-semibold">Resistances:</span> <span className="text-blue-300">{character.resistances}</span></div>
+              )}
+              {character.immunities && (
+                <div><span className="text-green-500 font-semibold">Immunities:</span> <span className="text-green-300">{character.immunities}</span></div>
+              )}
+            </div>
+          )}
+
+          {/* Senses & Languages */}
+          {(character.senses || character.languages) && (
+            <div className="text-xs space-y-1">
+              {character.senses && <div><span className="text-stone-500 font-semibold">Senses:</span> <span className="text-stone-300">{character.senses}</span></div>}
+              {character.languages && <div><span className="text-stone-500 font-semibold">Languages:</span> <span className="text-stone-300">{character.languages}</span></div>}
+            </div>
+          )}
+
+          {/* Advantages / Resistances - View Only (legacy) */}
           {(character.advantages || []).length > 0 && (
             <div>
               <label className="text-xs text-stone-400 mb-2 block">Advantages & Resistances</label>
@@ -548,7 +586,9 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               </div>
             </div>
           )}
-          <div><label className="text-xs text-stone-400">Notes</label><EditableField value={character.notes} onChange={(v) => onUpdate({ ...character, notes: v })} className="block w-full text-sm" placeholder="Click to add notes..." /></div>
+
+          {/* Notes - editable for status effects, conditions, etc. */}
+          <div><label className="text-xs text-stone-400">Notes (conditions, status effects)</label><EditableField value={character.notes} onChange={(v) => onUpdate({ ...character, notes: v })} className="block w-full text-sm" placeholder="Click to add notes..." /></div>
           
           {/* Resources with +/- controls */}
           {showResources && (character.resources || []).length > 0 && (
@@ -584,14 +624,62 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               getProfBonus={getProfBonus}
             />
           )}
+
+          {/* Traits - full display */}
+          {(character.traits || []).length > 0 && (
+            <div className="space-y-2">
+              <label className="text-xs text-amber-400 font-bold flex items-center gap-1">Traits</label>
+              <div className="space-y-2">
+                {character.traits.map((trait, i) => (
+                  <div key={i} className="text-xs bg-stone-800/30 rounded p-2">
+                    <span className="text-amber-300 font-semibold italic">{trait.name}.</span>{' '}
+                    <span className="text-stone-300">{trait.description}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           
-          {/* Read-only display of actions */}
+          {/* Actions - full display with descriptions */}
           {(character.actions || []).length > 0 && (
-            <div className="space-y-1">
-              <label className="text-xs text-stone-400 flex items-center gap-1"><Icons.Sword /> Actions</label>
-              <div className="flex flex-wrap gap-1">
-                {character.actions.map((a, i) => (
-                  <span key={i} className="bg-red-900/30 text-red-300 rounded px-2 py-0.5 text-xs">{a.name}</span>
+            <div className="space-y-2">
+              <label className="text-xs text-red-400 font-bold flex items-center gap-1"><Icons.Sword /> Actions</label>
+              <div className="space-y-2">
+                {character.actions.map((action, i) => (
+                  <div key={i} className="text-xs bg-red-950/30 border border-red-900/30 rounded p-2">
+                    <span className="text-red-300 font-semibold italic">{action.name}.</span>{' '}
+                    <span className="text-stone-300">{action.description}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Reactions - full display */}
+          {(character.reactions || []).length > 0 && (
+            <div className="space-y-2">
+              <label className="text-xs text-cyan-400 font-bold flex items-center gap-1">Reactions</label>
+              <div className="space-y-2">
+                {character.reactions.map((reaction, i) => (
+                  <div key={i} className="text-xs bg-cyan-950/30 border border-cyan-900/30 rounded p-2">
+                    <span className="text-cyan-300 font-semibold italic">{reaction.name}.</span>{' '}
+                    <span className="text-stone-300">{reaction.description}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Legendary Actions - full display */}
+          {(character.legendaryActions || []).length > 0 && (
+            <div className="space-y-2">
+              <label className="text-xs text-purple-400 font-bold flex items-center gap-1">★ Legendary Actions</label>
+              <div className="space-y-2">
+                {character.legendaryActions.map((action, i) => (
+                  <div key={i} className="text-xs bg-purple-950/30 border border-purple-900/30 rounded p-2">
+                    <span className="text-purple-300 font-semibold italic">{action.name}.</span>{' '}
+                    <span className="text-stone-300">{action.description}</span>
+                  </div>
                 ))}
               </div>
             </div>
