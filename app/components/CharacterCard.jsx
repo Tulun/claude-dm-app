@@ -317,6 +317,11 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
     const dexMod = getModNum(character.dex);
     const inventory = character.inventory || [];
     
+    // If no inventory and no AC effect, return null to use template's ac value
+    if (inventory.length === 0 && !character.acEffect && !character.tempAC) {
+      return null;
+    }
+    
     const equippedArmor = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType !== 'Shield');
     const equippedShield = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType === 'Shield');
     const acBonusItems = inventory.filter(i => i.equipped && i.acBonus && i.itemType !== 'armor');
@@ -369,8 +374,9 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
     return baseAC + dexBonus + shieldBonus + itemBonuses + tempBonus;
   };
 
-  // Use calculated AC if no manual override, or if items are equipped
-  const displayAC = character.acOverride || getCalculatedAC() || character.ac;
+  // Use calculated AC if available, otherwise fall back to template's ac value
+  const calculatedAC = getCalculatedAC();
+  const displayAC = character.acOverride || calculatedAC || character.ac || 10;
 
   return (
     <div className={`border rounded-lg overflow-hidden transition-all ${isDead ? 'border-red-900/50 bg-stone-900/30 opacity-60' : isEnemy ? 'border-red-800/50 bg-gradient-to-br from-red-950/40 to-stone-900/60' : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60'}`}>

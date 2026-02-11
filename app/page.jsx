@@ -75,7 +75,7 @@ export default function DMAdminTool() {
   const [savedEncounters, setSavedEncounters] = useState([]);
   const [showLoadEncounter, setShowLoadEncounter] = useState(false);
   const [encounterToLoad, setEncounterToLoad] = useState(null);
-  const initialEncounterLoadDone = React.useRef(false);
+  const encounterSaveEnabled = React.useRef(false);
 
   // Update tab when URL changes and reload data (in case edited on character page)
   useEffect(() => {
@@ -133,12 +133,15 @@ export default function DMAdminTool() {
           }
         }
         setEncounterLoaded(true);
+        // Enable saving after a delay to ensure state has settled
+        setTimeout(() => { encounterSaveEnabled.current = true; }, 500);
       } catch (err) {
         console.error('Error loading data:', err);
         // Fall back to defaults on error
         setParty(defaultPartyData);
         setTemplates(defaultEnemyTemplates);
         setEncounterLoaded(true);
+        setTimeout(() => { encounterSaveEnabled.current = true; }, 500);
       }
       setIsLoaded(true);
     };
@@ -179,12 +182,9 @@ export default function DMAdminTool() {
 
   // Auto-save encounter (enemies + lairAction) when it changes (debounced, only after initial load)
   useEffect(() => {
-    if (!encounterLoaded) return;
-    // Skip the first trigger right after loading completes
-    if (!initialEncounterLoadDone.current) {
-      initialEncounterLoadDone.current = true;
-      return;
-    }
+    // Only save if loading is complete and save is enabled
+    if (!encounterSaveEnabled.current) return;
+    
     const timeout = setTimeout(() => {
       fetch('/api/encounter', {
         method: 'POST',
@@ -196,7 +196,7 @@ export default function DMAdminTool() {
       }).catch(console.error);
     }, 1000);
     return () => clearTimeout(timeout);
-  }, [enemies, lairAction, encounterLoaded]);
+  }, [enemies, lairAction]);
 
   const reloadParty = async () => {
     try {
