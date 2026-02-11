@@ -71,6 +71,9 @@ export default function DMAdminTool() {
   const [saveStatus, setSaveStatus] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
   const [encounterLoaded, setEncounterLoaded] = useState(false);
+  const [savedEncounters, setSavedEncounters] = useState([]);
+  const [showLoadEncounter, setShowLoadEncounter] = useState(false);
+  const [encounterToLoad, setEncounterToLoad] = useState(null);
 
   // Update tab when URL changes and reload data (in case edited on character page)
   useEffect(() => {
@@ -89,10 +92,11 @@ export default function DMAdminTool() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [partyRes, templatesRes, encounterRes] = await Promise.all([
+        const [partyRes, templatesRes, encounterRes, encountersRes] = await Promise.all([
           fetch('/api/party'),
           fetch('/api/templates'),
           fetch('/api/encounter'),
+          fetch('/api/encounters'),
         ]);
         
         if (partyRes.ok) {
@@ -114,6 +118,13 @@ export default function DMAdminTool() {
           const encounterData = await encounterRes.json();
           if (encounterData && Array.isArray(encounterData.enemies) && encounterData.enemies.length > 0) {
             setEnemies(encounterData.enemies);
+          }
+        }
+
+        if (encountersRes.ok) {
+          const encountersData = await encountersRes.json();
+          if (Array.isArray(encountersData)) {
+            setSavedEncounters(encountersData);
           }
         }
         setEncounterLoaded(true);
@@ -193,6 +204,38 @@ export default function DMAdminTool() {
     } catch (err) {
       console.error('Error reloading party:', err);
     }
+  };
+
+  // Load a saved encounter into the current combat
+  const loadEncounter = (encounter) => {
+    if (!encounter || !templates) return;
+    
+    const newEnemies = [];
+    encounter.monsters.forEach(monster => {
+      const template = templates.find(t => t.id === monster.templateId);
+      if (!template) return;
+      
+      for (let i = 0; i < monster.quantity; i++) {
+        const suffix = monster.quantity > 1 ? ` ${i + 1}` : '';
+        const displayName = monster.customName 
+          ? (monster.quantity > 1 ? `${monster.customName}${suffix}` : monster.customName)
+          : (monster.quantity > 1 ? `${monster.name}${suffix}` : monster.name);
+        
+        newEnemies.push({
+          ...template,
+          id: `enemy-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          name: displayName,
+          currentHp: template.maxHp,
+          initiative: 0,
+        });
+      }
+    });
+    
+    setEnemies(prev => [...prev, ...newEnemies]);
+    setEncounterToLoad(null);
+    setShowLoadEncounter(false);
+    setSaveStatus(`Loaded: ${encounter.name}`);
+    setTimeout(() => setSaveStatus(''), 2000);
   };
 
   const reloadTemplates = async () => {
@@ -282,6 +325,7 @@ export default function DMAdminTool() {
               <div className="flex gap-1 bg-stone-800 rounded-lg p-1">
                 <button onClick={() => { setActiveTab('combat'); router.push('/'); }} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'combat' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Sword /> Combat</button>
                 <button onClick={() => { setActiveTab('characters'); router.push('/?tab=characters'); }} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'characters' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Shield /> Characters</button>
+                <Link href="/encounters" className="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-stone-700"><Icons.Scroll /> Encounters</Link>
                 <button onClick={() => { setActiveTab('templates'); router.push('/?tab=templates'); }} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'templates' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Book /> Templates</button>
               </div>
             </div>
@@ -345,14 +389,18 @@ export default function DMAdminTool() {
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-red-400 flex items-center gap-2"><Icons.Skull />Enemies</h2>
+              <div className="flex items-center gap-3">
+                <h2 className="text-lg font-bold text-red-400 flex items-center gap-2"><Icons.Skull />Enemies</h2>
+                <Link href="/encounters" className="text-xs text-stone-500 hover:text-stone-300">Manage Encounters →</Link>
+              </div>
               <div className="flex gap-2">
                 {enemies.length > 0 && <button onClick={() => { setEnemies([]); fetch('/api/encounter', { method: 'DELETE' }); }} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-sm"><Icons.Trash />Clear</button>}
+                {savedEncounters.length > 0 && <button onClick={() => setShowLoadEncounter(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.FolderOpen />Load</button>}
                 <button onClick={() => setShowAddEnemy(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-red-800/50 hover:bg-red-700/50 text-red-300 text-sm"><Icons.Plus />Add</button>
               </div>
             </div>
             {enemies.map(e => <CharacterCard key={e.id} character={e} isEnemy={!e.isNpc} onUpdate={(u) => setEnemies(prev => prev.map(x => x.id === u.id ? u : x))} onRemove={(id) => setEnemies(prev => prev.filter(x => x.id !== id))} expanded={expandedCards[e.id]} onToggleExpand={() => setExpandedCards(prev => ({ ...prev, [e.id]: !prev[e.id] }))} />)}
-            {!enemies.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No enemies yet.</div>}
+            {!enemies.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No enemies yet. <Link href="/encounters" className="text-amber-500 hover:text-amber-400">Create encounters</Link> to quickly add groups.</div>}
           </div>
         </main>
       ) : activeTab === 'characters' ? (
@@ -430,6 +478,89 @@ export default function DMAdminTool() {
           }).catch(console.error);
         }} 
       />
+
+      {/* Load Encounter Modal */}
+      {showLoadEncounter && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => { setShowLoadEncounter(false); setEncounterToLoad(null); }}>
+          <div className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-lg max-h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="p-4 border-b border-stone-700">
+              <h2 className="text-lg font-bold text-amber-400 flex items-center gap-2">
+                <Icons.FolderOpen /> Load Encounter
+              </h2>
+              <p className="text-sm text-stone-400 mt-1">
+                {enemies.length > 0 ? 'Monsters will be added to your current encounter.' : 'Select an encounter to load.'}
+              </p>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+              {savedEncounters.map(encounter => {
+                const monsterCount = encounter.monsters.reduce((sum, m) => sum + m.quantity, 0);
+                const totalXP = encounter.monsters.reduce((sum, m) => {
+                  const template = (templates || []).find(t => t.id === m.templateId);
+                  return sum + ((template?.xp || 0) * m.quantity);
+                }, 0);
+                
+                return (
+                  <button
+                    key={encounter.id}
+                    onClick={() => setEncounterToLoad(encounter)}
+                    className={`w-full text-left p-3 rounded-lg border transition-colors ${
+                      encounterToLoad?.id === encounter.id 
+                        ? 'border-amber-500 bg-amber-900/30' 
+                        : 'border-stone-700 bg-stone-800/50 hover:border-stone-600'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium">{encounter.name}</span>
+                      <div className="flex items-center gap-3 text-sm text-stone-400">
+                        <span>{monsterCount} creatures</span>
+                        <span className="text-amber-400">{totalXP.toLocaleString()} XP</span>
+                      </div>
+                    </div>
+                    {encounter.monsters.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {encounter.monsters.slice(0, 4).map(m => (
+                          <span key={m.id} className="text-xs bg-stone-700/50 px-2 py-0.5 rounded">
+                            {m.quantity > 1 && `${m.quantity}x `}{m.customName || m.name}
+                          </span>
+                        ))}
+                        {encounter.monsters.length > 4 && (
+                          <span className="text-xs text-stone-500">+{encounter.monsters.length - 4} more</span>
+                        )}
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+              {savedEncounters.length === 0 && (
+                <div className="text-center py-8 text-stone-500">
+                  No saved encounters. <Link href="/encounters" className="text-amber-500 hover:text-amber-400">Create one</Link>
+                </div>
+              )}
+            </div>
+            
+            <div className="p-4 border-t border-stone-700 flex gap-2">
+              <button
+                onClick={() => { setShowLoadEncounter(false); setEncounterToLoad(null); }}
+                className="flex-1 py-2 rounded-lg bg-stone-700 hover:bg-stone-600"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => encounterToLoad && loadEncounter(encounterToLoad)}
+                disabled={!encounterToLoad}
+                className={`flex-1 py-2 rounded-lg font-medium ${
+                  encounterToLoad 
+                    ? 'bg-amber-600 hover:bg-amber-500 text-white' 
+                    : 'bg-stone-700 text-stone-500 cursor-not-allowed'
+                }`}
+              >
+                {enemies.length > 0 ? 'Add to Combat' : 'Load Encounter'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
