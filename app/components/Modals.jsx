@@ -23,8 +23,7 @@ const CR_OPTIONS = [
 ];
 
 export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
-  const [selected, setSelected] = useState(null);
-  const [quantity, setQuantity] = useState(1);
+  const [selectedMonsters, setSelectedMonsters] = useState({}); // { templateId: quantity }
   const [typeFilter, setTypeFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCRs, setSelectedCRs] = useState([]);
@@ -69,23 +68,49 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
 
   const clearCRFilter = () => setSelectedCRs([]);
 
+  const toggleMonster = (templateId) => {
+    setSelectedMonsters(prev => {
+      const newSelection = { ...prev };
+      if (newSelection[templateId]) {
+        delete newSelection[templateId];
+      } else {
+        newSelection[templateId] = 1;
+      }
+      return newSelection;
+    });
+  };
+
+  const updateQuantity = (templateId, delta) => {
+    setSelectedMonsters(prev => {
+      const current = prev[templateId] || 0;
+      const newQty = Math.max(1, current + delta);
+      return { ...prev, [templateId]: newQty };
+    });
+  };
+
+  const selectedCount = Object.values(selectedMonsters).reduce((sum, qty) => sum + qty, 0);
+  const selectedTypes = Object.keys(selectedMonsters).length;
+
   const handleAdd = () => {
-    const template = templates.find(t => t.id === selected);
-    if (!template) return;
-    for (let i = 0; i < quantity; i++) {
-      onAdd({ ...template, id: `enemy-${Date.now()}-${i}`, name: quantity > 1 ? `${template.name} ${i + 1}` : template.name, currentHp: template.maxHp, initiative: Math.floor(Math.random() * 20) + 1 });
-    }
-    onClose();
-    setSelected(null);
-    setQuantity(1);
-    setSearchQuery('');
-    setSelectedCRs([]);
+    Object.entries(selectedMonsters).forEach(([templateId, quantity]) => {
+      const template = templates.find(t => t.id === templateId);
+      if (!template) return;
+      for (let i = 0; i < quantity; i++) {
+        onAdd({ 
+          ...template, 
+          id: `enemy-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, 
+          name: quantity > 1 ? `${template.name} ${i + 1}` : template.name, 
+          currentHp: template.maxHp, 
+          initiative: Math.floor(Math.random() * 20) + 1 
+        });
+      }
+    });
+    handleClose();
   };
 
   const handleClose = () => {
     onClose();
-    setSelected(null);
-    setQuantity(1);
+    setSelectedMonsters({});
     setSearchQuery('');
     setSelectedCRs([]);
     setShowCRDropdown(false);
@@ -93,9 +118,16 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={handleClose}>
-      <div className="bg-stone-900 border border-amber-800/50 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-auto" onClick={(e) => { e.stopPropagation(); setShowCRDropdown(false); }}>
+      <div className="bg-stone-900 border border-amber-800/50 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col" onClick={(e) => { e.stopPropagation(); setShowCRDropdown(false); }}>
         <div className="p-4 border-b border-stone-700">
-          <h2 className="text-xl font-bold text-amber-400">Add to Encounter</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-amber-400">Add to Encounter</h2>
+            {selectedTypes > 0 && (
+              <span className="text-sm bg-red-900/50 text-red-300 px-2 py-1 rounded">
+                {selectedCount} creature{selectedCount !== 1 ? 's' : ''} selected
+              </span>
+            )}
+          </div>
           
           {/* Search Input */}
           <div className="mt-3 relative">
@@ -149,11 +181,7 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
                       <button
                         key={cr.value}
                         onClick={() => toggleCR(cr.value)}
-                        className={`px-2 py-1 rounded text-xs text-center transition-colors ${
-                          selectedCRs.includes(cr.value) 
-                            ? 'bg-purple-700 text-purple-100' 
-                            : 'bg-stone-700 hover:bg-stone-600 text-stone-300'
-                        }`}
+                        className={`px-2 py-1 rounded text-xs ${selectedCRs.includes(cr.value) ? 'bg-purple-600' : 'bg-stone-700 hover:bg-stone-600'}`}
                       >
                         {cr.label}
                       </button>
@@ -164,7 +192,7 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
             </div>
           </div>
 
-          {/* Selected CR Tags - fixed height area */}
+          {/* Selected CR Tags */}
           <div className="mt-2 min-h-[28px] flex flex-wrap gap-1 items-center">
             {selectedCRs.length > 0 ? selectedCRs.map(cr => (
               <span key={cr} className="px-2 py-0.5 bg-purple-900/50 text-purple-300 rounded text-xs flex items-center gap-1">
@@ -177,40 +205,81 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
           </div>
         </div>
 
-        <div className="p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4">
           {/* Results Count */}
-          <div className="text-xs text-stone-500">
+          <div className="text-xs text-stone-500 mb-2">
             {filtered.length} {filtered.length === 1 ? 'result' : 'results'}
             {(searchQuery || selectedCRs.length > 0) && ' (filtered)'}
           </div>
 
-          {/* Template Grid - fixed height */}
-          <div className="grid grid-cols-2 gap-2 h-64 overflow-y-auto content-start">
-            {filtered.length > 0 ? filtered.map((t) => (
-              <button key={t.id} onClick={() => setSelected(t.id)} className={`p-3 rounded-lg text-left h-fit ${selected === t.id ? (t.isNpc ? 'bg-emerald-800/50 border-2 border-emerald-500' : 'bg-red-800/50 border-2 border-red-500') : 'bg-stone-800 border border-stone-700 hover:border-stone-500'}`}>
-                <div className="flex items-center gap-2">{t.isNpc ? <Icons.Shield /> : <Icons.Skull />}<span className="font-medium">{t.name}</span></div>
-                <div className="text-xs text-stone-400 mt-1">CR {t.cr} • AC {t.ac} • HP {t.maxHp}</div>
-              </button>
-            )) : (
+          {/* Template Grid - Multi-select */}
+          <div className="grid grid-cols-2 gap-2">
+            {filtered.length > 0 ? filtered.map((t) => {
+              const isSelected = selectedMonsters[t.id] !== undefined;
+              const quantity = selectedMonsters[t.id] || 0;
+              
+              return (
+                <div 
+                  key={t.id} 
+                  className={`rounded-lg text-left transition-colors ${
+                    isSelected 
+                      ? (t.isNpc ? 'bg-emerald-900/40 border-2 border-emerald-500' : 'bg-red-900/40 border-2 border-red-500')
+                      : 'bg-stone-800 border border-stone-700 hover:border-stone-500'
+                  }`}
+                >
+                  <button 
+                    onClick={() => toggleMonster(t.id)} 
+                    className="w-full p-3 text-left"
+                  >
+                    <div className="flex items-center gap-2">
+                      {t.isNpc ? <Icons.Shield /> : <Icons.Skull />}
+                      <span className="font-medium">{t.name}</span>
+                      {isSelected && <span className="ml-auto text-xs bg-green-900/50 text-green-300 px-1.5 py-0.5 rounded">✓</span>}
+                    </div>
+                    <div className="text-xs text-stone-400 mt-1">CR {t.cr} • AC {t.ac} • HP {t.maxHp}</div>
+                  </button>
+                  
+                  {isSelected && (
+                    <div className="flex items-center justify-center gap-2 px-3 pb-3 pt-1 border-t border-stone-700/50">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); updateQuantity(t.id, -1); }}
+                        className="w-7 h-7 rounded bg-stone-700 hover:bg-stone-600 flex items-center justify-center text-sm"
+                      >
+                        −
+                      </button>
+                      <span className="w-8 text-center font-mono">{quantity}</span>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); updateQuantity(t.id, 1); }}
+                        className="w-7 h-7 rounded bg-stone-700 hover:bg-stone-600 flex items-center justify-center text-sm"
+                      >
+                        +
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            }) : (
               <div className="col-span-2 text-center py-8 text-stone-500">
                 No templates match your filters.
               </div>
             )}
           </div>
-
-          {/* Quantity Selector - always visible */}
-          <div className={`flex items-center gap-3 p-3 bg-stone-800 rounded-lg transition-opacity ${selected ? 'opacity-100' : 'opacity-40 pointer-events-none'}`}>
-            <label>Quantity:</label>
-            <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-8 h-8 rounded bg-stone-700 hover:bg-stone-600">-</button>
-            <span className="w-8 text-center font-bold">{quantity}</span>
-            <button onClick={() => setQuantity(quantity + 1)} className="w-8 h-8 rounded bg-stone-700 hover:bg-stone-600">+</button>
-            {!selected && <span className="text-xs text-stone-500 ml-2">Select a template first</span>}
-          </div>
         </div>
 
         <div className="p-4 border-t border-stone-700 flex justify-end gap-3">
           <button onClick={handleClose} className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600">Cancel</button>
-          <button onClick={handleAdd} disabled={!selected} className="px-4 py-2 rounded-lg bg-amber-700 hover:bg-amber-600 disabled:opacity-50 flex items-center gap-2"><Icons.Plus />Add</button>
+          <button 
+            onClick={handleAdd} 
+            disabled={selectedTypes === 0} 
+            className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
+              selectedTypes > 0 
+                ? 'bg-amber-700 hover:bg-amber-600' 
+                : 'bg-stone-700 text-stone-500 cursor-not-allowed'
+            }`}
+          >
+            <Icons.Plus />
+            {selectedCount > 0 ? `Add ${selectedCount} Creature${selectedCount !== 1 ? 's' : ''}` : 'Add'}
+          </button>
         </div>
       </div>
     </div>

@@ -1,58 +1,16 @@
 [
   {
-    "id": "encounter-1770774317132",
-    "name": "Test",
-    "monsters": [
-      {
-        "id": "mm-baboon-1770774324028-gavkz",
-        "templateId": "mm-baboon",
-        "name": "Baboon",
-        "customName": "",
-        "quantity": 1
-      },
-      {
-        "id": "mm-badger-1770774324028-mb5g6",
-        "templateId": "mm-badger",
-        "name": "Badger",
-        "customName": "",
-        "quantity": 1
-      },
-      {
-        "id": "mm-bat-1770774324028-87y24",
-        "templateId": "mm-bat",
-        "name": "Bat",
-        "customName": "",
-        "quantity": 1
-      }
-    ],
-    "createdAt": "2026-02-11T01:45:17.132Z"
-  },
-  {
-    "id": "encounter-1770774329489",
+    "id": "encounter-1770835359606",
     "name": "New Encounter",
     "monsters": [
       {
-        "id": "mm-baboon-1770774333930-zcicr",
-        "templateId": "mm-baboon",
-        "name": "Baboon",
+        "id": "mm-dire-wolf-1770835373468-pm67w",
+        "templateId": "mm-dire-wolf",
+        "name": "Dire Wolf",
         "customName": "",
-        "quantity": 1
-      },
-      {
-        "id": "mm-badger-1770774333930-3wf2u",
-        "templateId": "mm-badger",
-        "name": "Badger",
-        "customName": "",
-        "quantity": 1
-      },
-      {
-        "id": "mm-bat-1770774333930-635d4",
-        "templateId": "mm-bat",
-        "name": "Bat",
-        "customName": "",
-        "quantity": 1
+        "quantity": 2
       }
     ],
-    "createdAt": "2026-02-11T01:45:29.489Z"
+    "createdAt": "2026-02-11T18:42:39.606Z"
   }
 ]
