@@ -374,8 +374,8 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
 
   return (
     <div className={`border rounded-lg overflow-hidden transition-all ${isDead ? 'border-red-900/50 bg-stone-900/30 opacity-60' : isEnemy ? 'border-red-800/50 bg-gradient-to-br from-red-950/40 to-stone-900/60' : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60'}`}>
-      <div className={`flex items-center justify-between p-3 cursor-pointer ${isEnemy ? 'hover:bg-red-900/20' : 'hover:bg-emerald-900/20'}`} onClick={onToggleExpand}>
-        <div className="flex items-center gap-3">
+      <div className={`flex items-center justify-between p-3 ${isEnemy ? 'hover:bg-red-900/20' : 'hover:bg-emerald-900/20'}`}>
+        <div className="flex items-center gap-3 cursor-pointer flex-1" onClick={onToggleExpand}>
           <div className={`p-2 rounded-lg ${isEnemy ? 'bg-red-900/50' : 'bg-emerald-900/50'}`}>{isEnemy ? <Icons.Skull /> : <Icons.Shield />}</div>
           <div>
             <h3 className={`font-bold ${isDead ? 'line-through text-stone-500' : ''}`}>{character.name}</h3>
@@ -394,7 +394,18 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
           <div className={`flex items-center gap-1 text-sm ${character.acEffect ? 'text-cyan-400' : ''}`}><Icons.Shield /><span className="font-mono">{displayAC}</span></div>
           <div className="flex items-center gap-1 text-sm"><Icons.Heart /><span className={`font-mono ${isDead ? 'text-red-500' : ''}`}>{character.currentHp}/{character.maxHp}</span></div>
           {spellDC && <div className="flex items-center gap-1 text-sm text-purple-400"><Icons.Sparkles /><span className="font-mono">{spellDC}</span></div>}
-          {expanded ? <Icons.ChevronUp /> : <Icons.ChevronDown />}
+          {isEnemy && onRemove && (
+            <button 
+              onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }}
+              className="p-1.5 rounded text-stone-500 hover:text-red-400 hover:bg-red-900/30 transition-colors"
+              title="Remove from combat"
+            >
+              <Icons.Trash />
+            </button>
+          )}
+          <div className="cursor-pointer" onClick={onToggleExpand}>
+            {expanded ? <Icons.ChevronUp /> : <Icons.ChevronDown />}
+          </div>
         </div>
       </div>
 

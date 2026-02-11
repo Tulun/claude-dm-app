@@ -62,6 +62,7 @@ export default function DMAdminTool() {
   const [activeTab, setActiveTab] = useState(tabFromUrl || 'combat');
   const [party, setParty] = useState(null); // Start with null to detect loading
   const [enemies, setEnemies] = useState([]);
+  const [lairAction, setLairAction] = useState(null); // { initiative: 20, notes: '' }
   const [templates, setTemplates] = useState(null); // Start with null to detect loading
   const [expandedCards, setExpandedCards] = useState({});
   const [showAddEnemy, setShowAddEnemy] = useState(false);
@@ -74,6 +75,7 @@ export default function DMAdminTool() {
   const [savedEncounters, setSavedEncounters] = useState([]);
   const [showLoadEncounter, setShowLoadEncounter] = useState(false);
   const [encounterToLoad, setEncounterToLoad] = useState(null);
+  const initialEncounterLoadDone = React.useRef(false);
 
   // Update tab when URL changes and reload data (in case edited on character page)
   useEffect(() => {
@@ -118,6 +120,9 @@ export default function DMAdminTool() {
           const encounterData = await encounterRes.json();
           if (encounterData && Array.isArray(encounterData.enemies) && encounterData.enemies.length > 0) {
             setEnemies(encounterData.enemies);
+          }
+          if (encounterData && encounterData.lairAction) {
+            setLairAction(encounterData.lairAction);
           }
         }
 
@@ -172,21 +177,26 @@ export default function DMAdminTool() {
     return () => clearTimeout(timeout);
   }, [templates, isLoaded]);
 
-  // Auto-save encounter (enemies) when it changes (debounced, only after initial load)
+  // Auto-save encounter (enemies + lairAction) when it changes (debounced, only after initial load)
   useEffect(() => {
     if (!encounterLoaded) return;
+    // Skip the first trigger right after loading completes
+    if (!initialEncounterLoadDone.current) {
+      initialEncounterLoadDone.current = true;
+      return;
+    }
     const timeout = setTimeout(() => {
       fetch('/api/encounter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ enemies }),
+        body: JSON.stringify({ enemies, lairAction }),
       }).then(() => {
         setSaveStatus('Encounter saved');
         setTimeout(() => setSaveStatus(''), 2000);
       }).catch(console.error);
     }, 1000);
     return () => clearTimeout(timeout);
-  }, [enemies, encounterLoaded]);
+  }, [enemies, lairAction, encounterLoaded]);
 
   const reloadParty = async () => {
     try {
@@ -276,17 +286,24 @@ export default function DMAdminTool() {
   );
   
   // Build the initiative list based on manual order or default to all combatants
-  const allCombatants = [...(party || []), ...partyCompanions, ...enemies];
+  const lairActionEntry = lairAction ? { 
+    id: 'lair-action', 
+    name: 'Lair Action', 
+    initiative: lairAction.initiative, 
+    isLairAction: true,
+    notes: lairAction.notes 
+  } : null;
+  const allCombatants = [...(party || []), ...partyCompanions, ...enemies, ...(lairActionEntry ? [lairActionEntry] : [])];
   
   // If we have a manual order, use it (filtering out any removed combatants)
   // Then append any new combatants not yet in the order
-  const orderedIds = initiativeOrder.filter(id => allCombatants.some(c => c.id === id));
+  const orderedIds = initiativeOrder.filter(id => allCombatants.some(c => c.id === id) || id === 'lair-action');
   const newCombatantIds = allCombatants.filter(c => !orderedIds.includes(c.id)).map(c => c.id);
   const fullOrderIds = [...orderedIds, ...newCombatantIds];
   
   const fullInitiativeList = fullOrderIds.map(id => allCombatants.find(c => c.id === id)).filter(Boolean);
 
-  // Sort by initiative values
+  // Sort by initiative values (including lair action)
   const sortByInitiative = () => {
     const sorted = [...allCombatants].sort((a, b) => b.initiative - a.initiative);
     setInitiativeOrder(sorted.map(c => c.id));
@@ -359,8 +376,10 @@ export default function DMAdminTool() {
               <button onClick={sortByInitiative} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.Refresh />Sort by Init</button>
             </div>
             <div className="space-y-2">
-              {fullInitiativeList.map((c, i) => <InitiativeItem key={c.id} character={c} isEnemy={enemies.some(e => e.id === c.id)} isCompanion={c.isCompanion} index={i} onDragStart={(e, idx) => { setDragIndex(idx); e.dataTransfer.effectAllowed = 'move'; }} onDragOver={(e, idx) => { e.preventDefault(); setDragOverIndex(idx); }} onDrop={handleDrop} onDragEnd={() => { setDragIndex(null); setDragOverIndex(null); }} isDragging={dragIndex === i} dragOverIndex={dragOverIndex} onUpdateInitiative={(id, newInit) => { 
-                if (id.startsWith('companion-')) {
+              {fullInitiativeList.map((c, i) => <InitiativeItem key={c.id} character={c} isEnemy={enemies.some(e => e.id === c.id)} isCompanion={c.isCompanion} isLairAction={c.isLairAction} index={i} onDragStart={(e, idx) => { setDragIndex(idx); e.dataTransfer.effectAllowed = 'move'; }} onDragOver={(e, idx) => { e.preventDefault(); setDragOverIndex(idx); }} onDrop={handleDrop} onDragEnd={() => { setDragIndex(null); setDragOverIndex(null); }} isDragging={dragIndex === i} dragOverIndex={dragOverIndex} onUpdateInitiative={(id, newInit) => { 
+                if (id === 'lair-action') {
+                  setLairAction(prev => ({ ...prev, initiative: newInit }));
+                } else if (id.startsWith('companion-')) {
                   // Update companion initiative - extract owner and companion IDs
                   const parts = id.split('-');
                   const ownerId = parts[1];
@@ -382,25 +401,34 @@ export default function DMAdminTool() {
                   ...p,
                   companions: (p.companions || []).map(comp => comp.id === companionId ? { ...comp, currentHp: hp } : comp)
                 } : p));
-              } : undefined} />)}
+              } : undefined} onUpdateLairNotes={c.isLairAction ? (notes) => setLairAction(prev => ({ ...prev, notes })) : undefined} onRemoveLairAction={c.isLairAction ? () => setLairAction(null) : undefined} />)}
               {!fullInitiativeList.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">Add combatants to begin!</div>}
             </div>
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
                 <h2 className="text-lg font-bold text-red-400 flex items-center gap-2"><Icons.Skull />Enemies</h2>
-                <Link href="/encounters" className="text-xs text-stone-500 hover:text-stone-300">Manage Encounters →</Link>
+                <div className="flex gap-2">
+                  {(enemies.length > 0 || lairAction) && <button onClick={() => { setEnemies([]); setLairAction(null); fetch('/api/encounter', { method: 'DELETE' }); }} className="flex items-center gap-1 px-2 py-1 rounded text-stone-500 hover:text-stone-300 hover:bg-stone-700/50 text-sm"><Icons.Trash /></button>}
+                  <button onClick={() => setShowAddEnemy(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-red-800/50 hover:bg-red-700/50 text-red-300 text-sm"><Icons.Plus />Add</button>
+                </div>
               </div>
-              <div className="flex gap-2">
-                {enemies.length > 0 && <button onClick={() => { setEnemies([]); fetch('/api/encounter', { method: 'DELETE' }); }} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-sm"><Icons.Trash />Clear</button>}
-                {savedEncounters.length > 0 && <button onClick={() => setShowLoadEncounter(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.FolderOpen />Load</button>}
-                <button onClick={() => setShowAddEnemy(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-red-800/50 hover:bg-red-700/50 text-red-300 text-sm"><Icons.Plus />Add</button>
+              <div className="flex items-center gap-2 text-xs">
+                <Link href="/encounters" className="text-stone-500 hover:text-stone-300">Manage Encounters →</Link>
+                {savedEncounters.length > 0 && <>
+                  <span className="text-stone-600">•</span>
+                  <button onClick={() => setShowLoadEncounter(true)} className="text-amber-500 hover:text-amber-400">Load Saved</button>
+                </>}
+                {!lairAction && <>
+                  <span className="text-stone-600">•</span>
+                  <button onClick={() => setLairAction({ initiative: 20, notes: '' })} className="text-purple-400 hover:text-purple-300">+ Lair Action</button>
+                </>}
               </div>
             </div>
             {enemies.map(e => <CharacterCard key={e.id} character={e} isEnemy={!e.isNpc} onUpdate={(u) => setEnemies(prev => prev.map(x => x.id === u.id ? u : x))} onRemove={(id) => setEnemies(prev => prev.filter(x => x.id !== id))} expanded={expandedCards[e.id]} onToggleExpand={() => setExpandedCards(prev => ({ ...prev, [e.id]: !prev[e.id] }))} />)}
-            {!enemies.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No enemies yet. <Link href="/encounters" className="text-amber-500 hover:text-amber-400">Create encounters</Link> to quickly add groups.</div>}
+            {!enemies.length && !lairAction && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No enemies yet. <Link href="/encounters" className="text-amber-500 hover:text-amber-400">Create encounters</Link> to quickly add groups.</div>}
           </div>
         </main>
       ) : activeTab === 'characters' ? (

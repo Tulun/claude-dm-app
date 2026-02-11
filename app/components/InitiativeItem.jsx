@@ -64,12 +64,14 @@ const getCalculatedAC = (character) => {
   return baseAC + dexBonus + shieldBonus + itemBonuses + tempBonus;
 };
 
-const InitiativeItem = ({ character, isEnemy, isCompanion, index, onDragStart, onDragOver, onDrop, onDragEnd, isDragging, dragOverIndex, onUpdateInitiative, onUpdateHp }) => {
-  const isDead = character.currentHp <= 0;
+const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, onDragStart, onDragOver, onDrop, onDragEnd, isDragging, dragOverIndex, onUpdateInitiative, onUpdateHp, onUpdateLairNotes, onRemoveLairAction }) => {
+  const isDead = !isLairAction && character.currentHp <= 0;
   const [editing, setEditing] = useState(false);
   const [initValue, setInitValue] = useState(String(character.initiative || 0));
   const [editingHp, setEditingHp] = useState(false);
   const [hpValue, setHpValue] = useState(String(character.currentHp));
+  const [editingNotes, setEditingNotes] = useState(false);
+  const [notesValue, setNotesValue] = useState(character.notes || '');
 
   // Calculate AC - use calculated value if available, fall back to manual ac field
   const calculatedAC = getCalculatedAC(character);
@@ -107,6 +109,82 @@ const InitiativeItem = ({ character, isEnemy, isCompanion, index, onDragStart, o
       setHpValue(String(character.currentHp));
     }
   };
+
+  const handleNotesBlur = () => {
+    setEditingNotes(false);
+    if (onUpdateLairNotes) {
+      onUpdateLairNotes(notesValue);
+    }
+  };
+
+  // Lair Action special rendering
+  if (isLairAction) {
+    return (
+      <div
+        draggable={!editing && !editingNotes}
+        onDragStart={(e) => !editing && !editingNotes && onDragStart(e, index)}
+        onDragOver={(e) => onDragOver(e, index)}
+        onDrop={(e) => onDrop(e, index)}
+        onDragEnd={onDragEnd}
+        className={`flex items-center gap-3 p-3 rounded-lg transition-all ${!editing && !editingNotes ? 'cursor-grab active:cursor-grabbing' : ''} 
+          bg-purple-950/40 border border-purple-700/50 hover:border-purple-500/50
+          ${isDragging ? 'opacity-50' : ''} ${dragOverIndex === index ? 'border-amber-400 border-2' : ''}`}
+      >
+        <Icons.Grip />
+        <div 
+          className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg bg-purple-800/50
+            ${!editing ? 'cursor-pointer hover:ring-2 hover:ring-purple-400/50' : ''}`}
+          onClick={() => !editing && setEditing(true)}
+        >
+          {editing ? (
+            <input
+              type="text"
+              value={initValue}
+              onChange={handleInitChange}
+              onBlur={handleInitBlur}
+              onKeyDown={handleKeyDown}
+              autoFocus
+              className="w-full h-full bg-transparent text-center font-bold focus:outline-none"
+            />
+          ) : (
+            character.initiative
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="font-medium text-purple-300 flex items-center gap-2">
+            <Icons.Sparkles /> Lair Action
+          </div>
+          {editingNotes ? (
+            <input
+              type="text"
+              value={notesValue}
+              onChange={(e) => setNotesValue(e.target.value)}
+              onBlur={handleNotesBlur}
+              onKeyDown={(e) => { if (e.key === 'Enter') e.target.blur(); if (e.key === 'Escape') { setNotesValue(character.notes || ''); setEditingNotes(false); } }}
+              autoFocus
+              placeholder="Describe the lair action..."
+              className="w-full text-sm bg-purple-900/30 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-purple-400 placeholder-stone-500"
+            />
+          ) : (
+            <div 
+              className="text-xs text-stone-400 cursor-pointer hover:text-purple-300 truncate"
+              onClick={() => setEditingNotes(true)}
+            >
+              {character.notes || <span className="italic text-stone-500">Click to add description...</span>}
+            </div>
+          )}
+        </div>
+        {onRemoveLairAction && (
+          <button 
+            onClick={onRemoveLairAction}
+            className="p-1 text-stone-500 hover:text-red-400 transition-colors"
+          >
+            <Icons.Trash />
+          </button>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div
