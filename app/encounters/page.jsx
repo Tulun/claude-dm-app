@@ -78,10 +78,10 @@ export default function EncountersPage() {
   };
 
   // Encounter CRUD
-  const createNewEncounter = () => {
+  const createNewEncounter = (name = 'New Encounter') => {
     const newEncounter = {
       id: `encounter-${Date.now()}`,
-      name: 'New Encounter',
+      name: name,
       monsters: [],
       createdAt: new Date().toISOString(),
     };

@@ -5,7 +5,7 @@ import { defaultEnemyTemplates } from '../../components/defaultData';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const TEMPLATES_FILE = path.join(DATA_DIR, 'templates.json');
-const TEMPLATES_VERSION = 4; // Increment this to force refresh
+const TEMPLATES_VERSION = 6; // Bumped to force refresh after deduplication
 
 function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) {
@@ -19,15 +19,16 @@ export async function GET() {
     if (fs.existsSync(TEMPLATES_FILE)) {
       const data = fs.readFileSync(TEMPLATES_FILE, 'utf8');
       const parsed = JSON.parse(data);
-      // Check if we need to upgrade - look for version or new MM2024 format
+      // Check if we need to upgrade - look for version or new size/creatureType format
+      const templates = parsed.templates || parsed;
       const needsUpgrade = !parsed._version || parsed._version < TEMPLATES_VERSION || 
-        (parsed.length > 0 && !parsed[0].type && !parsed[0].traits);
+        (templates.length > 0 && !templates[0].size);
       if (needsUpgrade) {
         const dataWithVersion = { _version: TEMPLATES_VERSION, templates: defaultEnemyTemplates };
         fs.writeFileSync(TEMPLATES_FILE, JSON.stringify(dataWithVersion, null, 2), 'utf8');
         return NextResponse.json(defaultEnemyTemplates);
       }
-      return NextResponse.json(parsed.templates || parsed);
+      return NextResponse.json(templates);
     }
     // No file exists, create with defaults
     const dataWithVersion = { _version: TEMPLATES_VERSION, templates: defaultEnemyTemplates };

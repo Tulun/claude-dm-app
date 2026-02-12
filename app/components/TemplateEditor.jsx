@@ -1,7 +1,111 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Icons from './Icons';
+
+// CR values for filtering
+const CR_OPTIONS = [
+  { value: '0', label: '0' },
+  { value: '1/8', label: '⅛' },
+  { value: '1/4', label: '¼' },
+  { value: '1/2', label: '½' },
+  { value: '1', label: '1' },
+  { value: '2', label: '2' },
+  { value: '3', label: '3' },
+  { value: '4', label: '4' },
+  { value: '5', label: '5' },
+  { value: '6', label: '6' },
+  { value: '7', label: '7' },
+  { value: '8', label: '8' },
+  { value: '9', label: '9' },
+  { value: '10', label: '10' },
+  { value: '11', label: '11' },
+  { value: '12', label: '12' },
+  { value: '13', label: '13' },
+  { value: '14', label: '14' },
+  { value: '15', label: '15' },
+  { value: '16', label: '16' },
+  { value: '17', label: '17' },
+  { value: '18', label: '18' },
+  { value: '19', label: '19' },
+  { value: '20', label: '20' },
+  { value: '21', label: '21' },
+  { value: '22', label: '22' },
+  { value: '23', label: '23' },
+  { value: '24', label: '24' },
+  { value: '25', label: '25' },
+  { value: '30', label: '30' },
+];
+
+const SIZE_OPTIONS = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
+
+const CREATURE_TYPE_OPTIONS = [
+  'Aberration', 'Beast', 'Celestial', 'Construct', 'Dragon', 'Elemental',
+  'Fey', 'Fiend', 'Giant', 'Humanoid', 'Monstrosity', 'Ooze', 'Plant', 'Undead'
+];
+
+// Multi-select dropdown component
+const FilterDropdown = ({ label, options, selected, onToggle, onClear, colorClass = 'purple' }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const colors = {
+    purple: { bg: 'bg-purple-700', badge: 'bg-purple-900', button: 'bg-purple-600' },
+    blue: { bg: 'bg-blue-700', badge: 'bg-blue-900', button: 'bg-blue-600' },
+    green: { bg: 'bg-emerald-700', badge: 'bg-emerald-900', button: 'bg-emerald-600' },
+  };
+  const c = colors[colorClass] || colors.purple;
+
+  return (
+    <div className="relative" onClick={(e) => e.stopPropagation()}>
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className={`px-3 py-1.5 rounded-lg text-sm flex items-center gap-2 ${selected.length > 0 ? c.bg : 'bg-stone-700 hover:bg-stone-600'}`}
+      >
+        <span>{label}</span>
+        {selected.length > 0 && (
+          <span className={`${c.badge} px-1.5 py-0.5 rounded text-xs`}>{selected.length}</span>
+        )}
+        <Icons.ChevronDown className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
+          <div className="absolute top-full left-0 mt-1 bg-stone-800 border border-stone-600 rounded-lg shadow-xl z-20 min-w-[200px] max-w-[280px]">
+            <div className="p-2 border-b border-stone-700 flex justify-between items-center">
+              <span className="text-xs text-stone-400">Select {label}</span>
+              {selected.length > 0 && (
+                <button onClick={() => { onClear(); }} className="text-xs text-red-400 hover:text-red-300">Clear</button>
+              )}
+            </div>
+            <div className="p-2 flex flex-wrap gap-1 max-h-[200px] overflow-y-auto">
+              {options.map(opt => {
+                const value = typeof opt === 'object' ? opt.value : opt;
+                const displayLabel = typeof opt === 'object' ? opt.label : opt;
+                return (
+                  <button
+                    key={value}
+                    onClick={() => onToggle(value)}
+                    className={`px-2 py-1 rounded text-xs ${selected.includes(value) ? c.button : 'bg-stone-700 hover:bg-stone-600'}`}
+                  >
+                    {displayLabel}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="p-2 border-t border-stone-700">
+              <button 
+                onClick={() => setIsOpen(false)} 
+                className="w-full text-xs text-stone-400 hover:text-stone-200 py-1"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 // Reusable editor for traits/actions/reactions/legendary actions
 const StatBlockListEditor = ({ items = [], onChange, label, color = 'red' }) => {
@@ -91,8 +195,66 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
   });
   const [filter, setFilter] = useState('all');
   const [expandedTemplates, setExpandedTemplates] = useState({});
+  
+  // New filter states
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCRs, setSelectedCRs] = useState([]);
+  const [selectedSizes, setSelectedSizes] = useState([]);
+  const [selectedCreatureTypes, setSelectedCreatureTypes] = useState([]);
 
-  const filtered = templates.filter(t => filter === 'all' || (filter === 'enemies' ? !t.isNpc : t.isNpc));
+  // Get available creature types from templates
+  const availableCreatureTypes = useMemo(() => {
+    const types = new Set();
+    (templates || []).forEach(t => {
+      if (t.creatureType) {
+        const baseType = t.creatureType.split(' ')[0].replace(/[()]/g, '');
+        types.add(baseType);
+      }
+    });
+    return CREATURE_TYPE_OPTIONS.filter(ct => types.has(ct));
+  }, [templates]);
+
+  const toggleFilter = (setter) => (value) => {
+    setter(prev => prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]);
+  };
+
+  const filtered = useMemo(() => {
+    return templates.filter(t => {
+      // Type filter (NPC vs Enemy)
+      if (filter === 'enemies' && t.isNpc) return false;
+      if (filter === 'npcs' && !t.isNpc) return false;
+      
+      // Search filter
+      if (searchQuery && !t.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      
+      // CR filter
+      if (selectedCRs.length > 0 && !selectedCRs.includes(String(t.cr))) return false;
+      
+      // Size filter
+      if (selectedSizes.length > 0 && !selectedSizes.includes(t.size)) return false;
+      
+      // Creature type filter
+      if (selectedCreatureTypes.length > 0) {
+        if (!t.creatureType) return false;
+        const matches = selectedCreatureTypes.some(ct => 
+          t.creatureType.startsWith(ct) || t.creatureType.includes(ct)
+        );
+        if (!matches) return false;
+      }
+      
+      return true;
+    });
+  }, [templates, filter, searchQuery, selectedCRs, selectedSizes, selectedCreatureTypes]);
+
+  const clearAllFilters = () => {
+    setSearchQuery('');
+    setSelectedCRs([]);
+    setSelectedSizes([]);
+    setSelectedCreatureTypes([]);
+    setFilter('all');
+  };
+
+  const hasFilters = searchQuery || selectedCRs.length > 0 || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || filter !== 'all';
 
   const parseNum = (val, fallback) => { const num = parseInt(val); return isNaN(num) ? fallback : num; };
   const getMod = (score) => { const mod = Math.floor((parseNum(score, 10) - 10) / 2); return mod >= 0 ? `+${mod}` : `${mod}`; };
@@ -187,16 +349,103 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex gap-2">
+      {/* Search Bar */}
+      <div className="relative">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search templates by name..."
+          className="w-full bg-stone-800 border border-stone-700 rounded-lg px-4 py-2 pl-10 text-sm focus:outline-none focus:border-amber-600"
+        />
+        <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        {searchQuery && (
+          <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-500 hover:text-stone-300">×</button>
+        )}
+      </div>
+
+      {/* Filter Row */}
+      <div className="flex flex-wrap items-center gap-2">
+        {/* Type Filter */}
+        <div className="flex gap-1">
           {['all', 'enemies', 'npcs'].map(f => (
-            <button key={f} onClick={() => setFilter(f)} className={`px-3 py-1 rounded text-sm capitalize ${filter === f ? 'bg-amber-700' : 'bg-stone-700 hover:bg-stone-600'}`}>{f}</button>
+            <button key={f} onClick={() => setFilter(f)} className={`px-3 py-1.5 rounded-lg text-sm capitalize ${filter === f ? 'bg-amber-700' : 'bg-stone-700 hover:bg-stone-600'}`}>{f}</button>
           ))}
         </div>
-        <button onClick={() => setShowCreate(!showCreate)} className="px-3 py-1 rounded bg-emerald-700 hover:bg-emerald-600 text-sm flex items-center gap-1">
+
+        <div className="w-px h-6 bg-stone-700" />
+
+        {/* CR Filter */}
+        <FilterDropdown
+          label="CR"
+          options={CR_OPTIONS}
+          selected={selectedCRs}
+          onToggle={toggleFilter(setSelectedCRs)}
+          onClear={() => setSelectedCRs([])}
+          colorClass="purple"
+        />
+
+        {/* Size Filter */}
+        <FilterDropdown
+          label="Size"
+          options={SIZE_OPTIONS}
+          selected={selectedSizes}
+          onToggle={toggleFilter(setSelectedSizes)}
+          onClear={() => setSelectedSizes([])}
+          colorClass="blue"
+        />
+
+        {/* Creature Type Filter */}
+        <FilterDropdown
+          label="Type"
+          options={availableCreatureTypes}
+          selected={selectedCreatureTypes}
+          onToggle={toggleFilter(setSelectedCreatureTypes)}
+          onClear={() => setSelectedCreatureTypes([])}
+          colorClass="green"
+        />
+
+        {hasFilters && (
+          <button 
+            onClick={clearAllFilters}
+            className="px-2 py-1 rounded text-xs text-red-400 hover:text-red-300 hover:bg-red-900/30"
+          >
+            Clear All
+          </button>
+        )}
+
+        <div className="flex-1" />
+
+        <button onClick={() => setShowCreate(!showCreate)} className="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-sm flex items-center gap-1">
           {showCreate ? <Icons.X /> : <Icons.Plus />} {showCreate ? 'Cancel' : 'New Template'}
         </button>
       </div>
+
+      {/* Active Filter Tags */}
+      {hasFilters && (
+        <div className="flex flex-wrap gap-1 items-center">
+          {selectedCRs.map(cr => (
+            <span key={`cr-${cr}`} className="px-2 py-0.5 bg-purple-900/50 text-purple-300 rounded text-xs flex items-center gap-1">
+              CR {cr}
+              <button onClick={() => toggleFilter(setSelectedCRs)(cr)} className="hover:text-white">×</button>
+            </span>
+          ))}
+          {selectedSizes.map(size => (
+            <span key={`size-${size}`} className="px-2 py-0.5 bg-blue-900/50 text-blue-300 rounded text-xs flex items-center gap-1">
+              {size}
+              <button onClick={() => toggleFilter(setSelectedSizes)(size)} className="hover:text-white">×</button>
+            </span>
+          ))}
+          {selectedCreatureTypes.map(ct => (
+            <span key={`ct-${ct}`} className="px-2 py-0.5 bg-emerald-900/50 text-emerald-300 rounded text-xs flex items-center gap-1">
+              {ct}
+              <button onClick={() => toggleFilter(setSelectedCreatureTypes)(ct)} className="hover:text-white">×</button>
+            </span>
+          ))}
+        </div>
+      )}
 
       {showCreate && (
         <div className="border border-emerald-700 rounded-lg bg-stone-900/50">
@@ -204,7 +453,10 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
         </div>
       )}
 
-      <div className="text-xs text-stone-500">{filtered.length} template{filtered.length !== 1 ? 's' : ''}</div>
+      <div className="text-xs text-stone-500">
+        {filtered.length} template{filtered.length !== 1 ? 's' : ''}
+        {hasFilters && ` (filtered from ${templates.length})`}
+      </div>
 
       <div className="space-y-2">
         {filtered.map((t) => (
@@ -219,7 +471,7 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
                     <div>
                       <div className="font-medium">{t.name}</div>
                       <div className="text-xs text-stone-400">
-                        {t.type && <span className="italic">{t.type} • </span>}
+                        {(t.size || t.creatureType) && <span className="italic">{t.size} {t.creatureType} • </span>}
                         CR {t.cr} • AC {t.ac} • HP {t.maxHp}{t.hitDice && ` (${t.hitDice})`} • {t.speed}{typeof t.speed === 'number' ? ' ft.' : ''}
                       </div>
                     </div>

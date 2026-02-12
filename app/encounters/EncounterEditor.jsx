@@ -1,8 +1,112 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useMemo } from 'react';
 import Icons from '../components/Icons';
 import { crToNumber } from './constants';
+
+// CR values for filtering
+const CR_OPTIONS = [
+  { value: '0', label: '0' },
+  { value: '1/8', label: '⅛' },
+  { value: '1/4', label: '¼' },
+  { value: '1/2', label: '½' },
+  { value: '1', label: '1' },
+  { value: '2', label: '2' },
+  { value: '3', label: '3' },
+  { value: '4', label: '4' },
+  { value: '5', label: '5' },
+  { value: '6', label: '6' },
+  { value: '7', label: '7' },
+  { value: '8', label: '8' },
+  { value: '9', label: '9' },
+  { value: '10', label: '10' },
+  { value: '11', label: '11' },
+  { value: '12', label: '12' },
+  { value: '13', label: '13' },
+  { value: '14', label: '14' },
+  { value: '15', label: '15' },
+  { value: '16', label: '16' },
+  { value: '17', label: '17' },
+  { value: '18', label: '18' },
+  { value: '19', label: '19' },
+  { value: '20', label: '20' },
+  { value: '21', label: '21' },
+  { value: '22', label: '22' },
+  { value: '23', label: '23' },
+  { value: '24', label: '24' },
+  { value: '25', label: '25' },
+  { value: '30', label: '30' },
+];
+
+const SIZE_OPTIONS = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
+
+const CREATURE_TYPE_OPTIONS = [
+  'Aberration', 'Beast', 'Celestial', 'Construct', 'Dragon', 'Elemental',
+  'Fey', 'Fiend', 'Giant', 'Humanoid', 'Monstrosity', 'Ooze', 'Plant', 'Undead'
+];
+
+// Multi-select dropdown component
+const FilterDropdown = ({ label, options, selected, onToggle, onClear, colorClass = 'purple' }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const colors = {
+    purple: { bg: 'bg-purple-700', badge: 'bg-purple-900', button: 'bg-purple-600' },
+    blue: { bg: 'bg-blue-700', badge: 'bg-blue-900', button: 'bg-blue-600' },
+    green: { bg: 'bg-emerald-700', badge: 'bg-emerald-900', button: 'bg-emerald-600' },
+  };
+  const c = colors[colorClass] || colors.purple;
+
+  return (
+    <div className="relative" onClick={(e) => e.stopPropagation()}>
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className={`px-3 py-2 rounded-lg text-sm flex items-center gap-2 ${selected.length > 0 ? c.bg : 'bg-stone-800 hover:bg-stone-700'}`}
+      >
+        <span>{label}</span>
+        {selected.length > 0 && (
+          <span className={`${c.badge} px-1.5 py-0.5 rounded text-xs`}>{selected.length}</span>
+        )}
+        <Icons.ChevronDown className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
+          <div className="absolute top-full left-0 mt-1 bg-stone-800 border border-stone-600 rounded-lg shadow-xl z-20 min-w-[200px] max-w-[280px]">
+            <div className="p-2 border-b border-stone-700 flex justify-between items-center">
+              <span className="text-xs text-stone-400">Select {label}</span>
+              {selected.length > 0 && (
+                <button onClick={() => { onClear(); }} className="text-xs text-red-400 hover:text-red-300">Clear</button>
+              )}
+            </div>
+            <div className="p-2 flex flex-wrap gap-1 max-h-[200px] overflow-y-auto">
+              {options.map(opt => {
+                const value = typeof opt === 'object' ? opt.value : opt;
+                const displayLabel = typeof opt === 'object' ? opt.label : opt;
+                return (
+                  <button
+                    key={value}
+                    onClick={() => onToggle(value)}
+                    className={`px-2 py-1 rounded text-xs ${selected.includes(value) ? c.button : 'bg-stone-700 hover:bg-stone-600'}`}
+                  >
+                    {displayLabel}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="p-2 border-t border-stone-700">
+              <button 
+                onClick={() => setIsOpen(false)} 
+                className="w-full text-xs text-stone-400 hover:text-stone-200 py-1"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 const EncounterEditor = ({
   encounter,
@@ -14,28 +118,39 @@ const EncounterEditor = ({
   const [showAddMonster, setShowAddMonster] = useState(false);
   const [selectedMonsters, setSelectedMonsters] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
-  const [crFilter, setCrFilter] = useState('all');
-  const [showCrDropdown, setShowCrDropdown] = useState(false);
-  const crDropdownRef = useRef(null);
+  const [selectedCRs, setSelectedCRs] = useState([]);
+  const [selectedSizes, setSelectedSizes] = useState([]);
+  const [selectedCreatureTypes, setSelectedCreatureTypes] = useState([]);
 
-  // Close CR dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (crDropdownRef.current && !crDropdownRef.current.contains(e.target)) {
-        setShowCrDropdown(false);
+  // Get available creature types from templates
+  const availableCreatureTypes = useMemo(() => {
+    const types = new Set();
+    (templates || []).forEach(t => {
+      if (t.creatureType) {
+        const baseType = t.creatureType.split(' ')[0].replace(/[()]/g, '');
+        types.add(baseType);
       }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    });
+    return CREATURE_TYPE_OPTIONS.filter(ct => types.has(ct));
+  }, [templates]);
 
-  const availableCRs = [...new Set(templates.map(t => t.cr))].sort((a, b) => crToNumber(a) - crToNumber(b));
+  const toggleFilter = (setter) => (value) => {
+    setter(prev => prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]);
+  };
 
-  const filteredTemplates = templates
-    .filter(t => !t.isNpc)
-    .filter(t => crFilter === 'all' || t.cr === crFilter)
-    .filter(t => t.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    .sort((a, b) => crToNumber(a.cr) - crToNumber(b.cr) || a.name.localeCompare(b.name));
+  const filteredTemplates = useMemo(() => {
+    return templates
+      .filter(t => !t.isNpc)
+      .filter(t => selectedCRs.length === 0 || selectedCRs.includes(String(t.cr)))
+      .filter(t => selectedSizes.length === 0 || selectedSizes.includes(t.size))
+      .filter(t => {
+        if (selectedCreatureTypes.length === 0) return true;
+        if (!t.creatureType) return false;
+        return selectedCreatureTypes.some(ct => t.creatureType.startsWith(ct) || t.creatureType.includes(ct));
+      })
+      .filter(t => t.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      .sort((a, b) => crToNumber(a.cr) - crToNumber(b.cr) || a.name.localeCompare(b.name));
+  }, [templates, selectedCRs, selectedSizes, selectedCreatureTypes, searchTerm]);
 
   const toggleMonsterSelection = (template) => {
     setSelectedMonsters(prev => {
@@ -76,15 +191,28 @@ const EncounterEditor = ({
     setSelectedMonsters({});
     setShowAddMonster(false);
     setSearchTerm('');
-    setCrFilter('all');
+    setSelectedCRs([]);
+    setSelectedSizes([]);
+    setSelectedCreatureTypes([]);
   };
 
   const cancelAddMonsters = () => {
     setSelectedMonsters({});
     setShowAddMonster(false);
     setSearchTerm('');
-    setCrFilter('all');
+    setSelectedCRs([]);
+    setSelectedSizes([]);
+    setSelectedCreatureTypes([]);
   };
+
+  const clearAllFilters = () => {
+    setSearchTerm('');
+    setSelectedCRs([]);
+    setSelectedSizes([]);
+    setSelectedCreatureTypes([]);
+  };
+
+  const hasFilters = searchTerm || selectedCRs.length > 0 || selectedSizes.length > 0 || selectedCreatureTypes.length > 0;
 
   const updateMonster = (monsterId, changes) => {
     onUpdate({
@@ -200,7 +328,7 @@ const EncounterEditor = ({
       {/* Add Monster Modal */}
       {showAddMonster && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={cancelAddMonsters}>
-          <div className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-2xl max-h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
+          <div className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-2xl max-h-[85vh] flex flex-col" onClick={e => e.stopPropagation()}>
             <div className="p-4 border-b border-stone-700">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-bold text-red-400 flex items-center gap-2">
@@ -212,46 +340,90 @@ const EncounterEditor = ({
                   </span>
                 )}
               </div>
-              <div className="flex gap-2 mt-3">
+              
+              {/* Search */}
+              <div className="mt-3 relative">
                 <input
                   type="text"
-                  placeholder="Search monsters..."
+                  placeholder="Search by name..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="flex-1 bg-stone-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+                  className="w-full bg-stone-800 rounded-lg px-4 py-2 pl-10 text-sm focus:outline-none focus:ring-1 focus:ring-red-500"
                   autoFocus
                 />
-                <div className="relative" ref={crDropdownRef}>
-                  <button
-                    onClick={() => setShowCrDropdown(!showCrDropdown)}
-                    className="bg-stone-800 rounded-lg px-3 py-2 text-sm flex items-center gap-2 min-w-[100px]"
-                  >
-                    CR: {crFilter === 'all' ? 'All' : crFilter}
-                    <Icons.ChevronDown />
-                  </button>
-                  {showCrDropdown && (
-                    <div className="absolute top-full mt-1 right-0 bg-stone-800 border border-stone-600 rounded-lg shadow-xl z-10 max-h-48 overflow-y-auto min-w-[100px]">
-                      <button
-                        onClick={() => { setCrFilter('all'); setShowCrDropdown(false); }}
-                        className={`w-full px-3 py-1.5 text-left text-sm hover:bg-stone-700 ${crFilter === 'all' ? 'text-amber-400' : ''}`}
-                      >
-                        All
-                      </button>
-                      {availableCRs.map(cr => (
-                        <button
-                          key={cr}
-                          onClick={() => { setCrFilter(cr); setShowCrDropdown(false); }}
-                          className={`w-full px-3 py-1.5 text-left text-sm hover:bg-stone-700 ${crFilter === cr ? 'text-amber-400' : ''}`}
-                        >
-                          CR {cr}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
               </div>
+
+              {/* Filter Dropdowns */}
+              <div className="flex flex-wrap items-center gap-2 mt-3">
+                <FilterDropdown
+                  label="CR"
+                  options={CR_OPTIONS}
+                  selected={selectedCRs}
+                  onToggle={toggleFilter(setSelectedCRs)}
+                  onClear={() => setSelectedCRs([])}
+                  colorClass="purple"
+                />
+                <FilterDropdown
+                  label="Size"
+                  options={SIZE_OPTIONS}
+                  selected={selectedSizes}
+                  onToggle={toggleFilter(setSelectedSizes)}
+                  onClear={() => setSelectedSizes([])}
+                  colorClass="blue"
+                />
+                <FilterDropdown
+                  label="Type"
+                  options={availableCreatureTypes}
+                  selected={selectedCreatureTypes}
+                  onToggle={toggleFilter(setSelectedCreatureTypes)}
+                  onClear={() => setSelectedCreatureTypes([])}
+                  colorClass="green"
+                />
+                {hasFilters && (
+                  <button 
+                    onClick={clearAllFilters}
+                    className="px-2 py-1 rounded text-xs text-red-400 hover:text-red-300 hover:bg-red-900/30"
+                  >
+                    Clear All
+                  </button>
+                )}
+              </div>
+
+              {/* Active Filter Tags */}
+              {hasFilters && (
+                <div className="mt-2 flex flex-wrap gap-1 items-center">
+                  {selectedCRs.map(cr => (
+                    <span key={`cr-${cr}`} className="px-2 py-0.5 bg-purple-900/50 text-purple-300 rounded text-xs flex items-center gap-1">
+                      CR {cr}
+                      <button onClick={() => toggleFilter(setSelectedCRs)(cr)} className="hover:text-white">×</button>
+                    </span>
+                  ))}
+                  {selectedSizes.map(size => (
+                    <span key={`size-${size}`} className="px-2 py-0.5 bg-blue-900/50 text-blue-300 rounded text-xs flex items-center gap-1">
+                      {size}
+                      <button onClick={() => toggleFilter(setSelectedSizes)(size)} className="hover:text-white">×</button>
+                    </span>
+                  ))}
+                  {selectedCreatureTypes.map(ct => (
+                    <span key={`ct-${ct}`} className="px-2 py-0.5 bg-emerald-900/50 text-emerald-300 rounded text-xs flex items-center gap-1">
+                      {ct}
+                      <button onClick={() => toggleFilter(setSelectedCreatureTypes)(ct)} className="hover:text-white">×</button>
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
+
             <div className="flex-1 overflow-y-auto p-4">
+              {/* Results Count */}
+              <div className="text-xs text-stone-500 mb-2">
+                {filteredTemplates.length} {filteredTemplates.length === 1 ? 'result' : 'results'}
+                {hasFilters && ' (filtered)'}
+              </div>
+              
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {filteredTemplates.map(template => {
                   const isSelected = selectedMonsters[template.id] !== undefined;
@@ -279,7 +451,9 @@ const EncounterEditor = ({
                           )}
                         </div>
                         <div className="font-medium text-sm mt-1 truncate">{template.name}</div>
-                        <div className="text-xs text-stone-500 truncate">{template.type}</div>
+                        <div className="text-xs text-stone-500 truncate">
+                          {template.size} {template.creatureType}
+                        </div>
                       </button>
                       
                       {isSelected && (

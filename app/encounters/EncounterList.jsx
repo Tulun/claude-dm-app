@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Icons from '../components/Icons';
 import { getDailyXPBudget } from './constants';
 
@@ -15,6 +16,9 @@ const EncounterList = ({
   onAddToDaily,
   onCreate,
 }) => {
+  const [showNameModal, setShowNameModal] = useState(false);
+  const [newEncounterName, setNewEncounterName] = useState('');
+  
   const dailyBudget = getDailyXPBudget(partyLevel, partySize);
 
   const getDifficulty = (totalXP) => {
@@ -30,13 +34,33 @@ const EncounterList = ({
     }
   };
 
+  const handleCreateClick = () => {
+    setNewEncounterName('');
+    setShowNameModal(true);
+  };
+
+  const handleCreateConfirm = () => {
+    const name = newEncounterName.trim() || 'New Encounter';
+    onCreate(name);
+    setShowNameModal(false);
+    setNewEncounterName('');
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleCreateConfirm();
+    } else if (e.key === 'Escape') {
+      setShowNameModal(false);
+    }
+  };
+
   return (
     <div className="flex-1">
       <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-amber-400">Saved Encounters</h2>
           <button
-            onClick={onCreate}
+            onClick={handleCreateClick}
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-medium"
           >
             <Icons.Plus /> New Encounter
@@ -121,6 +145,43 @@ const EncounterList = ({
           </div>
         )}
       </div>
+
+      {/* New Encounter Name Modal */}
+      {showNameModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setShowNameModal(false)}>
+          <div className="bg-stone-900 border border-amber-800/50 rounded-xl w-full max-w-md" onClick={e => e.stopPropagation()}>
+            <div className="p-4 border-b border-stone-700">
+              <h2 className="text-lg font-bold text-amber-400">Create New Encounter</h2>
+            </div>
+            <div className="p-4">
+              <label className="block text-sm text-stone-400 mb-2">Encounter Name</label>
+              <input
+                type="text"
+                value={newEncounterName}
+                onChange={(e) => setNewEncounterName(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="e.g., Goblin Ambush, Dragon's Lair..."
+                className="w-full bg-stone-800 border border-stone-600 rounded-lg px-4 py-3 focus:outline-none focus:border-amber-500"
+                autoFocus
+              />
+            </div>
+            <div className="p-4 border-t border-stone-700 flex gap-3">
+              <button
+                onClick={() => setShowNameModal(false)}
+                className="flex-1 py-2 rounded-lg bg-stone-700 hover:bg-stone-600"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCreateConfirm}
+                className="flex-1 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-medium flex items-center justify-center gap-2"
+              >
+                <Icons.Plus /> Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

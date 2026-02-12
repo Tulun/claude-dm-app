@@ -1,16 +1,16 @@
 [
   {
-    "id": "encounter-1770835359606",
+    "id": "encounter-1770862209865",
     "name": "New Encounter",
     "monsters": [
       {
-        "id": "mm-dire-wolf-1770835373468-pm67w",
-        "templateId": "mm-dire-wolf",
-        "name": "Dire Wolf",
+        "id": "mm-tarrasque-1770862238287-2aqag",
+        "templateId": "mm-tarrasque",
+        "name": "Tarrasque",
         "customName": "",
-        "quantity": 2
+        "quantity": 1
       }
     ],
-    "createdAt": "2026-02-11T18:42:39.606Z"
+    "createdAt": "2026-02-12T02:10:09.865Z"
   }
 ]
