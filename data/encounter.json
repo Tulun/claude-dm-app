@@ -1,4 +1,138 @@
 {
-  "enemies": [],
+  "enemies": [
+    {
+      "id": "enemy-1771013821435-bslz1bp0b",
+      "name": "Earth Elemental",
+      "size": "Large",
+      "creatureType": "Elemental",
+      "ac": 17,
+      "maxHp": 126,
+      "hitDice": "12d10+60",
+      "speed": "30, burrow 30",
+      "cr": "5",
+      "xp": 1800,
+      "profBonus": 3,
+      "str": 20,
+      "dex": 8,
+      "con": 20,
+      "int": 5,
+      "wis": 10,
+      "cha": 5,
+      "vulnerabilities": "Thunder",
+      "resistances": "Bludgeoning, Piercing, Slashing from nonmagical attacks",
+      "immunities": "Poison; Exhaustion, Paralyzed, Petrified, Poisoned, Unconscious",
+      "senses": "Darkvision 60 ft., Tremorsense 60 ft., Passive Perception 10",
+      "languages": "Primordial (Terran)",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Earth Glide",
+          "description": "Can burrow through nonmagical unworked earth/stone without disturbing it."
+        },
+        {
+          "name": "Siege Monster",
+          "description": "Double damage to objects and structures."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Two Slam attacks."
+        },
+        {
+          "name": "Slam",
+          "description": "Melee Attack Roll: +8, reach 10 ft. Hit: 14 (2d8+5) Bludgeoning damage."
+        }
+      ],
+      "notes": "Natural Armor",
+      "currentHp": 126,
+      "initiative": 4
+    },
+    {
+      "id": "enemy-1771013865200-6n7a0csd1",
+      "name": "Tarrasque",
+      "size": "Gargantuan",
+      "creatureType": "Monstrosity (Titan)",
+      "ac": 25,
+      "maxHp": 676,
+      "hitDice": "33d20+330",
+      "speed": 40,
+      "cr": "30",
+      "xp": 155000,
+      "profBonus": 9,
+      "str": 30,
+      "dex": 11,
+      "con": 30,
+      "int": 3,
+      "wis": 11,
+      "cha": 11,
+      "savingThrows": "Int +5, Wis +9, Cha +9",
+      "immunities": "Fire, Poison; Charmed, Frightened, Paralyzed, Poisoned",
+      "senses": "Blindsight 120 ft., Passive Perception 10",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Legendary Resistance (3/Day)",
+          "description": "If fails a save, can choose to succeed instead."
+        },
+        {
+          "name": "Magic Resistance",
+          "description": "Advantage on saves vs spells/magic."
+        },
+        {
+          "name": "Reflective Carapace",
+          "description": "Targeted by magic missile, line spell, or spell requiring ranged attack: d6. 1-5 = no effect. 6 = reflected at caster as if from tarrasque."
+        },
+        {
+          "name": "Siege Monster",
+          "description": "Double damage to objects and structures."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Five attacks: one Bite, two Claws, one Horn, and one Tail. Can use Swallow instead of Bite."
+        },
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +19, reach 10 ft. Hit: 36 (4d12+10) Piercing. Target Grappled (escape DC 20) if Huge or smaller, Restrained until grapple ends."
+        },
+        {
+          "name": "Claw",
+          "description": "Melee Attack Roll: +19, reach 15 ft. Hit: 28 (4d8+10) Slashing damage."
+        },
+        {
+          "name": "Horn",
+          "description": "Melee Attack Roll: +19, reach 10 ft. Hit: 32 (4d10+10) Piercing damage."
+        },
+        {
+          "name": "Tail",
+          "description": "Melee Attack Roll: +19, reach 20 ft. Hit: 24 (4d6+10) Bludgeoning. DC 20 STR or Prone."
+        },
+        {
+          "name": "Swallow",
+          "description": "One Grappled Large or smaller creature. Target Blinded, Restrained, Total Cover, 56 (16d6) Acid at start of tarrasque's turns. If tarrasque takes 60+ damage in one turn from inside, DC 20 CON or regurgitates all swallowed creatures (Prone within 10 ft)."
+        }
+      ],
+      "legendaryActions": [
+        {
+          "name": "Attack",
+          "description": "Makes one Claw or Tail attack."
+        },
+        {
+          "name": "Move",
+          "description": "Moves up to half speed."
+        },
+        {
+          "name": "Chomp (2 Actions)",
+          "description": "Makes one Bite attack or uses Swallow."
+        }
+      ],
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "currentHp": 676,
+      "initiative": 9
+    }
+  ],
   "lairAction": null
 }
