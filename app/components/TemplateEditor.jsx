@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Icons from './Icons';
+import ImportMonsterModal from './ImportMonsterModal';
 
 // CR values for filtering
 const CR_OPTIONS = [
@@ -181,10 +182,11 @@ const StatBlockSection = ({ title, items, color = 'red' }) => {
   );
 };
 
-const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
+const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) => {
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [showCreate, setShowCreate] = useState(false);
+  const [showImport, setShowImport] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   const [createForm, setCreateForm] = useState({ 
     name: '', type: 'Medium Humanoid', ac: '10', maxHp: '10', hitDice: '1d8', speed: '30', cr: '1', 
@@ -418,6 +420,12 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
 
         <div className="flex-1" />
 
+        {onImport && (
+          <button onClick={() => setShowImport(true)} className="px-3 py-1.5 rounded-lg bg-purple-700 hover:bg-purple-600 text-sm flex items-center gap-1">
+            <Icons.Image /> Import from Image
+          </button>
+        )}
+
         <button onClick={() => setShowCreate(!showCreate)} className="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-sm flex items-center gap-1">
           {showCreate ? <Icons.X /> : <Icons.Plus />} {showCreate ? 'Cancel' : 'New Template'}
         </button>
@@ -544,6 +552,18 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate }) => {
           </div>
         ))}
       </div>
+
+      {/* Import Monster Modal */}
+      {onImport && (
+        <ImportMonsterModal
+          isOpen={showImport}
+          onClose={() => setShowImport(false)}
+          onImport={(monster) => {
+            onImport(monster);
+            setShowImport(false);
+          }}
+        />
+      )}
     </div>
   );
 };

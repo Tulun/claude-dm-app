@@ -18012,6 +18012,62 @@
         }
       ],
       "notes": "Natural Armor. 3 Legendary Actions/round."
+    },
+    {
+      "id": "imported-1770946675418",
+      "name": "Topiary Golem Ornamental",
+      "size": "Medium",
+      "creatureType": "Construct/Plant",
+      "ac": 14,
+      "maxHp": 117,
+      "hitDice": "18d8+36",
+      "speed": "40",
+      "cr": "3",
+      "xp": 700,
+      "profBonus": 2,
+      "str": 17,
+      "dex": 16,
+      "con": 14,
+      "int": 3,
+      "wis": 11,
+      "cha": 1,
+      "savingThrows": "",
+      "skills": "",
+      "vulnerabilities": "Fire, Slashing",
+      "resistances": "",
+      "immunities": "Psychic, Charmed, Exhaustion, Frightened, Paralyzed, Petrified, Poisoned",
+      "senses": "Passive Perception 10",
+      "languages": "Understands the languages of its creator but can't speak",
+      "traits": [
+        {
+          "name": "Hedgeblend",
+          "description": "The golem can move through hedges or other dense foliage without impediment, and can occupy their space."
+        },
+        {
+          "name": "Golemcraft Ward (1/Day)",
+          "description": "When the golem fails a saving throw that would alter its form or incapacitate it, it can choose to succeed instead. The golem adds +3 to its saving throws against spells and magical effects for each use of this ability it has remaining."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The golem makes two attacks with its Manicured Slash."
+        },
+        {
+          "name": "Manicured Slash",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 13 (3d6 + 3) Slashing damage. If the golem is Bloodied, this attack deals an additional 3 (1d6) Slashing damage on a hit."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Extend Roots",
+          "description": "The golem drives its roots into the ground, becoming utterly immobile and gaining Tremorsense to a range of 90 feet until it ends this effect as a Bonus Action. While in this state, the golem is indistinguishable from an ordinary topiary."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Natural Armor. Initiative +3 (13). Drives Obedience.",
+      "isNpc": false
     }
   ]
 }
