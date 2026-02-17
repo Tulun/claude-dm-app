@@ -44,8 +44,8 @@
           "description": "Melee Attack Roll: +8, reach 10 ft. Hit: 14 (2d8+5) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor",
-      "currentHp": 126,
+      "notes": "Prone!",
+      "currentHp": 60,
       "initiative": 4
     },
     {

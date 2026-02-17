@@ -258,6 +258,8 @@ const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
 const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onToggleExpand, showResources }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(false);
+  const [showHpEditor, setShowHpEditor] = useState(false);
+  const [hpDelta, setHpDelta] = useState('');
   const isDead = character.currentHp <= 0;
   const characterType = character.class ? 'party' : 'template';
 
@@ -476,12 +478,16 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
 
   const spellcastingInfo = parseSpellcasting();
 
+  // State for notes popup
+  const [showNotesPopup, setShowNotesPopup] = useState(false);
+  const [notesText, setNotesText] = useState(character.notes || '');
+
   return (
     <div className={`border rounded-lg overflow-hidden transition-all ${isDead ? 'border-red-900/50 bg-stone-900/30 opacity-60' : isEnemy ? 'border-red-800/50 bg-gradient-to-br from-red-950/40 to-stone-900/60' : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60'}`}>
-      <div className={`p-3 ${isEnemy ? 'hover:bg-red-900/20' : 'hover:bg-emerald-900/20'}`}>
+      <div className="p-3">
         {/* Top row: Icon, Name, and action buttons */}
         <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-3 cursor-pointer flex-1" onClick={onToggleExpand}>
+          <div className="flex items-center gap-3 flex-1">
             <div className={`p-2 rounded-lg ${isEnemy ? 'bg-red-900/50' : 'bg-emerald-900/50'}`}>{isEnemy ? <Icons.Skull /> : <Icons.Shield />}</div>
             <div>
               <h3 className={`font-bold text-lg ${isDead ? 'line-through text-stone-500' : ''}`}>{character.name}</h3>
@@ -496,9 +502,23 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            {/* Notes Button */}
+            {isEnemy && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setNotesText(character.notes || ''); setShowNotesPopup(true); }}
+                className={`p-2 rounded-lg transition-colors ${
+                  character.notes 
+                    ? 'text-amber-400 hover:bg-amber-900/30 bg-amber-900/20' 
+                    : 'text-stone-500 hover:text-amber-400 hover:bg-amber-900/30'
+                }`}
+                title="Combat Notes (conditions, status)"
+              >
+                <Icons.Scroll className="w-5 h-5" />
+              </button>
+            )}
             {/* Quick Actions Button */}
-            {isEnemy && (character.actions?.length > 0 || character.legendaryActions?.length > 0) && (
+            {isEnemy && (character.actions?.length > 0 || character.legendaryActions?.length > 0 || spellcastingInfo.found) && (
               <button 
                 onClick={(e) => { e.stopPropagation(); setShowQuickActions(true); }}
                 className={`p-2 rounded-lg transition-colors flex items-center gap-1 ${
@@ -521,31 +541,97 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                 <Icons.Trash />
               </button>
             )}
-            <div className="cursor-pointer p-2" onClick={onToggleExpand}>
-              {expanded ? <Icons.ChevronUp /> : <Icons.ChevronDown />}
-            </div>
+            {/* Expand/Collapse Arrow - bigger and more prominent */}
+            <button 
+              onClick={onToggleExpand}
+              className={`p-2 rounded-lg transition-colors ${isEnemy ? 'hover:bg-red-900/30' : 'hover:bg-emerald-900/30'}`}
+              title={expanded ? 'Collapse' : 'Expand'}
+            >
+              {expanded ? (
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6 1.41 1.41z"/></svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+              )}
+            </button>
           </div>
         </div>
         
         {/* Stats row: AC, HP, Spell DC in styled badges */}
-        <div className="flex items-center gap-2 cursor-pointer" onClick={onToggleExpand}>
+        <div className="flex items-center gap-2 flex-wrap">
           <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm ${character.acEffect ? 'bg-cyan-900/30 text-cyan-400' : 'bg-stone-800/60 text-stone-300'}`}>
             <Icons.Shield />
             <span className="font-mono font-medium">{displayAC}</span>
             <span className="text-xs text-stone-500">AC</span>
           </div>
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm ${isDead ? 'bg-red-900/40 text-red-400' : 'bg-stone-800/60 text-stone-300'}`}>
-            <Icons.Heart />
-            <span className={`font-mono font-medium ${isDead ? 'text-red-400' : ''}`}>{character.currentHp}</span>
-            <span className="text-stone-500">/</span>
-            <span className="font-mono text-stone-400">{character.maxHp}</span>
-            <span className="text-xs text-stone-500">HP</span>
+          {/* HP Badge - Clickable to edit */}
+          <div className="relative">
+            {showHpEditor ? (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setShowHpEditor(false)} />
+                <div className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm z-50 relative ${isDead ? 'bg-red-900/40' : 'bg-stone-800/60'}`}>
+                  <Icons.Heart />
+                  <input
+                    type="text"
+                    value={hpDelta}
+                    onChange={(e) => setHpDelta(e.target.value)}
+                    onBlur={() => {
+                      const num = parseInt(hpDelta);
+                      if (!isNaN(num) && num >= 0) {
+                        onUpdate({ ...character, currentHp: num });
+                      }
+                      setShowHpEditor(false);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        const num = parseInt(hpDelta);
+                        if (!isNaN(num) && num >= 0) {
+                          onUpdate({ ...character, currentHp: num });
+                        }
+                        setShowHpEditor(false);
+                      } else if (e.key === 'Escape') {
+                        setShowHpEditor(false);
+                      }
+                    }}
+                    className="w-12 text-center bg-stone-900 border border-amber-500 rounded px-1 py-0.5 font-mono focus:outline-none"
+                    autoFocus
+                  />
+                  <span className="text-stone-500">/</span>
+                  <span className="font-mono text-stone-400">{character.maxHp}</span>
+                  <span className="text-xs text-stone-500">HP</span>
+                </div>
+              </>
+            ) : (
+              <button
+                onClick={(e) => { e.stopPropagation(); setHpDelta(String(character.currentHp)); setShowHpEditor(true); }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm cursor-pointer transition-colors ${
+                  isDead ? 'bg-red-900/40 text-red-400 hover:bg-red-900/50' : 'bg-stone-800/60 text-stone-300 hover:bg-stone-700/60'
+                }`}
+                title="Click to edit HP"
+              >
+                <Icons.Heart />
+                <span className={`font-mono font-medium ${isDead ? 'text-red-400' : ''}`}>{character.currentHp}</span>
+                <span className="text-stone-500">/</span>
+                <span className="font-mono text-stone-400">{character.maxHp}</span>
+                <span className="text-xs text-stone-500">HP</span>
+              </button>
+            )}
           </div>
           {spellDC && (
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-purple-900/30 text-purple-400">
               <Icons.Sparkles />
               <span className="font-mono font-medium">{spellDC}</span>
               <span className="text-xs text-purple-500">DC</span>
+            </div>
+          )}
+          {/* Show notes indicator in stats row if notes exist */}
+          {isEnemy && character.notes && (
+            <div 
+              onClick={(e) => { e.stopPropagation(); setNotesText(character.notes || ''); setShowNotesPopup(true); }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-amber-900/30 text-amber-400 cursor-pointer hover:bg-amber-900/40"
+              title={character.notes}
+            >
+              <Icons.Scroll className="w-4 h-4" />
+              <span className="text-xs max-w-[100px] truncate">{character.notes}</span>
             </div>
           )}
         </div>
@@ -1322,6 +1408,68 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               >
                 Close
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Notes Popup Modal */}
+      {showNotesPopup && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={() => setShowNotesPopup(false)}>
+          <div className="bg-stone-900 border border-amber-800/50 rounded-xl w-full max-w-md overflow-hidden" onClick={e => e.stopPropagation()}>
+            <div className="p-4 border-b border-stone-700 bg-gradient-to-r from-amber-950/50 to-stone-900">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold text-amber-400 flex items-center gap-2">
+                  <Icons.Scroll className="w-5 h-5" /> Combat Notes
+                </h2>
+                <button onClick={() => setShowNotesPopup(false)} className="text-stone-400 hover:text-stone-200">
+                  <Icons.X />
+                </button>
+              </div>
+              <p className="text-xs text-stone-400 mt-1">{character.name} - Conditions, status effects, etc.</p>
+            </div>
+            <div className="p-4">
+              <textarea
+                value={notesText}
+                onChange={(e) => setNotesText(e.target.value)}
+                placeholder="Prone, Poisoned, Concentrating on spell, Hidden behind pillar..."
+                className="w-full h-32 bg-stone-800 border border-stone-700 rounded-lg p-3 text-sm focus:outline-none focus:border-amber-600 resize-none"
+                autoFocus
+              />
+              <div className="flex flex-wrap gap-2 mt-3">
+                <span className="text-xs text-stone-500">Quick add:</span>
+                {['Prone', 'Poisoned', 'Frightened', 'Stunned', 'Restrained', 'Blinded', 'Concentrating'].map(condition => (
+                  <button
+                    key={condition}
+                    onClick={() => setNotesText(prev => prev ? `${prev}, ${condition}` : condition)}
+                    className="text-xs px-2 py-1 rounded bg-stone-800 hover:bg-stone-700 text-stone-400 hover:text-amber-400"
+                  >
+                    {condition}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="p-4 border-t border-stone-700 flex justify-between">
+              <button 
+                onClick={() => { setNotesText(''); }}
+                className="px-3 py-2 rounded-lg text-stone-400 hover:text-red-400 hover:bg-red-900/20 text-sm"
+              >
+                Clear
+              </button>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => setShowNotesPopup(false)}
+                  className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600 text-sm"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={() => { onUpdate({ ...character, notes: notesText }); setShowNotesPopup(false); }}
+                  className="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-sm"
+                >
+                  Save
+                </button>
+              </div>
             </div>
           </div>
         </div>
