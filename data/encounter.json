@@ -131,7 +131,42 @@
       ],
       "notes": "Natural Armor. 3 Legendary Actions/round.",
       "currentHp": 676,
-      "initiative": 9
+      "initiative": 9,
+      "legendaryActionsUsed": 3
+    },
+    {
+      "id": "enemy-1771357728147-cdnyz20zz",
+      "name": "Druid",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 11,
+      "maxHp": 27,
+      "hitDice": "5d8+5",
+      "speed": 30,
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 10,
+      "dex": 12,
+      "con": 13,
+      "int": 12,
+      "wis": 15,
+      "cha": 11,
+      "skills": "Medicine +4, Nature +3, Perception +4",
+      "senses": "Passive Perception 14",
+      "languages": "Druidic plus any two",
+      "isNpc": true,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Quarterstaff",
+          "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 3 (1d6) Bludgeoning, or 4 (1d8) two-handed."
+        }
+      ],
+      "notes": "Spellcasting (DC 12, +4): Cantrips: druidcraft, produce flame, shillelagh. 1st (4 slots): entangle, longstrider, speak with animals, thunderwave. 2nd (3 slots): animal messenger, barkskin.",
+      "currentHp": 27,
+      "initiative": 1,
+      "spellSlots1stUsed": 0
     }
   ],
   "lairAction": null

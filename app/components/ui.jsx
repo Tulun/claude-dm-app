@@ -3,23 +3,23 @@
 import { useState, useEffect, useRef } from 'react';
 
 // Shared Tooltip component - uses fixed positioning to avoid container clipping
-export const Tooltip = ({ text, children }) => {
+export const Tooltip = ({ text, children, maxWidth = '280px' }) => {
   const [show, setShow] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const triggerRef = useRef(null);
+  const maxW = parseInt(maxWidth) || 280;
 
   const handleMouseEnter = () => {
     if (triggerRef.current && text) {
       const rect = triggerRef.current.getBoundingClientRect();
-      const tooltipWidth = 280;
       
       // Start position: above the element, aligned to left
       let top = rect.top - 8;
       let left = rect.left;
       
       // Prevent going off right edge of viewport
-      if (left + tooltipWidth > window.innerWidth - 16) {
-        left = window.innerWidth - tooltipWidth - 16;
+      if (left + maxW > window.innerWidth - 16) {
+        left = window.innerWidth - maxW - 16;
       }
       
       // Prevent going off left edge
@@ -32,6 +32,9 @@ export const Tooltip = ({ text, children }) => {
     }
   };
 
+  // Truncate very long text
+  const displayText = text && text.length > 500 ? text.substring(0, 500) + '...' : text;
+
   return (
     <span 
       ref={triggerRef}
@@ -42,16 +45,16 @@ export const Tooltip = ({ text, children }) => {
       {children}
       {show && text && (
         <span 
-          className="fixed px-2 py-1.5 bg-stone-900 border border-stone-600 rounded text-xs text-stone-200 shadow-xl pointer-events-none"
+          className="fixed px-3 py-2 bg-stone-900 border border-stone-600 rounded-lg text-xs text-stone-200 shadow-xl pointer-events-none leading-relaxed"
           style={{ 
             zIndex: 99999, 
             top: position.top,
             left: position.left,
             transform: 'translateY(-100%)',
-            maxWidth: '280px',
+            maxWidth: maxWidth,
           }}
         >
-          {text}
+          {displayText}
         </span>
       )}
     </span>
@@ -139,18 +142,18 @@ export const HpBar = ({ current, max, onChange }) => {
   };
 
   return (
-    <div className="flex items-center gap-2">
-      <div className="flex-1 h-3 bg-stone-900 rounded-full overflow-hidden border border-stone-700">
+    <div className="flex items-center gap-3">
+      <div className="flex-1 h-4 bg-stone-900 rounded-full overflow-hidden border border-stone-700">
         <div className={`h-full ${barColor} transition-all duration-300`} style={{ width: `${percentage}%` }} />
       </div>
-      <div className="flex items-center gap-1 text-sm font-mono">
+      <div className="flex items-center gap-1.5 text-sm font-mono">
         <input
           type="text"
           value={currentText}
           onChange={(e) => setCurrentText(e.target.value)}
           onBlur={handleCurrentBlur}
           onKeyDown={(e) => e.key === 'Enter' && e.target.blur()}
-          className="w-12 text-center bg-stone-900/50 border border-stone-700 rounded px-1 py-0.5 focus:outline-none focus:border-amber-500"
+          className="w-16 text-center bg-stone-900/50 border border-stone-700 rounded px-2 py-1 focus:outline-none focus:border-amber-500"
         />
         <span className="text-stone-500">/</span>
         <input
@@ -159,7 +162,7 @@ export const HpBar = ({ current, max, onChange }) => {
           onChange={(e) => setMaxText(e.target.value)}
           onBlur={handleMaxBlur}
           onKeyDown={(e) => e.key === 'Enter' && e.target.blur()}
-          className="w-12 text-center bg-stone-900/50 border border-stone-700 rounded px-1 py-0.5 focus:outline-none focus:border-amber-500"
+          className="w-16 text-center bg-stone-900/50 border border-stone-700 rounded px-2 py-1 focus:outline-none focus:border-amber-500"
         />
       </div>
     </div>

@@ -257,6 +257,7 @@ const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {
 
 const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onToggleExpand, showResources }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showQuickActions, setShowQuickActions] = useState(false);
   const isDead = character.currentHp <= 0;
   const characterType = character.class ? 'party' : 'template';
 
@@ -378,40 +379,175 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   const calculatedAC = getCalculatedAC();
   const displayAC = character.acOverride || calculatedAC || character.ac || 10;
 
+  // Parse spellcasting from traits, actions, or notes
+  const parseSpellcasting = () => {
+    const spellcasting = {
+      found: false,
+      dc: null,
+      attack: null,
+      ability: null,
+      atWill: [],
+      perDay: {}, // { "1": ["spell1", "spell2"], "3": ["spell3"] }
+      slots: {}, // { "1st": { slots: 4, spells: ["entangle", "longstrider"] } }
+      cantrips: [],
+      notes: null,
+      source: null, // 'trait', 'action', or 'notes'
+    };
+
+    // Check traits and actions for Spellcasting
+    const allAbilities = [
+      ...(character.traits || []).map(t => ({ ...t, source: 'trait' })),
+      ...(character.actions || []).map(a => ({ ...a, source: 'action' })),
+    ];
+
+    for (const ability of allAbilities) {
+      const name = ability.name?.toLowerCase() || '';
+      const desc = ability.description || '';
+      
+      if (name.includes('spellcasting') || name.includes('innate spellcasting')) {
+        spellcasting.found = true;
+        spellcasting.notes = desc;
+        spellcasting.source = ability.source;
+        parseSpellText(desc, spellcasting);
+        break;
+      }
+    }
+
+    // If not found in traits/actions, check notes field
+    if (!spellcasting.found && character.notes) {
+      const notes = character.notes.toLowerCase();
+      if (notes.includes('spellcasting') || notes.includes('spell save dc') || notes.includes('cantrips')) {
+        spellcasting.found = true;
+        spellcasting.notes = character.notes;
+        spellcasting.source = 'notes';
+        parseSpellText(character.notes, spellcasting);
+      }
+    }
+
+    return spellcasting;
+  };
+
+  // Helper to parse spell text into structured data
+  const parseSpellText = (desc, spellcasting) => {
+    // Extract DC and attack bonus
+    const dcMatch = desc.match(/(?:spell save DC|DC)\s*(\d+)/i);
+    if (dcMatch) spellcasting.dc = dcMatch[1];
+    
+    const attackMatch = desc.match(/([+-]\d+)\s*(?:to hit|spell attack)/i);
+    if (attackMatch) spellcasting.attack = attackMatch[1];
+
+    // Also try format like "(DC 12, +4)"
+    const comboMatch = desc.match(/\(DC\s*(\d+),?\s*([+-]\d+)\)/i);
+    if (comboMatch) {
+      spellcasting.dc = comboMatch[1];
+      spellcasting.attack = comboMatch[2];
+    }
+
+    // Extract cantrips
+    const cantripMatch = desc.match(/cantrips?[^:]*:\s*([^.]+?)(?:\.|$|\d+(?:st|nd|rd|th))/i);
+    if (cantripMatch) {
+      spellcasting.cantrips = cantripMatch[1].split(/,\s*/).map(s => s.trim()).filter(Boolean);
+    }
+
+    // Extract at-will spells
+    const atWillMatch = desc.match(/at will[^:]*:\s*([^.]+)/i);
+    if (atWillMatch) {
+      spellcasting.atWill = atWillMatch[1].split(/,\s*/).map(s => s.trim()).filter(Boolean);
+    }
+
+    // Extract X/day spells
+    const perDayMatches = desc.matchAll(/(\d+)\/day[^:]*:\s*([^.]+)/gi);
+    for (const match of perDayMatches) {
+      const count = match[1];
+      const spells = match[2].split(/,\s*/).map(s => s.trim()).filter(Boolean);
+      spellcasting.perDay[count] = [...(spellcasting.perDay[count] || []), ...spells];
+    }
+
+    // Extract slot-based spells (e.g., "1st (4 slots): entangle, longstrider")
+    const slotMatches = desc.matchAll(/(\d+)(?:st|nd|rd|th)\s*\((\d+)\s*slots?\)[^:]*:\s*([^.]+?)(?:\.|$|\d+(?:st|nd|rd|th))/gi);
+    for (const match of slotMatches) {
+      const level = match[1] + (match[1] === '1' ? 'st' : match[1] === '2' ? 'nd' : match[1] === '3' ? 'rd' : 'th');
+      spellcasting.slots[level] = {
+        slots: parseInt(match[2]),
+        spells: match[3].split(/,\s*/).map(s => s.trim()).filter(Boolean),
+      };
+    }
+  };
+
+  const spellcastingInfo = parseSpellcasting();
+
   return (
     <div className={`border rounded-lg overflow-hidden transition-all ${isDead ? 'border-red-900/50 bg-stone-900/30 opacity-60' : isEnemy ? 'border-red-800/50 bg-gradient-to-br from-red-950/40 to-stone-900/60' : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60'}`}>
-      <div className={`flex items-center justify-between p-3 ${isEnemy ? 'hover:bg-red-900/20' : 'hover:bg-emerald-900/20'}`}>
-        <div className="flex items-center gap-3 cursor-pointer flex-1" onClick={onToggleExpand}>
-          <div className={`p-2 rounded-lg ${isEnemy ? 'bg-red-900/50' : 'bg-emerald-900/50'}`}>{isEnemy ? <Icons.Skull /> : <Icons.Shield />}</div>
-          <div>
-            <h3 className={`font-bold ${isDead ? 'line-through text-stone-500' : ''}`}>{character.name}</h3>
-            <p className="text-xs text-stone-400">
-              {character.classes?.length > 0 
-                ? character.classes.map(c => `${c.name} ${c.level}`).join(' / ')
-                : character.class 
-                  ? `${character.class} ${character.level || 1}` 
-                  : character.cr 
-                    ? `CR ${character.cr}`
-                    : ''}
-            </p>
+      <div className={`p-3 ${isEnemy ? 'hover:bg-red-900/20' : 'hover:bg-emerald-900/20'}`}>
+        {/* Top row: Icon, Name, and action buttons */}
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-3 cursor-pointer flex-1" onClick={onToggleExpand}>
+            <div className={`p-2 rounded-lg ${isEnemy ? 'bg-red-900/50' : 'bg-emerald-900/50'}`}>{isEnemy ? <Icons.Skull /> : <Icons.Shield />}</div>
+            <div>
+              <h3 className={`font-bold text-lg ${isDead ? 'line-through text-stone-500' : ''}`}>{character.name}</h3>
+              <p className="text-xs text-stone-400">
+                {character.classes?.length > 0 
+                  ? character.classes.map(c => `${c.name} ${c.level}`).join(' / ')
+                  : character.class 
+                    ? `${character.class} ${character.level || 1}` 
+                    : character.cr 
+                      ? `CR ${character.cr}`
+                      : ''}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {/* Quick Actions Button */}
+            {isEnemy && (character.actions?.length > 0 || character.legendaryActions?.length > 0) && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setShowQuickActions(true); }}
+                className={`p-2 rounded-lg transition-colors flex items-center gap-1 ${
+                  character.legendaryActions?.length > 0 
+                    ? 'text-purple-400 hover:bg-purple-900/30 bg-purple-900/20' 
+                    : 'text-red-400 hover:bg-red-900/30'
+                }`}
+                title="Quick Actions"
+              >
+                <Icons.Sword />
+                {character.legendaryActions?.length > 0 && <span className="text-xs">★</span>}
+              </button>
+            )}
+            {isEnemy && onRemove && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }}
+                className="p-2 rounded-lg text-stone-500 hover:text-red-400 hover:bg-red-900/30 transition-colors"
+                title="Remove from combat"
+              >
+                <Icons.Trash />
+              </button>
+            )}
+            <div className="cursor-pointer p-2" onClick={onToggleExpand}>
+              {expanded ? <Icons.ChevronUp /> : <Icons.ChevronDown />}
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <div className={`flex items-center gap-1 text-sm ${character.acEffect ? 'text-cyan-400' : ''}`}><Icons.Shield /><span className="font-mono">{displayAC}</span></div>
-          <div className="flex items-center gap-1 text-sm"><Icons.Heart /><span className={`font-mono ${isDead ? 'text-red-500' : ''}`}>{character.currentHp}/{character.maxHp}</span></div>
-          {spellDC && <div className="flex items-center gap-1 text-sm text-purple-400"><Icons.Sparkles /><span className="font-mono">{spellDC}</span></div>}
-          {isEnemy && onRemove && (
-            <button 
-              onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }}
-              className="p-1.5 rounded text-stone-500 hover:text-red-400 hover:bg-red-900/30 transition-colors"
-              title="Remove from combat"
-            >
-              <Icons.Trash />
-            </button>
-          )}
-          <div className="cursor-pointer" onClick={onToggleExpand}>
-            {expanded ? <Icons.ChevronUp /> : <Icons.ChevronDown />}
+        
+        {/* Stats row: AC, HP, Spell DC in styled badges */}
+        <div className="flex items-center gap-2 cursor-pointer" onClick={onToggleExpand}>
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm ${character.acEffect ? 'bg-cyan-900/30 text-cyan-400' : 'bg-stone-800/60 text-stone-300'}`}>
+            <Icons.Shield />
+            <span className="font-mono font-medium">{displayAC}</span>
+            <span className="text-xs text-stone-500">AC</span>
           </div>
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm ${isDead ? 'bg-red-900/40 text-red-400' : 'bg-stone-800/60 text-stone-300'}`}>
+            <Icons.Heart />
+            <span className={`font-mono font-medium ${isDead ? 'text-red-400' : ''}`}>{character.currentHp}</span>
+            <span className="text-stone-500">/</span>
+            <span className="font-mono text-stone-400">{character.maxHp}</span>
+            <span className="text-xs text-stone-500">HP</span>
+          </div>
+          {spellDC && (
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-purple-900/30 text-purple-400">
+              <Icons.Sparkles />
+              <span className="font-mono font-medium">{spellDC}</span>
+              <span className="text-xs text-purple-500">DC</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -437,19 +573,34 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
 
       {/* Quick actions preview - always visible when collapsed and has actions */}
       {!expanded && character.actions?.length > 0 && (
-        <div className="px-3 pb-2 text-xs">
-          <div className="flex flex-wrap gap-1">
+        <div className="px-3 pb-3 text-xs">
+          <div className="flex flex-wrap gap-1.5">
             {character.actions.map((action, i) => (
-              <span key={i} className="bg-red-900/30 text-red-300 px-2 py-0.5 rounded">{action.name}</span>
+              <button
+                key={i}
+                onClick={(e) => { e.stopPropagation(); setShowQuickActions(true); }}
+                className="bg-red-900/30 text-red-300 px-2 py-1 rounded cursor-pointer hover:bg-red-800/40 transition-colors"
+              >
+                {action.name}
+              </button>
             ))}
+            {/* Show spellcasting indicator if present */}
+            {spellcastingInfo.found && (
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowQuickActions(true); }}
+                className="bg-purple-900/30 text-purple-300 px-2 py-1 rounded cursor-pointer hover:bg-purple-800/40 transition-colors flex items-center gap-1"
+              >
+                <Icons.Sparkles /> Spells
+              </button>
+            )}
           </div>
         </div>
       )}
 
       {expanded && (
-        <div className="p-4 pt-0 border-t border-stone-700/50 space-y-4">
+        <div className="p-4 border-t border-stone-700/50 space-y-4">
           <div>
-            <label className="text-xs text-stone-400 mb-1 block">Hit Points</label>
+            <label className="text-xs text-stone-400 mb-2 block">Hit Points</label>
             <HpBar current={character.currentHp} max={character.maxHp} onChange={(curr, max) => onUpdate({ ...character, currentHp: curr, maxHp: max })} />
           </div>
           
@@ -605,7 +756,16 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
           )}
 
           {/* Notes - editable for status effects, conditions, etc. */}
-          <div><label className="text-xs text-stone-400">Notes (conditions, status effects)</label><EditableField value={character.notes} onChange={(v) => onUpdate({ ...character, notes: v })} className="block w-full text-sm" placeholder="Click to add notes..." /></div>
+          {/* If spellcasting was parsed from notes, don't show it again in Notes */}
+          {spellcastingInfo.source !== 'notes' ? (
+            <div><label className="text-xs text-stone-400">Notes (conditions, status effects)</label><EditableField value={character.notes} onChange={(v) => onUpdate({ ...character, notes: v })} className="block w-full text-sm" placeholder="Click to add notes..." /></div>
+          ) : (
+            <div>
+              <label className="text-xs text-stone-400">Notes (conditions, status effects)</label>
+              <div className="text-xs text-stone-500 italic mt-1">Spellcasting info shown above. Click to edit raw notes.</div>
+              <EditableField value={character.notes} onChange={(v) => onUpdate({ ...character, notes: v })} className="block w-full text-sm opacity-50" placeholder="Click to add notes..." />
+            </div>
+          )}
           
           {/* Resources with +/- controls */}
           {showResources && (character.resources || []).length > 0 && (
@@ -640,6 +800,75 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               getModNum={getModNum}
               getProfBonus={getProfBonus}
             />
+          )}
+
+          {/* Spellcasting - parsed and formatted nicely */}
+          {spellcastingInfo.found && (
+            <div className="space-y-2">
+              <label className="text-xs text-purple-400 font-bold flex items-center gap-2">
+                <Icons.Sparkles /> Spellcasting
+                {spellcastingInfo.dc && (
+                  <span className="font-mono bg-purple-900/40 px-2 py-0.5 rounded text-purple-300">
+                    DC {spellcastingInfo.dc}
+                  </span>
+                )}
+                {spellcastingInfo.attack && (
+                  <span className="font-mono bg-purple-900/40 px-2 py-0.5 rounded text-purple-300">
+                    {spellcastingInfo.attack} to hit
+                  </span>
+                )}
+              </label>
+              <div className="bg-purple-950/20 border border-purple-900/30 rounded-lg p-3 space-y-2">
+                {/* Cantrips */}
+                {spellcastingInfo.cantrips.length > 0 && (
+                  <div className="text-xs">
+                    <span className="text-purple-400 font-medium">Cantrips: </span>
+                    <span className="text-stone-300 italic">{spellcastingInfo.cantrips.join(', ')}</span>
+                  </div>
+                )}
+                
+                {/* At Will */}
+                {spellcastingInfo.atWill.length > 0 && (
+                  <div className="text-xs">
+                    <span className="text-purple-400 font-medium">At Will: </span>
+                    <span className="text-stone-300 italic">{spellcastingInfo.atWill.join(', ')}</span>
+                  </div>
+                )}
+                
+                {/* Per Day */}
+                {Object.keys(spellcastingInfo.perDay).length > 0 && (
+                  <div className="space-y-1">
+                    {Object.entries(spellcastingInfo.perDay).sort((a, b) => parseInt(b[0]) - parseInt(a[0])).map(([count, spells]) => (
+                      <div key={count} className="text-xs">
+                        <span className="text-purple-400 font-medium">{count}/Day: </span>
+                        <span className="text-stone-300 italic">{spells.join(', ')}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                {/* Spell Slots */}
+                {Object.keys(spellcastingInfo.slots).length > 0 && (
+                  <div className="space-y-1">
+                    {Object.entries(spellcastingInfo.slots).map(([level, data]) => (
+                      <div key={level} className="text-xs">
+                        <span className="text-purple-400 font-medium">{level} ({data.slots} slots): </span>
+                        <span className="text-stone-300 italic">{data.spells.join(', ')}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Fallback: show raw notes if no structured data parsed */}
+                {spellcastingInfo.cantrips.length === 0 && 
+                 spellcastingInfo.atWill.length === 0 && 
+                 Object.keys(spellcastingInfo.perDay).length === 0 && 
+                 Object.keys(spellcastingInfo.slots).length === 0 && 
+                 spellcastingInfo.notes && (
+                  <div className="text-xs text-stone-300">{spellcastingInfo.notes}</div>
+                )}
+              </div>
+            </div>
           )}
 
           {/* Traits - full display */}
@@ -703,12 +932,21 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
           )}
           
           <div className="flex justify-between items-center pt-2 border-t border-stone-700/30">
-            <Link 
-              href={`/character?id=${character.id}&type=${characterType}`}
-              className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-amber-900/30 hover:bg-amber-800/50 text-amber-400"
-            >
-              <Icons.Edit /> Full Page
-            </Link>
+            {isEnemy ? (
+              <button 
+                onClick={() => setShowQuickActions(true)}
+                className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-red-900/30 hover:bg-red-800/50 text-red-400"
+              >
+                <Icons.Sword /> Actions & Spells
+              </button>
+            ) : (
+              <Link 
+                href={`/character?id=${character.id}&type=${characterType}`}
+                className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-amber-900/30 hover:bg-amber-800/50 text-amber-400"
+              >
+                <Icons.Edit /> Full Page
+              </Link>
+            )}
             <button onClick={() => setShowDeleteConfirm(true)} className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-red-900/30 hover:bg-red-800/50 text-red-400">
               <Icons.Trash />{isEnemy ? 'Kill' : 'Remove'}
             </button>
@@ -745,6 +983,344 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                 className="px-4 py-2 rounded-lg bg-red-700 hover:bg-red-600 text-white text-sm flex items-center gap-2"
               >
                 <Icons.Trash /> Yes, {isEnemy ? 'Kill' : 'Remove'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Quick Actions Modal */}
+      {showQuickActions && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={() => setShowQuickActions(false)}>
+          <div className="bg-stone-900 border border-red-800/50 rounded-xl w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+            {/* Header */}
+            <div className="p-4 border-b border-stone-700 bg-gradient-to-r from-red-950/50 to-stone-900">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-red-900/50"><Icons.Skull /></div>
+                  <div>
+                    <h2 className="text-lg font-bold text-red-400">{character.name}</h2>
+                    <p className="text-xs text-stone-400">
+                      CR {character.cr} • AC {displayAC} • HP {character.currentHp}/{character.maxHp}
+                    </p>
+                  </div>
+                </div>
+                <button onClick={() => setShowQuickActions(false)} className="text-stone-400 hover:text-stone-200">
+                  <Icons.X />
+                </button>
+              </div>
+            </div>
+
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {/* Legendary Actions Tracker */}
+              {character.legendaryActions?.length > 0 && (
+                <div className="bg-purple-950/30 border border-purple-800/50 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-bold text-purple-400 flex items-center gap-2">
+                      ★ Legendary Actions
+                      <span className="text-xs text-stone-400 font-normal">(3 per round, at end of other creature's turn)</span>
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-stone-400">Used:</span>
+                      <div className="flex gap-1">
+                        {[0, 1, 2].map(i => (
+                          <button
+                            key={i}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const used = character.legendaryActionsUsed || 0;
+                              const newUsed = i < used ? i : i + 1;
+                              onUpdate({ ...character, legendaryActionsUsed: newUsed });
+                            }}
+                            className={`w-6 h-6 rounded-full border-2 transition-colors ${
+                              i < (character.legendaryActionsUsed || 0)
+                                ? 'bg-purple-600 border-purple-400'
+                                : 'bg-stone-800 border-stone-600 hover:border-purple-500'
+                            }`}
+                            title={`${i + 1} legendary action${i > 0 ? 's' : ''} used`}
+                          />
+                        ))}
+                      </div>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); onUpdate({ ...character, legendaryActionsUsed: 0 }); }}
+                        className="text-xs text-purple-400 hover:text-purple-300 ml-2 px-2 py-1 rounded hover:bg-purple-900/30"
+                      >
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    {character.legendaryActions.map((action, i) => (
+                      <div key={i} className="bg-purple-900/20 rounded p-3">
+                        <div className="text-sm">
+                          <span className="text-purple-300 font-semibold">{action.name}.</span>{' '}
+                          <span className="text-stone-300">{action.description}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Spellcasting with Slot Tracking */}
+              {spellcastingInfo.found && (
+                <div className="bg-purple-950/30 border border-purple-800/50 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-bold text-purple-400 flex items-center gap-2">
+                      <Icons.Sparkles /> Spellcasting
+                      {spellcastingInfo.dc && (
+                        <span className="font-mono bg-purple-900/40 px-2 py-0.5 rounded text-purple-300 text-xs">
+                          DC {spellcastingInfo.dc}
+                        </span>
+                      )}
+                      {spellcastingInfo.attack && (
+                        <span className="font-mono bg-purple-900/40 px-2 py-0.5 rounded text-purple-300 text-xs">
+                          {spellcastingInfo.attack} to hit
+                        </span>
+                      )}
+                    </h3>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {/* Cantrips */}
+                    {spellcastingInfo.cantrips.length > 0 && (
+                      <div>
+                        <div className="text-xs text-purple-400 font-medium mb-1">Cantrips (at will)</div>
+                        <div className="flex flex-wrap gap-1">
+                          {spellcastingInfo.cantrips.map((spell, i) => (
+                            <span key={i} className="bg-purple-900/30 text-purple-200 px-2 py-1 rounded text-xs italic">
+                              {spell}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* At Will Spells */}
+                    {spellcastingInfo.atWill.length > 0 && (
+                      <div>
+                        <div className="text-xs text-purple-400 font-medium mb-1">At Will</div>
+                        <div className="flex flex-wrap gap-1">
+                          {spellcastingInfo.atWill.map((spell, i) => (
+                            <span key={i} className="bg-purple-900/30 text-purple-200 px-2 py-1 rounded text-xs italic">
+                              {spell}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Per Day Spells with Usage Tracking */}
+                    {Object.keys(spellcastingInfo.perDay).length > 0 && (
+                      <div className="space-y-2">
+                        {Object.entries(spellcastingInfo.perDay).sort((a, b) => parseInt(b[0]) - parseInt(a[0])).map(([count, spells]) => {
+                          const usageKey = `perDay${count}Used`;
+                          const used = character[usageKey] || 0;
+                          const total = parseInt(count);
+                          return (
+                            <div key={count}>
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-xs text-purple-400 font-medium">{count}/Day</span>
+                                <div className="flex gap-1">
+                                  {Array.from({ length: total }).map((_, i) => (
+                                    <button
+                                      key={i}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        const newUsed = i < used ? i : i + 1;
+                                        onUpdate({ ...character, [usageKey]: newUsed });
+                                      }}
+                                      className={`w-4 h-4 rounded-full border transition-colors ${
+                                        i < used
+                                          ? 'bg-purple-600 border-purple-400'
+                                          : 'bg-stone-800 border-stone-600 hover:border-purple-500'
+                                      }`}
+                                    />
+                                  ))}
+                                </div>
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); onUpdate({ ...character, [usageKey]: 0 }); }}
+                                  className="text-[10px] text-purple-400 hover:text-purple-300 px-1"
+                                >
+                                  Reset
+                                </button>
+                              </div>
+                              <div className="flex flex-wrap gap-1">
+                                {spells.map((spell, i) => (
+                                  <span key={i} className="bg-purple-900/30 text-purple-200 px-2 py-1 rounded text-xs italic">
+                                    {spell}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                    
+                    {/* Spell Slots with Tracking */}
+                    {Object.keys(spellcastingInfo.slots).length > 0 && (
+                      <div className="space-y-2">
+                        {Object.entries(spellcastingInfo.slots).map(([level, data]) => {
+                          const usageKey = `spellSlots${level}Used`;
+                          const used = character[usageKey] || 0;
+                          return (
+                            <div key={level}>
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-xs text-purple-400 font-medium">{level} Level</span>
+                                <div className="flex gap-1">
+                                  {Array.from({ length: data.slots }).map((_, i) => (
+                                    <button
+                                      key={i}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        const newUsed = i < used ? i : i + 1;
+                                        onUpdate({ ...character, [usageKey]: newUsed });
+                                      }}
+                                      className={`w-4 h-4 rounded border transition-colors ${
+                                        i < used
+                                          ? 'bg-purple-600 border-purple-400'
+                                          : 'bg-stone-800 border-stone-600 hover:border-purple-500'
+                                      }`}
+                                    />
+                                  ))}
+                                </div>
+                                <span className="text-[10px] text-stone-500">{data.slots - used}/{data.slots}</span>
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); onUpdate({ ...character, [usageKey]: 0 }); }}
+                                  className="text-[10px] text-purple-400 hover:text-purple-300 px-1"
+                                >
+                                  Reset
+                                </button>
+                              </div>
+                              <div className="flex flex-wrap gap-1">
+                                {data.spells.map((spell, i) => (
+                                  <span key={i} className="bg-purple-900/30 text-purple-200 px-2 py-1 rounded text-xs italic">
+                                    {spell}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Reset All Spell Slots */}
+                    {(Object.keys(spellcastingInfo.slots).length > 0 || Object.keys(spellcastingInfo.perDay).length > 0) && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const updates = { ...character };
+                          Object.keys(spellcastingInfo.slots).forEach(level => {
+                            updates[`spellSlots${level}Used`] = 0;
+                          });
+                          Object.keys(spellcastingInfo.perDay).forEach(count => {
+                            updates[`perDay${count}Used`] = 0;
+                          });
+                          onUpdate(updates);
+                        }}
+                        className="text-xs text-purple-400 hover:text-purple-300 px-2 py-1 rounded hover:bg-purple-900/30 border border-purple-800/50"
+                      >
+                        Reset All Spell Slots
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Traits */}
+              {character.traits?.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-bold text-amber-400 mb-2 flex items-center gap-2">Traits</h3>
+                  <div className="space-y-2">
+                    {character.traits.map((trait, i) => (
+                      <div key={i} className="bg-amber-950/20 border border-amber-900/30 rounded p-3">
+                        <div className="text-sm">
+                          <span className="text-amber-300 font-semibold italic">{trait.name}.</span>{' '}
+                          <span className="text-stone-300">{trait.description}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Actions */}
+              {character.actions?.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-bold text-red-400 mb-2 flex items-center gap-2">
+                    <Icons.Sword /> Actions
+                  </h3>
+                  <div className="space-y-2">
+                    {character.actions.map((action, i) => (
+                      <div key={i} className="bg-red-950/20 border border-red-900/30 rounded p-3">
+                        <div className="text-sm">
+                          <span className="text-red-300 font-semibold italic">{action.name}.</span>{' '}
+                          <span className="text-stone-300">{action.description}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Bonus Actions */}
+              {character.bonusActions?.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-bold text-orange-400 mb-2">Bonus Actions</h3>
+                  <div className="space-y-2">
+                    {character.bonusActions.map((action, i) => (
+                      <div key={i} className="bg-orange-950/20 border border-orange-900/30 rounded p-3">
+                        <div className="text-sm">
+                          <span className="text-orange-300 font-semibold italic">{action.name}.</span>{' '}
+                          <span className="text-stone-300">{action.description}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Reactions */}
+              {character.reactions?.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-bold text-cyan-400 mb-2">Reactions</h3>
+                  <div className="space-y-2">
+                    {character.reactions.map((reaction, i) => (
+                      <div key={i} className="bg-cyan-950/20 border border-cyan-900/30 rounded p-3">
+                        <div className="text-sm">
+                          <span className="text-cyan-300 font-semibold italic">{reaction.name}.</span>{' '}
+                          <span className="text-stone-300">{reaction.description}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Special Abilities from Notes */}
+              {character.notes && (
+                <div>
+                  <h3 className="text-sm font-bold text-stone-400 mb-2">Notes</h3>
+                  <div className="bg-stone-800/50 rounded p-3 text-sm text-stone-300 italic">
+                    {character.notes}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-stone-700 flex justify-between items-center">
+              <div className="text-xs text-stone-500">
+                {character.senses && <span>Senses: {character.senses}</span>}
+              </div>
+              <button 
+                onClick={() => setShowQuickActions(false)} 
+                className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600"
+              >
+                Close
               </button>
             </div>
           </div>
