@@ -1,5 +1,5 @@
 {
-  "_version": 6,
+  "_version": 7,
   "templates": [
     {
       "id": "mm-awakened-shrub",
@@ -7416,6 +7416,728 @@
           "description": "Magically Invisible until attacks or uses Consume Life, or until Concentration ends."
         }
       ]
+    },
+    {
+      "id": "mm-awakened-tree",
+      "name": "Awakened Tree",
+      "size": "Huge",
+      "creatureType": "Plant",
+      "ac": 13,
+      "maxHp": 59,
+      "hitDice": "7d12+14",
+      "speed": 20,
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 19,
+      "dex": 6,
+      "con": 15,
+      "int": 10,
+      "wis": 10,
+      "cha": 7,
+      "vulnerabilities": "Fire",
+      "resistances": "Bludgeoning, Piercing",
+      "senses": "Passive Perception 10",
+      "languages": "One language known by its creator",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "False Appearance",
+          "description": "While motionless, indistinguishable from a normal tree."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Slam",
+          "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 14 (3d6+4) Bludgeoning damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-faerie-dragon-adult",
+      "name": "Faerie Dragon (Adult)",
+      "size": "Tiny",
+      "creatureType": "Dragon",
+      "ac": 15,
+      "maxHp": 14,
+      "hitDice": "4d4+4",
+      "speed": "10, fly 60",
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 3,
+      "dex": 20,
+      "con": 13,
+      "int": 14,
+      "wis": 12,
+      "cha": 16,
+      "skills": "Arcana +4, Perception +3, Stealth +7",
+      "senses": "Darkvision 60 ft., Passive Perception 13",
+      "languages": "Draconic, Sylvan",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Superior Invisibility",
+          "description": "As Bonus Action, magically turns Invisible until concentration ends. Anything it wears or carries is Invisible."
+        },
+        {
+          "name": "Magic Resistance",
+          "description": "Advantage on saves vs spells and magical effects."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 1 Piercing damage."
+        },
+        {
+          "name": "Euphoria Breath (Recharge 5-6)",
+          "description": "5-ft Cone. DC 11 WIS or Charmed for 1 minute. While Charmed, can't attack or target caster with harmful effects. Target can repeat save at end of each turn."
+        }
+      ],
+      "notes": "Innate Spellcasting (Cha, DC 13): 1/day each: Color Spray, Dancing Lights, Hallucinatory Terrain, Mage Hand, Minor Illusion, Mirror Image, Polymorph, Suggestion."
+    },
+    {
+      "id": "mm-giant-boar",
+      "name": "Giant Boar",
+      "size": "Large",
+      "creatureType": "Beast",
+      "ac": 12,
+      "maxHp": 42,
+      "hitDice": "5d10+15",
+      "speed": 40,
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 17,
+      "dex": 10,
+      "con": 16,
+      "int": 2,
+      "wis": 7,
+      "cha": 5,
+      "senses": "Passive Perception 8",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Charge",
+          "description": "If moves 20+ ft straight then hits with Tusk, +7 (2d6) Slashing and DC 13 STR or Prone."
+        },
+        {
+          "name": "Relentless (Recharges after Short/Long Rest)",
+          "description": "If reduced to 0 HP by damage that isn't a critical hit, drops to 1 HP instead."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Tusk",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6+3) Slashing damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-giant-constrictor-snake",
+      "name": "Giant Constrictor Snake",
+      "size": "Huge",
+      "creatureType": "Beast",
+      "ac": 12,
+      "maxHp": 60,
+      "hitDice": "8d12+8",
+      "speed": "30, swim 30",
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 19,
+      "dex": 14,
+      "con": 12,
+      "int": 1,
+      "wis": 10,
+      "cha": 3,
+      "skills": "Perception +2",
+      "senses": "Blindsight 10 ft., Passive Perception 12",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 11 (2d6+4) Piercing damage."
+        },
+        {
+          "name": "Constrict",
+          "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8+4) Bludgeoning. Target is Grappled (escape DC 16). Until grapple ends, creature is Restrained, and snake can't Constrict another target."
+        }
+      ]
+    },
+    {
+      "id": "mm-giant-elk",
+      "name": "Giant Elk",
+      "size": "Huge",
+      "creatureType": "Beast",
+      "ac": 14,
+      "maxHp": 42,
+      "hitDice": "5d12+10",
+      "speed": 60,
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 19,
+      "dex": 16,
+      "con": 14,
+      "int": 7,
+      "wis": 14,
+      "cha": 10,
+      "skills": "Perception +4",
+      "senses": "Passive Perception 14",
+      "languages": "Giant Elk, understands Common, Elvish, Sylvan",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Charge",
+          "description": "If moves 20+ ft straight then hits with Ram, +7 (2d6) damage and DC 14 STR or Prone."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Ram",
+          "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 11 (2d6+4) Bludgeoning damage."
+        },
+        {
+          "name": "Hooves",
+          "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 22 (4d8+4) Bludgeoning damage."
+        }
+      ]
+    },
+    {
+      "id": "mm-githzerai-monk",
+      "name": "Githzerai Monk",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 14,
+      "maxHp": 38,
+      "hitDice": "7d8+7",
+      "speed": 30,
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 12,
+      "dex": 15,
+      "con": 12,
+      "int": 13,
+      "wis": 14,
+      "cha": 10,
+      "savingThrows": "Str +3, Dex +4, Int +3, Wis +4",
+      "skills": "Insight +4, Perception +4",
+      "senses": "Passive Perception 14",
+      "languages": "Gith",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Psychic Defense",
+          "description": "While not wearing armor, AC includes Wisdom modifier."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Makes two Unarmed Strike attacks."
+        },
+        {
+          "name": "Unarmed Strike",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8+2) Bludgeoning plus 9 (2d8) Psychic."
+        }
+      ],
+      "notes": "Innate Spellcasting (Wis, DC 12): At will: Mage Hand (hand is invisible). 3/day each: Feather Fall, Jump, See Invisibility, Shield."
+    },
+    {
+      "id": "mm-gnoll-pack-lord",
+      "name": "Gnoll Pack Lord",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 15,
+      "maxHp": 49,
+      "hitDice": "9d8+9",
+      "speed": 30,
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 16,
+      "dex": 14,
+      "con": 13,
+      "int": 8,
+      "wis": 11,
+      "cha": 9,
+      "senses": "Darkvision 60 ft., Passive Perception 10",
+      "languages": "Gnoll",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Rampage",
+          "description": "When reducing creature to 0 HP with melee, Bonus Action to move half speed and Bite."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Two attacks: one Bite and one Glaive, or two Longbow attacks."
+        },
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 5 (1d4+3) Piercing damage."
+        },
+        {
+          "name": "Glaive",
+          "description": "Melee Attack Roll: +5, reach 10 ft. Hit: 8 (1d10+3) Slashing damage."
+        },
+        {
+          "name": "Longbow",
+          "description": "Ranged Attack Roll: +4, range 150/600 ft. Hit: 6 (1d8+2) Piercing damage."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Incite Rampage",
+          "description": "One gnoll within 30 ft can use its reaction to make a Bite attack."
+        }
+      ],
+      "notes": "Chain Shirt, Shield"
+    },
+    {
+      "id": "mm-lizardfolk-geomancer",
+      "name": "Lizardfolk Geomancer",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 13,
+      "maxHp": 27,
+      "hitDice": "5d8+5",
+      "speed": "30, swim 30",
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 15,
+      "dex": 10,
+      "con": 13,
+      "int": 10,
+      "wis": 15,
+      "cha": 8,
+      "skills": "Perception +4, Stealth +4, Survival +6",
+      "senses": "Passive Perception 14",
+      "languages": "Draconic",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Hold Breath",
+          "description": "Can hold breath for 15 minutes."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Makes two Bite or Quarterstaff attacks."
+        },
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing damage."
+        },
+        {
+          "name": "Quarterstaff",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Bludgeoning damage, or 6 (1d8+2) if two-handed."
+        }
+      ],
+      "notes": "Natural Armor. Spellcasting (DC 12, +4): Cantrips: druidcraft, produce flame, thorn whip. 1st (4 slots): entangle, fog cloud. 2nd (2 slots): heat metal, spike growth."
+    },
+    {
+      "id": "mm-mage-apprentice",
+      "name": "Mage Apprentice",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 10,
+      "maxHp": 22,
+      "hitDice": "5d8",
+      "speed": 30,
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 9,
+      "dex": 10,
+      "con": 10,
+      "int": 15,
+      "wis": 12,
+      "cha": 11,
+      "savingThrows": "Int +4, Wis +3",
+      "skills": "Arcana +4, History +4",
+      "senses": "Passive Perception 11",
+      "languages": "Any two",
+      "isNpc": true,
+      "traits": [],
+      "actions": [
+        {
+          "name": "Dagger",
+          "description": "Melee or Ranged Attack Roll: +2, reach 5 ft. or range 20/60 ft. Hit: 2 (1d4) Piercing damage."
+        },
+        {
+          "name": "Arcane Burst",
+          "description": "Ranged Spell Attack: +4, range 120 ft. Hit: 11 (2d10) Force damage."
+        }
+      ],
+      "notes": "Spellcasting (DC 12, +4): Cantrips: fire bolt, light, mage hand, prestidigitation. 1st (4 slots): detect magic, magic missile, shield. 2nd (2 slots): misty step, scorching ray."
+    },
+    {
+      "id": "mm-minotaur-skeleton",
+      "name": "Minotaur Skeleton",
+      "size": "Large",
+      "creatureType": "Undead",
+      "ac": 12,
+      "maxHp": 67,
+      "hitDice": "9d10+18",
+      "speed": 40,
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 18,
+      "dex": 11,
+      "con": 15,
+      "int": 6,
+      "wis": 8,
+      "cha": 5,
+      "vulnerabilities": "Bludgeoning",
+      "immunities": "Poison; Exhaustion, Poisoned",
+      "senses": "Darkvision 60 ft., Passive Perception 9",
+      "languages": "Understands Abyssal but can't speak",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Charge",
+          "description": "If moves 10+ ft straight then hits with Gore, +9 (2d8) Piercing and DC 14 STR or pushed 10 ft and Prone."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Greataxe",
+          "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 17 (2d12+4) Slashing damage."
+        },
+        {
+          "name": "Gore",
+          "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8+4) Piercing damage."
+        }
+      ],
+      "notes": "Natural Armor"
+    },
+    {
+      "id": "mm-modron-pentadrone",
+      "name": "Pentadrone",
+      "size": "Large",
+      "creatureType": "Construct",
+      "ac": 16,
+      "maxHp": 32,
+      "hitDice": "5d10+5",
+      "speed": 40,
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 15,
+      "dex": 14,
+      "con": 12,
+      "int": 10,
+      "wis": 10,
+      "cha": 13,
+      "skills": "Perception +4",
+      "senses": "Truesight 120 ft., Passive Perception 14",
+      "languages": "Modron",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Axiomatic Mind",
+          "description": "Can't be compelled to act against its nature or instructions."
+        },
+        {
+          "name": "Disintegration",
+          "description": "If dies, body disintegrates, leaving equipped items."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Makes five Arm attacks."
+        },
+        {
+          "name": "Arm",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Bludgeoning damage."
+        },
+        {
+          "name": "Paralysis Gas (Recharge 5-6)",
+          "description": "30-foot Cone. DC 11 CON or Paralyzed 1 minute (save ends)."
+        }
+      ],
+      "notes": "Natural Armor"
+    },
+    {
+      "id": "mm-myconid-sovereign",
+      "name": "Myconid Sovereign",
+      "size": "Large",
+      "creatureType": "Plant",
+      "ac": 13,
+      "maxHp": 60,
+      "hitDice": "8d10+16",
+      "speed": 30,
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 12,
+      "dex": 10,
+      "con": 14,
+      "int": 13,
+      "wis": 15,
+      "cha": 10,
+      "senses": "Darkvision 120 ft., Passive Perception 12",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Distress Spores",
+          "description": "When takes damage, all myconids within 240 ft sense its pain."
+        },
+        {
+          "name": "Sun Sickness",
+          "description": "In sunlight, Disadvantage on ability checks, attacks, and saves. Dies if in sunlight 1 hour."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Makes one Fist attack and uses one spore ability."
+        },
+        {
+          "name": "Fist",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 8 (3d4+1) Bludgeoning plus 7 (3d4) Poison."
+        },
+        {
+          "name": "Animating Spores (3/Day)",
+          "description": "Targets one corpse of Medium or smaller creature within 5 ft. Corpse rises as Spore Servant."
+        },
+        {
+          "name": "Hallucination Spores",
+          "description": "20-foot radius. DC 12 CON or Poisoned 1 minute (save ends). While Poisoned, Incapacitated and sees hallucinations."
+        },
+        {
+          "name": "Pacifying Spores",
+          "description": "20-foot radius. DC 12 CON or Stunned 1 minute (save ends)."
+        },
+        {
+          "name": "Rapport Spores",
+          "description": "20-foot radius. DC 12 CON or linked telepathically 1 hour."
+        }
+      ],
+      "notes": "Natural Armor"
+    },
+    {
+      "id": "mm-poltergeist",
+      "name": "Poltergeist",
+      "size": "Medium",
+      "creatureType": "Undead",
+      "ac": 12,
+      "maxHp": 22,
+      "hitDice": "5d8",
+      "speed": "0, fly 50 (hover)",
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 1,
+      "dex": 14,
+      "con": 11,
+      "int": 10,
+      "wis": 10,
+      "cha": 11,
+      "resistances": "Acid, Cold, Fire, Lightning, Thunder; Bludgeoning, Piercing, Slashing from nonmagical attacks",
+      "immunities": "Necrotic, Poison; Charmed, Exhaustion, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained, Unconscious",
+      "senses": "Darkvision 60 ft., Passive Perception 10",
+      "languages": "Understands languages it knew in life",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Incorporeal Movement",
+          "description": "Moves through creatures/objects as difficult terrain. Takes 5 (1d10) Force if ends turn inside object."
+        },
+        {
+          "name": "Invisibility",
+          "description": "Naturally Invisible."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Forceful Slam",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 10 (3d6) Force damage."
+        },
+        {
+          "name": "Telekinetic Thrust",
+          "description": "Targets Medium or smaller creature within 30 ft. DC 12 STR or creature and objects moved up to 30 ft. If hits creature, wall, or ceiling, takes 7 (2d6) Bludgeoning and falls Prone."
+        }
+      ]
+    },
+    {
+      "id": "mm-swarm-of-stirges",
+      "name": "Swarm of Stirges",
+      "size": "Medium",
+      "creatureType": "Swarm of Tiny Beasts",
+      "ac": 14,
+      "maxHp": 36,
+      "hitDice": "8d8",
+      "speed": "10, fly 40",
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 4,
+      "dex": 16,
+      "con": 11,
+      "int": 2,
+      "wis": 8,
+      "cha": 6,
+      "resistances": "Bludgeoning, Piercing, Slashing",
+      "immunities": "Charmed, Frightened, Grappled, Paralyzed, Petrified, Prone, Restrained, Stunned",
+      "senses": "Darkvision 60 ft., Passive Perception 9",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Swarm",
+          "description": "Occupies another's space. Moves through Tiny gaps. Can't regain HP."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Blood Drain",
+          "description": "Melee Attack Roll: +5, reach 0 ft. (creatures in swarm's space). Hit: 14 (4d6) Piercing, or 7 (2d6) Piercing if at half HP or fewer. Target max HP reduced by damage taken. Reduction lasts until long rest."
+        }
+      ]
+    },
+    {
+      "id": "mm-centaur-trooper",
+      "name": "Centaur Trooper",
+      "size": "Large",
+      "creatureType": "Fey",
+      "ac": 14,
+      "maxHp": 52,
+      "hitDice": "7d10+14",
+      "speed": 50,
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 18,
+      "dex": 14,
+      "con": 14,
+      "int": 9,
+      "wis": 13,
+      "cha": 11,
+      "skills": "Athletics +6, Perception +3",
+      "senses": "Passive Perception 13",
+      "languages": "Elvish, Sylvan",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Charge",
+          "description": "If moves 30+ ft straight and hits with Pike, +10 (3d6) Piercing damage."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Two attacks: one Pike and one Hooves."
+        },
+        {
+          "name": "Pike",
+          "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 9 (1d10+4) Piercing damage."
+        },
+        {
+          "name": "Hooves",
+          "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 11 (2d6+4) Bludgeoning damage."
+        }
+      ],
+      "notes": "Scale Mail"
+    },
+    {
+      "id": "mm-azer-sentinel",
+      "name": "Azer Sentinel",
+      "size": "Medium",
+      "creatureType": "Elemental",
+      "ac": 18,
+      "maxHp": 45,
+      "hitDice": "7d8+14",
+      "speed": 30,
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 17,
+      "dex": 12,
+      "con": 15,
+      "int": 12,
+      "wis": 13,
+      "cha": 10,
+      "savingThrows": "Con +4",
+      "immunities": "Fire, Poison; Poisoned",
+      "senses": "Passive Perception 11",
+      "languages": "Ignan",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Heated Body",
+          "description": "Creature touching or hitting with melee within 5 ft: 5 (1d10) Fire."
+        },
+        {
+          "name": "Heated Weapons",
+          "description": "Metal melee weapons deal +3 (1d6) Fire."
+        },
+        {
+          "name": "Illumination",
+          "description": "Sheds bright light 10 ft, dim light 10 ft more."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Makes two Warhammer attacks."
+        },
+        {
+          "name": "Warhammer",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8+3) Bludgeoning plus 3 (1d6) Fire."
+        }
+      ],
+      "notes": "Plate Armor, Shield"
+    },
+    {
+      "id": "mm-bulette-pup",
+      "name": "Bulette Pup",
+      "size": "Medium",
+      "creatureType": "Monstrosity",
+      "ac": 15,
+      "maxHp": 45,
+      "hitDice": "6d8+18",
+      "speed": "40, burrow 30",
+      "cr": "2",
+      "xp": 450,
+      "profBonus": 2,
+      "str": 17,
+      "dex": 11,
+      "con": 16,
+      "int": 2,
+      "wis": 10,
+      "cha": 5,
+      "skills": "Perception +4",
+      "senses": "Darkvision 60 ft., Tremorsense 60 ft., Passive Perception 14",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Standing Leap",
+          "description": "Long jump up to 20 ft, high jump up to 10 ft."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 14 (2d10+3) Piercing damage."
+        }
+      ],
+      "notes": "Natural Armor"
     },
     {
       "id": "mm-owlbear",
@@ -18012,62 +18734,6 @@
         }
       ],
       "notes": "Natural Armor. 3 Legendary Actions/round."
-    },
-    {
-      "id": "imported-1770946675418",
-      "name": "Topiary Golem Ornamental",
-      "size": "Medium",
-      "creatureType": "Construct/Plant",
-      "ac": 14,
-      "maxHp": 117,
-      "hitDice": "18d8+36",
-      "speed": "40",
-      "cr": "3",
-      "xp": 700,
-      "profBonus": 2,
-      "str": 17,
-      "dex": 16,
-      "con": 14,
-      "int": 3,
-      "wis": 11,
-      "cha": 1,
-      "savingThrows": "",
-      "skills": "",
-      "vulnerabilities": "Fire, Slashing",
-      "resistances": "",
-      "immunities": "Psychic, Charmed, Exhaustion, Frightened, Paralyzed, Petrified, Poisoned",
-      "senses": "Passive Perception 10",
-      "languages": "Understands the languages of its creator but can't speak",
-      "traits": [
-        {
-          "name": "Hedgeblend",
-          "description": "The golem can move through hedges or other dense foliage without impediment, and can occupy their space."
-        },
-        {
-          "name": "Golemcraft Ward (1/Day)",
-          "description": "When the golem fails a saving throw that would alter its form or incapacitate it, it can choose to succeed instead. The golem adds +3 to its saving throws against spells and magical effects for each use of this ability it has remaining."
-        }
-      ],
-      "actions": [
-        {
-          "name": "Multiattack",
-          "description": "The golem makes two attacks with its Manicured Slash."
-        },
-        {
-          "name": "Manicured Slash",
-          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 13 (3d6 + 3) Slashing damage. If the golem is Bloodied, this attack deals an additional 3 (1d6) Slashing damage on a hit."
-        }
-      ],
-      "bonusActions": [
-        {
-          "name": "Extend Roots",
-          "description": "The golem drives its roots into the ground, becoming utterly immobile and gaining Tremorsense to a range of 90 feet until it ends this effect as a Bonus Action. While in this state, the golem is indistinguishable from an ordinary topiary."
-        }
-      ],
-      "reactions": [],
-      "legendaryActions": [],
-      "notes": "Natural Armor. Initiative +3 (13). Drives Obedience.",
-      "isNpc": false
     }
   ]
 }

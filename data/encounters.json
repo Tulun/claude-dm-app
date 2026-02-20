@@ -1,16 +1,37 @@
 [
   {
-    "id": "encounter-1770862209865",
-    "name": "New Encounter",
+    "id": "encounter-1771627315567",
+    "name": "Talamh's lair First route Medium diff fight",
     "monsters": [
       {
-        "id": "mm-tarrasque-1770862238287-2aqag",
-        "templateId": "mm-tarrasque",
-        "name": "Tarrasque",
+        "id": "mm-animated-armor-1771627321688-s3ksj",
+        "templateId": "mm-animated-armor",
+        "name": "Animated Armor",
+        "customName": "",
+        "quantity": 2
+      }
+    ],
+    "createdAt": "2026-02-20T22:41:55.567Z"
+  },
+  {
+    "id": "encounter-1771627886734",
+    "name": "Talamh's lair 1st Hard diff fight",
+    "monsters": [
+      {
+        "id": "mm-awakened-tree-1771627891209-weupw",
+        "templateId": "mm-awakened-tree",
+        "name": "Awakened Tree",
+        "customName": "",
+        "quantity": 1
+      },
+      {
+        "id": "mm-satyr-1771627895360-2pl29",
+        "templateId": "mm-satyr",
+        "name": "Satyr",
         "customName": "",
         "quantity": 1
       }
     ],
-    "createdAt": "2026-02-12T02:10:09.865Z"
+    "createdAt": "2026-02-20T22:51:26.734Z"
   }
 ]
