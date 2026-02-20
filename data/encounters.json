@@ -33,5 +33,19 @@
       }
     ],
     "createdAt": "2026-02-20T22:51:26.734Z"
+  },
+  {
+    "id": "encounter-1771629874048",
+    "name": "Tal's 2nd route fight",
+    "monsters": [
+      {
+        "id": "mm-dryad-1771629880516-8d4v4",
+        "templateId": "mm-dryad",
+        "name": "Dryad",
+        "customName": "",
+        "quantity": 3
+      }
+    ],
+    "createdAt": "2026-02-20T23:24:34.048Z"
   }
 ]
