@@ -5,7 +5,7 @@ import { defaultEnemyTemplates } from '../../components/defaultData';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const TEMPLATES_FILE = path.join(DATA_DIR, 'templates.json');
-const TEMPLATES_VERSION = 10; // Bumped to add missing CR 1 and CR 2 creatures
+const TEMPLATES_VERSION = 11; // Removed duplicate Red Dragon Wyrmling
 
 function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) {

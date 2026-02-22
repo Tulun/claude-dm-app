@@ -6,18 +6,18 @@
     "ac": 15,
     "maxHp": 35,
     "speed": 30,
-    "notes": "",
+    "notes": "6 temp hp ",
     "resources": [
       {
         "id": 1770233816410,
         "name": "Wild Shape",
-        "current": 0,
+        "current": 1,
         "max": 2
       },
       {
         "id": 1770233861678,
         "name": "1st Level Spell Slot",
-        "current": 0,
+        "current": 1,
         "max": 4
       },
       {
@@ -35,8 +35,8 @@
     "cha": 8,
     "spellStat": "wis",
     "id": "party-1770062695464",
-    "currentHp": 35,
-    "initiative": 8,
+    "currentHp": 39,
+    "initiative": 14,
     "skillProficiencies": {
       "Animal Handling": 1,
       "Medicine": 1,
@@ -155,25 +155,25 @@
     "ac": 10,
     "maxHp": 43,
     "speed": 35,
-    "notes": "1 free Misty step.",
+    "notes": "1 free Misty step. Under effect of Barkskin (17 AC). 10 temp hp",
     "resources": [
       {
         "id": 1770429647251,
         "name": "Bardic Inspiration",
-        "current": 0,
+        "current": 1,
         "max": 2
       },
       {
         "id": 1770429662062,
         "name": "1st Level Spell Slots",
-        "current": 0,
+        "current": 1,
         "max": 4
       },
       {
         "id": 1770429677549,
         "name": "2nd Level Spell Slots",
-        "current": 1,
-        "max": 2
+        "current": 0,
+        "max": 3
       }
     ],
     "str": 9,
@@ -184,7 +184,7 @@
     "cha": 14,
     "spellStat": "cha",
     "id": "party-1770417737904",
-    "currentHp": 43,
+    "currentHp": 53,
     "initiative": 7,
     "skillProficiencies": {
       "History": 1,
@@ -272,7 +272,8 @@
         "level": 4,
         "subclass": "College of Lore"
       }
-    ]
+    ],
+    "tempAC": "5"
   },
   {
     "name": "Marshuh",
@@ -281,30 +282,30 @@
     "ac": 10,
     "maxHp": 30,
     "speed": 30,
-    "notes": "Two free acid breaths from mushroom boon.",
+    "notes": "",
     "resources": [
       {
         "id": 1770433645271,
         "name": "Sorcery Points",
-        "current": 1,
-        "max": 3
+        "current": 0,
+        "max": 4
       },
       {
         "id": 1770433792223,
         "name": "Innate Sorcery",
-        "current": 0,
+        "current": 1,
         "max": 2
       },
       {
         "id": 1770433656573,
         "name": "1st Level Spell Slots",
-        "current": 0,
+        "current": 1,
         "max": 4
       },
       {
         "id": 1770433735059,
         "name": "2nd Level Spell Slots",
-        "current": 3,
+        "current": 0,
         "max": 3
       }
     ],
@@ -316,8 +317,8 @@
     "cha": 17,
     "spellStat": "cha",
     "id": "party-1770431961400",
-    "currentHp": 30,
-    "initiative": 18,
+    "currentHp": 23,
+    "initiative": 8,
     "skillProficiencies": {
       "Deception": 1,
       "History": 1,
