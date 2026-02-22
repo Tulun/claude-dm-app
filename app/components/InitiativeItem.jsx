@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Icons from './Icons';
 
 // Calculate AC from equipped items (same logic as CharacterCard)
@@ -38,7 +38,6 @@ const getCalculatedAC = (character) => {
       baseAC = 10 + wisMod;
     }
   } else if (character.acEffect === 'draconicResilience') {
-    // Draconic Sorcerer: 10 + DEX + CHA
     const chaMod = getModNum(character.cha);
     baseAC = 10 + chaMod;
   } else if (equippedArmor) {
@@ -49,7 +48,6 @@ const getCalculatedAC = (character) => {
       dexBonus = 0;
     }
   } else if (inventory.length === 0 && !character.acEffect) {
-    // No inventory and no effect, return null to fall back to manual AC
     return null;
   }
   
@@ -67,46 +65,53 @@ const getCalculatedAC = (character) => {
 const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, onDragStart, onDragOver, onDrop, onDragEnd, isDragging, dragOverIndex, onUpdateInitiative, onUpdateHp, onUpdateLairNotes, onRemoveLairAction }) => {
   const isDead = !isLairAction && character.currentHp <= 0;
   const [editing, setEditing] = useState(false);
-  const [initValue, setInitValue] = useState(String(character.initiative || 0));
   const [editingHp, setEditingHp] = useState(false);
-  const [hpValue, setHpValue] = useState(String(character.currentHp));
   const [editingNotes, setEditingNotes] = useState(false);
   const [notesValue, setNotesValue] = useState(character.notes || '');
+  
+  // Use refs for input values to avoid stale state issues
+  const initInputRef = useRef(null);
+  const hpInputRef = useRef(null);
 
-  // Calculate AC - use calculated value if available, fall back to manual ac field
+  // Calculate AC
   const calculatedAC = getCalculatedAC(character);
   const displayAC = calculatedAC !== null ? calculatedAC : (character.ac || 10);
 
-  const handleInitChange = (e) => {
-    setInitValue(e.target.value);
+  // Format initiative for display
+  const formatInit = (init) => {
+    if (init === undefined || init === null) return '—';
+    return Math.floor(init) === init ? init : init.toFixed(1);
   };
 
   const handleInitBlur = () => {
     setEditing(false);
-    const num = parseFloat(initValue);
+    const num = parseFloat(initInputRef.current?.value);
     if (!isNaN(num) && onUpdateInitiative) {
       onUpdateInitiative(character.id, num);
-    } else {
-      setInitValue(String(character.initiative || 0));
     }
   };
 
-  const handleKeyDown = (e) => {
+  const handleInitKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.target.blur();
     } else if (e.key === 'Escape') {
-      setInitValue(String(character.initiative || 0));
       setEditing(false);
     }
   };
 
   const handleHpBlur = () => {
     setEditingHp(false);
-    const num = parseInt(hpValue);
+    const num = parseInt(hpInputRef.current?.value);
     if (!isNaN(num) && onUpdateHp) {
       onUpdateHp(character.id, Math.max(0, num));
-    } else {
-      setHpValue(String(character.currentHp));
+    }
+  };
+
+  const handleHpKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.target.blur();
+    } else if (e.key === 'Escape') {
+      setEditingHp(false);
     }
   };
 
@@ -138,16 +143,16 @@ const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, 
         >
           {editing ? (
             <input
+              ref={initInputRef}
               type="text"
-              value={initValue}
-              onChange={handleInitChange}
+              defaultValue={character.initiative || 0}
               onBlur={handleInitBlur}
-              onKeyDown={handleKeyDown}
+              onKeyDown={handleInitKeyDown}
               autoFocus
               className="w-full h-full bg-transparent text-center font-bold focus:outline-none"
             />
           ) : (
-            character.initiative
+            formatInit(character.initiative)
           )}
         </div>
         <div className="flex-1 min-w-0">
@@ -209,20 +214,16 @@ const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, 
       >
         {editing ? (
           <input
+            ref={initInputRef}
             type="text"
-            value={initValue}
-            onChange={handleInitChange}
+            defaultValue={character.initiative || 0}
             onBlur={handleInitBlur}
-            onKeyDown={handleKeyDown}
+            onKeyDown={handleInitKeyDown}
             autoFocus
             className="w-full h-full bg-transparent text-center font-bold focus:outline-none"
           />
         ) : (
-          character.initiative !== undefined && character.initiative !== null
-            ? (Math.floor(character.initiative) === character.initiative 
-                ? character.initiative 
-                : character.initiative.toFixed(1))
-            : '—'
+          formatInit(character.initiative)
         )}
       </div>
       <div className="flex-1 min-w-0">
@@ -237,16 +238,16 @@ const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, 
           {isCompanion && onUpdateHp ? (
             <span 
               className={`flex items-center gap-1 cursor-pointer hover:text-purple-300 ${isDead ? 'text-red-500' : ''}`}
-              onClick={() => setEditingHp(true)}
+              onClick={() => !editingHp && setEditingHp(true)}
             >
               <Icons.Heart />
               {editingHp ? (
                 <input
+                  ref={hpInputRef}
                   type="number"
-                  value={hpValue}
-                  onChange={(e) => setHpValue(e.target.value)}
+                  defaultValue={character.currentHp}
                   onBlur={handleHpBlur}
-                  onKeyDown={(e) => { if (e.key === 'Enter') e.target.blur(); }}
+                  onKeyDown={handleHpKeyDown}
                   autoFocus
                   className="w-12 bg-transparent text-center focus:outline-none"
                 />

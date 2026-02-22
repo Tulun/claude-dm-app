@@ -276,6 +276,7 @@ export default function DMAdminTool() {
       .map(c => ({
         ...c,
         id: `companion-${member.id}-${c.id}`,
+        originalId: c.id,
         ownerId: member.id,
         ownerName: member.name,
         isCompanion: true,
@@ -380,27 +381,27 @@ export default function DMAdminTool() {
                 if (id === 'lair-action') {
                   setLairAction(prev => ({ ...prev, initiative: newInit }));
                 } else if (id.startsWith('companion-')) {
-                  // Update companion initiative - extract owner and companion IDs
-                  const parts = id.split('-');
-                  const ownerId = parts[1];
-                  const companionId = parseInt(parts[2]);
-                  setParty(prev => prev.map(p => p.id === ownerId ? { 
-                    ...p, 
-                    companions: (p.companions || []).map(comp => comp.id === companionId ? { ...comp, initiative: newInit } : comp)
-                  } : p));
+                  // Update companion initiative - use ownerId and originalId from the character object
+                  const companion = fullInitiativeList.find(x => x.id === id);
+                  if (companion?.ownerId && companion?.originalId !== undefined) {
+                    setParty(prev => prev.map(p => p.id === companion.ownerId ? { 
+                      ...p, 
+                      companions: (p.companions || []).map(comp => comp.id === companion.originalId ? { ...comp, initiative: newInit } : comp)
+                    } : p));
+                  }
                 } else if ((party || []).some(p => p.id === id)) {
                   setParty(prev => prev.map(p => p.id === id ? { ...p, initiative: newInit } : p));
                 } else {
                   setEnemies(prev => prev.map(e => e.id === id ? { ...e, initiative: newInit } : e));
                 }
               }} onUpdateHp={c.isCompanion ? (id, hp) => {
-                const parts = id.split('-');
-                const ownerId = parts[1];
-                const companionId = parseInt(parts[2]);
-                setParty(prev => prev.map(p => p.id === ownerId ? {
-                  ...p,
-                  companions: (p.companions || []).map(comp => comp.id === companionId ? { ...comp, currentHp: hp } : comp)
-                } : p));
+                const companion = fullInitiativeList.find(x => x.id === id);
+                if (companion?.ownerId && companion?.originalId !== undefined) {
+                  setParty(prev => prev.map(p => p.id === companion.ownerId ? {
+                    ...p,
+                    companions: (p.companions || []).map(comp => comp.id === companion.originalId ? { ...comp, currentHp: hp } : comp)
+                  } : p));
+                }
               } : undefined} onUpdateLairNotes={c.isLairAction ? (notes) => setLairAction(prev => ({ ...prev, notes })) : undefined} onRemoveLairAction={c.isLairAction ? () => setLairAction(null) : undefined} />)}
               {!fullInitiativeList.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">Add combatants to begin!</div>}
             </div>

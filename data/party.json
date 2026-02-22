@@ -35,7 +35,7 @@
     "cha": 8,
     "spellStat": "wis",
     "id": "party-1770062695464",
-    "currentHp": 39,
+    "currentHp": 35,
     "initiative": 14,
     "skillProficiencies": {
       "Animal Handling": 1,
@@ -144,9 +144,11 @@
         "actions": "",
         "notes": "",
         "active": true,
-        "inCombat": true
+        "inCombat": true,
+        "initiative": 15
       }
-    ]
+    ],
+    "tempHp": 4
   },
   {
     "name": "Braadlei",
@@ -184,7 +186,7 @@
     "cha": 14,
     "spellStat": "cha",
     "id": "party-1770417737904",
-    "currentHp": 53,
+    "currentHp": 43,
     "initiative": 7,
     "skillProficiencies": {
       "History": 1,
@@ -273,7 +275,8 @@
         "subclass": "College of Lore"
       }
     ],
-    "tempAC": "5"
+    "tempAC": "5",
+    "tempHp": 10
   },
   {
     "name": "Marshuh",
