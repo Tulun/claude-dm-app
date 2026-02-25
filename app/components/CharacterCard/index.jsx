@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Icons from '../Icons';
-import { EditableField, HpBar } from '../ui';
+import { EditableField, HpBar, Tooltip } from '../ui';
 import InventoryDisplay from './InventoryDisplay';
 import QuickActionsModal from './QuickActionsModal';
 import NotesModal from './NotesModal';
@@ -68,54 +68,63 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
           <div className="flex items-center gap-1">
             {/* Stat Block Button - for enemies/NPCs */}
             {isEnemy && (
-              <button 
-                onClick={(e) => { e.stopPropagation(); setShowStatBlock(true); }}
-                className="p-2 rounded-lg text-stone-400 hover:text-amber-300 hover:bg-amber-900/30 transition-colors"
-                title="View Stat Block"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
-                  <path d="M4 6h16M4 10h16M4 14h10M4 18h7" />
-                </svg>
-              </button>
+              <Tooltip text="View Stat Block">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setShowStatBlock(true); }}
+                  className="p-2 rounded-lg text-stone-400 hover:text-amber-300 hover:bg-amber-900/30 transition-colors"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+                    <path d="M4 6h16M4 10h16M4 14h10M4 18h7" />
+                  </svg>
+                </button>
+              </Tooltip>
             )}
             {/* Notes Button */}
             {isEnemy && (
-              <button 
-                onClick={(e) => { e.stopPropagation(); setShowNotesPopup(true); }}
-                className={`p-2 rounded-lg transition-colors ${character.combatNotes ? 'text-amber-400 hover:bg-amber-900/30 bg-amber-900/20' : 'text-stone-500 hover:text-amber-400 hover:bg-amber-900/30'}`}
-                title="Combat Notes"
-              >
-                <Icons.Scroll className="w-5 h-5" />
-              </button>
+              <Tooltip text="Combat Notes">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setShowNotesPopup(true); }}
+                  className={`p-2 rounded-lg transition-colors ${character.combatNotes ? 'text-amber-400 hover:bg-amber-900/30 bg-amber-900/20' : 'text-stone-500 hover:text-amber-400 hover:bg-amber-900/30'}`}
+                >
+                  <Icons.Scroll className="w-5 h-5" />
+                </button>
+              </Tooltip>
             )}
             {/* Quick Actions Button */}
             {isEnemy && (character.actions?.length > 0 || character.legendaryActions?.length > 0 || spellcastingInfo.found) && (
-              <button 
-                onClick={(e) => { e.stopPropagation(); setShowQuickActions(true); }}
-                className={`p-2 rounded-lg transition-colors flex items-center gap-1 ${character.legendaryActions?.length > 0 ? 'text-purple-400 hover:bg-purple-900/30 bg-purple-900/20' : 'text-red-400 hover:bg-red-900/30'}`}
-                title="Quick Actions"
-              >
-                <Icons.Sword />
-                {character.legendaryActions?.length > 0 && <span className="text-xs">★</span>}
-              </button>
+              <Tooltip text="Quick Actions">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setShowQuickActions(true); }}
+                  className={`p-2 rounded-lg transition-colors flex items-center gap-1 ${character.legendaryActions?.length > 0 ? 'text-purple-400 hover:bg-purple-900/30 bg-purple-900/20' : 'text-red-400 hover:bg-red-900/30'}`}
+                >
+                  <Icons.Sword />
+                  {character.legendaryActions?.length > 0 && <span className="text-xs">★</span>}
+                </button>
+              </Tooltip>
             )}
             {isEnemy && onRemove && (
-              <button 
-                onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }}
-                className="p-2 rounded-lg text-stone-500 hover:text-red-400 hover:bg-red-900/30 transition-colors"
-                title="Remove from combat"
-              >
-                <Icons.Trash />
-              </button>
+              <Tooltip text="Remove from Combat">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }}
+                  className="p-2 rounded-lg text-stone-500 hover:text-red-400 hover:bg-red-900/30 transition-colors"
+                >
+                  <Icons.Trash />
+                </button>
+              </Tooltip>
             )}
             {/* Expand/Collapse Arrow */}
-            <button onClick={onToggleExpand} className={`p-2 rounded-lg transition-colors ${isEnemy ? 'hover:bg-red-900/30' : 'hover:bg-emerald-900/30'}`}>
-              {expanded ? (
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6 1.41 1.41z"/></svg>
-              ) : (
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
-              )}
-            </button>
+            <Tooltip text={expanded ? "Collapse" : "Expand"}>
+              <button 
+                onClick={onToggleExpand} 
+                className={`p-2 rounded-lg transition-colors ${isEnemy ? 'hover:bg-red-900/30' : 'hover:bg-emerald-900/30'}`}
+              >
+                {expanded ? (
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6 1.41 1.41z"/></svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                )}
+              </button>
+            </Tooltip>
           </div>
         </div>
         
@@ -261,12 +270,21 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
         <div className="px-3 pb-3 text-xs">
           <div className="flex flex-wrap gap-1.5">
             {character.actions.map((action, i) => (
-              <button key={i} onClick={(e) => { e.stopPropagation(); setShowQuickActions(true); }} className="bg-red-900/30 text-red-300 px-2 py-1 rounded cursor-pointer hover:bg-red-800/40 transition-colors">
+              <button 
+                key={i} 
+                onClick={(e) => { e.stopPropagation(); setShowQuickActions(true); }} 
+                className="bg-red-900/30 text-red-300 px-2 py-1 rounded cursor-pointer hover:bg-red-800/40 transition-colors"
+                title={action.description}
+              >
                 {action.name}
               </button>
             ))}
             {spellcastingInfo.found && (
-              <button onClick={(e) => { e.stopPropagation(); setShowQuickActions(true); }} className="bg-purple-900/30 text-purple-300 px-2 py-1 rounded cursor-pointer hover:bg-purple-800/40 transition-colors flex items-center gap-1">
+              <button 
+                onClick={(e) => { e.stopPropagation(); setShowQuickActions(true); }} 
+                className="bg-purple-900/30 text-purple-300 px-2 py-1 rounded cursor-pointer hover:bg-purple-800/40 transition-colors flex items-center gap-1"
+                title={`Spellcasting: ${spellcastingInfo.spellList?.slice(0, 100) || 'Click to view spells'}${spellcastingInfo.spellList?.length > 100 ? '...' : ''}`}
+              >
                 <Icons.Sparkles /> Spells
               </button>
             )}
