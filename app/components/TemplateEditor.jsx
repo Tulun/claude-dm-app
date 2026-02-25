@@ -349,6 +349,37 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
     </div>
   );
 
+  // Full-screen Create New Template view
+  if (showCreate) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold text-emerald-400 flex items-center gap-2">
+            <Icons.Plus /> Create New Template
+          </h2>
+          <button 
+            onClick={() => {
+              setShowCreate(false);
+              setCreateForm({ 
+                name: '', type: 'Medium Humanoid', ac: '10', maxHp: '10', hitDice: '1d8', speed: '30', cr: '1', 
+                xp: '200', profBonus: '2', notes: '', isNpc: false,
+                str: '10', dex: '10', con: '10', int: '10', wis: '10', cha: '10',
+                senses: '', languages: '', vulnerabilities: '', resistances: '', immunities: '',
+                traits: [], actions: [], reactions: [], legendaryActions: []
+              });
+            }} 
+            className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600 flex items-center gap-2"
+          >
+            <Icons.X /> Cancel
+          </button>
+        </div>
+        <div className="border border-emerald-700 rounded-lg bg-stone-900/50">
+          {renderEditForm(createForm, setCreateForm, handleCreate, () => setShowCreate(false))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       {/* Search Bar */}
@@ -426,8 +457,8 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
           </button>
         )}
 
-        <button onClick={() => setShowCreate(!showCreate)} className="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-sm flex items-center gap-1">
-          {showCreate ? <Icons.X /> : <Icons.Plus />} {showCreate ? 'Cancel' : 'New Template'}
+        <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-sm flex items-center gap-1">
+          <Icons.Plus /> New Template
         </button>
       </div>
 
@@ -452,12 +483,6 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
               <button onClick={() => toggleFilter(setSelectedCreatureTypes)(ct)} className="hover:text-white">×</button>
             </span>
           ))}
-        </div>
-      )}
-
-      {showCreate && (
-        <div className="border border-emerald-700 rounded-lg bg-stone-900/50">
-          {renderEditForm(createForm, setCreateForm, handleCreate, () => setShowCreate(false))}
         </div>
       )}
 
