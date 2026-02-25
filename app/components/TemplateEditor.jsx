@@ -558,8 +558,13 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
         <ImportMonsterModal
           isOpen={showImport}
           onClose={() => setShowImport(false)}
+          templates={templates}
           onImport={(monster) => {
             onImport(monster);
+            setShowImport(false);
+          }}
+          onUpdate={(monster) => {
+            onUpdate(monster);
             setShowImport(false);
           }}
         />

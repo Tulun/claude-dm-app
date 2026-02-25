@@ -4507,10 +4507,10 @@
       "name": "Dryad",
       "size": "Medium",
       "creatureType": "Fey",
-      "ac": 11,
+      "ac": 16,
       "maxHp": 22,
       "hitDice": "5d8",
-      "speed": 30,
+      "speed": "30",
       "cr": "1",
       "xp": 200,
       "profBonus": 2,
@@ -4520,35 +4520,51 @@
       "int": 14,
       "wis": 15,
       "cha": 18,
+      "savingThrows": "",
       "skills": "Perception +4, Stealth +5",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
       "senses": "Darkvision 60 ft., Passive Perception 14",
       "languages": "Elvish, Sylvan",
-      "isNpc": false,
       "traits": [
         {
-          "name": "Magic Resistance",
-          "description": "Advantage on saves against spells and magical effects."
-        },
-        {
           "name": "Speak with Beasts and Plants",
-          "description": "Can communicate with beasts and plants."
+          "description": "The dryad can communicate with Beasts and Plants as if they shared a language."
         },
         {
-          "name": "Tree Stride",
-          "description": "Once per turn, can use 10 ft of movement to enter a living tree and emerge from another within 60 ft."
+          "name": "Magic Resistance",
+          "description": "The dryad has Advantage on saving throws against spells and other magical effects."
         }
       ],
       "actions": [
         {
-          "name": "Club",
-          "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 2 (1d4) Bludgeoning damage."
+          "name": "Multiattack",
+          "description": "The dryad makes one Vine Lash or Thorn Burst attack, and it can use Spellcasting to cast Charm Monster."
         },
         {
-          "name": "Fey Charm",
-          "description": "One humanoid or beast within 30 ft: DC 14 WIS or Charmed. Charmed creature regards dryad as trusted friend, 24 hours or until dryad or ally harms it."
+          "name": "Vine Lash",
+          "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 8 (1d8 + 4) Slashing damage."
+        },
+        {
+          "name": "Thorn Burst",
+          "description": "Ranged Attack Roll: +6, range 60 ft. Hit: 7 (1d6 + 4) Piercing damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The dryad casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 14): At Will: Animal Friendship, Charm Monster (lasts 24 hours; ends early if the dryad casts the spell again), Druidcraft. 1/Day Each: Entangle, Pass without Trace"
         }
       ],
-      "notes": "Innate Spellcasting (CHA, DC 14): At will: druidcraft. 3/day each: entangle, goodberry. 1/day each: barkskin, pass without trace, shillelagh."
+      "bonusActions": [
+        {
+          "name": "Tree Stride",
+          "description": "If within 5 feet of a Large or bigger tree, the dryad teleports to an unoccupied space within 5 feet of a second Large or bigger tree that is within 60 feet of the previous tree."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Neutral alignment. Initiative +1 (11).",
+      "isNpc": false
     },
     {
       "id": "mm-duergar",

@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import Icons from './Icons';
 
-const ImportMonsterModal = ({ isOpen, onClose, onImport }) => {
+const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [] }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -11,7 +11,20 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport }) => {
   const [parsedMonster, setParsedMonster] = useState(null);
   const [error, setError] = useState(null);
   const [editMode, setEditMode] = useState(false);
+  const [existingMatch, setExistingMatch] = useState(null);
   const fileInputRef = useRef(null);
+
+  // Check for existing monster with same name when parsedMonster changes
+  useMemo(() => {
+    if (parsedMonster && templates.length > 0) {
+      const match = templates.find(t => 
+        t.name.toLowerCase().trim() === parsedMonster.name.toLowerCase().trim()
+      );
+      setExistingMatch(match || null);
+    } else {
+      setExistingMatch(null);
+    }
+  }, [parsedMonster, templates]);
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -83,9 +96,15 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport }) => {
     }
   };
 
-  const handleImport = () => {
+  const handleImport = (updateExisting = false) => {
     if (parsedMonster) {
-      onImport(parsedMonster);
+      if (updateExisting && existingMatch && onUpdate) {
+        // Update existing monster, keeping the original ID
+        onUpdate({ ...parsedMonster, id: existingMatch.id });
+      } else {
+        // Create new monster
+        onImport(parsedMonster);
+      }
       handleClose();
     }
   };
@@ -97,6 +116,7 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport }) => {
     setError(null);
     setEditMode(false);
     setIsParsing(false);
+    setExistingMatch(null);
     onClose();
   };
 
@@ -432,18 +452,36 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport }) => {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-stone-700 flex justify-end gap-3">
-          <button onClick={handleClose} className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600">
-            Cancel
-          </button>
-          {parsedMonster && (
-            <button
-              onClick={handleImport}
-              className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-500 text-white font-medium flex items-center gap-2"
-            >
-              <Icons.Download /> Import Monster
-            </button>
+        <div className="p-4 border-t border-stone-700">
+          {existingMatch && (
+            <div className="mb-3 p-3 bg-amber-900/30 border border-amber-700/50 rounded-lg">
+              <p className="text-amber-400 text-sm flex items-center gap-2">
+                <Icons.Info /> A monster named "{existingMatch.name}" already exists.
+              </p>
+              <p className="text-stone-400 text-xs mt-1">You can update the existing entry or create a new one.</p>
+            </div>
           )}
+          <div className="flex justify-end gap-3">
+            <button onClick={handleClose} className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600">
+              Cancel
+            </button>
+            {parsedMonster && existingMatch && onUpdate && (
+              <button
+                onClick={() => handleImport(true)}
+                className="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-medium flex items-center gap-2"
+              >
+                <Icons.Refresh /> Update Existing
+              </button>
+            )}
+            {parsedMonster && (
+              <button
+                onClick={() => handleImport(false)}
+                className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-500 text-white font-medium flex items-center gap-2"
+              >
+                <Icons.Download /> {existingMatch ? 'Create New' : 'Import Monster'}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
