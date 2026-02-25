@@ -14,11 +14,40 @@ export default function EncountersPage() {
   const [encountersLoaded, setEncountersLoaded] = useState(false);
   const [editingEncounter, setEditingEncounter] = useState(null);
   
-  // Daily tracker state
+  // Daily tracker state - initialize from localStorage
   const [dailyEncounters, setDailyEncounters] = useState([]);
   const [partySize, setPartySize] = useState(4);
   const [partyLevel, setPartyLevel] = useState(5);
   const [calcMode, setCalcMode] = useState('2024');
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
+
+  // Load party settings from localStorage on mount
+  useEffect(() => {
+    try {
+      const savedPartySize = localStorage.getItem('dm-toolkit-party-size');
+      const savedPartyLevel = localStorage.getItem('dm-toolkit-party-level');
+      const savedCalcMode = localStorage.getItem('dm-toolkit-calc-mode');
+      
+      if (savedPartySize) setPartySize(parseInt(savedPartySize) || 4);
+      if (savedPartyLevel) setPartyLevel(parseInt(savedPartyLevel) || 5);
+      if (savedCalcMode) setCalcMode(savedCalcMode);
+    } catch (e) {
+      console.error('Error loading party settings:', e);
+    }
+    setSettingsLoaded(true);
+  }, []);
+
+  // Save party settings to localStorage when they change
+  useEffect(() => {
+    if (!settingsLoaded) return;
+    try {
+      localStorage.setItem('dm-toolkit-party-size', String(partySize));
+      localStorage.setItem('dm-toolkit-party-level', String(partyLevel));
+      localStorage.setItem('dm-toolkit-calc-mode', calcMode);
+    } catch (e) {
+      console.error('Error saving party settings:', e);
+    }
+  }, [partySize, partyLevel, calcMode, settingsLoaded]);
 
   // Load data on mount
   useEffect(() => {
