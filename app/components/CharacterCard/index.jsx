@@ -264,7 +264,8 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
 
       {/* Expanded content */}
       {expanded && (
-        <div className="p-4 border-t border-stone-700/50 space-y-4">
+        <div className="border-t border-stone-700/50">
+          <div className="p-4 space-y-4 max-h-[400px] overflow-y-auto">
           <div>
             <label className="text-xs text-stone-400 mb-2 block">Hit Points</label>
             <div className="flex items-center gap-3">
@@ -461,9 +462,10 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               ))}
             </div>
           )}
+          </div>
           
-          {/* Footer */}
-          <div className="flex justify-between items-center pt-2 border-t border-stone-700/30">
+          {/* Footer - outside scrollable area */}
+          <div className="flex justify-between items-center p-4 pt-2 border-t border-stone-700/30">
             {isEnemy ? (
               <button onClick={() => setShowQuickActions(true)} className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-red-900/30 hover:bg-red-800/50 text-red-400">
                 <Icons.Sword /> Actions & Spells

@@ -56,7 +56,8 @@
       "notes": "Natural Armor. Challenge Rating 3. Initiative +3. 5 ft. tall. Plant construct type. Obeys commands and drives based on Obedience.",
       "isNpc": false,
       "currentHp": 117,
-      "initiative": 12
+      "initiative": 12,
+      "tempHp": 0
     },
     {
       "id": "enemy-1772047268864-xibbawsvl",
