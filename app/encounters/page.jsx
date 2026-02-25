@@ -146,20 +146,44 @@ export default function EncountersPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-stone-100">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-stone-900/95 backdrop-blur border-b border-stone-700/50 px-4 py-3">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-2 text-xl font-bold">
-              <span className="text-2xl">⚔️</span>
-              <span className="text-amber-400">DM</span>
-              <span className="text-stone-400">Tool</span>
+      <header className="relative border-b border-amber-900/30 bg-stone-900/80 backdrop-blur-sm sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center shadow-lg">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
+                  <rect x="2" y="2" width="8" height="8" rx="1" /><rect x="14" y="2" width="8" height="8" rx="1" />
+                  <rect x="2" y="14" width="8" height="8" rx="1" /><rect x="14" y="14" width="8" height="8" rx="1" />
+                  <circle cx="6" cy="6" r="1" fill="currentColor" /><circle cx="18" cy="6" r="1" fill="currentColor" />
+                  <circle cx="6" cy="18" r="1" fill="currentColor" /><circle cx="18" cy="18" r="1" fill="currentColor" />
+                </svg>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">DM&apos;s Toolkit</h1>
+                <p className="text-xs text-stone-400">5th Edition Combat Manager</p>
+              </div>
             </Link>
-            <span className="text-stone-600">|</span>
-            <h1 className="text-lg font-semibold text-stone-300">Encounters</h1>
+            <div className="flex items-center gap-4">
+              <div className="flex gap-1 bg-stone-800 rounded-lg p-1">
+                <Link href="/" className="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-stone-700">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M14.5 17.5L3 6V3h3l11.5 11.5M13 19l6-6M15 21l6-6" /></svg>
+                  Combat
+                </Link>
+                <Link href="/?tab=characters" className="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-stone-700">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                  Characters
+                </Link>
+                <span className="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 bg-amber-700">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" /></svg>
+                  Encounters
+                </span>
+                <Link href="/?tab=templates" className="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-stone-700">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" /></svg>
+                  Templates
+                </Link>
+              </div>
+            </div>
           </div>
-          <Link href="/" className="text-stone-400 hover:text-stone-200 text-sm">
-            ← Back to Combat
-          </Link>
         </div>
       </header>
 

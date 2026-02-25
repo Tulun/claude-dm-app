@@ -18,6 +18,7 @@ const EncounterList = ({
 }) => {
   const [showNameModal, setShowNameModal] = useState(false);
   const [newEncounterName, setNewEncounterName] = useState('');
+  const [deleteConfirm, setDeleteConfirm] = useState(null); // holds encounter to delete
   
   const dailyBudget = getDailyXPBudget(partyLevel, partySize);
 
@@ -131,7 +132,7 @@ const EncounterList = ({
                         <Icons.Copy />
                       </button>
                       <button
-                        onClick={() => onDelete(encounter.id)}
+                        onClick={() => setDeleteConfirm(encounter)}
                         className="p-2 rounded hover:bg-stone-700 text-red-400"
                         title="Delete"
                       >
@@ -177,6 +178,42 @@ const EncounterList = ({
                 className="flex-1 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-medium flex items-center justify-center gap-2"
               >
                 <Icons.Plus /> Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setDeleteConfirm(null)}>
+          <div className="bg-stone-900 border border-red-800/50 rounded-xl w-full max-w-md" onClick={e => e.stopPropagation()}>
+            <div className="p-4 border-b border-stone-700">
+              <h2 className="text-lg font-bold text-red-400 flex items-center gap-2">
+                <Icons.Trash /> Delete Encounter
+              </h2>
+            </div>
+            <div className="p-4">
+              <p className="text-stone-300">
+                Are you sure you want to delete <span className="font-semibold text-white">"{deleteConfirm.name}"</span>?
+              </p>
+              <p className="text-sm text-stone-500 mt-2">This action cannot be undone.</p>
+            </div>
+            <div className="p-4 border-t border-stone-700 flex gap-3">
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="flex-1 py-2 rounded-lg bg-stone-700 hover:bg-stone-600"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  onDelete(deleteConfirm.id);
+                  setDeleteConfirm(null);
+                }}
+                className="flex-1 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white font-medium flex items-center justify-center gap-2"
+              >
+                <Icons.Trash /> Delete
               </button>
             </div>
           </div>
