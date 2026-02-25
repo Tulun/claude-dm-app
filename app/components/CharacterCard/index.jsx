@@ -32,14 +32,26 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   const calculatedAC = getCalculatedAC(character);
   const displayAC = character.acOverride || calculatedAC || character.ac || 10;
   const spellcastingInfo = parseSpellcasting(character);
+  const isNpc = character.isNpc;
+
+  // Determine card colors - NPCs get teal, enemies get red, party gets emerald
+  const cardColors = isDead 
+    ? 'border-red-900/50 bg-stone-900/30 opacity-60' 
+    : isEnemy 
+      ? (isNpc 
+          ? 'border-teal-800/50 bg-gradient-to-br from-teal-950/40 to-stone-900/60' 
+          : 'border-red-800/50 bg-gradient-to-br from-red-950/40 to-stone-900/60')
+      : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60';
+  
+  const iconBgColor = isEnemy ? (isNpc ? 'bg-teal-900/50' : 'bg-red-900/50') : 'bg-emerald-900/50';
 
   return (
-    <div className={`border rounded-lg overflow-hidden transition-all ${isDead ? 'border-red-900/50 bg-stone-900/30 opacity-60' : isEnemy ? 'border-red-800/50 bg-gradient-to-br from-red-950/40 to-stone-900/60' : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60'}`}>
+    <div className={`border rounded-lg overflow-hidden transition-all ${cardColors}`}>
       <div className="p-3">
         {/* Top row: Icon, Name, and action buttons */}
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3 flex-1">
-            <div className={`p-2 rounded-lg ${isEnemy ? 'bg-red-900/50' : 'bg-emerald-900/50'}`}>
+            <div className={`p-2 rounded-lg ${iconBgColor}`}>
               {isEnemy ? <Icons.Skull /> : <Icons.Shield />}
             </div>
             <div>
@@ -70,7 +82,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
             {isEnemy && (
               <button 
                 onClick={(e) => { e.stopPropagation(); setShowNotesPopup(true); }}
-                className={`p-2 rounded-lg transition-colors ${character.notes ? 'text-amber-400 hover:bg-amber-900/30 bg-amber-900/20' : 'text-stone-500 hover:text-amber-400 hover:bg-amber-900/30'}`}
+                className={`p-2 rounded-lg transition-colors ${character.combatNotes ? 'text-amber-400 hover:bg-amber-900/30 bg-amber-900/20' : 'text-stone-500 hover:text-amber-400 hover:bg-amber-900/30'}`}
                 title="Combat Notes"
               >
                 <Icons.Scroll className="w-5 h-5" />
@@ -215,14 +227,14 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               <span className="text-xs text-purple-500">DC</span>
             </div>
           )}
-          {/* Notes indicator */}
-          {isEnemy && character.notes && (
+          {/* Combat Notes indicator */}
+          {isEnemy && character.combatNotes && (
             <div 
               onClick={(e) => { e.stopPropagation(); setShowNotesPopup(true); }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-amber-900/30 text-amber-400 cursor-pointer hover:bg-amber-900/40"
             >
               <Icons.Scroll className="w-4 h-4" />
-              <span className="text-xs max-w-[100px] truncate">{character.notes}</span>
+              <span className="text-xs max-w-[100px] truncate">{character.combatNotes}</span>
             </div>
           )}
         </div>

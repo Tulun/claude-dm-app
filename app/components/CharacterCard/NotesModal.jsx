@@ -4,14 +4,14 @@ import { useState, useEffect } from 'react';
 import Icons from '../Icons';
 
 const NotesModal = ({ isOpen, character, onUpdate, onClose }) => {
-  const [notesText, setNotesText] = useState(character.notes || '');
+  const [notesText, setNotesText] = useState(character.combatNotes || '');
 
-  // Sync with character notes when modal opens
+  // Sync with character combatNotes when modal opens
   useEffect(() => {
     if (isOpen) {
-      setNotesText(character.notes || '');
+      setNotesText(character.combatNotes || '');
     }
-  }, [isOpen, character.notes]);
+  }, [isOpen, character.combatNotes]);
 
   if (!isOpen) return null;
 
@@ -62,7 +62,7 @@ const NotesModal = ({ isOpen, character, onUpdate, onClose }) => {
               Cancel
             </button>
             <button 
-              onClick={() => { onUpdate({ ...character, notes: notesText }); onClose(); }}
+              onClick={() => { onUpdate({ ...character, combatNotes: notesText }); onClose(); }}
               className="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-sm"
             >
               Save

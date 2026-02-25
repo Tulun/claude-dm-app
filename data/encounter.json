@@ -57,44 +57,41 @@
       "isNpc": false,
       "currentHp": 117,
       "initiative": 12,
-      "tempHp": 0
+      "tempHp": 0,
+      "combatNotes": ""
     },
     {
-      "id": "enemy-1772047268864-xibbawsvl",
-      "name": "Eagle",
-      "size": "Small",
-      "creatureType": "Beast",
-      "ac": 12,
-      "maxHp": 3,
-      "hitDice": "1d6",
-      "speed": "10, fly 60",
-      "cr": "0",
-      "xp": 10,
+      "id": "enemy-1772047632980-lsa6a27zh",
+      "name": "Druid",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 11,
+      "maxHp": 27,
+      "hitDice": "5d8+5",
+      "speed": 30,
+      "cr": "2",
+      "xp": 450,
       "profBonus": 2,
-      "str": 6,
-      "dex": 15,
-      "con": 10,
-      "int": 2,
-      "wis": 14,
-      "cha": 7,
-      "skills": "Perception +4",
+      "str": 10,
+      "dex": 12,
+      "con": 13,
+      "int": 12,
+      "wis": 15,
+      "cha": 11,
+      "skills": "Medicine +4, Nature +3, Perception +4",
       "senses": "Passive Perception 14",
-      "languages": "—",
-      "isNpc": false,
-      "traits": [
-        {
-          "name": "Keen Sight",
-          "description": "Advantage on Perception checks that rely on sight."
-        }
-      ],
+      "languages": "Druidic plus any two",
+      "isNpc": true,
+      "traits": [],
       "actions": [
         {
-          "name": "Talons",
-          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Slashing damage."
+          "name": "Quarterstaff",
+          "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 3 (1d6) Bludgeoning, or 4 (1d8) two-handed."
         }
       ],
-      "currentHp": 3,
-      "initiative": 3
+      "notes": "Spellcasting (DC 12, +4): Cantrips: druidcraft, produce flame, shillelagh. 1st (4 slots): entangle, longstrider, speak with animals, thunderwave. 2nd (3 slots): animal messenger, barkskin.",
+      "currentHp": 27,
+      "initiative": 10
     }
   ],
   "lairAction": null
