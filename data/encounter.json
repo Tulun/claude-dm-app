@@ -57,6 +57,43 @@
       "isNpc": false,
       "currentHp": 117,
       "initiative": 12
+    },
+    {
+      "id": "enemy-1772047268864-xibbawsvl",
+      "name": "Eagle",
+      "size": "Small",
+      "creatureType": "Beast",
+      "ac": 12,
+      "maxHp": 3,
+      "hitDice": "1d6",
+      "speed": "10, fly 60",
+      "cr": "0",
+      "xp": 10,
+      "profBonus": 2,
+      "str": 6,
+      "dex": 15,
+      "con": 10,
+      "int": 2,
+      "wis": 14,
+      "cha": 7,
+      "skills": "Perception +4",
+      "senses": "Passive Perception 14",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Keen Sight",
+          "description": "Advantage on Perception checks that rely on sight."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Talons",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Slashing damage."
+        }
+      ],
+      "currentHp": 3,
+      "initiative": 3
     }
   ],
   "lairAction": null

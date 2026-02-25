@@ -8,6 +8,7 @@ import InventoryDisplay from './InventoryDisplay';
 import QuickActionsModal from './QuickActionsModal';
 import NotesModal from './NotesModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
+import StatBlockModal from './StatBlockModal';
 import { parseSpellcasting } from './spellcastingParser';
 import { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, getCalculatedAC } from './utils';
 
@@ -19,6 +20,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   const [showTempHpEditor, setShowTempHpEditor] = useState(false);
   const [tempHpDelta, setTempHpDelta] = useState('');
   const [showNotesPopup, setShowNotesPopup] = useState(false);
+  const [showStatBlock, setShowStatBlock] = useState(false);
   
   const isDead = character.currentHp <= 0;
   const characterType = character.class ? 'party' : 'template';
@@ -52,6 +54,18 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
             </div>
           </div>
           <div className="flex items-center gap-1">
+            {/* Stat Block Button - for enemies/NPCs */}
+            {isEnemy && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setShowStatBlock(true); }}
+                className="p-2 rounded-lg text-stone-400 hover:text-amber-300 hover:bg-amber-900/30 transition-colors"
+                title="View Stat Block"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+                  <path d="M4 6h16M4 10h16M4 14h10M4 18h7" />
+                </svg>
+              </button>
+            )}
             {/* Notes Button */}
             {isEnemy && (
               <button 
@@ -470,6 +484,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
       <DeleteConfirmModal isOpen={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)} character={character} isEnemy={isEnemy} onRemove={onRemove} />
       <QuickActionsModal isOpen={showQuickActions} onClose={() => setShowQuickActions(false)} character={character} onUpdate={onUpdate} displayAC={displayAC} spellcastingInfo={spellcastingInfo} />
       <NotesModal isOpen={showNotesPopup} onClose={() => setShowNotesPopup(false)} character={character} onUpdate={onUpdate} />
+      <StatBlockModal isOpen={showStatBlock} onClose={() => setShowStatBlock(false)} character={character} />
     </div>
   );
 };
