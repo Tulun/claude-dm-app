@@ -20,15 +20,20 @@ export async function GET() {
       const data = fs.readFileSync(TEMPLATES_FILE, 'utf8');
       const parsed = JSON.parse(data);
       // Check if we need to upgrade - look for version or new size/creatureType format
-      const templates = parsed.templates || parsed;
+      const existingTemplates = parsed.templates || parsed;
       const needsUpgrade = !parsed._version || parsed._version < TEMPLATES_VERSION || 
-        (templates.length > 0 && !templates[0].size);
+        (existingTemplates.length > 0 && !existingTemplates[0].size);
+      
       if (needsUpgrade) {
-        const dataWithVersion = { _version: TEMPLATES_VERSION, templates: defaultEnemyTemplates };
+        // Preserve custom/imported templates (those not starting with 'mm-')
+        const customTemplates = existingTemplates.filter(t => !t.id?.startsWith('mm-'));
+        // Merge: defaults first, then custom templates
+        const mergedTemplates = [...defaultEnemyTemplates, ...customTemplates];
+        const dataWithVersion = { _version: TEMPLATES_VERSION, templates: mergedTemplates };
         fs.writeFileSync(TEMPLATES_FILE, JSON.stringify(dataWithVersion, null, 2), 'utf8');
-        return NextResponse.json(defaultEnemyTemplates);
+        return NextResponse.json(mergedTemplates);
       }
-      return NextResponse.json(templates);
+      return NextResponse.json(existingTemplates);
     }
     // No file exists, create with defaults
     const dataWithVersion = { _version: TEMPLATES_VERSION, templates: defaultEnemyTemplates };
