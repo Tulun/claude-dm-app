@@ -58,7 +58,8 @@
       "currentHp": 117,
       "initiative": 12,
       "tempHp": 0,
-      "combatNotes": ""
+      "combatNotes": "",
+      "tempAC": 0
     },
     {
       "id": "enemy-1772047632980-lsa6a27zh",

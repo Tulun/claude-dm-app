@@ -19,18 +19,22 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   const [hpDelta, setHpDelta] = useState('');
   const [showTempHpEditor, setShowTempHpEditor] = useState(false);
   const [tempHpDelta, setTempHpDelta] = useState('');
+  const [showTempAcEditor, setShowTempAcEditor] = useState(false);
+  const [tempAcDelta, setTempAcDelta] = useState('');
   const [showNotesPopup, setShowNotesPopup] = useState(false);
   const [showStatBlock, setShowStatBlock] = useState(false);
   
   const isDead = character.currentHp <= 0;
   const characterType = character.class ? 'party' : 'template';
   const tempHp = character.tempHp || 0;
+  const tempAC = character.tempAC || 0;
 
   const profBonus = getProfBonus(character);
   const spellDC = getSpellSaveDC(character);
   const spellAttack = getSpellAttackBonus(character);
   const calculatedAC = getCalculatedAC(character);
-  const displayAC = character.acOverride || calculatedAC || character.ac || 10;
+  const baseAC = character.acOverride || calculatedAC || character.ac || 10;
+  const displayAC = baseAC + (parseInt(tempAC) || 0);
   const spellcastingInfo = parseSpellcasting(character);
   const isNpc = character.isNpc;
 
@@ -130,10 +134,56 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
         
         {/* Stats row: AC, HP, Spell DC */}
         <div className="flex items-center gap-2 flex-wrap">
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm ${character.acEffect ? 'bg-cyan-900/30 text-cyan-400' : 'bg-stone-800/60 text-stone-300'}`}>
-            <Icons.Shield />
-            <span className="font-mono font-medium">{displayAC}</span>
-            <span className="text-xs text-stone-500">AC</span>
+          {/* AC Badge - Clickable to edit temp AC for enemies */}
+          <div className="relative">
+            {showTempAcEditor && isEnemy ? (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setShowTempAcEditor(false)} />
+                <div className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm z-50 relative ${tempAC > 0 ? 'bg-amber-900/40' : 'bg-stone-800/60'}`}>
+                  <Icons.Shield />
+                  <span className="font-mono text-stone-400">{baseAC}</span>
+                  <span className="text-amber-400">+</span>
+                  <input
+                    type="text"
+                    value={tempAcDelta}
+                    onChange={(e) => setTempAcDelta(e.target.value)}
+                    onBlur={() => {
+                      const num = parseInt(tempAcDelta);
+                      onUpdate({ ...character, tempAC: isNaN(num) ? 0 : Math.max(0, num) });
+                      setShowTempAcEditor(false);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        const num = parseInt(tempAcDelta);
+                        onUpdate({ ...character, tempAC: isNaN(num) ? 0 : Math.max(0, num) });
+                        setShowTempAcEditor(false);
+                      } else if (e.key === 'Escape') setShowTempAcEditor(false);
+                    }}
+                    className="w-8 text-center bg-stone-900 border border-amber-500 rounded px-1 py-0.5 font-mono focus:outline-none"
+                    autoFocus
+                    placeholder="0"
+                  />
+                  <span className="text-xs text-stone-500">AC</span>
+                </div>
+              </>
+            ) : isEnemy ? (
+              <button
+                onClick={(e) => { e.stopPropagation(); setTempAcDelta(String(tempAC || '')); setShowTempAcEditor(true); }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm cursor-pointer transition-colors ${tempAC > 0 ? 'bg-amber-900/30 text-amber-400 hover:bg-amber-900/40 ring-1 ring-amber-500/50' : character.acEffect ? 'bg-cyan-900/30 text-cyan-400 hover:bg-cyan-900/40' : 'bg-stone-800/60 text-stone-300 hover:bg-stone-700/60'}`}
+                title="Click to add temp AC bonus"
+              >
+                <Icons.Shield />
+                <span className="font-mono font-medium">{baseAC}</span>
+                {tempAC > 0 && <span className="text-amber-400 font-mono">+{tempAC}</span>}
+                <span className="text-xs text-stone-500">AC</span>
+              </button>
+            ) : (
+              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm ${character.acEffect ? 'bg-cyan-900/30 text-cyan-400' : 'bg-stone-800/60 text-stone-300'}`}>
+                <Icons.Shield />
+                <span className="font-mono font-medium">{displayAC}</span>
+                <span className="text-xs text-stone-500">AC</span>
+              </div>
+            )}
           </div>
           {/* HP Badge - Clickable to edit */}
           <div className="relative">
@@ -328,17 +378,21 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
             <div>
               <label className="text-xs text-stone-400">AC</label>
               <div className="flex items-center gap-2">
-                <div className={`bg-stone-700/50 rounded px-2 py-1 font-mono flex-1 ${character.acEffect ? 'text-cyan-400' : ''}`}>
-                  {displayAC}
+                <div className={`bg-stone-700/50 rounded px-2 py-1 font-mono flex-1 ${tempAC > 0 ? 'text-amber-400' : character.acEffect ? 'text-cyan-400' : ''}`}>
+                  {baseAC}{tempAC > 0 && <span className="text-amber-400"> +{tempAC}</span>}
                 </div>
-                <input
-                  type="number"
-                  value={character.tempAC || ''}
-                  onChange={(e) => onUpdate({ ...character, tempAC: e.target.value })}
-                  placeholder="0"
-                  className="w-10 bg-stone-700 rounded px-1 py-1 text-center text-sm font-mono focus:outline-none focus:ring-1 focus:ring-cyan-500"
-                  title="Bonus AC"
-                />
+                <div className="flex flex-col items-center">
+                  <label className="text-[10px] text-amber-400">+AC</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={character.tempAC || ''}
+                    onChange={(e) => onUpdate({ ...character, tempAC: e.target.value })}
+                    placeholder="0"
+                    className="w-12 bg-amber-900/30 border border-amber-700/50 rounded px-1 py-1 text-center text-sm font-mono text-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                    title="Temporary AC bonus (Shield, Cover, etc.)"
+                  />
+                </div>
               </div>
             </div>
             <div>
