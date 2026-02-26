@@ -116,19 +116,21 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                 </button>
               </Tooltip>
             )}
-            {/* Expand/Collapse Arrow */}
-            <Tooltip text={expanded ? "Collapse" : "Expand"}>
-              <button 
-                onClick={onToggleExpand} 
-                className={`p-2 rounded-lg transition-colors ${isEnemy ? 'hover:bg-red-900/30' : 'hover:bg-emerald-900/30'}`}
-              >
-                {expanded ? (
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6 1.41 1.41z"/></svg>
-                ) : (
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
-                )}
-              </button>
-            </Tooltip>
+            {/* Expand/Collapse Arrow - only show if expand is available */}
+            {onToggleExpand && (
+              <Tooltip text={expanded ? "Collapse" : "Expand"}>
+                <button 
+                  onClick={onToggleExpand} 
+                  className={`p-2 rounded-lg transition-colors ${isEnemy ? 'hover:bg-red-900/30' : 'hover:bg-emerald-900/30'}`}
+                >
+                  {expanded ? (
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6 1.41 1.41z"/></svg>
+                  ) : (
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                  )}
+                </button>
+              </Tooltip>
+            )}
           </div>
         </div>
         

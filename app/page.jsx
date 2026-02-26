@@ -428,7 +428,7 @@ export default function DMAdminTool() {
                 </>}
               </div>
             </div>
-            {enemies.map(e => <CharacterCard key={e.id} character={e} isEnemy={true} onUpdate={(u) => setEnemies(prev => prev.map(x => x.id === u.id ? u : x))} onRemove={(id) => setEnemies(prev => prev.filter(x => x.id !== id))} expanded={expandedCards[e.id]} onToggleExpand={() => setExpandedCards(prev => ({ ...prev, [e.id]: !prev[e.id] }))} />)}
+            {enemies.map(e => <CharacterCard key={e.id} character={e} isEnemy={true} onUpdate={(u) => setEnemies(prev => prev.map(x => x.id === u.id ? u : x))} onRemove={(id) => setEnemies(prev => prev.filter(x => x.id !== id))} />)}
             {!enemies.length && !lairAction && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No enemies yet. <Link href="/encounters" className="text-amber-500 hover:text-amber-400">Create encounters</Link> to quickly add groups.</div>}
           </div>
         </main>
