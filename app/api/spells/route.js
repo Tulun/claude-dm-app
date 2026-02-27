@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { defaultSpells } from '../../data/defaultSpells';
+import { defaultSpells } from '../../data/defaultSpells.js';
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'spells.json');
 const DATA_DIR = path.join(process.cwd(), 'data');
 
 // Current version - increment when adding new default spells
-const SPELLS_VERSION = 1;
+const SPELLS_VERSION = 2;
 
 // Ensure data directory exists
 function ensureDataDir() {

@@ -1,117 +1,60 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-import { defaultSpells } from '../../data/defaultSpells';
+import fs from 'node:fs';
+import path from 'node:path';
+import { defaultEnemyTemplates } from '../../components/defaultData';
 
-const DATA_FILE = path.join(process.cwd(), 'data', 'spells.json');
 const DATA_DIR = path.join(process.cwd(), 'data');
+const TEMPLATES_FILE = path.join(DATA_DIR, 'templates.json');
+const TEMPLATES_VERSION = 11; // Removed duplicate Red Dragon Wyrmling
 
-// Current version - increment when adding new default spells
-const SPELLS_VERSION = 1;
-
-// Ensure data directory exists
 function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }
 }
 
-// Load spells from file or return defaults
-function loadSpells() {
-  ensureDataDir();
-  try {
-    if (fs.existsSync(DATA_FILE)) {
-      const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-      
-      // Check version and merge new defaults if needed
-      if (!data.version || data.version < SPELLS_VERSION) {
-        // Find which default spell IDs already exist in saved data
-        const existingIds = new Set(data.spells?.map(s => s.id) || []);
-        // Only add NEW default spells that don't exist yet
-        const newDefaults = defaultSpells.filter(s => !existingIds.has(s.id));
-        const mergedSpells = [...(data.spells || []), ...newDefaults];
-        saveSpells(mergedSpells);
-        return mergedSpells;
-      }
-      
-      return data.spells || [];
-    }
-  } catch (error) {
-    console.error('Error loading spells:', error);
-  }
-  
-  // First time only - save defaults
-  saveSpells(defaultSpells);
-  return [...defaultSpells];
-}
-
-// Save spells to file
-function saveSpells(spells) {
-  ensureDataDir();
-  const data = {
-    version: SPELLS_VERSION,
-    spells: spells
-  };
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-}
-
-// GET - retrieve all spells
 export async function GET() {
-  const spells = loadSpells();
-  // Sort by level then name
-  spells.sort((a, b) => {
-    if (a.level !== b.level) return a.level - b.level;
-    return a.name.localeCompare(b.name);
-  });
-  return NextResponse.json(spells);
-}
-
-// POST - add or update a spell
-export async function POST(request) {
+  ensureDataDir();
   try {
-    const spell = await request.json();
-    const spells = loadSpells();
-    
-    // Generate ID if new spell
-    if (!spell.id) {
-      spell.id = `custom-${spell.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${Date.now()}`;
+    if (fs.existsSync(TEMPLATES_FILE)) {
+      const data = fs.readFileSync(TEMPLATES_FILE, 'utf8');
+      const parsed = JSON.parse(data);
+      // Check if we need to upgrade - look for version or new size/creatureType format
+      const existingTemplates = parsed.templates || parsed;
+      const needsUpgrade = !parsed._version || parsed._version < TEMPLATES_VERSION || 
+        (existingTemplates.length > 0 && !existingTemplates[0].size);
+      
+      if (needsUpgrade) {
+        // Preserve custom/imported templates (those not starting with 'mm-')
+        const customTemplates = existingTemplates.filter(t => !t.id?.startsWith('mm-'));
+        // Merge: defaults first, then custom templates
+        const mergedTemplates = [...defaultEnemyTemplates, ...customTemplates];
+        const dataWithVersion = { _version: TEMPLATES_VERSION, templates: mergedTemplates };
+        fs.writeFileSync(TEMPLATES_FILE, JSON.stringify(dataWithVersion, null, 2), 'utf8');
+        return NextResponse.json(mergedTemplates);
+      }
+      return NextResponse.json(existingTemplates);
     }
-    
-    // Check if updating existing
-    const existingIndex = spells.findIndex(s => s.id === spell.id);
-    if (existingIndex >= 0) {
-      spells[existingIndex] = spell;
-    } else {
-      spells.push(spell);
-    }
-    
-    saveSpells(spells);
-    return NextResponse.json(spell);
+    // No file exists, create with defaults
+    const dataWithVersion = { _version: TEMPLATES_VERSION, templates: defaultEnemyTemplates };
+    fs.writeFileSync(TEMPLATES_FILE, JSON.stringify(dataWithVersion, null, 2), 'utf8');
+    return NextResponse.json(defaultEnemyTemplates);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to save spell' }, { status: 500 });
+    console.error('GET /api/templates error:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
-// DELETE - remove a spell
-export async function DELETE(request) {
+export async function POST(request) {
+  ensureDataDir();
   try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
-    
-    if (!id) {
-      return NextResponse.json({ error: 'Spell ID required' }, { status: 400 });
-    }
-    
-    const spells = loadSpells();
-    const filtered = spells.filter(s => s.id !== id);
-    
-    if (filtered.length === spells.length) {
-      return NextResponse.json({ error: 'Spell not found' }, { status: 404 });
-    }
-    
-    saveSpells(filtered);
+    const body = await request.json();
+    const dataWithVersion = { _version: TEMPLATES_VERSION, templates: body };
+    fs.writeFileSync(TEMPLATES_FILE, JSON.stringify(dataWithVersion, null, 2), 'utf8');
+    console.log('Saved templates data to:', TEMPLATES_FILE);
     return NextResponse.json({ success: true });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to delete spell' }, { status: 500 });
+    console.error('POST /api/templates error:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
