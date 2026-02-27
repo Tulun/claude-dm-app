@@ -210,6 +210,10 @@ export default function EncountersPage() {
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" /></svg>
                   Templates
                 </Link>
+                <Link href="/spellbook" className="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-stone-700">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M12 3L10.5 7.5L6 9l4.5 1.5L12 15l1.5-4.5L18 9l-4.5-1.5L12 3zM5 12l-1.5 3L0 16.5l3.5 1.5L5 21l1.5-3L10 16.5 6.5 15 5 12zm14 0l-1.5 3-3.5 1.5 3.5 1.5L19 21l1.5-3 3.5-1.5-3.5-1.5L19 12z"/></svg>
+                  Spellbook
+                </Link>
               </div>
             </div>
           </div>
