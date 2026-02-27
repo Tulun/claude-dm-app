@@ -36,7 +36,10 @@ export const getSpellSaveDC = (character) => {
   if (!character.spellStat) return null;
   const statMap = { str: character.str, dex: character.dex, con: character.con, int: character.int, wis: character.wis, cha: character.cha };
   const mod = getModNum(statMap[character.spellStat]);
-  return 8 + getProfBonus(character) + mod;
+  let dc = 8 + getProfBonus(character) + mod;
+  // Add +1 for Innate Sorcery if active (Sorcerer feature)
+  if (character.innateSorcery) dc += 1;
+  return dc;
 };
 
 export const getSpellAttackBonus = (character) => {
@@ -61,7 +64,6 @@ export const getCalculatedAC = (character) => {
   let dexBonus = dexMod;
   let shieldBonus = 0;
   let itemBonuses = 0;
-  let tempBonus = parseInt(character.tempAC) || 0;
   
   if (character.acEffect === 'mageArmor') {
     baseAC = 13;
@@ -84,7 +86,7 @@ export const getCalculatedAC = (character) => {
   if (equippedShield) shieldBonus = parseInt(equippedShield.baseAC) || 2;
   acBonusItems.forEach(item => { itemBonuses += parseInt(item.acBonus) || 0; });
   
-  return baseAC + dexBonus + shieldBonus + itemBonuses + tempBonus;
+  return baseAC + dexBonus + shieldBonus + itemBonuses;
 };
 
 export const parseSpellcasting = (character) => {

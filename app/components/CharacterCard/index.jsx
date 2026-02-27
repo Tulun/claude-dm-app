@@ -6,6 +6,7 @@ import Icons from '../Icons';
 import { EditableField, HpBar, Tooltip } from '../ui';
 import InventoryDisplay from './InventoryDisplay';
 import QuickActionsModal from './QuickActionsModal';
+import QuickResourcesModal from './QuickResourcesModal';
 import NotesModal from './NotesModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import StatBlockModal from './StatBlockModal';
@@ -15,6 +16,7 @@ import { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, g
 const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onToggleExpand, showResources }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(false);
+  const [showQuickResources, setShowQuickResources] = useState(false);
   const [showHpEditor, setShowHpEditor] = useState(false);
   const [hpDelta, setHpDelta] = useState('');
   const [showTempHpEditor, setShowTempHpEditor] = useState(false);
@@ -80,6 +82,17 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
                     <path d="M4 6h16M4 10h16M4 14h10M4 18h7" />
                   </svg>
+                </button>
+              </Tooltip>
+            )}
+            {/* Quick Resources Button - for party members */}
+            {!isEnemy && ((character.resources?.length > 0) || (character.spellSlots && Object.keys(character.spellSlots).some(k => k.startsWith('level') && character.spellSlots[k]?.max > 0))) && (
+              <Tooltip text="Quick Resources">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setShowQuickResources(true); }}
+                  className="p-2 rounded-lg text-amber-400 hover:bg-amber-900/30 transition-colors"
+                >
+                  <Icons.Sparkles />
                 </button>
               </Tooltip>
             )}
@@ -463,19 +476,40 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
 
           {/* Spellcasting */}
           {spellDC && (
-            <div className="flex items-center gap-4 text-sm bg-purple-900/20 rounded-lg p-3">
-              <div className="text-center">
-                <label className="text-xs text-stone-400">Spellcasting</label>
-                <div className="font-mono text-purple-400 text-sm uppercase">{character.spellStat}</div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-4 text-sm bg-purple-900/20 rounded-lg p-3">
+                <div className="text-center">
+                  <label className="text-xs text-stone-400">Spellcasting</label>
+                  <div className="font-mono text-purple-400 text-sm uppercase">{character.spellStat}</div>
+                </div>
+                <div className="text-center">
+                  <label className="text-xs text-stone-400">Spell DC</label>
+                  <div className={`font-mono text-lg ${character.innateSorcery ? 'text-purple-300' : 'text-purple-400'}`}>
+                    {spellDC}
+                    {character.innateSorcery && <span className="text-xs text-purple-300 ml-1">+1</span>}
+                  </div>
+                </div>
+                <div className="text-center">
+                  <label className="text-xs text-stone-400">Spell Atk</label>
+                  <div className="font-mono text-purple-400 text-lg">{spellAttack}</div>
+                </div>
               </div>
-              <div className="text-center">
-                <label className="text-xs text-stone-400">Spell DC</label>
-                <div className="font-mono text-purple-400 text-lg">{spellDC}</div>
-              </div>
-              <div className="text-center">
-                <label className="text-xs text-stone-400">Spell Atk</label>
-                <div className="font-mono text-purple-400 text-lg">{spellAttack}</div>
-              </div>
+              {/* Innate Sorcery Toggle - for Sorcerers */}
+              {(character.classes?.some(c => c.name?.toLowerCase() === 'sorcerer') || character.class?.toLowerCase() === 'sorcerer') && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); onUpdate({ ...character, innateSorcery: !character.innateSorcery }); }}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${character.innateSorcery ? 'bg-purple-700/50 border border-purple-500/50' : 'bg-stone-800/50 border border-stone-700/50 hover:border-purple-500/30'}`}
+                >
+                  <div className="flex items-center gap-2">
+                    <Icons.Sparkles />
+                    <span className={`text-sm ${character.innateSorcery ? 'text-purple-300' : 'text-stone-400'}`}>Innate Sorcery</span>
+                    <span className="text-xs text-stone-500">(+1 DC)</span>
+                  </div>
+                  <div className={`w-10 h-5 rounded-full transition-colors relative ${character.innateSorcery ? 'bg-purple-600' : 'bg-stone-700'}`}>
+                    <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${character.innateSorcery ? 'left-5' : 'left-0.5'}`} />
+                  </div>
+                </button>
+              )}
             </div>
           )}
 
@@ -571,6 +605,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
       {/* Modals */}
       <DeleteConfirmModal isOpen={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)} character={character} isEnemy={isEnemy} onRemove={onRemove} />
       <QuickActionsModal isOpen={showQuickActions} onClose={() => setShowQuickActions(false)} character={character} onUpdate={onUpdate} displayAC={displayAC} spellcastingInfo={spellcastingInfo} />
+      <QuickResourcesModal isOpen={showQuickResources} onClose={() => setShowQuickResources(false)} character={character} onUpdate={onUpdate} />
       <NotesModal isOpen={showNotesPopup} onClose={() => setShowNotesPopup(false)} character={character} onUpdate={onUpdate} />
       <StatBlockModal isOpen={showStatBlock} onClose={() => setShowStatBlock(false)} character={character} />
     </div>
