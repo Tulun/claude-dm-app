@@ -355,7 +355,8 @@
         "weaponProperties": [
           "Thrown",
           "Simple"
-        ]
+        ],
+        "equipped": true
       }
     ],
     "advantages": [],

@@ -4,13 +4,25 @@ import { useState } from 'react';
 import Icons from '../Icons';
 
 const InventoryModal = ({ isOpen, character, onUpdate, onClose }) => {
-  const [expandedItem, setExpandedItem] = useState(null);
+  const [expandedItems, setExpandedItems] = useState(new Set());
   const [filter, setFilter] = useState('all');
 
   if (!isOpen) return null;
 
   const inventory = character.inventory || [];
   
+  const toggleExpanded = (index) => {
+    setExpandedItems(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
+  };
+
   const toggleEquipped = (index) => {
     const updated = [...inventory];
     updated[index] = { ...updated[index], equipped: !updated[index].equipped };
@@ -115,7 +127,7 @@ const InventoryModal = ({ isOpen, character, onUpdate, onClose }) => {
             <div className="space-y-2">
               {filteredInventory.map((item, i) => {
                 const originalIndex = inventory.indexOf(item);
-                const isExpanded = expandedItem === originalIndex;
+                const isExpanded = expandedItems.has(originalIndex);
                 
                 return (
                   <div 
@@ -125,7 +137,7 @@ const InventoryModal = ({ isOpen, character, onUpdate, onClose }) => {
                     {/* Item Header */}
                     <div 
                       className="p-3 flex items-center gap-3 cursor-pointer hover:bg-stone-700/30"
-                      onClick={() => setExpandedItem(isExpanded ? null : originalIndex)}
+                      onClick={() => toggleExpanded(originalIndex)}
                     >
                       <span className="text-xl">{getItemTypeIcon(item)}</span>
                       <div className="flex-1 min-w-0">
