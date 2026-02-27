@@ -7,6 +7,7 @@ import { EditableField, HpBar, Tooltip } from '../ui';
 import InventoryDisplay from './InventoryDisplay';
 import QuickActionsModal from './QuickActionsModal';
 import QuickResourcesModal from './QuickResourcesModal';
+import CharacterSheetModal from './CharacterSheetModal';
 import NotesModal from './NotesModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import StatBlockModal from './StatBlockModal';
@@ -17,6 +18,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(false);
   const [showQuickResources, setShowQuickResources] = useState(false);
+  const [showCharacterSheet, setShowCharacterSheet] = useState(false);
   const [showHpEditor, setShowHpEditor] = useState(false);
   const [hpDelta, setHpDelta] = useState('');
   const [showTempHpEditor, setShowTempHpEditor] = useState(false);
@@ -78,6 +80,19 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                 <button 
                   onClick={(e) => { e.stopPropagation(); setShowStatBlock(true); }}
                   className="p-2 rounded-lg text-stone-400 hover:text-amber-300 hover:bg-amber-900/30 transition-colors"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+                    <path d="M4 6h16M4 10h16M4 14h10M4 18h7" />
+                  </svg>
+                </button>
+              </Tooltip>
+            )}
+            {/* Character Sheet Button - for party members */}
+            {!isEnemy && (
+              <Tooltip text="Character Sheet">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setShowCharacterSheet(true); }}
+                  className="p-2 rounded-lg text-stone-400 hover:text-emerald-300 hover:bg-emerald-900/30 transition-colors"
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
                     <path d="M4 6h16M4 10h16M4 14h10M4 18h7" />
@@ -606,6 +621,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
       <DeleteConfirmModal isOpen={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)} character={character} isEnemy={isEnemy} onRemove={onRemove} />
       <QuickActionsModal isOpen={showQuickActions} onClose={() => setShowQuickActions(false)} character={character} onUpdate={onUpdate} displayAC={displayAC} spellcastingInfo={spellcastingInfo} />
       <QuickResourcesModal isOpen={showQuickResources} onClose={() => setShowQuickResources(false)} character={character} onUpdate={onUpdate} />
+      <CharacterSheetModal isOpen={showCharacterSheet} onClose={() => setShowCharacterSheet(false)} character={character} />
       <NotesModal isOpen={showNotesPopup} onClose={() => setShowNotesPopup(false)} character={character} onUpdate={onUpdate} />
       <StatBlockModal isOpen={showStatBlock} onClose={() => setShowStatBlock(false)} character={character} />
     </div>
