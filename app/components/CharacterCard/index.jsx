@@ -157,19 +157,31 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                 </button>
               </Tooltip>
             )}
-            {/* Expand/Collapse Arrow - only show if expand is available */}
-            {onToggleExpand && (
-              <Tooltip text={expanded ? "Collapse" : "Expand"}>
-                <button 
-                  onClick={onToggleExpand} 
-                  className={`p-2 rounded-lg transition-colors ${isEnemy ? 'hover:bg-red-900/30' : 'hover:bg-emerald-900/30'}`}
+            {/* Edit link for party, Expand/Collapse for enemies */}
+            {isEnemy ? (
+              onToggleExpand && (
+                <Tooltip text={expanded ? "Collapse" : "Expand"}>
+                  <button 
+                    onClick={onToggleExpand} 
+                    className="p-2 rounded-lg transition-colors hover:bg-red-900/30"
+                  >
+                    {expanded ? (
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6 1.41 1.41z"/></svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                    )}
+                  </button>
+                </Tooltip>
+              )
+            ) : (
+              <Tooltip text="Edit Character">
+                <Link 
+                  href={`/character?id=${character.id}&type=${characterType}`}
+                  className="p-2 rounded-lg transition-colors hover:bg-emerald-900/30 text-stone-400 hover:text-emerald-400"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  {expanded ? (
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6 1.41 1.41z"/></svg>
-                  ) : (
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
-                  )}
-                </button>
+                  <Icons.Edit />
+                </Link>
               </Tooltip>
             )}
           </div>
@@ -385,246 +397,161 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
         </div>
       )}
 
-      {/* Expanded content */}
-      {expanded && (
+      {/* Expanded content - only for enemies */}
+      {expanded && isEnemy && (
         <div className="border-t border-stone-700/50">
           <div className="p-4 space-y-4 max-h-[400px] overflow-y-auto">
-          <div>
-            <label className="text-xs text-stone-400 mb-2 block">Hit Points</label>
-            <div className="flex items-center gap-3">
-              <div className="flex-1">
-                <HpBar current={character.currentHp} max={character.maxHp} onChange={(curr, max) => onUpdate({ ...character, currentHp: curr, maxHp: max })} />
-              </div>
-              <div className="flex flex-col items-center gap-1">
-                <label className="text-[10px] text-cyan-400">Temp HP</label>
-                <input
-                  type="number"
-                  min="0"
-                  value={tempHp || ''}
-                  onChange={(e) => {
-                    const val = parseInt(e.target.value);
-                    onUpdate({ ...character, tempHp: isNaN(val) ? 0 : Math.max(0, val) });
-                  }}
-                  placeholder="0"
-                  className="w-14 bg-cyan-900/30 border border-cyan-700/50 rounded px-2 py-1 text-center text-sm font-mono text-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-                />
-              </div>
-            </div>
-          </div>
-          
-          {/* Stat block */}
-          <div className="grid grid-cols-2 gap-3 text-sm">
             <div>
-              <label className="text-xs text-stone-400">Name</label>
-              <div className="bg-stone-800/30 rounded px-2 py-1">{character.name}</div>
-            </div>
-            <div>
-              <label className="text-xs text-stone-400">AC</label>
-              <div className="flex items-center gap-2">
-                <div className={`bg-stone-700/50 rounded px-2 py-1 font-mono flex-1 ${tempAC > 0 ? 'text-amber-400' : character.acEffect ? 'text-cyan-400' : ''}`}>
-                  {baseAC}{tempAC > 0 && <span className="text-amber-400"> +{tempAC}</span>}
+              <label className="text-xs text-stone-400 mb-2 block">Hit Points</label>
+              <div className="flex items-center gap-3">
+                <div className="flex-1">
+                  <HpBar current={character.currentHp} max={character.maxHp} onChange={(curr, max) => onUpdate({ ...character, currentHp: curr, maxHp: max })} />
                 </div>
-                <div className="flex flex-col items-center">
-                  <label className="text-[10px] text-amber-400">+AC</label>
+                <div className="flex flex-col items-center gap-1">
+                  <label className="text-[10px] text-cyan-400">Temp HP</label>
                   <input
                     type="number"
                     min="0"
-                    value={character.tempAC || ''}
-                    onChange={(e) => onUpdate({ ...character, tempAC: e.target.value })}
+                    value={tempHp || ''}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value);
+                      onUpdate({ ...character, tempHp: isNaN(val) ? 0 : Math.max(0, val) });
+                    }}
                     placeholder="0"
-                    className="w-12 bg-amber-900/30 border border-amber-700/50 rounded px-1 py-1 text-center text-sm font-mono text-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-500"
-                    title="Temporary AC bonus (Shield, Cover, etc.)"
+                    className="w-14 bg-cyan-900/30 border border-cyan-700/50 rounded px-2 py-1 text-center text-sm font-mono text-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                   />
                 </div>
               </div>
             </div>
-            <div>
-              <label className="text-xs text-stone-400">Initiative</label>
-              <EditableField value={character.initiative} onChange={(v) => onUpdate({ ...character, initiative: v })} type="number" className="block w-full" />
-            </div>
-            <div>
-              <label className="text-xs text-stone-400">Speed</label>
-              <div className="flex items-center gap-1 bg-stone-800/30 rounded px-2 py-1">
-                <Icons.Boot />
-                <span>{character.speed}</span>
+            
+            {/* Stat block */}
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <label className="text-xs text-stone-400">Name</label>
+                <div className="bg-stone-800/30 rounded px-2 py-1">{character.name}</div>
               </div>
-            </div>
-          </div>
-
-          {/* Ability scores */}
-          <div className="grid grid-cols-6 gap-2 text-center">
-            {['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'].map(label => {
-              const key = label.toLowerCase();
-              return (
-                <div key={label} className="bg-stone-800/50 rounded p-2">
-                  <div className="text-[10px] text-stone-500">{label}</div>
-                  <div className="font-bold">{character[key] || 10}</div>
-                  <div className="text-xs text-stone-400">{getMod(character[key])}</div>
-                </div>
-              );
-            })}
-          </div>
-          
-          {/* Saving Throws */}
-          <div>
-            <label className="text-xs text-stone-400 mb-2 block">Saving Throws</label>
-            <div className="grid grid-cols-6 gap-2 text-center">
-              {['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'].map(label => {
-                const key = label.toLowerCase();
-                const baseMod = getModNum(character[key]);
-                const hasSaveProf = character.savingThrows?.toLowerCase().includes(label.toLowerCase());
-                const totalMod = hasSaveProf ? baseMod + profBonus : baseMod;
-                return (
-                  <div key={label} className={`rounded p-1.5 ${hasSaveProf ? 'bg-amber-900/30 border border-amber-800/50' : 'bg-stone-800/50'}`}>
-                    <div className="text-[10px] text-stone-500">{label}</div>
-                    <div className={`font-bold ${hasSaveProf ? 'text-amber-400' : ''}`}>{totalMod >= 0 ? '+' : ''}{totalMod}</div>
-                    {hasSaveProf && <div className="text-[9px] text-amber-600">{profBonus}</div>}
+              <div>
+                <label className="text-xs text-stone-400">AC</label>
+                <div className="flex items-center gap-2">
+                  <div className={`bg-stone-700/50 rounded px-2 py-1 font-mono flex-1 ${tempAC > 0 ? 'text-amber-400' : character.acEffect ? 'text-cyan-400' : ''}`}>
+                    {baseAC}{tempAC > 0 && <span className="text-amber-400"> +{tempAC}</span>}
                   </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Defenses */}
-          {(character.vulnerabilities || character.resistances || character.immunities) && (
-            <div className="grid grid-cols-3 gap-2 text-xs">
-              {character.vulnerabilities && <div className="bg-yellow-900/20 rounded p-2"><span className="text-yellow-400 font-medium">Vulnerable:</span> <span className="text-stone-300">{character.vulnerabilities}</span></div>}
-              {character.resistances && <div className="bg-blue-900/20 rounded p-2"><span className="text-blue-400 font-medium">Resistant:</span> <span className="text-stone-300">{character.resistances}</span></div>}
-              {character.immunities && <div className="bg-green-900/20 rounded p-2"><span className="text-green-400 font-medium">Immune:</span> <span className="text-stone-300">{character.immunities}</span></div>}
-            </div>
-          )}
-
-          {/* Senses & Languages */}
-          {(character.senses || character.languages) && (
-            <div className="grid grid-cols-2 gap-3 text-xs">
-              {character.senses && <div><span className="text-stone-400">Senses:</span> <span className="text-stone-300">{character.senses}</span></div>}
-              {character.languages && <div><span className="text-stone-400">Languages:</span> <span className="text-stone-300">{character.languages}</span></div>}
-            </div>
-          )}
-
-          {/* Spellcasting */}
-          {spellDC && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-4 text-sm bg-purple-900/20 rounded-lg p-3">
-                <div className="text-center">
-                  <label className="text-xs text-stone-400">Spellcasting</label>
-                  <div className="font-mono text-purple-400 text-sm uppercase">{character.spellStat}</div>
-                </div>
-                <div className="text-center">
-                  <label className="text-xs text-stone-400">Spell DC</label>
-                  <div className={`font-mono text-lg ${character.innateSorcery ? 'text-purple-300' : 'text-purple-400'}`}>
-                    {spellDC}
-                    {character.innateSorcery && <span className="text-xs text-purple-300 ml-1">+1</span>}
+                  <div className="flex flex-col items-center">
+                    <label className="text-[10px] text-amber-400">+AC</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={character.tempAC || ''}
+                      onChange={(e) => onUpdate({ ...character, tempAC: e.target.value })}
+                      placeholder="0"
+                      className="w-12 bg-amber-900/30 border border-amber-700/50 rounded px-1 py-1 text-center text-sm font-mono text-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                      title="Temporary AC bonus (Shield, Cover, etc.)"
+                    />
                   </div>
-                </div>
-                <div className="text-center">
-                  <label className="text-xs text-stone-400">Spell Atk</label>
-                  <div className="font-mono text-purple-400 text-lg">{spellAttack}</div>
                 </div>
               </div>
-              {/* Innate Sorcery Toggle - for Sorcerers */}
-              {(character.classes?.some(c => c.name?.toLowerCase() === 'sorcerer') || character.class?.toLowerCase() === 'sorcerer') && (
-                <button
-                  onClick={(e) => { e.stopPropagation(); onUpdate({ ...character, innateSorcery: !character.innateSorcery }); }}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${character.innateSorcery ? 'bg-purple-700/50 border border-purple-500/50' : 'bg-stone-800/50 border border-stone-700/50 hover:border-purple-500/30'}`}
-                >
-                  <div className="flex items-center gap-2">
-                    <Icons.Sparkles />
-                    <span className={`text-sm ${character.innateSorcery ? 'text-purple-300' : 'text-stone-400'}`}>Innate Sorcery</span>
-                    <span className="text-xs text-stone-500">(+1 DC)</span>
+              <div>
+                <label className="text-xs text-stone-400">Initiative</label>
+                <EditableField value={character.initiative} onChange={(v) => onUpdate({ ...character, initiative: v })} type="number" className="block w-full" />
+              </div>
+              <div>
+                <label className="text-xs text-stone-400">Speed</label>
+                <div className="flex items-center gap-1 bg-stone-800/30 rounded px-2 py-1">
+                  <Icons.Boot />
+                  <span>{character.speed}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Ability Scores */}
+            <div className="bg-stone-800/30 rounded-lg p-2">
+              <div className="grid grid-cols-6 gap-1 text-center text-xs">
+                {['str', 'dex', 'con', 'int', 'wis', 'cha'].map(stat => (
+                  <div key={stat}>
+                    <div className="text-stone-500 uppercase">{stat}</div>
+                    <div className="text-stone-200 font-mono text-sm">{character[stat] || 10}</div>
+                    <div className="text-amber-400 text-[10px]">{getMod(character[stat])}</div>
                   </div>
-                  <div className={`w-10 h-5 rounded-full transition-colors relative ${character.innateSorcery ? 'bg-purple-600' : 'bg-stone-700'}`}>
-                    <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${character.innateSorcery ? 'left-5' : 'left-0.5'}`} />
-                  </div>
-                </button>
-              )}
+                ))}
+              </div>
             </div>
-          )}
 
-          {/* Resources */}
-          {showResources && (character.resources || []).length > 0 && (
-            <div className="space-y-2">
-              <label className="text-xs text-stone-400 flex items-center gap-1"><Icons.Sparkles /> Resources</label>
-              {character.resources.map((r, i) => (
-                <div key={i} className="bg-stone-800/50 rounded px-2 py-1.5 flex items-center justify-between">
-                  <span className="text-stone-300 text-sm">{r.name}</span>
-                  <div className="flex items-center gap-1">
-                    <button onClick={(e) => { e.stopPropagation(); const updated = [...character.resources]; updated[i] = { ...r, current: Math.max(0, r.current - 1) }; onUpdate({ ...character, resources: updated }); }} className="w-6 h-6 rounded bg-stone-700 hover:bg-stone-600 text-stone-300 flex items-center justify-center text-sm">−</button>
-                    <span className="font-mono text-amber-400 w-12 text-center">{r.current}/{r.max}</span>
-                    <button onClick={(e) => { e.stopPropagation(); const updated = [...character.resources]; updated[i] = { ...r, current: Math.min(r.max, r.current + 1) }; onUpdate({ ...character, resources: updated }); }} className="w-6 h-6 rounded bg-stone-700 hover:bg-stone-600 text-stone-300 flex items-center justify-center text-sm">+</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          
-          {/* Inventory */}
-          {showResources && (character.inventory || []).length > 0 && (
-            <InventoryDisplay items={character.inventory} character={character} getModNum={(s) => getModNum(s)} getProfBonus={() => profBonus} />
-          )}
-
-          {/* Traits */}
-          {(character.traits || []).length > 0 && (
-            <div className="space-y-2">
-              <label className="text-xs text-amber-400 font-bold">Traits</label>
-              {character.traits.map((trait, i) => (
-                <div key={i} className="text-xs bg-stone-800/30 rounded p-2">
-                  <span className="text-amber-300 font-semibold italic">{trait.name}.</span> <span className="text-stone-300">{trait.description}</span>
-                </div>
-              ))}
-            </div>
-          )}
-          
-          {/* Actions */}
-          {(character.actions || []).length > 0 && (
-            <div className="space-y-2">
-              <label className="text-xs text-red-400 font-bold flex items-center gap-1"><Icons.Sword /> Actions</label>
-              {character.actions.map((action, i) => (
-                <div key={i} className="text-xs bg-red-950/30 border border-red-900/30 rounded p-2">
-                  <span className="text-red-300 font-semibold italic">{action.name}.</span> <span className="text-stone-300">{action.description}</span>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Reactions */}
-          {(character.reactions || []).length > 0 && (
-            <div className="space-y-2">
-              <label className="text-xs text-cyan-400 font-bold">Reactions</label>
-              {character.reactions.map((r, i) => (
-                <div key={i} className="text-xs bg-cyan-950/30 border border-cyan-900/30 rounded p-2">
-                  <span className="text-cyan-300 font-semibold italic">{r.name}.</span> <span className="text-stone-300">{r.description}</span>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Legendary Actions */}
-          {(character.legendaryActions || []).length > 0 && (
-            <div className="space-y-2">
-              <label className="text-xs text-purple-400 font-bold">★ Legendary Actions</label>
-              {character.legendaryActions.map((a, i) => (
-                <div key={i} className="text-xs bg-purple-950/30 border border-purple-900/30 rounded p-2">
-                  <span className="text-purple-300 font-semibold italic">{a.name}.</span> <span className="text-stone-300">{a.description}</span>
-                </div>
-              ))}
-            </div>
-          )}
-          </div>
-          
-          {/* Footer - outside scrollable area */}
-          <div className="flex justify-between items-center p-4 pt-2 border-t border-stone-700/30">
-            {isEnemy ? (
-              <button onClick={() => setShowQuickActions(true)} className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-red-900/30 hover:bg-red-800/50 text-red-400">
-                <Icons.Sword /> Actions & Spells
-              </button>
-            ) : (
-              <Link href={`/character?id=${character.id}&type=${characterType}`} className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-amber-900/30 hover:bg-amber-800/50 text-amber-400">
-                <Icons.Edit /> Full Page
-              </Link>
+            {/* Misc info */}
+            {(character.senses || character.languages) && (
+              <div className="text-xs space-y-1">
+                {character.senses && <div><span className="text-stone-400">Senses:</span> <span className="text-stone-300">{character.senses}</span></div>}
+                {character.languages && <div><span className="text-stone-400">Languages:</span> <span className="text-stone-300">{character.languages}</span></div>}
+              </div>
             )}
+
+            {/* Traits */}
+            {(character.traits || []).length > 0 && (
+              <div className="space-y-2">
+                <label className="text-xs text-stone-400 font-bold">Traits</label>
+                {character.traits.map((t, i) => (
+                  <div key={i} className="text-xs bg-stone-800/50 rounded p-2">
+                    <span className="text-amber-400 font-semibold italic">{t.name}.</span> <span className="text-stone-300">{t.description}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Actions */}
+            {(character.actions || []).length > 0 && (
+              <div className="space-y-2">
+                <label className="text-xs text-red-400 font-bold flex items-center gap-1"><Icons.Sword /> Actions</label>
+                {character.actions.map((a, i) => (
+                  <div key={i} className="text-xs bg-red-950/30 border border-red-900/30 rounded p-2">
+                    <span className="text-red-300 font-semibold italic">{a.name}.</span> <span className="text-stone-300">{a.description}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Bonus Actions */}
+            {(character.bonusActions || []).length > 0 && (
+              <div className="space-y-2">
+                <label className="text-xs text-orange-400 font-bold">Bonus Actions</label>
+                {character.bonusActions.map((a, i) => (
+                  <div key={i} className="text-xs bg-orange-950/30 border border-orange-900/30 rounded p-2">
+                    <span className="text-orange-300 font-semibold italic">{a.name}.</span> <span className="text-stone-300">{a.description}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Reactions */}
+            {(character.reactions || []).length > 0 && (
+              <div className="space-y-2">
+                <label className="text-xs text-cyan-400 font-bold">Reactions</label>
+                {character.reactions.map((r, i) => (
+                  <div key={i} className="text-xs bg-cyan-950/30 border border-cyan-900/30 rounded p-2">
+                    <span className="text-cyan-300 font-semibold italic">{r.name}.</span> <span className="text-stone-300">{r.description}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Legendary Actions */}
+            {(character.legendaryActions || []).length > 0 && (
+              <div className="space-y-2">
+                <label className="text-xs text-purple-400 font-bold">★ Legendary Actions</label>
+                {character.legendaryActions.map((a, i) => (
+                  <div key={i} className="text-xs bg-purple-950/30 border border-purple-900/30 rounded p-2">
+                    <span className="text-purple-300 font-semibold italic">{a.name}.</span> <span className="text-stone-300">{a.description}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          {/* Footer */}
+          <div className="flex justify-between items-center p-4 pt-2 border-t border-stone-700/30">
+            <button onClick={() => setShowQuickActions(true)} className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-red-900/30 hover:bg-red-800/50 text-red-400">
+              <Icons.Sword /> Actions & Spells
+            </button>
             <button onClick={() => setShowDeleteConfirm(true)} className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-red-900/30 hover:bg-red-800/50 text-red-400">
-              <Icons.Trash />{isEnemy ? 'Kill' : 'Remove'}
+              <Icons.Trash /> Kill
             </button>
           </div>
         </div>
