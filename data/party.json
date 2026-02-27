@@ -275,7 +275,7 @@
         "subclass": "College of Lore"
       }
     ],
-    "tempAC": "0",
+    "tempAC": 0,
     "tempHp": 10
   },
   {

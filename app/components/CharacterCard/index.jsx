@@ -177,7 +177,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               <Tooltip text="Edit Character">
                 <Link 
                   href={`/character?id=${character.id}&type=${characterType}`}
-                  className="p-2 rounded-lg transition-colors hover:bg-emerald-900/30 text-stone-400 hover:text-emerald-400"
+                  className="p-2 rounded-lg transition-colors hover:bg-emerald-900/30 text-stone-400 hover:text-emerald-400 inline-flex"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Icons.Edit />
@@ -189,9 +189,9 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
         
         {/* Stats row: AC, HP, Spell DC */}
         <div className="flex items-center gap-2 flex-wrap">
-          {/* AC Badge - Clickable to edit temp AC for enemies */}
+          {/* AC Badge - Clickable to edit temp AC */}
           <div className="relative">
-            {showTempAcEditor && isEnemy ? (
+            {showTempAcEditor ? (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setShowTempAcEditor(false)} />
                 <div className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm z-50 relative ${tempAC > 0 ? 'bg-amber-900/40' : 'bg-stone-800/60'}`}>
@@ -221,23 +221,16 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                   <span className="text-xs text-stone-500">AC</span>
                 </div>
               </>
-            ) : isEnemy ? (
+            ) : (
               <button
                 onClick={(e) => { e.stopPropagation(); setTempAcDelta(String(tempAC || '')); setShowTempAcEditor(true); }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm cursor-pointer transition-colors ${tempAC > 0 ? 'bg-amber-900/30 text-amber-400 hover:bg-amber-900/40 ring-1 ring-amber-500/50' : character.acEffect ? 'bg-cyan-900/30 text-cyan-400 hover:bg-cyan-900/40' : 'bg-stone-800/60 text-stone-300 hover:bg-stone-700/60'}`}
-                title="Click to add temp AC bonus"
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm cursor-pointer transition-colors ${tempAC > 0 ? 'bg-amber-900/40 text-amber-400 hover:bg-amber-900/50 shadow-[0_0_10px_rgba(251,191,36,0.4)]' : character.acEffect ? 'bg-cyan-900/30 text-cyan-400 hover:bg-cyan-900/40' : 'bg-stone-800/60 text-stone-300 hover:bg-stone-700/60'}`}
+                title={tempAC > 0 ? `Base ${baseAC} + ${tempAC} temp bonus` : "Click to add temp AC bonus"}
               >
-                <Icons.Shield />
-                <span className="font-mono font-medium">{baseAC}</span>
-                {tempAC > 0 && <span className="text-amber-400 font-mono">+{tempAC}</span>}
-                <span className="text-xs text-stone-500">AC</span>
-              </button>
-            ) : (
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm ${character.acEffect ? 'bg-cyan-900/30 text-cyan-400' : 'bg-stone-800/60 text-stone-300'}`}>
                 <Icons.Shield />
                 <span className="font-mono font-medium">{displayAC}</span>
                 <span className="text-xs text-stone-500">AC</span>
-              </div>
+              </button>
             )}
           </div>
           {/* HP Badge - Clickable to edit */}
