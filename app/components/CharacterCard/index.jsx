@@ -8,6 +8,7 @@ import InventoryDisplay from './InventoryDisplay';
 import QuickActionsModal from './QuickActionsModal';
 import QuickResourcesModal from './QuickResourcesModal';
 import CharacterSheetModal from './CharacterSheetModal';
+import InventoryModal from './InventoryModal';
 import NotesModal from './NotesModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import StatBlockModal from './StatBlockModal';
@@ -19,6 +20,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   const [showQuickActions, setShowQuickActions] = useState(false);
   const [showQuickResources, setShowQuickResources] = useState(false);
   const [showCharacterSheet, setShowCharacterSheet] = useState(false);
+  const [showInventory, setShowInventory] = useState(false);
   const [showHpEditor, setShowHpEditor] = useState(false);
   const [hpDelta, setHpDelta] = useState('');
   const [showTempHpEditor, setShowTempHpEditor] = useState(false);
@@ -97,6 +99,17 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
                     <path d="M4 6h16M4 10h16M4 14h10M4 18h7" />
                   </svg>
+                </button>
+              </Tooltip>
+            )}
+            {/* Inventory Button - for party members */}
+            {!isEnemy && character.inventory?.length > 0 && (
+              <Tooltip text="Inventory">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setShowInventory(true); }}
+                  className="p-2 rounded-lg text-stone-400 hover:text-amber-300 hover:bg-amber-900/30 transition-colors"
+                >
+                  <Icons.Book />
                 </button>
               </Tooltip>
             )}
@@ -622,6 +635,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
       <QuickActionsModal isOpen={showQuickActions} onClose={() => setShowQuickActions(false)} character={character} onUpdate={onUpdate} displayAC={displayAC} spellcastingInfo={spellcastingInfo} />
       <QuickResourcesModal isOpen={showQuickResources} onClose={() => setShowQuickResources(false)} character={character} onUpdate={onUpdate} />
       <CharacterSheetModal isOpen={showCharacterSheet} onClose={() => setShowCharacterSheet(false)} character={character} />
+      <InventoryModal isOpen={showInventory} onClose={() => setShowInventory(false)} character={character} onUpdate={onUpdate} />
       <NotesModal isOpen={showNotesPopup} onClose={() => setShowNotesPopup(false)} character={character} onUpdate={onUpdate} />
       <StatBlockModal isOpen={showStatBlock} onClose={() => setShowStatBlock(false)} character={character} />
     </div>
