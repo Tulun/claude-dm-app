@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "characters": [],
+  "world": {
+    "places": [],
+    "npcs": [],
+    "lore": [],
+    "gods": [],
+    "factions": [],
+    "items": []
+  },
+  "sessionNotes": {
+    "current": "",
+    "sessions": []
+  }
+}

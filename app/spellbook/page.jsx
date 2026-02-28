@@ -188,6 +188,7 @@ export default function SpellbookPage() {
               <Link href="/encounters" className="px-4 py-2 rounded-lg text-stone-300 hover:bg-stone-800 transition-colors">Encounters</Link>
               <Link href="/templates" className="px-4 py-2 rounded-lg text-stone-300 hover:bg-stone-800 transition-colors">Templates</Link>
               <Link href="/spellbook" className="px-4 py-2 rounded-lg bg-amber-700 text-amber-100 transition-colors">Spellbook</Link>
+              <Link href="/dm" className="px-4 py-2 rounded-lg text-stone-300 hover:bg-stone-800 transition-colors">DM</Link>
             </div>
           </div>
         </div>

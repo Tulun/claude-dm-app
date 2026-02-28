@@ -346,6 +346,7 @@ export default function DMAdminTool() {
                 <Link href="/encounters" className="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-stone-700"><Icons.Scroll /> Encounters</Link>
                 <button onClick={() => { setActiveTab('templates'); router.push('/?tab=templates'); }} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'templates' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Book /> Templates</button>
                 <Link href="/spellbook" className="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-stone-700"><Icons.Sparkles /> Spellbook</Link>
+                <Link href="/dm" className="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-stone-700"><Icons.Crown /> DM</Link>
               </div>
             </div>
           </div>
