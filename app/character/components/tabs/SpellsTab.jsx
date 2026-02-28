@@ -103,7 +103,10 @@ export default function SpellsTab({ character, onUpdate }) {
                             : 'border-stone-700/50 bg-stone-800/30 hover:bg-stone-800/50'
                         }`}
                       >
-                        <div className="flex items-center gap-2 p-2">
+                        <div 
+                          className="flex items-center gap-2 p-2 cursor-pointer"
+                          onClick={() => hasDetails && setExpandedSpell(isExpanded ? null : spell.id)}
+                        >
                           {/* Spell Name */}
                           {spell.sourceId ? (
                             // From spellbook - show as text
@@ -116,6 +119,7 @@ export default function SpellsTab({ character, onUpdate }) {
                               type="text"
                               value={spell.name}
                               onChange={(e) => updateSpell(spell.id, 'name', e.target.value)}
+                              onClick={(e) => e.stopPropagation()}
                               className="flex-1 bg-transparent focus:outline-none font-medium text-amber-400 min-w-0"
                               placeholder="Spell name"
                             />
@@ -141,12 +145,9 @@ export default function SpellsTab({ character, onUpdate }) {
                             {spell.range || '—'}
                           </span>
 
-                          {/* Expand/Collapse */}
+                          {/* Expand/Collapse Indicator */}
                           {hasDetails && (
-                            <button
-                              onClick={() => setExpandedSpell(isExpanded ? null : spell.id)}
-                              className="text-stone-400 hover:text-white p-1 flex-shrink-0"
-                            >
+                            <div className="text-stone-400 p-1 flex-shrink-0">
                               <svg
                                 viewBox="0 0 24 24"
                                 fill="currentColor"
@@ -154,12 +155,15 @@ export default function SpellsTab({ character, onUpdate }) {
                               >
                                 <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
                               </svg>
-                            </button>
+                            </div>
                           )}
 
                           {/* Remove */}
                           <button
-                            onClick={() => removeSpell(spell.id)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeSpell(spell.id);
+                            }}
                             className="text-red-500 hover:text-red-400 p-1 flex-shrink-0"
                           >
                             <Icons.Trash className="w-3 h-3" />

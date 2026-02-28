@@ -12,6 +12,7 @@ import InventoryModal from './InventoryModal';
 import NotesModal from './NotesModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import StatBlockModal from './StatBlockModal';
+import SpellsModal from './SpellsModal';
 import { parseSpellcasting } from './spellcastingParser';
 import { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, getCalculatedAC } from './utils';
 
@@ -29,6 +30,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   const [tempAcDelta, setTempAcDelta] = useState('');
   const [showNotesPopup, setShowNotesPopup] = useState(false);
   const [showStatBlock, setShowStatBlock] = useState(false);
+  const [showSpells, setShowSpells] = useState(false);
   
   const isDead = character.currentHp <= 0;
   const characterType = character.class ? 'party' : 'template';
@@ -110,6 +112,17 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                   className="p-2 rounded-lg text-stone-400 hover:text-amber-300 hover:bg-amber-900/30 transition-colors"
                 >
                   <Icons.Book />
+                </button>
+              </Tooltip>
+            )}
+            {/* Spells Button - for party members with spells */}
+            {!isEnemy && character.spells?.length > 0 && (
+              <Tooltip text="Spells">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setShowSpells(true); }}
+                  className="p-2 rounded-lg text-purple-400 hover:text-purple-300 hover:bg-purple-900/30 transition-colors"
+                >
+                  <Icons.Sparkles />
                 </button>
               </Tooltip>
             )}
@@ -558,6 +571,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
       <InventoryModal isOpen={showInventory} onClose={() => setShowInventory(false)} character={character} onUpdate={onUpdate} />
       <NotesModal isOpen={showNotesPopup} onClose={() => setShowNotesPopup(false)} character={character} onUpdate={onUpdate} />
       <StatBlockModal isOpen={showStatBlock} onClose={() => setShowStatBlock(false)} character={character} />
+      <SpellsModal isOpen={showSpells} onClose={() => setShowSpells(false)} character={character} />
     </div>
   );
 };

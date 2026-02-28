@@ -432,6 +432,6 @@
       "Sorcerer:Metamagic": "Quickened Spell,Twinned Spell"
     },
     "acEffect": "draconicResilience",
-    "innateSorcery": false
+    "innateSorcery": true
   }
 ]
