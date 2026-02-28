@@ -64,7 +64,7 @@ export default function SpellbookPage() {
       }
       return true;
     });
-  }, [search, selectedSchools, selectedClasses, selectedLevels]);
+  }, [spells, search, selectedSchools, selectedClasses, selectedLevels]);
 
   const toggleFilter = (value, selected, setSelected) => {
     if (selected.includes(value)) {
