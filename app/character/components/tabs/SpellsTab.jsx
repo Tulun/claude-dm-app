@@ -200,6 +200,25 @@ export default function SpellsTab({ character, onUpdate }) {
                                   {spell.higherLevels}
                                 </p>
                               )}
+                              {/* Source Info */}
+                              {(spell.source || spell.sourceUrl) && (
+                                <div className="pt-2 border-t border-stone-700/50 flex items-center justify-between">
+                                  <span className="text-stone-500">
+                                    Source: <span className="text-stone-400">{spell.sourceShort || spell.source || 'Unknown'}</span>
+                                  </span>
+                                  {spell.sourceUrl && (
+                                    <a 
+                                      href={spell.sourceUrl} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="text-blue-400 hover:text-blue-300 flex items-center gap-1"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      View Source ↗
+                                    </a>
+                                  )}
+                                </div>
+                              )}
                             </div>
                           </div>
                         )}

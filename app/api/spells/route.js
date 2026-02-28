@@ -6,8 +6,8 @@ import { defaultSpells } from '../../data/defaultSpells.js';
 const DATA_FILE = path.join(process.cwd(), 'data', 'spells.json');
 const DATA_DIR = path.join(process.cwd(), 'data');
 
-// Current version - increment when adding new default spells
-const SPELLS_VERSION = 2;
+// Current version - increment when adding new default spells or fields
+const SPELLS_VERSION = 4;
 
 // Ensure data directory exists
 function ensureDataDir() {
@@ -25,12 +25,34 @@ function loadSpells() {
       
       // Check version and merge new defaults if needed
       if (!data.version || data.version < SPELLS_VERSION) {
-        // Find which default spell IDs already exist in saved data
-        const existingIds = new Set(data.spells?.map(s => s.id) || []);
-        // Only add NEW default spells that don't exist yet
+        // Create a map of default spells by ID for quick lookup
+        const defaultSpellMap = new Map(defaultSpells.map(s => [s.id, s]));
+        
+        // Update existing spells with new fields from defaults (but preserve user edits)
+        const updatedSpells = (data.spells || []).map(spell => {
+          const defaultSpell = defaultSpellMap.get(spell.id);
+          if (defaultSpell) {
+            // Merge: add new fields from default that don't exist in saved spell
+            // This preserves user edits while adding new fields like source, sourceShort, sourceUrl
+            return {
+              ...defaultSpell,  // Start with all default fields
+              ...spell,         // Override with user's saved values
+              // Explicitly add new fields if they don't exist in user's spell
+              source: spell.source || defaultSpell.source,
+              sourceShort: spell.sourceShort || defaultSpell.sourceShort,
+              sourceUrl: spell.sourceUrl || defaultSpell.sourceUrl,
+            };
+          }
+          return spell; // Custom spell, keep as-is
+        });
+        
+        // Add any completely new default spells that don't exist
+        const existingIds = new Set(updatedSpells.map(s => s.id));
         const newDefaults = defaultSpells.filter(s => !existingIds.has(s.id));
-        const mergedSpells = [...(data.spells || []), ...newDefaults];
+        const mergedSpells = [...updatedSpells, ...newDefaults];
+        
         saveSpells(mergedSpells);
+        console.log(`Migrated spells to version ${SPELLS_VERSION}: updated ${updatedSpells.length} spells, added ${newDefaults.length} new spells`);
         return mergedSpells;
       }
       

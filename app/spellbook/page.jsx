@@ -20,7 +20,10 @@ const EMPTY_SPELL = {
   description: '',
   higherLevels: '',
   concentration: false,
-  ritual: false
+  ritual: false,
+  source: "Player's Handbook (2024)",
+  sourceShort: 'PHB 2024',
+  sourceUrl: ''
 };
 
 export default function SpellbookPage() {
@@ -562,6 +565,43 @@ function SpellForm({ spell, onChange, onSave, onCancel, saveLabel = "Save Change
         />
       </div>
 
+      {/* Source Information */}
+      <div className="border-t border-stone-700 pt-4">
+        <label className="text-xs text-stone-400 uppercase tracking-wide mb-2 block">Source Information</label>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div>
+            <label className="text-xs text-stone-500 block mb-1">Source Book</label>
+            <input
+              type="text"
+              value={spell.source || ''}
+              onChange={(e) => updateField('source', e.target.value)}
+              className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+              placeholder="Player's Handbook (2024)"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-stone-500 block mb-1">Short Name</label>
+            <input
+              type="text"
+              value={spell.sourceShort || ''}
+              onChange={(e) => updateField('sourceShort', e.target.value)}
+              className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+              placeholder="PHB 2024"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-stone-500 block mb-1">Reference URL</label>
+            <input
+              type="text"
+              value={spell.sourceUrl || ''}
+              onChange={(e) => updateField('sourceUrl', e.target.value)}
+              className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+              placeholder="https://..."
+            />
+          </div>
+        </div>
+      </div>
+
       {/* Action Buttons */}
       <div className="flex justify-end gap-3 pt-2">
         <button
@@ -987,6 +1027,25 @@ function SpellCard({ spell, expanded, editing, onToggle, onEdit, onSave, onCance
                   </span>{' '}
                   {spell.higherLevels}
                 </p>
+              )}
+              {/* Source Info */}
+              {(spell.source || spell.sourceUrl) && (
+                <div className="mt-4 pt-3 border-t border-stone-700/50 flex items-center justify-between text-sm">
+                  <span className="text-stone-500">
+                    Source: <span className="text-stone-400">{spell.sourceShort || spell.source || 'Unknown'}</span>
+                  </span>
+                  {spell.sourceUrl && (
+                    <a 
+                      href={spell.sourceUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-400 hover:text-blue-300 flex items-center gap-1"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      View Source ↗
+                    </a>
+                  )}
+                </div>
               )}
             </div>
           )}

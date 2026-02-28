@@ -16,7 +16,10 @@ export const defaultSpells = [
     description: "You create an acidic bubble at a point within range, where it explodes in a 5-foot-radius Sphere. Each creature in that Sphere must succeed on a Dexterity saving throw or take 1d6 Acid damage.",
     higherLevels: "The damage increases by 1d6 when you reach levels 5 (2d6), 11 (3d6), and 17 (4d6).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#AcidSplash"
   },
   {
     id: "spell-aid",
@@ -31,7 +34,10 @@ export const defaultSpells = [
     description: "Choose up to three creatures within range. Each target's Hit Point maximum and current Hit Points increase by 5 for the duration.",
     higherLevels: "Each target's Hit Points increase by 5 for each slot level above 2.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Aid"
   },
   {
     id: "spell-alarm",
@@ -46,7 +52,10 @@ export const defaultSpells = [
     description: "You set an alarm against intrusion. Choose a door, a window, or an area within range that is no larger than a 20-foot Cube. Until the spell ends, an alarm alerts you whenever a creature touches or enters the warded area. When you cast the spell, you can designate creatures that won't set off the alarm. You also choose whether the alarm is audible or mental:\n\nAudible Alarm. The alarm produces the sound of a handbell for 10 seconds within 60 feet of the warded area.\n\nMental Alarm. You are alerted by a mental ping if you are within 1 mile of the warded area. This ping awakens you if you're asleep.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Alarm"
   },
   {
     id: "spell-alter-self",
@@ -61,7 +70,10 @@ export const defaultSpells = [
     description: "You alter your physical form. Choose one of the following options. Its effects last for the duration, during which you can take a Magic action to replace the option you chose with a different one.\n\nAquatic Adaptation. You sprout gills and grow webs between your fingers. You can breathe underwater and gain a Swim Speed equal to your Speed.\n\nChange Appearance. You alter your appearance. You decide what you look like, including your height, weight, facial features, sound of your voice, hair length, coloration, and other distinguishing characteristics. You can make yourself appear as a member of another species, though none of your statistics change. You can't appear as a creature of a different size, and your basic shape stays the same.\n\nNatural Weapons. You grow claws, fangs, spines, horns, or a different natural weapon of your choice. Your Unarmed Strikes deal 1d6 Bludgeoning, Piercing, or Slashing damage, as appropriate to the weapon you chose, and you are proficient with your Unarmed Strikes. Finally, the natural weapon is magic, and you have a +1 bonus to the attack and damage rolls you make using it.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#AlterSelf"
   },
   {
     id: "spell-animal-friendship",
@@ -76,7 +88,10 @@ export const defaultSpells = [
     description: "Target a Beast that you can see within range. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. If you or one of your allies deals damage to the target, the spell ends.",
     higherLevels: "You can target one additional Beast for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#AnimalFriendship"
   },
   {
     id: "spell-animal-messenger",
@@ -91,7 +106,10 @@ export const defaultSpells = [
     description: "A Tiny Beast of your choice that you can see within range must succeed on a Charisma saving throw, or it attempts to deliver a message for you (if the target's Challenge Rating isn't 0, it automatically succeeds). You specify a location you have visited and a recipient who matches a general description, such as \"a person dressed in the uniform of the town guard\" or \"a red-haired dwarf wearing a pointed hat.\" You also communicate a message of up to 25 words. The Beast travels for the duration toward the specified location, covering about 25 miles per 24 hours or 50 miles if the Beast can fly.\n\nWhen the messenger arrives, it delivers your message to the creature that you described, replicating the sound of your voice. If the messenger doesn't reach its destination before the spell ends, the message is lost, and the Beast returns to where you cast this spell.",
     higherLevels: "The spell's duration increases by 48 hours for each slot level above 2.",
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#AnimalMessenger"
   },
   {
     id: "spell-animal-shapes",
@@ -106,7 +124,10 @@ export const defaultSpells = [
     description: "Choose any number of willing creatures that you can see within range. Each target shape-shifts into a Large or smaller Beast of your choice that has a Challenge Rating of 4 or lower. On later turns, you can take a Magic action to transform the targets again.\n\nA target's game statistics are replaced by the chosen Beast's statistics, but the target retains its creature type; Hit Points; Hit Point Dice; alignment; ability to communicate; and Intelligence, Wisdom, and Charisma scores. The target's actions are limited by the Beast form's anatomy, and it can't cast spells. The target's equipment melds into the new form, and the target can't use any of that equipment while in that form.\n\nThe target gains a number of Temporary Hit Points equal to the Beast form's Hit Points. The transformation lasts for the duration for each target, until the target has no Temporary Hit Points, or until the target leaves the form as a Bonus Action.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#AnimalShapes"
   },
   {
     id: "spell-animate-dead",
@@ -121,7 +142,10 @@ export const defaultSpells = [
     description: "Choose a pile of bones or a corpse of a Medium or Small Humanoid within range. The target becomes an Undead creature: a Skeleton if you chose bones or a Zombie if you chose a corpse.\n\nOn each of your turns, you can take a Bonus Action to mentally command any creature you made with this spell if the creature is within 60 feet of you. You decide what action the creature will take and where it will move on its next turn, or you can issue a general command, such as to guard a particular place. If you issue no commands, the creature takes the Dodge action and moves only to avoid harm.\n\nThe creature is under your control for 24 hours, after which it stops obeying any command you've given it. To maintain control of the creature for another 24 hours, you must cast this spell on the creature again before the current 24-hour period ends. This use of the spell reasserts your control over up to four creatures you have animated with this spell rather than animating a new creature.",
     higherLevels: "You can animate or reassert control over two additional Undead creatures for each slot level above 3.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#AnimateDead"
   },
   {
     id: "spell-animate-objects",
@@ -136,7 +160,10 @@ export const defaultSpells = [
     description: "Objects animate at your command. Choose up to ten nonmagical objects within range that aren't being worn or carried and that aren't fixed to a surface. Medium or smaller targets count as one object each; Large targets count as two objects each; Huge targets count as four objects each. You can't animate an object larger than Huge.\n\nEach target animates, sprouts legs, and becomes a Construct that uses the Animated Object stat block; this creature is under your control until the spell ends or until it is reduced to 0 Hit Points. As a Bonus Action, you can mentally command any creature you made with this spell if the creature is within 500 feet of you. If you issue no commands, the creature takes the Dodge action and moves only to avoid harm.",
     higherLevels: "The creature's Slam damage increases by 1d4 (Medium or smaller), 1d6 (Large), or 1d12 (Huge) for each slot level above 5.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#AnimateObjects"
   },
   {
     id: "spell-antilife-shell",
@@ -151,7 +178,10 @@ export const defaultSpells = [
     description: "An aura extends from you in a 10-foot Emanation for the duration. The aura prevents creatures other than Constructs and Undead from passing or reaching through it. An affected creature can cast spells or make attacks with Ranged or Reach weapons through the aura.\n\nIf you move so that an affected creature is forced to pass through the aura, the spell ends.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#AntilifeShell"
   },
   {
     id: "spell-antimagic-field",
@@ -166,7 +196,10 @@ export const defaultSpells = [
     description: "An aura of antimagic surrounds you in a 10-foot Emanation. No one can cast spells, take Magic actions, or create other magical effects inside the aura, and those things can't target or otherwise affect anything inside it. Magical properties of magic items don't work inside the aura or on anything inside it.\n\nAreas of effect created by spells or other magic can't extend into the aura, and no one can teleport into or out of it or use planar travel there. Portals close temporarily while in the aura.\n\nDispelled Magic. Spells and other magical effects are suppressed in the aura. Dispel Magic and similar spells and effects can't end this spell.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#AntimagicField"
   },
   {
     id: "spell-antipathy-sympathy",
@@ -181,7 +214,10 @@ export const defaultSpells = [
     description: "As you cast the spell, choose whether it creates antipathy or sympathy, and target one creature or object that is Huge or smaller. Then specify a kind of creature, such as red dragons, goblins, or vampires. A creature of the chosen kind makes a Wisdom saving throw when it comes within 120 feet of the target.\n\nAntipathy. The creature has the Frightened condition. The Frightened creature must use its movement to move to the nearest safe spot from which the target is out of sight.\n\nSympathy. The creature has the Charmed condition. While Charmed, the creature must use its movement on each of its turns to enter the target's space or move within reach of it.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Antipathysympathy"
   },
   {
     id: "spell-arcane-eye",
@@ -196,7 +232,10 @@ export const defaultSpells = [
     description: "You create an Invisible, magical eye within range that hovers for the duration. You mentally receive visual information from the eye, which can see in every direction. It also has Darkvision with a range of 30 feet.\n\nAs a Bonus Action, you can move the eye up to 30 feet in any direction. A solid barrier blocks the eye's movement, but the eye can pass through an opening as small as 1 inch in diameter.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ArcaneEye"
   },
   {
     id: "spell-arcane-gate",
@@ -211,7 +250,10 @@ export const defaultSpells = [
     description: "You create linked teleportation portals. Choose two points on the ground that you can see, one within 10 feet of you and one within 500 feet of you. A circular portal, 10 feet in diameter, opens at each point and lasts for the duration.\n\nA portal is a two-dimensional glowing ring filled with mist that blocks vision. Any creature or object entering one portal exits the other as if the two were adjacent to each other.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ArcaneGate"
   },
   {
     id: "spell-arcane-lock",
@@ -226,7 +268,10 @@ export const defaultSpells = [
     description: "You touch a closed door, window, gate, container, or hatch and magically lock it for the duration. You and any creatures you designate when you cast the spell can open the object normally. You can also set a password that, when spoken within 5 feet of the object, unlocks it for 1 minute. Otherwise, the object is impassable until it is broken or the spell is dispelled or suppressed. Casting Knock on the object suppresses Arcane Lock for 10 minutes.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ArcaneLock"
   },
   {
     id: "spell-arcane-vigor",
@@ -241,7 +286,10 @@ export const defaultSpells = [
     description: "You tap into your life force to heal yourself. Roll one or two of your unexpended Hit Point Dice, and regain a number of Hit Points equal to the roll's total plus your spellcasting ability modifier. Those dice are then expended.",
     higherLevels: "The number of unexpended Hit Dice you can roll increases by one for each slot level above 2.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ArcaneVigor"
   },
   {
     id: "spell-armor-of-agathys",
@@ -256,7 +304,10 @@ export const defaultSpells = [
     description: "Protective magical frost surrounds you. You gain 5 Temporary Hit Points. If a creature hits you with a melee attack roll before the spell ends, the creature takes 5 Cold damage. The spell ends early if you have no Temporary Hit Points.",
     higherLevels: "The Temporary Hit Points and the Cold damage both increase by 5 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ArmorOfAgathys"
   },
   {
     id: "spell-arms-of-hadar",
@@ -271,7 +322,10 @@ export const defaultSpells = [
     description: "Invoking Hadar, you cause tendrils to erupt from yourself. Each creature in a 10-foot Emanation originating from you makes a Strength saving throw. On a failed save, a target takes 2d6 Necrotic damage and can't take Reactions until the start of its next turn. On a successful save, a target takes half as much damage only.",
     higherLevels: "The damage increases by 1d6 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ArmsOfHadar"
   },
   {
     id: "spell-astral-projection",
@@ -286,7 +340,10 @@ export const defaultSpells = [
     description: "You and up to eight willing creatures within range project your astral bodies into the Astral Plane. Each target's body is left behind in a state of suspended animation; it has the Unconscious condition, doesn't need food or air, and doesn't age.\n\nA target's astral form resembles its body in almost every way, replicating its game statistics and possessions. The principal difference is the addition of a silvery cord that trails from between the shoulder blades of the astral form. If the cord is cut, the target's body and astral form both die.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#AstralProjection"
   },
   {
     id: "spell-augury",
@@ -301,7 +358,10 @@ export const defaultSpells = [
     description: "You receive an omen from an otherworldly entity about the results of a course of action that you plan to take within the next 30 minutes. The DM chooses from the following possible omens:\n\nWeal, for good results\nWoe, for bad results\nWeal and woe, for both\nIndifference, for results that aren't especially good or bad\n\nThe spell doesn't account for circumstances that might change the outcome. If you cast the spell more than once before finishing a Long Rest, there is a cumulative 25 percent chance for each casting after the first that you get no answer.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Augury"
   },
   {
     id: "spell-aura-of-life",
@@ -316,7 +376,10 @@ export const defaultSpells = [
     description: "An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Resistance to Necrotic damage, and your Hit Point maximums can't be reduced. If an ally with 0 Hit Points starts its turn in the aura, that ally regains 1 Hit Point.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#AuraOfLife"
   },
   {
     id: "spell-aura-of-purity",
@@ -331,7 +394,10 @@ export const defaultSpells = [
     description: "An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Resistance to Poison damage and Advantage on saving throws to avoid or end the Blinded, Charmed, Deafened, Frightened, Paralyzed, Poisoned, or Stunned condition.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#AuraOfPurity"
   },
   {
     id: "spell-aura-of-vitality",
@@ -346,7 +412,10 @@ export const defaultSpells = [
     description: "An aura radiates from you in a 30-foot Emanation for the duration. When you create the aura and at the start of each of your turns while it persists, you can restore 2d6 Hit Points to one creature in it.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#AuraOfVitality"
   },
   {
     id: "spell-awaken",
@@ -361,7 +430,10 @@ export const defaultSpells = [
     description: "You spend the casting time tracing magical pathways within a precious gemstone, and then touch the target. The target must be either a Beast or Plant creature with an Intelligence of 3 or less or a natural plant that isn't a creature. The target gains an Intelligence of 10 and the ability to speak one language you know. If the target is a natural plant, it becomes a Plant creature and gains the ability to move its limbs, roots, vines, creepers, and so forth, and it gains senses similar to a human's.\n\nThe awakened target has the Charmed condition for 30 days or until you or your allies deal damage to it. When that condition ends, the awakened creature chooses its attitude toward you.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Awaken"
   },
 
   // === B ===
@@ -378,7 +450,10 @@ export const defaultSpells = [
     description: "Up to three creatures of your choice that you can see within range must each make a Charisma saving throw. Whenever a target that fails this save makes an attack roll or a saving throw before the spell ends, the target must subtract 1d4 from the attack roll or save.",
     higherLevels: "You can target one additional creature for each slot level above 1.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Bane"
   },
   {
     id: "spell-banishing-smite",
@@ -393,7 +468,10 @@ export const defaultSpells = [
     description: "The target hit by the attack roll takes an extra 5d10 Force damage. If the attack reduces the target to 50 Hit Points or fewer, the target must succeed on a Charisma saving throw or be transported to a harmless demiplane for the duration. While there, the target has the Incapacitated condition. When the spell ends, the target reappears in the space it left or the nearest unoccupied space.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#BanishingSmite"
   },
   {
     id: "spell-banishment",
@@ -408,7 +486,10 @@ export const defaultSpells = [
     description: "One creature that you can see within range must succeed on a Charisma saving throw or be transported to a harmless demiplane for the duration. While there, the target has the Incapacitated condition. When the spell ends, the target reappears in the space it left or the nearest unoccupied space.\n\nIf the target is an Aberration, a Celestial, an Elemental, a Fey, or a Fiend, the target doesn't return if the spell lasts for 1 minute. The target is instead transported to a random location on a plane associated with its creature type.",
     higherLevels: "You can target one additional creature for each slot level above 4.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Banishment"
   },
   {
     id: "spell-barkskin",
@@ -423,7 +504,10 @@ export const defaultSpells = [
     description: "You touch a willing creature. Until the spell ends, the target's skin assumes a bark-like appearance, and the target has an Armor Class of 17 if its AC is lower than that.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Barkskin"
   },
   {
     id: "spell-beacon-of-hope",
@@ -438,7 +522,10 @@ export const defaultSpells = [
     description: "Choose any number of creatures within range. For the duration, each target has Advantage on Wisdom saving throws and Death Saving Throws and regains the maximum number of Hit Points possible from any healing.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#BeaconOfHope"
   },
   {
     id: "spell-beast-sense",
@@ -453,7 +540,10 @@ export const defaultSpells = [
     description: "You touch a willing Beast. For the duration, you can take a Magic action to see through the Beast's eyes and hear what it hears, gaining the benefit of any special senses the Beast has. While perceiving through the Beast's senses, you have the Blinded and Deafened conditions with regard to your own senses.",
     higherLevels: null,
     concentration: true,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#BeastSense"
   },
   {
     id: "spell-bestow-curse",
@@ -468,7 +558,10 @@ export const defaultSpells = [
     description: "You touch a creature, which must succeed on a Wisdom saving throw or become cursed for the duration. Choose one of the following effects:\n\nAbility Penalty. Choose one ability. The target has Disadvantage on ability checks and saving throws made with that ability.\n\nAversion. Choose a type of damage. Whenever the target takes that type of damage, it has the Frightened condition until the end of its next turn.\n\nInternal Injury. Each turn, when the target takes an action, Bonus Action, or Reaction, it takes 1d8 Necrotic damage.\n\nWeakness. The target deals only half damage with weapon attacks.\n\nA Remove Curse spell ends this effect.",
     higherLevels: "If you cast this spell with a level 4 spell slot, the duration is 10 minutes without Concentration. Level 5-6: 8 hours. Level 7-8: 24 hours. Level 9: until ended by Remove Curse.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#BestowCurse"
   },
   {
     id: "spell-blade-barrier",
@@ -483,7 +576,10 @@ export const defaultSpells = [
     description: "You create a wall of whirling blades made of magical energy. The wall appears within range and lasts for the duration. You make a straight wall up to 100 feet long, 20 feet high, and 5 feet thick, or a ringed wall up to 60 feet in diameter, 20 feet high, and 5 feet thick. The wall provides Three-Quarters Cover, and its space is Difficult Terrain.\n\nA creature that enters the wall's space for the first time on a turn or starts its turn there makes a Dexterity saving throw, taking 6d10 Slashing damage on a failed save or half as much damage on a successful one.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#BladeBarrier"
   },
   {
     id: "spell-blade-ward",
@@ -498,7 +594,10 @@ export const defaultSpells = [
     description: "Whenever a creature makes an attack roll against you before the spell ends, the attacker subtracts 1d4 from the attack roll.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#BladeWard"
   },
   {
     id: "spell-bless",
@@ -513,7 +612,10 @@ export const defaultSpells = [
     description: "You bless up to three creatures within range. Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the roll.",
     higherLevels: "You can target one additional creature for each slot level above 1.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Bless"
   },
   {
     id: "spell-blight",
@@ -528,7 +630,10 @@ export const defaultSpells = [
     description: "A creature that you can see within range makes a Constitution saving throw, taking 8d8 Necrotic damage on a failed save or half as much damage on a successful one. A Plant creature automatically fails the save.\n\nA nonmagical plant that isn't a creature, such as a tree or shrub, doesn't make a save; it simply withers and dies.",
     higherLevels: "The damage increases by 1d8 for each slot level above 4.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Blight"
   },
   {
     id: "spell-blinding-smite",
@@ -543,7 +648,10 @@ export const defaultSpells = [
     description: "The target hit by the attack roll takes an extra 3d8 Radiant damage. The target must succeed on a Constitution saving throw, or it has the Blinded condition until the spell ends. At the end of each of its turns, the Blinded target repeats the save, ending the spell on itself on a success.",
     higherLevels: "The extra damage increases by 1d8 for each slot level above 3.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#BlindingSmite"
   },
   {
     id: "spell-blindness-deafness",
@@ -558,7 +666,10 @@ export const defaultSpells = [
     description: "One creature that you can see within range must succeed on a Constitution saving throw, or it has the Blinded or Deafened condition (your choice) for the duration. At the end of each of its turns, the target repeats the save, ending the spell on itself on a success.",
     higherLevels: "You can target one additional creature for each slot level above 2.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Blindnessdeafness"
   },
   {
     id: "spell-blink",
@@ -573,7 +684,10 @@ export const defaultSpells = [
     description: "Roll 1d6 at the end of each of your turns for the duration. On a roll of 4, 5, or 6, you vanish and appear in the Ethereal Plane. At the start of your next turn, you return to the plane you left in a space of your choice that you can see within 10 feet of the space you vanished from. You can dismiss this spell as a Bonus Action.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Blink"
   },
   {
     id: "spell-blur",
@@ -588,7 +702,10 @@ export const defaultSpells = [
     description: "Your body becomes blurred. For the duration, any creature has Disadvantage on attack rolls against you. An attacker is immune to this effect if it perceives you with Blindsight or Truesight or doesn't rely on sight.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Blur"
   },
   {
     id: "spell-burning-hands",
@@ -603,7 +720,10 @@ export const defaultSpells = [
     description: "A thin sheet of flames shoots forth from you. Each creature in a 15-foot Cone makes a Dexterity saving throw, taking 3d6 Fire damage on a failed save or half as much damage on a successful one.\n\nFlammable objects in the Cone that aren't being worn or carried start burning.",
     higherLevels: "The damage increases by 1d6 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#BurningHands"
   },
 
   // === C ===
@@ -620,7 +740,10 @@ export const defaultSpells = [
     description: "A storm cloud appears at a point within range that you can see above yourself. It takes the shape of a Cylinder that is 10 feet tall with a 60-foot radius. When you cast the spell, choose a point you can see under the cloud. A bolt of lightning flashes down and each creature within 5 feet of that point makes a Dexterity saving throw, taking 3d10 Lightning damage on a failed save or half as much on a successful one.\n\nUntil the spell ends, you can take a Magic action to call down lightning in this way again, targeting the same point or a different one.\n\nIf you're outdoors in a storm when you cast this spell, the spell gives you control over that storm instead of creating a new one. The spell's damage increases by 1d10 under such conditions.",
     higherLevels: "The damage increases by 1d10 for each slot level above 3.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CallLightning"
   },
   {
     id: "spell-calm-emotions",
@@ -635,7 +758,10 @@ export const defaultSpells = [
     description: "Each Humanoid in a 20-foot-radius Sphere centered on a point you choose within range must succeed on a Charisma saving throw or be affected by one of the following effects (choose for each creature):\n\nEnd Effect. You suppress any effect causing the target to have the Charmed or Frightened condition.\n\nMake Indifferent. You make the target Indifferent toward creatures of your choice that it was Hostile toward. This indifference ends if the target takes damage or witnesses its allies taking damage.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CalmEmotions"
   },
   {
     id: "spell-chain-lightning",
@@ -650,7 +776,10 @@ export const defaultSpells = [
     description: "You launch a bolt of lightning toward a target you can see within range. Three bolts then leap from that target to as many as three other targets of your choice, each of which must be within 30 feet of the first target. A target can be a creature or an object and can be targeted by only one of the bolts.\n\nEach target makes a Dexterity saving throw, taking 10d8 Lightning damage on a failed save or half as much damage on a successful one.",
     higherLevels: "One additional bolt leaps from the first target to another target for each slot level above 6.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ChainLightning"
   },
   {
     id: "spell-charm-monster",
@@ -665,7 +794,10 @@ export const defaultSpells = [
     description: "One creature you can see within range makes a Wisdom saving throw. It does so with Advantage if you or your allies are fighting it. On a failed save, the target has the Charmed condition until the spell ends or until you or your allies damage it. The Charmed creature is Friendly to you. When the spell ends, the target knows it was Charmed by you.",
     higherLevels: "You can target one additional creature for each slot level above 4.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CharmMonster"
   },
   {
     id: "spell-charm-person",
@@ -680,7 +812,10 @@ export const defaultSpells = [
     description: "One Humanoid you can see within range makes a Wisdom saving throw. It does so with Advantage if you or your allies are fighting it. On a failed save, the target has the Charmed condition until the spell ends or until you or your allies damage it. The Charmed creature is Friendly to you. When the spell ends, the target knows it was Charmed by you.",
     higherLevels: "You can target one additional creature for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CharmPerson"
   },
   {
     id: "spell-chill-touch",
@@ -695,7 +830,10 @@ export const defaultSpells = [
     description: "You touch one creature, and Necrotic energy washes over it. The target must succeed on a Constitution saving throw or take 1d10 Necrotic damage. Until the start of your next turn, the target can't regain Hit Points.",
     higherLevels: "The damage increases by 1d10 when you reach levels 5 (2d10), 11 (3d10), and 17 (4d10).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ChillTouch"
   },
   {
     id: "spell-circle-of-death",
@@ -710,7 +848,10 @@ export const defaultSpells = [
     description: "Negative energy ripples out in a 60-foot-radius Sphere from a point within range. Each creature in that area makes a Constitution saving throw, taking 8d6 Necrotic damage on a failed save or half as much damage on a successful one.",
     higherLevels: "The damage increases by 2d6 for each slot level above 6.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CircleOfDeath"
   },
   {
     id: "spell-circle-of-power",
@@ -725,7 +866,10 @@ export const defaultSpells = [
     description: "An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Advantage on saving throws against spells and other magical effects. When an affected creature succeeds on a saving throw against a spell or magical effect that allows a save to take only half damage, it takes no damage instead.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CircleOfPower"
   },
   {
     id: "spell-clairvoyance",
@@ -740,7 +884,10 @@ export const defaultSpells = [
     description: "You create an Invisible sensor within range in a location familiar to you (a place you have visited or seen before) or in an obvious location that is unfamiliar to you (such as behind a door, around a corner, or in a grove of trees). The intangible, invulnerable sensor remains in place for the duration.\n\nWhen you cast the spell, choose seeing or hearing. You can use the chosen sense through the sensor as if you were in its space. As a Magic action, you can switch between seeing and hearing.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Clairvoyance"
   },
   {
     id: "spell-clone",
@@ -755,7 +902,10 @@ export const defaultSpells = [
     description: "You touch a creature or at least 1 cubic inch of its flesh. An inert duplicate of that creature forms inside the vessel used in the spell's casting and finishes growing after 120 days; you choose whether the finished clone is the same age as the creature or younger. The clone remains inert and endures indefinitely while its vessel remains undisturbed.\n\nIf the original creature dies after the clone finishes forming, the creature's soul transfers to the clone if the soul is free and willing. The clone is physically identical to the original and has the same personality, memories, and abilities, but none of the original's equipment. The original creature's remains, if any exist, become inert and can't be revived.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Clone"
   },
   {
     id: "spell-cloud-of-daggers",
@@ -770,7 +920,10 @@ export const defaultSpells = [
     description: "You conjure spinning daggers in a 5-foot Cube centered on a point within range. Each creature that enters the Cube for the first time on a turn or starts its turn there takes 4d4 Slashing damage.",
     higherLevels: "The damage increases by 2d4 for each slot level above 2.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CloudOfDaggers"
   },
   {
     id: "spell-cloudkill",
@@ -785,7 +938,10 @@ export const defaultSpells = [
     description: "You create a 20-foot-radius Sphere of yellow-green fog centered on a point within range. The Sphere is Heavily Obscured. It lasts for the duration or until strong wind (such as the one created by Gust of Wind) disperses it.\n\nWhen a creature enters the Sphere for the first time on a turn or starts its turn there, that creature makes a Constitution saving throw, taking 5d8 Poison damage on a failed save or half as much damage on a successful one. A creature is also affected even if it holds its breath or doesn't need to breathe.\n\nThe Sphere moves 10 feet away from you at the start of each of your turns.",
     higherLevels: "The damage increases by 1d8 for each slot level above 5.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Cloudkill"
   },
   {
     id: "spell-color-spray",
@@ -800,7 +956,10 @@ export const defaultSpells = [
     description: "You launch a dazzling array of flashing, colored light. Each creature in a 15-foot Cone originating from you must succeed on a Constitution saving throw or have the Blinded condition until the end of your next turn.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ColorSpray"
   },
   {
     id: "spell-command",
@@ -815,7 +974,10 @@ export const defaultSpells = [
     description: "You speak a one-word command to a creature you can see within range. The target must succeed on a Wisdom saving throw or follow the command on its next turn. Choose the command from these options:\n\nApproach. The target moves toward you by the shortest route, ending its turn within 5 feet of you.\n\nDrop. The target drops whatever it is holding and ends its turn.\n\nFlee. The target spends its turn moving away from you by the fastest available means.\n\nGrovel. The target has the Prone condition and ends its turn.\n\nHalt. On its turn, the target doesn't move and takes no action or Bonus Action.",
     higherLevels: "You can affect one additional creature for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Command"
   },
   {
     id: "spell-commune",
@@ -830,7 +992,10 @@ export const defaultSpells = [
     description: "You contact a deity or divine proxy and ask up to three yes-or-no questions that can be answered during the spell's duration. You must ask your questions before the spell ends. You receive a correct answer for each question, but divine beings aren't omniscient, so you might receive \"unclear\" as an answer if a question pertains to information beyond the deity's knowledge.\n\nIf you cast this spell more than once before finishing a Long Rest, there's a cumulative 25 percent chance for each casting after the first that you get no answer.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Commune"
   },
   {
     id: "spell-commune-with-nature",
@@ -845,7 +1010,10 @@ export const defaultSpells = [
     description: "You become one with nature and gain knowledge of the surrounding area. In the outdoors, the spell gives you knowledge of the area within 3 miles of you. In caves and other underground settings, the radius is limited to 300 feet. The spell doesn't function where nature has been replaced by construction, such as in castles and settlements.\n\nYou learn the following information about the area: significant terrain and bodies of water, prevalent plants, minerals, animals, and peoples, powerful Celestials, Fey, Fiends, Elementals, or Undead, influence from other planes, and buildings.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CommuneWithNature"
   },
   {
     id: "spell-compelled-duel",
@@ -860,7 +1028,10 @@ export const defaultSpells = [
     description: "You try to compel a creature into a duel. One creature that you can see within range makes a Wisdom saving throw. On a failed save, the target has Disadvantage on attack rolls against creatures other than you, and it can't willingly move to a space that is more than 30 feet away from you.\n\nThe spell ends if you make an attack roll against a creature other than the target, if you cast a spell on a hostile creature other than the target, if an ally of yours damages the target, or if you end your turn more than 30 feet away from the target.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CompelledDuel"
   },
   {
     id: "spell-comprehend-languages",
@@ -875,7 +1046,10 @@ export const defaultSpells = [
     description: "For the duration, you understand the literal meaning of any language that you hear or see signed. You also understand any written language that you see, but you must be touching the surface on which the words are written. It takes about 1 minute to read one page of text. This spell doesn't decode symbols or secret messages.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ComprehendLanguages"
   },
   {
     id: "spell-compulsion",
@@ -890,7 +1064,10 @@ export const defaultSpells = [
     description: "Each creature of your choice that you can see within range must succeed on a Wisdom saving throw or have the Charmed condition until the spell ends.\n\nFor the duration, you can take a Bonus Action to designate a direction that is horizontal to you. Each Charmed target must use as much of its movement as possible to move in that direction on its next turn, taking the safest route. After moving, a target repeats the save, ending the spell on itself on a success.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Compulsion"
   },
   {
     id: "spell-cone-of-cold",
@@ -905,7 +1082,10 @@ export const defaultSpells = [
     description: "You unleash a blast of cold air. Each creature in a 60-foot Cone originating from you makes a Constitution saving throw, taking 8d8 Cold damage on a failed save or half as much damage on a successful one. A creature killed by this spell becomes a frozen statue until it thaws.",
     higherLevels: "The damage increases by 1d8 for each slot level above 5.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ConeOfCold"
   },
   {
     id: "spell-confusion",
@@ -920,7 +1100,10 @@ export const defaultSpells = [
     description: "Each creature in a 10-foot-radius Sphere centered on a point you choose within range must succeed on a Wisdom saving throw, or that target can't take Bonus Actions or Reactions and must roll 1d10 at the start of each of its turns to determine its behavior for that turn, consulting the table in the spell description.\n\nAt the end of each of its turns, an affected target repeats the save, ending the spell on itself on a success.",
     higherLevels: "The Sphere's radius increases by 5 feet for each slot level above 4.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Confusion"
   },
   {
     id: "spell-conjure-animals",
@@ -935,7 +1118,10 @@ export const defaultSpells = [
     description: "You conjure nature spirits that take the form of a Large swarm of spectral animals in an unoccupied space you can see within range. The swarm lasts for the duration, is under your control, and uses the Conjured Animals stat block.\n\nOn your later turns, you can take a Bonus Action to command the swarm.",
     higherLevels: "The swarm gains 5 additional Hit Points for each slot level above 3.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ConjureAnimals"
   },
   {
     id: "spell-conjure-celestial",
@@ -950,7 +1136,10 @@ export const defaultSpells = [
     description: "You conjure a spirit from the Upper Planes. It manifests in an angelic form in an unoccupied space that you can see within range and uses the Celestial Spirit stat block. When you cast the spell, choose Avenger or Defender. Your choice determines certain details in its stat block. The creature disappears when it drops to 0 Hit Points or when the spell ends.\n\nAs a Bonus Action on your later turns, you can teleport the spirit to an unoccupied space you can see within 30 feet of the space it left.",
     higherLevels: "The spirit's Hit Points increase by 20 for each slot level above 7.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ConjureCelestial"
   },
   {
     id: "spell-conjure-elemental",
@@ -965,7 +1154,10 @@ export const defaultSpells = [
     description: "You conjure a spirit from an Elemental Plane. It manifests in an elemental form in an unoccupied space that you can see within range and uses the Elemental Spirit stat block. When you cast the spell, choose Air, Earth, Fire, or Water. The creature resembles a bipedal form made of the chosen element, and its stat block has certain details determined by your choice. The creature disappears when it drops to 0 Hit Points or when the spell ends.\n\nAs a Bonus Action on your later turns, you can teleport the spirit to an unoccupied space you can see within 30 feet of the space it left.",
     higherLevels: "The spirit's Hit Points increase by 10 for each slot level above 5.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ConjureElemental"
   },
   {
     id: "spell-conjure-fey",
@@ -980,7 +1172,10 @@ export const defaultSpells = [
     description: "You conjure a spirit from the Feywild. It manifests in an unoccupied space that you can see within range and uses the Fey Spirit stat block. When you cast the spell, choose a mood: Fuming, Mirthful, or Tricksy. The creature resembles a Fey of your choice, and its stat block has certain details determined by your mood choice. The creature disappears when it drops to 0 Hit Points or when the spell ends.\n\nAs a Bonus Action on your later turns, you can teleport the spirit to an unoccupied space you can see within 30 feet of the space it left.",
     higherLevels: "The spirit's Hit Points increase by 10 for each slot level above 6.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ConjureFey"
   },
   {
     id: "spell-conjure-minor-elementals",
@@ -995,7 +1190,10 @@ export const defaultSpells = [
     description: "You conjure elemental spirits that flit around you for the duration. Until the spell ends, any attack you make deals an extra 2d8 damage when you hit a creature within 15 feet of you. This damage is Acid, Cold, Fire, or Lightning (your choice when you cast the spell).\n\nIn addition, the ground within the Emanation is Difficult Terrain for your enemies.",
     higherLevels: "The damage increases by 2d8 for each slot level above 4.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ConjureMinorElementals"
   },
   {
     id: "spell-conjure-woodland-beings",
@@ -1010,7 +1208,10 @@ export const defaultSpells = [
     description: "You conjure nature spirits that flit about you for the duration. Until the spell ends, each creature you choose that enters a space within 10 feet of you for the first time on a turn or starts its turn there must succeed on a Wisdom saving throw or take 5d8 Force damage and have the Charmed condition until the start of its next turn.",
     higherLevels: "The damage increases by 1d8 for each slot level above 4.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ConjureWoodlandBeings"
   },
   {
     id: "spell-contact-other-plane",
@@ -1025,7 +1226,10 @@ export const defaultSpells = [
     description: "You mentally contact a demigod, the spirit of a long-dead sage, or some other knowledgeable entity from another plane. Contacting this extraplanar Intelligence can break your mind. When you cast this spell, make a DC 15 Intelligence saving throw. On a success, you can ask up to five yes-or-no questions during the duration. The DM answers each question with one word: \"yes,\" \"no,\" \"maybe,\" \"never,\" \"irrelevant,\" or \"unclear.\" On a failure, you take 6d6 Psychic damage and have the Incapacitated condition until you finish a Long Rest.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ContactOtherPlane"
   },
   {
     id: "spell-contagion",
@@ -1040,7 +1244,10 @@ export const defaultSpells = [
     description: "Your touch inflicts a magical contagion. The target must succeed on a Constitution saving throw or take 11d8 Necrotic damage and have the Poisoned condition. Also, choose one ability when you cast the spell. While Poisoned, the target has Disadvantage on saves made with the chosen ability.\n\nThe target must repeat the save at the end of each of its turns until it gets three successes or failures. Three successes end the spell on the target. Three failures mean the target is Poisoned for 7 days.",
     higherLevels: "The damage increases by 2d8 for each slot level above 5.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Contagion"
   },
   {
     id: "spell-contingency",
@@ -1055,7 +1262,10 @@ export const defaultSpells = [
     description: "Choose a spell of level 5 or lower that you can cast, that has a casting time of an action, and that can target you. You cast that spell—called the contingent spell—as part of casting Contingency, expending spell slots for both. The contingent spell doesn't take effect immediately; it takes effect when a certain trigger occurs. You describe that trigger when you cast the two spells. For example, a Contingency cast with Water Breathing might stipulate that Water Breathing takes effect when you are submerged.\n\nThe contingent spell takes effect immediately after the trigger, targeting only you even if it can target others. If you cast Contingency again, the effect of another Contingency spell on you ends. Contingency also ends if its material component is ever not on your person.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Contingency"
   },
   {
     id: "spell-continual-flame",
@@ -1070,7 +1280,10 @@ export const defaultSpells = [
     description: "A flame springs from an object that you touch. The effect casts Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. It looks like a regular flame, but it creates no heat and consumes no fuel. The flame can be covered or hidden but not smothered or quenched.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ContinualFlame"
   },
   {
     id: "spell-control-water",
@@ -1085,7 +1298,10 @@ export const defaultSpells = [
     description: "Until the spell ends, you control any water inside an area you choose that is a Cube up to 100 feet on a side. Choose one of the following effects when you cast the spell. As a Magic action on your later turns, you can repeat the same effect or choose a different one.\n\nFlood. You cause the water level of all standing water in the area to rise by as much as 20 feet. Flooding water spills onto land if the area includes a shore.\n\nPart Water. You part water in the area and create a trench.\n\nRedirect Flow. Flowing water in the area moves in a direction you choose.\n\nWhirlpool. You cause a whirlpool to form in the center of the area. Creatures entering the whirlpool must make a Strength save or take 2d8 Bludgeoning damage and get caught in the whirlpool.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ControlWater"
   },
   {
     id: "spell-control-weather",
@@ -1100,7 +1316,10 @@ export const defaultSpells = [
     description: "You take control of the weather within 5 miles of you for the duration. You must be outdoors to cast this spell, and it ends early if you go indoors.\n\nWhen you cast the spell, you change the current weather conditions, which the DM determines based on the climate. You can change precipitation, temperature, and wind. It takes 1d4 x 10 minutes for the new conditions to take effect. You can change the conditions again once they've taken effect. When the spell ends, weather gradually returns to normal.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ControlWeather"
   },
   {
     id: "spell-cordon-of-arrows",
@@ -1115,7 +1334,10 @@ export const defaultSpells = [
     description: "You plant four pieces of nonmagical ammunition—arrows or crossbow bolts—in the ground within range and lay magic upon them to protect an area. Until the spell ends, whenever a creature other than you comes within 30 feet of the ammunition for the first time on a turn or ends its turn there, one piece of ammunition flies up to strike it. The creature must succeed on a Dexterity saving throw or take 2d4 Piercing damage. The piece of ammunition is then destroyed. The spell ends when no ammunition remains.",
     higherLevels: "The amount of ammunition that can be affected increases by two for each slot level above 2.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CordonOfArrows"
   },
   {
     id: "spell-counterspell",
@@ -1130,7 +1352,10 @@ export const defaultSpells = [
     description: "You attempt to interrupt a creature in the process of casting a spell. The creature makes a Constitution saving throw. On a failed save, the spell dissipates with no effect, and the action, Bonus Action, or Reaction used to cast it is wasted. If that spell was cast with a spell slot, the slot isn't expended.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Counterspell"
   },
   {
     id: "spell-create-food-and-water",
@@ -1145,7 +1370,10 @@ export const defaultSpells = [
     description: "You create 45 pounds of food and 30 gallons of fresh water on the ground or in containers within range—enough to sustain up to fifteen Humanoids or five steeds for 24 hours. The food is bland but nourishing and spoils if uneaten after 24 hours. The water is clean.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CreateFoodAndWater"
   },
   {
     id: "spell-create-or-destroy-water",
@@ -1160,7 +1388,10 @@ export const defaultSpells = [
     description: "You do one of the following:\n\nCreate Water. You create up to 10 gallons of clean water within range in an open container. Alternatively, the water falls as rain in a 30-foot Cube within range, extinguishing exposed flames.\n\nDestroy Water. You destroy up to 10 gallons of water in an open container within range. Alternatively, you destroy fog in a 30-foot Cube within range.",
     higherLevels: "You create or destroy 10 additional gallons of water for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CreateOrDestroyWater"
   },
   {
     id: "spell-create-undead",
@@ -1175,7 +1406,10 @@ export const defaultSpells = [
     description: "You can cast this spell only at night. Choose up to three corpses of Medium or Small Humanoids within range. Each one becomes a Ghoul under your control.\n\nOn each of your turns, you can take a Bonus Action to mentally command any creature you made with this spell if it is within 120 feet of you. You decide the creature's action and movement.\n\nThe creature is under your control for 24 hours. To maintain control for another 24 hours, you must cast this spell on the creature again before the current 24-hour period ends.",
     higherLevels: "When you cast this spell with a level 7 spell slot, you can create or reassert control over four Ghouls. With a level 8 slot: five Ghouls or two Ghasts or Wights. With a level 9 slot: six Ghouls, three Ghasts or Wights, or two Mummies.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CreateUndead"
   },
   {
     id: "spell-creation",
@@ -1190,7 +1424,10 @@ export const defaultSpells = [
     description: "You pull wisps of shadow material from the Shadowfell to create an object within range. It is either an object of vegetable matter (soft goods, rope, wood, or the like) or mineral matter (stone, crystal, metal, or the like). The object must be no larger than a 5-foot Cube, and it must be of a form and material that you have seen.\n\nThe duration depends on the material: vegetable matter lasts 1 day, stone or crystal lasts 12 hours, precious metals last 1 hour, gems last 10 minutes, and adamantine or mithral lasts 1 minute.",
     higherLevels: "The Cube increases by 5 feet for each slot level above 5.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Creation"
   },
   {
     id: "spell-crown-of-madness",
@@ -1205,7 +1442,10 @@ export const defaultSpells = [
     description: "One creature of your choice that you can see within range must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The creature succeeds automatically if it isn't Humanoid.\n\nA spectral crown appears on the Charmed target's head, and it must use its action before moving on each of its turns to make a melee attack against a creature other than itself that you mentally choose. The target acts normally if you choose no creature or none are within range.\n\nOn your later turns, you must take the Magic action to maintain control, or the spell ends. The target repeats the save at the end of each of its turns, ending the spell on itself on a success.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CrownOfMadness"
   },
   {
     id: "spell-crusaders-mantle",
@@ -1220,7 +1460,10 @@ export const defaultSpells = [
     description: "You radiate a magical aura in a 30-foot Emanation. While in the aura, you and your allies each deal an extra 1d4 Radiant damage when hitting with a weapon or an Unarmed Strike.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CrusadersMantle"
   },
   {
     id: "spell-cure-wounds",
@@ -1235,7 +1478,10 @@ export const defaultSpells = [
     description: "A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier.",
     higherLevels: "The healing increases by 2d8 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#CureWounds"
   },
 
   // === D ===
@@ -1252,7 +1498,10 @@ export const defaultSpells = [
     description: "You create up to four torch-size lights within range, making them appear as torches, lanterns, or glowing orbs that hover for the duration. You can combine the four lights into one glowing, vaguely humanoid form of Medium size. Each light sheds Dim Light in a 10-foot radius.\n\nAs a Bonus Action, you can move the lights up to 60 feet to a new spot within range. A light must be within 20 feet of another light created by this spell, and a light winks out if it exceeds the spell's range.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DancingLights"
   },
   {
     id: "spell-darkness",
@@ -1267,7 +1516,10 @@ export const defaultSpells = [
     description: "For the duration, magical Darkness spreads from a point within range and fills a 15-foot-radius Sphere. Darkvision can't see through it, and nonmagical light can't illuminate it.\n\nAlternatively, you cast the spell on an object that isn't being worn or carried, causing the Darkness to fill a 15-foot Emanation originating from that object. Covering that object with something opaque blocks the Darkness.\n\nIf any of this spell's area overlaps with an area of Bright Light or Dim Light created by a spell of level 2 or lower, that other spell is dispelled.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Darkness"
   },
   {
     id: "spell-darkvision",
@@ -1282,7 +1534,10 @@ export const defaultSpells = [
     description: "You touch a willing creature to grant it Darkvision with a range of 150 feet for the duration.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Darkvision"
   },
   {
     id: "spell-daylight",
@@ -1297,7 +1552,10 @@ export const defaultSpells = [
     description: "For the duration, sunlight spreads from a point within range and fills a 60-foot-radius Sphere. The sunlight's area is Bright Light and sheds Dim Light for an additional 60 feet.\n\nAlternatively, you cast the spell on an object that isn't being worn or carried, causing the sunlight to fill a 60-foot Emanation originating from that object. Covering that object with something opaque blocks the sunlight.\n\nIf any of this spell's area overlaps with an area of Darkness created by a spell of level 3 or lower, that other spell is dispelled.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Daylight"
   },
   {
     id: "spell-death-ward",
@@ -1312,7 +1570,10 @@ export const defaultSpells = [
     description: "You touch a creature and grant it a measure of protection from death. The first time the target would drop to 0 Hit Points before the spell ends, the target drops to 1 Hit Point instead, and the spell ends.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DeathWard"
   },
   {
     id: "spell-delayed-blast-fireball",
@@ -1327,7 +1588,10 @@ export const defaultSpells = [
     description: "A beam of yellow light flashes from you, then condenses at a point within range as a glowing bead for the duration. When the spell ends, the bead explodes, and each creature in a 20-foot-radius Sphere centered on that point makes a Dexterity saving throw. A creature takes 12d6 Fire damage on a failed save or half as much on a successful one.\n\nThe spell's base damage increases by 1d6 for each round the bead doesn't explode, to a maximum of 15d6.\n\nIf the glowing bead is touched before the spell ends, the creature touching it makes a Dexterity saving throw. On a failed save, the spell ends, causing the bead to explode. On a success, the creature can throw the bead up to 40 feet; if the bead enters a creature's space or hits a solid object, the spell ends and the bead explodes.",
     higherLevels: "The damage increases by 1d6 for each slot level above 7.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DelayedBlastFireball"
   },
   {
     id: "spell-demiplane",
@@ -1342,7 +1606,10 @@ export const defaultSpells = [
     description: "You create a shadowy door on a flat solid surface that you can see within range. This door is large enough to allow Medium creatures to pass through unhindered. When opened, the door leads to a demiplane that is an empty room 30 feet in each dimension, made of wood or stone (your choice). When the spell ends, the door vanishes, and any objects inside the demiplane remain there. Any creatures inside also remain unless they leave.\n\nEach time you cast this spell, you can create a new demiplane or connect the door to a demiplane you made with a previous casting of this spell.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Demiplane"
   },
   {
     id: "spell-destructive-wave",
@@ -1357,7 +1624,10 @@ export const defaultSpells = [
     description: "Destructive energy ripples outward from you in a 30-foot Emanation. Each creature you choose in the Emanation makes a Constitution saving throw. On a failed save, a target takes 5d6 Thunder damage and 5d6 Radiant or Necrotic damage (your choice) and has the Prone condition. On a successful save, a target takes half as much damage only.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DestructiveWave"
   },
   {
     id: "spell-detect-evil-and-good",
@@ -1372,7 +1642,10 @@ export const defaultSpells = [
     description: "For the duration, you sense the location of any Aberration, Celestial, Elemental, Fey, Fiend, or Undead within 30 feet of you. You also sense whether the Hallow spell is active there and, if so, where.\n\nThe spell is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DetectEvilAndGood"
   },
   {
     id: "spell-detect-magic",
@@ -1387,7 +1660,10 @@ export const defaultSpells = [
     description: "For the duration, you sense the presence of magical effects within 30 feet of yourself. If you sense such effects, you can take the Magic action to see a faint aura around any visible creature or object in the area that bears the magic, and if an effect was created by a spell, you learn the spell's school of magic.\n\nThe spell is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt.",
     higherLevels: null,
     concentration: true,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DetectMagic"
   },
   {
     id: "spell-detect-poison-and-disease",
@@ -1402,7 +1678,10 @@ export const defaultSpells = [
     description: "For the duration, you sense the location of poisons, poisonous or venomous creatures, and magical contagions within 30 feet of you. You also identify the kind of poison, creature, or contagion in each case.\n\nThe spell is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt.",
     higherLevels: null,
     concentration: true,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DetectPoisonAndDisease"
   },
   {
     id: "spell-detect-thoughts",
@@ -1417,7 +1696,10 @@ export const defaultSpells = [
     description: "You can read the thoughts of certain creatures. When you cast the spell and as a Magic action on each of your turns until the spell ends, you can focus your mind on one creature you can see within 30 feet. The target makes a Wisdom saving throw. On a failed save, you gain insight into its emotional state and surface thoughts. On a successful save, you sense nothing.\n\nWhile focusing on a target, you can take a Magic action to probe deeper. The target makes another Wisdom save. On a failed save, you gain insight into its reasoning, emotional state, and something that looms large in its mind. On a success, the spell ends. Either way, the target knows you are probing.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DetectThoughts"
   },
   {
     id: "spell-dimension-door",
@@ -1432,7 +1714,10 @@ export const defaultSpells = [
     description: "You teleport to a location within range. You arrive at exactly the spot desired. It can be a place you can see, one you can visualize, or one you can describe by stating distance and direction.\n\nYou can also bring one willing creature of your size or smaller, who is carrying gear up to its carrying capacity and is within 5 feet of you. The creature appears in a space within 5 feet of your destination space.\n\nIf you would arrive in an occupied space, you and any creature with you each take 4d6 Force damage, and the teleportation fails.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DimensionDoor"
   },
   {
     id: "spell-disguise-self",
@@ -1447,7 +1732,10 @@ export const defaultSpells = [
     description: "You make yourself—including your clothing, armor, weapons, and other belongings on your person—look different until the spell ends. You can seem up to 1 foot shorter or taller and can appear heavier or lighter. You must adopt a form that has the same basic arrangement of limbs as you have.\n\nThe changes wrought by this spell fail to hold up to physical inspection. To discern that you are disguised, a creature must take the Study action to inspect your appearance and succeed on an Intelligence (Investigation) check against your spell save DC.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DisguiseSelf"
   },
   {
     id: "spell-disintegrate",
@@ -1462,7 +1750,10 @@ export const defaultSpells = [
     description: "You launch a green ray at a target you can see within range. The target can be a creature, a nonmagical object, or a creation of magical force, such as the wall created by Wall of Force.\n\nA creature targeted by this spell makes a Dexterity saving throw. On a failed save, the target takes 10d6 + 40 Force damage. If this damage reduces it to 0 Hit Points, it and everything nonmagical it is wearing and carrying are disintegrated into gray dust. The target can be revived only by a True Resurrection or a Wish spell.\n\nThis spell automatically disintegrates a Large or smaller nonmagical object or a creation of magical force. If the target is a Huge or larger object or creation of force, this spell disintegrates a 10-foot-Cube portion of it.",
     higherLevels: "The damage increases by 3d6 for each slot level above 6.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Disintegrate"
   },
   {
     id: "spell-dispel-evil-and-good",
@@ -1477,7 +1768,10 @@ export const defaultSpells = [
     description: "For the duration, Celestials, Elementals, Fey, Fiends, and Undead have Disadvantage on attack rolls against you. You can end the spell early by using either of the following special functions:\n\nBreak Enchantment. As a Magic action, you touch a creature that is possessed by or has the Charmed or Frightened condition from one or more creatures of the types above. The target is no longer possessed, Charmed, or Frightened by such creatures.\n\nDismissal. As a Magic action, you target one creature you can see within 5 feet that is of a type above. The target must succeed on a Charisma saving throw or be sent back to its home plane if it isn't there already.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DispelEvilAndGood"
   },
   {
     id: "spell-dispel-magic",
@@ -1492,7 +1786,10 @@ export const defaultSpells = [
     description: "Choose one creature, object, or magical effect within range. Any ongoing spell of level 3 or lower on the target ends. For each ongoing spell of level 4 or higher on the target, make an ability check using your spellcasting ability (DC 10 plus that spell's level). On a successful check, the spell ends.",
     higherLevels: "You automatically end a spell on the target if the spell's level is equal to or less than the level of the spell slot you used.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DispelMagic"
   },
   {
     id: "spell-dissonant-whispers",
@@ -1507,7 +1804,10 @@ export const defaultSpells = [
     description: "One creature of your choice that you can see within range hears a discordant melody in its mind. The target makes a Wisdom saving throw. On a failed save, it takes 3d6 Psychic damage and must immediately use its Reaction, if available, to move as far away from you as it can. The creature doesn't move into obviously dangerous ground, such as a fire or a pit. On a successful save, the target takes half as much damage only.",
     higherLevels: "The damage increases by 1d6 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DissonantWhispers"
   },
   {
     id: "spell-divination",
@@ -1522,7 +1822,10 @@ export const defaultSpells = [
     description: "This spell puts you in contact with a god or a god's servants. You ask one question about a specific goal, event, or activity to occur within 7 days. The DM offers a truthful reply, which might be a short phrase, a cryptic rhyme, or an omen.\n\nThe spell doesn't account for possible circumstances that might change the outcome, such as the casting of more spells.\n\nIf you cast the spell more than once before finishing a Long Rest, there's a cumulative 25 percent chance for each casting after the first that you get no answer.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Divination"
   },
   {
     id: "spell-divine-favor",
@@ -1537,7 +1840,10 @@ export const defaultSpells = [
     description: "Until the spell ends, your attacks with weapons deal an extra 1d4 Radiant damage on a hit.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DivineFavor"
   },
   {
     id: "spell-divine-smite",
@@ -1552,7 +1858,10 @@ export const defaultSpells = [
     description: "The target takes an extra 2d8 Radiant damage from the attack. The damage increases by 1d8 if the target is a Fiend or an Undead.",
     higherLevels: "The damage increases by 1d8 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DivineSmite"
   },
   {
     id: "spell-divine-word",
@@ -1567,7 +1876,10 @@ export const defaultSpells = [
     description: "You utter a divine word imbued with power. Each creature of your choice within range makes a Charisma saving throw. On a failed save, a target that has 50 Hit Points or fewer suffers an effect based on its Hit Points, as shown in the Divine Word Effects table. Regardless of its Hit Points, a Celestial, an Elemental, a Fey, or a Fiend that fails its save is forced back to its plane of origin and can't return to your current plane for 24 hours.\n\n0-20 HP: Dead\n21-30 HP: Deafened, Blinded, and Stunned for 1 hour\n31-40 HP: Deafened and Blinded for 10 minutes\n41-50 HP: Deafened for 1 minute",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DivineWord"
   },
   {
     id: "spell-dominate-beast",
@@ -1582,7 +1894,10 @@ export const defaultSpells = [
     description: "One Beast you can see within range must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target has Advantage on the save if you or your allies are fighting it.\n\nWhile the target is Charmed, you have a telepathic link with it as long as the two of you are on the same plane. You can use this link to issue commands to the creature (no action required), which it does its best to obey. You can specify a simple and general course of action. If the creature completes the order and doesn't receive further direction, it defends itself.\n\nYou can take a Magic action to assume direct control. The target takes only the actions you choose and makes no independent decisions.\n\nEach time the target takes damage, it repeats the save, ending the spell on a success.",
     higherLevels: "Level 5: 10 minutes. Level 6: 1 hour. Level 7+: 8 hours.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DominateBeast"
   },
   {
     id: "spell-dominate-monster",
@@ -1597,7 +1912,10 @@ export const defaultSpells = [
     description: "One creature you can see within range must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target has Advantage on the save if you or your allies are fighting it.\n\nWhile the target is Charmed, you have a telepathic link with it as long as the two of you are on the same plane. You can use this link to issue commands (no action required), which it does its best to obey. You can specify a simple course of action. If it completes the order and doesn't receive further direction, it defends itself.\n\nYou can take a Magic action to assume direct control. The target takes only the actions you choose.\n\nEach time the target takes damage, it repeats the save, ending the spell on a success.",
     higherLevels: "Level 9: 8 hours.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DominateMonster"
   },
   {
     id: "spell-dominate-person",
@@ -1612,7 +1930,10 @@ export const defaultSpells = [
     description: "One Humanoid you can see within range must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target has Advantage on the save if you or your allies are fighting it.\n\nWhile the target is Charmed, you have a telepathic link with it as long as the two of you are on the same plane. You can use this link to issue commands (no action required), which it does its best to obey. You can specify a simple course of action. If it completes the order and doesn't receive further direction, it defends itself.\n\nYou can take a Magic action to assume direct control. The target takes only the actions you choose.\n\nEach time the target takes damage, it repeats the save, ending the spell on a success.",
     higherLevels: "Level 6: 10 minutes. Level 7: 1 hour. Level 8+: 8 hours.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#DominatePerson"
   },
   {
     id: "spell-dream",
@@ -1627,7 +1948,10 @@ export const defaultSpells = [
     description: "You target a creature you know on the same plane of existence. You or a willing creature you touch enters a trance state to act as a messenger. While in the trance, the messenger is aware of its surroundings but can't take actions or move.\n\nIf the target is asleep, the messenger appears in its dreams and can converse with it as long as it remains asleep through the spell's duration. The messenger can also shape the dream's environment, creating objects and other images. The messenger can emerge from the trance at any time, ending the spell.\n\nThe target recalls the dream perfectly upon waking. If the target is awake, the messenger knows it and can end the trance (and the spell) or wait for it to fall asleep.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Dream"
   },
   {
     id: "spell-druidcraft",
@@ -1642,7 +1966,10 @@ export const defaultSpells = [
     description: "Whispering to the spirits of nature, you create one of the following effects within range:\n\nWeather Sensor. You create a Tiny, harmless sensory effect that predicts what the weather will be at your location for the next 24 hours. The effect persists for 1 round.\n\nBloom. You instantly make a flower blossom, a seed pod open, or a leaf bud bloom.\n\nSensory Effect. You create a harmless sensory effect, such as falling leaves, a puff of wind, the sound of a small animal, or the faint odor of skunk. The effect must fit in a 5-foot Cube.\n\nFire Play. You instantly light or snuff out a candle, a torch, or a small campfire.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Druidcraft"
   },
 
   // === E ===
@@ -1659,7 +1986,10 @@ export const defaultSpells = [
     description: "Choose a point on the ground that you can see within range. For the duration, an intense tremor rips through the ground in a 100-foot-radius circle centered on that point. The ground there is Difficult Terrain.\n\nWhen you cast this spell and at the end of each of your turns for the duration, each creature on the ground in the area makes a Dexterity saving throw. On a failed save, the creature has the Prone condition, and its Concentration is broken.\n\nYou can also cause the effects described in the full spell description for fissures, structures, and similar effects.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Earthquake"
   },
   {
     id: "spell-eldritch-blast",
@@ -1674,7 +2004,10 @@ export const defaultSpells = [
     description: "You hurl a beam of crackling energy. Make a ranged spell attack against one creature or object in range. On a hit, the target takes 1d10 Force damage.",
     higherLevels: "The spell creates more than one beam when you reach higher levels: two beams at level 5, three beams at level 11, and four beams at level 17. You can direct the beams at the same target or at different ones. Make a separate attack roll for each beam.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#EldritchBlast"
   },
   {
     id: "spell-elemental-weapon",
@@ -1689,7 +2022,10 @@ export const defaultSpells = [
     description: "A nonmagical weapon you touch becomes a magic weapon. Choose one of the following damage types: Acid, Cold, Fire, Lightning, or Thunder. For the duration, the weapon has a +1 bonus to attack rolls and deals an extra 1d4 damage of the chosen type when it hits.",
     higherLevels: "The bonus to attack rolls increases to +2 and the extra damage increases to 2d4 with a level 5-6 spell slot, or the bonus increases to +3 and the extra damage increases to 3d4 with a level 7+ spell slot.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ElementalWeapon"
   },
   {
     id: "spell-elementalism",
@@ -1704,7 +2040,10 @@ export const defaultSpells = [
     description: "You exert control over the elements, creating one of the following effects within range:\n\nAerial Flourish. You create a harmless sensory effect using air, such as causing leaves to rustle, wind to slam shutters closed, or clothes to ripple in a breeze.\n\nBolster Flame. You cause a nonmagical flame to double in size.\n\nDouse Flame. You snuff out a nonmagical fire that fills a 5-foot Cube.\n\nElemental Sculptures. You make a nonmagical fire, body of water, or section of stone, earth, or air change shape for 1 hour.\n\nFreezing Water. You freeze a body of water in a 5-foot Cube for 1 hour. It doesn't trap creatures inside.\n\nSparkling Air. You make a 5-foot Cube of air sparkle for 1 minute.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Elementalism"
   },
   {
     id: "spell-enhance-ability",
@@ -1719,7 +2058,10 @@ export const defaultSpells = [
     description: "You touch a creature and choose Strength, Dexterity, Constitution, Intelligence, Wisdom, or Charisma. For the duration, the target has Advantage on ability checks using the chosen ability.",
     higherLevels: "You can target one additional creature for each slot level above 2. You can choose a different ability for each target.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#EnhanceAbility"
   },
   {
     id: "spell-enlarge-reduce",
@@ -1734,7 +2076,10 @@ export const defaultSpells = [
     description: "For the duration, a creature or an object you can see within range is magically resized. Choose Enlarge or Reduce:\n\nEnlarge. The target's size increases by one category—from Medium to Large, for example. The target has Advantage on Strength checks and Strength saves, and the target's attacks with its body or weapons deal 1d4 extra damage.\n\nReduce. The target's size decreases by one category—from Medium to Small, for example. The target has Disadvantage on Strength checks and Strength saves, and the target's attacks with its body or weapons deal 1d4 less damage (minimum 1 damage).\n\nAn unwilling creature makes a Constitution save. On a success, the spell has no effect.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Enlargereduce"
   },
   {
     id: "spell-ensnaring-strike",
@@ -1749,7 +2094,10 @@ export const defaultSpells = [
     description: "As you hit the target, grasping vines appear on it, and it must succeed on a Strength saving throw or have the Restrained condition until the spell ends. A Large or larger creature has Advantage on this save.\n\nIf the target has the Restrained condition, it takes 1d6 Piercing damage at the start of each of its turns. The target or a creature within reach of it can take an action to make a Strength check against your spell save DC. On a success, the spell ends.",
     higherLevels: "The damage increases by 1d6 for each slot level above 1.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#EnsnaringStrike"
   },
   {
     id: "spell-entangle",
@@ -1764,7 +2112,10 @@ export const defaultSpells = [
     description: "Grasping plants sprout from the ground in a 20-foot square within range. For the duration, these plants turn the ground in the area into Difficult Terrain.\n\nEach creature in the area when you cast the spell must succeed on a Strength saving throw or have the Restrained condition until the spell ends. A Restrained creature can take an action to make a Strength check against your spell save DC. On a success, it frees itself.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Entangle"
   },
   {
     id: "spell-enthrall",
@@ -1779,7 +2130,10 @@ export const defaultSpells = [
     description: "You weave a distracting string of words, causing creatures of your choice that you can see within range to make a Wisdom saving throw. Any creature you or your companions are fighting automatically succeeds. On a failed save, a target has a -10 penalty to Wisdom (Perception) checks and Passive Perception until the spell ends.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Enthrall"
   },
   {
     id: "spell-etherealness",
@@ -1794,7 +2148,10 @@ export const defaultSpells = [
     description: "You step into the border regions of the Ethereal Plane, where it overlaps with your current plane. You remain on the Border Ethereal for the duration. While on the Ethereal Plane, you can perceive the plane you left, which is cast in shades of gray, but you can't see anything there more than 60 feet away.\n\nWhile on the Ethereal Plane, you can affect and be affected only by creatures on that plane. Creatures on other planes can't perceive you unless they have the ability to do so.\n\nWhen the spell ends, you return to the plane you left in the spot that corresponds to the spot on the Ethereal Plane where you were. If that spot is occupied, you appear in the nearest unoccupied space.\n\nYou can dismiss the spell as a Bonus Action.",
     higherLevels: "You can target up to three willing creatures (including yourself) for each slot level above 7.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Etherealness"
   },
   {
     id: "spell-evards-black-tentacles",
@@ -1809,7 +2166,10 @@ export const defaultSpells = [
     description: "Squirming, ebony tentacles fill a 20-foot square on ground that you can see within range. For the duration, these tentacles turn the ground in the area into Difficult Terrain.\n\nEach creature in the area when you cast the spell must succeed on a Dexterity saving throw or take 3d6 Bludgeoning damage and have the Restrained condition. A creature that starts its turn in the area and isn't already Restrained must also make that save.\n\nA Restrained creature can take an action to make a Strength or Dexterity check (its choice) against your spell save DC. On a success, it frees itself.",
     higherLevels: "The damage increases by 1d6 for each slot level above 4.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#EvardsBlackTentacles"
   },
   {
     id: "spell-expeditious-retreat",
@@ -1824,7 +2184,10 @@ export const defaultSpells = [
     description: "You take the Dash action, and until the spell ends, you can take the Dash action as a Bonus Action.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ExpeditiousRetreat"
   },
   {
     id: "spell-eyebite",
@@ -1839,7 +2202,10 @@ export const defaultSpells = [
     description: "For the duration, your eyes become an inky void. One creature of your choice within 60 feet of you that you can see must succeed on a Wisdom saving throw or be affected by one of the following effects of your choice for the duration.\n\nAsleep. The target has the Unconscious condition. It wakes if it takes damage or if another creature takes an action to shake it awake.\n\nPanicked. The target has the Frightened condition. On each of its turns, the Frightened target must take the Dash action and move away from you by the safest route. If the target moves to a space at least 60 feet away from you where it can't see you, this effect ends.\n\nSickened. The target has the Poisoned condition.\n\nOn your later turns, you can take a Magic action to affect another creature with this spell, but you can't target a creature you've already affected.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Eyebite"
   },
 
   // === F ===
@@ -1856,7 +2222,10 @@ export const defaultSpells = [
     description: "You convert raw materials into products of the same material. For example, you can fabricate a wooden bridge from a clump of trees, a rope from a patch of hemp, or clothes from flax or wool.\n\nChoose raw materials that you can see within range. You can fabricate a Large or smaller object (contained within a 10-foot Cube or eight connected 5-foot Cubes) given a sufficient quantity of material. If you're working with metal, stone, or another mineral substance, the fabricated object can be no larger than Medium (contained within a 5-foot Cube).\n\nThe quality of any fabricated objects is equivalent to the quality of the raw materials. Creatures and magic items can't be created by this spell.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Fabricate"
   },
   {
     id: "spell-faerie-fire",
@@ -1871,7 +2240,10 @@ export const defaultSpells = [
     description: "Objects in a 20-foot Cube within range are outlined in blue, green, or violet light (your choice). Each creature in the Cube is also outlined if it fails a Dexterity saving throw. For the duration, objects and affected creatures shed Dim Light in a 10-foot radius and can't benefit from the Invisible condition.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FaerieFire"
   },
   {
     id: "spell-false-life",
@@ -1886,7 +2258,10 @@ export const defaultSpells = [
     description: "You gain 2d4 + 4 Temporary Hit Points.",
     higherLevels: "You gain 5 additional Temporary Hit Points for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FalseLife"
   },
   {
     id: "spell-fear",
@@ -1901,7 +2276,10 @@ export const defaultSpells = [
     description: "Each creature in a 30-foot Cone must succeed on a Wisdom saving throw or drop whatever it is holding and have the Frightened condition for the duration.\n\nA Frightened creature takes the Dash action and moves away from you by the safest route on each of its turns unless there is nowhere to move. If the creature ends its turn in a location where it doesn't have line of sight to you, the creature makes a Wisdom save. On a successful save, the spell ends on that creature.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Fear"
   },
   {
     id: "spell-feather-fall",
@@ -1916,7 +2294,10 @@ export const defaultSpells = [
     description: "Choose up to five falling creatures within range. A falling creature's rate of descent slows to 60 feet per round until the spell ends. If a creature lands before the spell ends, the creature takes no damage from the fall, and the spell ends for that creature.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FeatherFall"
   },
   {
     id: "spell-feign-death",
@@ -1931,7 +2312,10 @@ export const defaultSpells = [
     description: "You touch a willing creature and put it into a cataleptic state that is indistinguishable from death.\n\nFor the duration, the target appears dead to outward inspection and to spells used to determine the target's status. The target has the Blinded and Incapacitated conditions, and its Speed is 0.\n\nThe target has Resistance to all damage except Psychic damage, and it has Immunity to the Poisoned condition and disease.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FeignDeath"
   },
   {
     id: "spell-find-familiar",
@@ -1946,7 +2330,10 @@ export const defaultSpells = [
     description: "You gain the service of a familiar, a spirit that takes an animal form you choose: Bat, Cat, Frog, Hawk, Lizard, Octopus, Owl, Rat, Raven, Spider, Weasel, or another Beast that has a Challenge Rating of 0. The familiar is a Celestial, Fey, or Fiend (your choice) instead of a Beast.\n\nYour familiar acts independently of you, but it obeys your commands. In combat, it acts on your turn. A familiar can't attack, but it can take other actions.\n\nWhile your familiar is within 100 feet, you can communicate with it telepathically. As a Bonus Action, you can see through its eyes and hear what it hears until the start of your next turn.\n\nAs a Magic action, you can temporarily dismiss it to a pocket dimension or recall it. If it drops to 0 HP, it disappears and can be resummoned by recasting this spell.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FindFamiliar"
   },
   {
     id: "spell-find-steed",
@@ -1961,7 +2348,10 @@ export const defaultSpells = [
     description: "You summon an otherworldly being that appears as a loyal steed in an unoccupied space of your choice within range. This creature uses the Otherworldly Steed stat block. If you already have a steed from this spell, your current steed is replaced by the new one.\n\nThe steed resembles a Large, rideable animal of your choice, such as a horse, camel, elk, or mastiff. Whenever you cast this spell, choose the steed's creature type—Celestial, Fey, or Fiend—which determines certain traits in the stat block.\n\nCombat. The steed is an ally to you and your allies. In combat, it shares your Initiative count, and you choose its behavior.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FindSteed"
   },
   {
     id: "spell-find-greater-steed",
@@ -1976,7 +2366,10 @@ export const defaultSpells = [
     description: "You summon an otherworldly being that appears as a loyal steed in an unoccupied space of your choice within range. This creature uses the Otherworldly Steed stat block with the enhancements in the spell description.\n\nThe steed resembles a Large, rideable animal of your choice, such as a horse, elephant, griffon, pegasus, or dire wolf. Whenever you cast this spell, choose the steed's creature type—Celestial, Fey, or Fiend.\n\nThe steed has a flying speed of 60 feet if it has wings (its appearance is your choice).",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FindGreaterSteed"
   },
   {
     id: "spell-find-the-path",
@@ -1991,7 +2384,10 @@ export const defaultSpells = [
     description: "You magically sense the most direct physical route to a location you name. You must be familiar with the location, and the spell fails if you name a destination on another plane of existence, a moving destination, or a vague destination (such as \"a green dragon's lair\").\n\nFor the duration, you know how far it is and in what direction it lies. Whenever you face a choice of paths, you know which path is the most direct.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FindThePath"
   },
   {
     id: "spell-find-traps",
@@ -2006,7 +2402,10 @@ export const defaultSpells = [
     description: "You sense any trap within line of sight and range. A trap is any object or mechanism designed to deal damage, harm, or otherwise impair. You learn the general nature of each trap but not the exact location.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FindTraps"
   },
   {
     id: "spell-finger-of-death",
@@ -2021,7 +2420,10 @@ export const defaultSpells = [
     description: "You unleash negative energy toward one creature you can see within range. The target makes a Constitution saving throw, taking 7d8 + 30 Necrotic damage on a failed save or half as much damage on a successful one.\n\nA Humanoid killed by this spell rises at the start of your next turn as a Zombie that follows your verbal orders.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FingerOfDeath"
   },
   {
     id: "spell-fire-bolt",
@@ -2036,7 +2438,10 @@ export const defaultSpells = [
     description: "You hurl a mote of fire at a creature or object within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 Fire damage. A flammable object hit by this spell catches fire if it isn't being worn or carried.",
     higherLevels: "The damage increases by 1d10 when you reach levels 5 (2d10), 11 (3d10), and 17 (4d10).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FireBolt"
   },
   {
     id: "spell-fire-shield",
@@ -2051,7 +2456,10 @@ export const defaultSpells = [
     description: "Wispy flames wreathe your body for the duration, shedding Bright Light in a 10-foot radius and Dim Light for an additional 10 feet.\n\nThe flames provide you with a warm shield or a chill shield, as you choose. The warm shield grants you Resistance to Cold damage, and the chill shield grants you Resistance to Fire damage.\n\nIn addition, whenever a creature within 5 feet of you hits you with a melee attack roll, the shield erupts. The attacker takes 2d8 Fire damage from a warm shield or 2d8 Cold damage from a chill shield.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FireShield"
   },
   {
     id: "spell-fire-storm",
@@ -2066,7 +2474,10 @@ export const defaultSpells = [
     description: "A storm of fire appears within range. The area of the storm consists of up to ten 10-foot Cubes, which you arrange as you like. Each Cube must be contiguous with at least one other Cube. Each creature in the area makes a Dexterity saving throw, taking 7d10 Fire damage on a failed save or half as much damage on a successful one.\n\nFlammable objects in the area that aren't being worn or carried start burning.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FireStorm"
   },
   {
     id: "spell-fireball",
@@ -2081,7 +2492,10 @@ export const defaultSpells = [
     description: "A bright streak flashes from you to a point you choose within range and then blossoms with a low roar into a fiery explosion. Each creature in a 20-foot-radius Sphere centered on that point makes a Dexterity saving throw, taking 8d6 Fire damage on a failed save or half as much damage on a successful one.\n\nFlammable objects in the area that aren't being worn or carried start burning.",
     higherLevels: "The damage increases by 1d6 for each slot level above 3.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Fireball"
   },
   {
     id: "spell-flame-blade",
@@ -2096,7 +2510,10 @@ export const defaultSpells = [
     description: "You evoke a fiery blade in your free hand. The blade is similar in size and shape to a scimitar, and it lasts for the duration. If you let go of the blade, it disappears, but you can evoke it again as a Bonus Action.\n\nAs a Magic action, you can make a melee spell attack with the fiery blade. On a hit, the target takes Fire damage equal to 3d6 plus your spellcasting ability modifier.\n\nThe flaming blade sheds Bright Light in a 10-foot radius and Dim Light for an additional 10 feet.",
     higherLevels: "The damage increases by 1d6 for every two slot levels above 2.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FlameBlade"
   },
   {
     id: "spell-flame-strike",
@@ -2111,7 +2528,10 @@ export const defaultSpells = [
     description: "A vertical column of brilliant fire roars down from above. Each creature in a 10-foot-radius, 40-foot-high Cylinder centered on a point within range makes a Dexterity saving throw, taking 5d6 Fire damage and 5d6 Radiant damage on a failed save or half as much damage on a successful one.",
     higherLevels: "The Fire damage and the Radiant damage increase by 1d6 for each slot level above 5.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FlameStrike"
   },
   {
     id: "spell-flaming-sphere",
@@ -2126,7 +2546,10 @@ export const defaultSpells = [
     description: "You create a 5-foot-diameter Sphere of fire in an unoccupied space on the ground within range. It lasts for the duration. Any creature that ends its turn within 5 feet of the Sphere makes a Dexterity saving throw, taking 2d6 Fire damage on a failed save or half as much damage on a successful one.\n\nAs a Bonus Action, you can move the Sphere up to 30 feet, rolling it along the ground. If you move the Sphere into a creature's space, that creature makes the save against the Sphere, and the Sphere stops moving for the turn.\n\nThe Sphere sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet.",
     higherLevels: "The damage increases by 1d6 for each slot level above 2.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FlamingSphere"
   },
   {
     id: "spell-flesh-to-stone",
@@ -2141,7 +2564,10 @@ export const defaultSpells = [
     description: "You attempt to turn one creature that you can see within range into stone. The target makes a Constitution saving throw. On a failed save, the target has the Restrained condition for the duration. On a successful save, the target's Speed is 0 until the start of your next turn.\n\nA Restrained target makes another Constitution save at the end of each of its turns. If the target has three successful saves, the spell ends. If the target has three failed saves, it is turned to stone and has the Petrified condition for the duration. The successes and failures don't need to be consecutive.\n\nIf you maintain Concentration for the full minute, the Petrified condition lasts until removed.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FleshToStone"
   },
   {
     id: "spell-fly",
@@ -2156,7 +2582,10 @@ export const defaultSpells = [
     description: "You touch a willing creature. The target gains a Fly Speed of 60 feet for the duration. When the spell ends, the target falls if it is still aloft unless it can stop the fall.",
     higherLevels: "You can target one additional creature for each slot level above 3.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Fly"
   },
   {
     id: "spell-fog-cloud",
@@ -2171,7 +2600,10 @@ export const defaultSpells = [
     description: "You create a 20-foot-radius Sphere of fog centered on a point within range. The Sphere is Heavily Obscured. It lasts for the duration or until a strong wind (such as one created by Gust of Wind) disperses it.",
     higherLevels: "The fog's radius increases by 20 feet for each slot level above 1.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FogCloud"
   },
   {
     id: "spell-forbiddance",
@@ -2186,7 +2618,10 @@ export const defaultSpells = [
     description: "You create a ward against magical travel that protects up to 40,000 square feet of floor space to a height of 30 feet above the floor. For the duration, creatures can't teleport into the area or use portals, such as those created by the Gate spell, to enter the area. The spell proofs the area against planar travel.\n\nIn addition, the spell damages types of creatures you choose. Choose one or more: Celestials, Elementals, Fey, Fiends, and Undead. When a creature of a chosen type enters the spell's area for the first time on a turn or starts its turn there, the creature takes 5d10 Radiant or Necrotic damage (your choice when you cast this spell).\n\nYou can designate a password when you cast the spell. A creature that speaks the password as it enters takes no damage.\n\nIf you cast this spell in the same area every day for 30 days, the spell lasts until dispelled.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Forbiddance"
   },
   {
     id: "spell-forcecage",
@@ -2201,7 +2636,10 @@ export const defaultSpells = [
     description: "An immobile, Invisible, Cube-shaped prison composed of magical force springs into existence around an area you choose within range. The prison can be a cage or a solid box, as you choose.\n\nA prison in the shape of a cage can be up to 20 feet on a side and is made from 1/2-inch diameter bars spaced 1/2 inch apart. A prison in the shape of a box can be up to 10 feet on a side, creating a solid barrier.\n\nA creature that is completely inside the cage's area is trapped. Creatures only partially within the area, or those too large to fit inside it, are pushed away from the center of the area until they are completely outside it.\n\nA creature inside the cage can't leave by nonmagical means. If the creature tries to use teleportation or interplanar travel to leave the cage, it must first make a Charisma save. On a successful save, the creature can use that magic to exit the cage. On a failed save, it can't exit and wastes the use of the spell or effect.\n\nThe cage also extends into the Ethereal Plane, blocking ethereal travel.\n\nThis spell can't be dispelled by Dispel Magic.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Forcecage"
   },
   {
     id: "spell-foresight",
@@ -2216,7 +2654,10 @@ export const defaultSpells = [
     description: "You touch a willing creature and bestow a limited ability to see into the immediate future. For the duration, the target can't be Surprised and has Advantage on attack rolls, ability checks, and saving throws. Additionally, other creatures have Disadvantage on attack rolls against the target for the duration.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Foresight"
   },
   {
     id: "spell-freedom-of-movement",
@@ -2231,7 +2672,10 @@ export const defaultSpells = [
     description: "You touch a willing creature. For the duration, the target's movement is unaffected by Difficult Terrain, and spells and other magical effects can neither reduce the target's Speed nor cause the target to have the Paralyzed or Restrained conditions. The target also has a Swim Speed equal to its Speed.\n\nIn addition, the target can spend 5 feet of movement to automatically escape from nonmagical restraints, such as manacles or a creature that has it in a grapple.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#FreedomOfMovement"
   },
   {
     id: "spell-friends",
@@ -2246,7 +2690,10 @@ export const defaultSpells = [
     description: "You magically emanate a sense of friendship toward one creature you can see within range. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target succeeds automatically if it isn't a Humanoid, if you're fighting it, or if you have cast this spell on it within the past 24 hours.\n\nThe spell ends early if the target takes damage or if you make an attack roll, deal damage, or force anyone to make a saving throw. When the spell ends, the target knows it was Charmed by you.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Friends"
   },
 
   // === G ===
@@ -2263,7 +2710,10 @@ export const defaultSpells = [
     description: "You touch a willing creature and transform it, along with everything it's wearing and carrying, into a misty cloud for the duration. The spell ends if the creature drops to 0 Hit Points or if the creature takes a Magic action to end the spell on itself.\n\nWhile in this form, the target's only method of movement is a Fly Speed of 10 feet, and it can hover. The target can enter and occupy the space of another creature. The target has Resistance to Bludgeoning, Piercing, and Slashing damage; has Advantage on Strength, Dexterity, and Constitution saves; and can pass through narrow openings. The target can't talk or manipulate objects, and any objects it was carrying can't be dropped, used, or otherwise interacted with. The target can't attack or cast spells.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#GaseousForm"
   },
   {
     id: "spell-gate",
@@ -2278,7 +2728,10 @@ export const defaultSpells = [
     description: "You conjure a portal linking an unoccupied space you can see within range to a precise location on a different plane of existence. The portal is a circular opening, which you can make 5 to 20 feet in diameter. You can orient the portal in any direction you choose. The portal lasts for the duration, and the portal's destination is visible through it.\n\nThe portal has a front and a back on each plane where it appears. Travel through the portal is possible only by moving through its front. Anything that does so is instantly transported to the other plane, appearing in the unoccupied space nearest to the portal.\n\nDeities and other planar rulers can prevent portals created by this spell from opening in their presence or anywhere within their domains.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Gate"
   },
   {
     id: "spell-geas",
@@ -2293,7 +2746,10 @@ export const defaultSpells = [
     description: "You give a verbal command to a creature that you can see within range, ordering it to carry out some service or refrain from an action or a course of activity as you decide. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target automatically succeeds if it can't understand your language.\n\nWhile Charmed, the creature takes 5d10 Psychic damage if it acts in a manner directly counter to your instructions, but no more than once each day. A creature that can't understand you is unaffected by the spell.",
     higherLevels: "Level 7-8: 1 year. Level 9: Until ended by Remove Curse or similar.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Geas"
   },
   {
     id: "spell-gentle-repose",
@@ -2308,7 +2764,10 @@ export const defaultSpells = [
     description: "You touch a corpse or other remains. For the duration, the target is protected from decay and can't become Undead.\n\nThe spell also extends the time limit on raising the target from the dead, since days spent under the influence of this spell don't count against the time limit of spells such as Raise Dead.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#GentleRepose"
   },
   {
     id: "spell-giant-insect",
@@ -2323,7 +2782,10 @@ export const defaultSpells = [
     description: "You summon a giant centipede, spider, or wasp (your choice) to fill an unoccupied space you can see within range. The creature is under your control and acts on your turn. It uses the Giant Insect stat block. When you take a Bonus Action to command it, you choose its behavior.\n\nIf you don't issue commands to the summoned creature, it defends itself but doesn't otherwise act.",
     higherLevels: "You summon one additional creature for each slot level above 4.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#GiantInsect"
   },
   {
     id: "spell-glibness",
@@ -2338,7 +2800,10 @@ export const defaultSpells = [
     description: "Until the spell ends, when you make a Charisma check, you can replace the number you roll with a 15. Additionally, no matter what you say, magic that would determine if you are telling the truth indicates that you are being truthful.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Glibness"
   },
   {
     id: "spell-globe-of-invulnerability",
@@ -2353,7 +2818,10 @@ export const defaultSpells = [
     description: "An immobile, shimmering barrier appears in a 10-foot Emanation around you and remains for the duration.\n\nAny spell of level 5 or lower cast from outside the barrier can't affect anything within it. Such a spell can target creatures and objects within the barrier, but the spell has no effect on them. Similarly, the area within the barrier is excluded from areas of effect created by such spells.",
     higherLevels: "The barrier blocks spells of the spell slot level used to cast Globe of Invulnerability and lower.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#GlobeOfInvulnerability"
   },
   {
     id: "spell-glyph-of-warding",
@@ -2368,7 +2836,10 @@ export const defaultSpells = [
     description: "You inscribe a glyph that later unleashes a magical effect. You inscribe it either on a surface or within an object that can be closed (such as a book or chest) to conceal the glyph. The glyph can cover an area no larger than 10 feet in diameter.\n\nYou set conditions that trigger the spell. The glyph is nearly invisible and requires a successful Wisdom (Perception) check against your spell save DC to notice.\n\nWhen triggered, the glyph erupts with magical energy in a 20-foot-radius Sphere. Each creature in the area makes a Dexterity saving throw, taking 5d8 Acid, Cold, Fire, Lightning, or Thunder damage (your choice when you create the glyph) on a failed save or half as much on a successful one.\n\nAlternatively, you can store a prepared spell of level 3 or lower in the glyph.",
     higherLevels: "The damage increases by 1d8 for each slot level above 3.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#GlyphOfWarding"
   },
   {
     id: "spell-goodberry",
@@ -2383,7 +2854,10 @@ export const defaultSpells = [
     description: "Ten berries appear in your hand and are infused with magic for the duration. A creature can take a Bonus Action to eat one berry. Eating a berry restores 1 Hit Point, and the berry provides enough nourishment to sustain a creature for one day.\n\nUneaten berries disappear when the spell ends.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Goodberry"
   },
   {
     id: "spell-grease",
@@ -2398,7 +2872,10 @@ export const defaultSpells = [
     description: "Slippery grease covers the ground in a 10-foot square centered on a point within range and turns it into Difficult Terrain for the duration.\n\nWhen the grease appears, each creature standing in its area must succeed on a Dexterity saving throw or have the Prone condition. A creature that enters the area or ends its turn there must also succeed on that save or have that condition.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Grease"
   },
   {
     id: "spell-greater-invisibility",
@@ -2413,7 +2890,10 @@ export const defaultSpells = [
     description: "A creature you touch has the Invisible condition until the spell ends.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#GreaterInvisibility"
   },
   {
     id: "spell-greater-restoration",
@@ -2428,7 +2908,10 @@ export const defaultSpells = [
     description: "You touch a creature and magically remove one of the following effects from it:\n\n1 Exhaustion level\nThe Charmed or Petrified condition\nA curse, including the target's Attunement to a cursed magic item\nAny reduction to one of the target's ability scores\nAny reduction to the target's Hit Point maximum",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#GreaterRestoration"
   },
   {
     id: "spell-guardian-of-faith",
@@ -2443,7 +2926,10 @@ export const defaultSpells = [
     description: "A Large spectral guardian appears and hovers for the duration in an unoccupied space that you can see within range. The guardian occupies that space and is invulnerable.\n\nAny enemy that moves to a space within 10 feet of the guardian for the first time on a turn or starts its turn there makes a Dexterity saving throw, taking 20 Radiant damage on a failed save or half as much damage on a successful one. The guardian vanishes when it has dealt a total of 60 damage.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#GuardianOfFaith"
   },
   {
     id: "spell-guards-and-wards",
@@ -2458,7 +2944,10 @@ export const defaultSpells = [
     description: "You create a ward that protects up to 2,500 square feet of floor space. The warded area can be up to 20 feet tall, and you shape it as one 50-foot square, one hundred 5-foot squares, or twenty-five 10-foot squares.\n\nYou can place your choice of the following magical effects within the warded area:\n\nCorridors: Fog fills all corridors, making them Heavily Obscured.\nDoors: All doors are magically locked.\nStairs: Webs fill all stairs from top to bottom.\n\nYou can place your choice of one of the following additional effects:\n\nDancing Lights in four corridors.\nMagic Mouth in two locations.\nStinking Cloud in two locations.\nGust of Wind in one corridor or room.\nSuggestion in one location.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#GuardsAndWards"
   },
   {
     id: "spell-guidance",
@@ -2473,7 +2962,10 @@ export const defaultSpells = [
     description: "You touch a willing creature and choose a skill. Until the spell ends, the creature adds 1d4 to any ability check using the chosen skill.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Guidance"
   },
   {
     id: "spell-guiding-bolt",
@@ -2488,7 +2980,10 @@ export const defaultSpells = [
     description: "A flash of light streaks toward a creature of your choice within range. Make a ranged spell attack against the target. On a hit, the target takes 4d6 Radiant damage, and the next attack roll made against this target before the end of your next turn has Advantage.",
     higherLevels: "The damage increases by 1d6 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#GuidingBolt"
   },
   {
     id: "spell-gust-of-wind",
@@ -2503,7 +2998,10 @@ export const defaultSpells = [
     description: "A Line of strong wind 60 feet long and 10 feet wide blasts from you in a direction you choose for the duration. Each creature in the Line must succeed on a Strength saving throw or be pushed 15 feet away from you in a direction following the Line. Any creature in the Line must spend 2 feet of movement for every 1 foot it moves when moving closer to you.\n\nThe gust disperses gas or vapor, and it extinguishes candles and similar unprotected flames in the area. It causes protected flames, such as those of lanterns, to dance wildly and has a 50 percent chance to extinguish them.\n\nAs a Bonus Action on your later turns, you can change the direction in which the Line blasts from you.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#GustOfWind"
   },
 
   // === H ===
@@ -2520,7 +3018,10 @@ export const defaultSpells = [
     description: "As you hit the creature, this spell creates a rain of thorns that sprouts from your Ranged weapon or ammunition. The target of the attack and each creature within 5 feet of it make a Dexterity saving throw, taking 1d10 Piercing damage on a failed save or half as much damage on a successful one.",
     higherLevels: "The damage increases by 1d10 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#HailOfThorns"
   },
   {
     id: "spell-hallow",
@@ -2535,7 +3036,10 @@ export const defaultSpells = [
     description: "You touch a point and infuse an area around it with holy or unholy power. The area can have a radius up to 60 feet. Celestials, Elementals, Fey, Fiends, and Undead can't willingly enter the area, and such creatures have Disadvantage on attack rolls, ability checks, and saving throws while in the area.\n\nYou can bind an extra effect to the area, such as: Courage, Darkness, Daylight, Energy Protection, Everlasting Rest, Extradimensional Interference, Fear, Silence, or Tongues.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Hallow"
   },
   {
     id: "spell-hallucinatory-terrain",
@@ -2550,7 +3054,10 @@ export const defaultSpells = [
     description: "You make natural terrain in a 150-foot Cube in range look, sound, and smell like another sort of natural terrain. A field or a road could be made to resemble a swamp, hill, or pit. A pond could seem like a grassy meadow or a rocky landscape.\n\nManufactured structures, equipment, and creatures in the area aren't changed.\n\nThe tactile characteristics of the terrain are unchanged. A creature that enters the area and uses an action to examine the illusion can make an Intelligence (Investigation) check against your spell save DC. On a successful check, the creature sees through it.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#HallucinatoryTerrain"
   },
   {
     id: "spell-harm",
@@ -2565,7 +3072,10 @@ export const defaultSpells = [
     description: "You unleash a virulent disease on a creature that you can see within range. The target makes a Constitution saving throw. On a failed save, it takes 14d6 Necrotic damage, and its Hit Point maximum is reduced by an amount equal to the Necrotic damage it takes. On a successful save, it takes half as much damage only. The spell can't reduce a target's Hit Point maximum below 1.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Harm"
   },
   {
     id: "spell-haste",
@@ -2580,7 +3090,10 @@ export const defaultSpells = [
     description: "Choose a willing creature that you can see within range. Until the spell ends, the target's Speed is doubled, it gains a +2 bonus to AC, it has Advantage on Dexterity saving throws, and it gains an additional action on each of its turns. That action can be used to take only the Attack (one attack only), Dash, Disengage, Hide, or Utilize action.\n\nWhen the spell ends, the target is Incapacitated and has a Speed of 0 until the end of its next turn, as a wave of lethargy washes over it.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Haste"
   },
   {
     id: "spell-heal",
@@ -2595,7 +3108,10 @@ export const defaultSpells = [
     description: "Choose a creature that you can see within range. Positive energy washes through the target, restoring 70 Hit Points. This spell also ends the Blinded, Deafened, and Poisoned conditions on the target.",
     higherLevels: "The healing increases by 10 for each slot level above 6.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Heal"
   },
   {
     id: "spell-healing-word",
@@ -2610,7 +3126,10 @@ export const defaultSpells = [
     description: "A creature of your choice that you can see within range regains Hit Points equal to 2d4 plus your spellcasting ability modifier.",
     higherLevels: "The healing increases by 2d4 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#HealingWord"
   },
   {
     id: "spell-heat-metal",
@@ -2625,7 +3144,10 @@ export const defaultSpells = [
     description: "Choose a manufactured metal object, such as a metal weapon or a suit of heavy or medium metal armor, that you can see within range. You cause the object to glow red-hot. Any creature in physical contact with the object takes 2d8 Fire damage when you cast the spell. Until the spell ends, you can take a Bonus Action on each of your later turns to deal this damage again if the creature is still in contact with the object.\n\nIf a creature is holding or wearing the object and takes the damage from it, the creature must succeed on a Constitution saving throw or drop the object if it can. If it doesn't drop the object, it has Disadvantage on attack rolls and ability checks until the start of your next turn.",
     higherLevels: "The damage increases by 1d8 for each slot level above 2.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#HeatMetal"
   },
   {
     id: "spell-hellish-rebuke",
@@ -2640,7 +3162,10 @@ export const defaultSpells = [
     description: "The creature that damaged you is momentarily surrounded by green flames. It makes a Dexterity saving throw, taking 2d10 Fire damage on a failed save or half as much damage on a successful one.",
     higherLevels: "The damage increases by 1d10 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#HellishRebuke"
   },
   {
     id: "spell-heroes-feast",
@@ -2655,7 +3180,10 @@ export const defaultSpells = [
     description: "You conjure a feast that appears on a surface in an unoccupied 10-foot Cube next to you. The feast takes 1 hour to consume and disappears at the end of that time, and the beneficial effects don't set in until this hour is over. Up to twelve creatures can partake of the feast.\n\nA creature that partakes gains several benefits: cured of all Poisoned conditions and diseases, Immunity to Poison, Advantage on Wisdom saves, and Hit Point maximum increases by 2d10, and it gains the same number of Hit Points. These benefits last for 24 hours.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#HeroesFeast"
   },
   {
     id: "spell-heroism",
@@ -2670,7 +3198,10 @@ export const defaultSpells = [
     description: "A willing creature you touch is imbued with bravery. Until the spell ends, the creature is immune to the Frightened condition and gains Temporary Hit Points equal to your spellcasting ability modifier at the start of each of its turns.",
     higherLevels: "You can target one additional creature for each slot level above 1.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Heroism"
   },
   {
     id: "spell-hex",
@@ -2685,7 +3216,10 @@ export const defaultSpells = [
     description: "You place a curse on a creature that you can see within range. Until the spell ends, you deal an extra 1d6 Necrotic damage to the target whenever you hit it with an attack roll. Also, choose one ability when you cast the spell. The target has Disadvantage on ability checks made with the chosen ability.\n\nIf the target drops to 0 Hit Points before this spell ends, you can take a Bonus Action on a later turn to curse a new creature.",
     higherLevels: "Level 3-4: 8 hours. Level 5+: 24 hours.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Hex"
   },
   {
     id: "spell-hold-monster",
@@ -2700,7 +3234,10 @@ export const defaultSpells = [
     description: "Choose a creature that you can see within range. The target must succeed on a Wisdom saving throw or have the Paralyzed condition for the duration. At the end of each of its turns, the target repeats the save, ending the spell on itself on a success.",
     higherLevels: "You can target one additional creature for each slot level above 5. The creatures must be within 30 feet of each other.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#HoldMonster"
   },
   {
     id: "spell-hold-person",
@@ -2715,7 +3252,10 @@ export const defaultSpells = [
     description: "Choose a Humanoid that you can see within range. The target must succeed on a Wisdom saving throw or have the Paralyzed condition for the duration. At the end of each of its turns, the target repeats the save, ending the spell on itself on a success.",
     higherLevels: "You can target one additional Humanoid for each slot level above 2. The Humanoids must be within 30 feet of each other.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#HoldPerson"
   },
   {
     id: "spell-holy-aura",
@@ -2730,7 +3270,10 @@ export const defaultSpells = [
     description: "For the duration, you emit a 30-foot Emanation. While in the Emanation, creatures of your choice have Advantage on all saving throws, and other creatures have Disadvantage on attack rolls against them. In addition, when a Fiend or an Undead hits an affected creature with a melee attack roll, the Emanation flashes with light. The attacker must succeed on a Constitution saving throw or have the Blinded condition until the spell ends.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#HolyAura"
   },
   {
     id: "spell-hunger-of-hadar",
@@ -2745,7 +3288,10 @@ export const defaultSpells = [
     description: "You open a gateway to the void between the stars, a region infested with unknown horrors. A 20-foot-radius Sphere of Darkness appears, centered on a point within range. The Sphere is Difficult Terrain, and the area is Heavily Obscured. Darkvision can't penetrate it, and nonmagical light can't illuminate it.\n\nAny creature that starts its turn in the Sphere takes 2d6 Cold damage. Any creature that ends its turn there must succeed on a Dexterity saving throw or take 2d6 Acid damage from otherworldly tentacles.",
     higherLevels: "Both types of damage increase by 1d6 for each slot level above 3.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#HungerOfHadar"
   },
   {
     id: "spell-hunters-mark",
@@ -2760,7 +3306,10 @@ export const defaultSpells = [
     description: "You magically mark one creature you can see within range as your quarry. Until the spell ends, you deal an extra 1d6 Force damage to the target whenever you hit it with an attack roll. You also have Advantage on any Wisdom (Perception or Survival) check you make to find it.\n\nIf the target drops to 0 Hit Points before this spell ends, you can take a Bonus Action to mark a new creature.",
     higherLevels: "Level 3-4: 8 hours. Level 5+: 24 hours.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#HuntersMark"
   },
   {
     id: "spell-hypnotic-pattern",
@@ -2775,7 +3324,10 @@ export const defaultSpells = [
     description: "You create a twisting pattern of colors that weaves through the air inside a 30-foot Cube within range. The pattern appears for a moment and vanishes. Each creature in the area who can see the pattern must succeed on a Wisdom saving throw or have the Charmed condition for the duration. While Charmed, the creature has the Incapacitated condition and a Speed of 0.\n\nThe spell ends for an affected creature if it takes any damage or if someone else takes an action to shake the creature out of its stupor.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#HypnoticPattern"
   },
 
   // === I ===
@@ -2792,7 +3344,10 @@ export const defaultSpells = [
     description: "You create a shard of ice and fling it at one creature within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 Piercing damage. Hit or miss, the shard then explodes. The target and each creature within 5 feet of it must succeed on a Dexterity saving throw or take 2d6 Cold damage.",
     higherLevels: "The Cold damage increases by 1d6 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#IceKnife"
   },
   {
     id: "spell-ice-storm",
@@ -2807,7 +3362,10 @@ export const defaultSpells = [
     description: "A hail of rock-hard ice pounds to the ground in a 20-foot-radius, 40-foot-high Cylinder centered on a point within range. Each creature in the Cylinder makes a Dexterity saving throw, taking 2d10 Bludgeoning damage and 4d6 Cold damage on a failed save or half as much damage on a successful one.\n\nHailstones turn the ground in the area into Difficult Terrain until the end of your next turn.",
     higherLevels: "The Bludgeoning damage increases by 1d10 for each slot level above 4.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#IceStorm"
   },
   {
     id: "spell-identify",
@@ -2822,7 +3380,10 @@ export const defaultSpells = [
     description: "You choose one object that you must touch throughout the casting of the spell. If it is a magic item or some other magic-imbued object, you learn its properties and how to use them, whether it requires Attunement to use, and how many charges it has, if any. You learn whether any ongoing spells are affecting the item and what they are. If the item was created by a spell, you learn which spell created it.\n\nIf you instead touch a creature throughout the casting, you learn which ongoing spells, if any, are currently affecting it.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Identify"
   },
   {
     id: "spell-illusory-script",
@@ -2837,7 +3398,10 @@ export const defaultSpells = [
     description: "You write on parchment, paper, or another suitable writing material and imbue it with an illusion that lasts for the duration. To you and any creatures you designate when you cast the spell, the writing appears normal. To all others, the writing appears as if it were written in an unknown or magical script that is unintelligible. Alternatively, the illusion can alter the meaning, style, and handwriting of the script.\n\nIf the spell is dispelled, the original script and the illusion both disappear.\n\nA creature that has Truesight can read the hidden message.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#IllusoryScript"
   },
   {
     id: "spell-imprisonment",
@@ -2852,7 +3416,10 @@ export const defaultSpells = [
     description: "You create a magical restraint to hold a creature that you can see within range. The target must succeed on a Wisdom saving throw or be bound by the spell; if it succeeds, it is immune to this spell if you cast it again. While bound, the creature doesn't need to breathe, eat, or drink, and it doesn't age.\n\nChoose one form of imprisonment: Burial, Chaining, Hedged Prison, Minimus Containment, or Slumber. Each has different effects as described in the full spell.\n\nA Dispel Magic spell can end the spell only if it is cast with a level 9 spell slot.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Imprisonment"
   },
   {
     id: "spell-incendiary-cloud",
@@ -2867,7 +3434,10 @@ export const defaultSpells = [
     description: "A swirling cloud of embers and smoke fills a 20-foot-radius Sphere centered on a point within range. The cloud's area is Heavily Obscured. It lasts for the duration or until a strong wind disperses it.\n\nWhen the cloud appears, each creature in it makes a Dexterity saving throw, taking 10d8 Fire damage on a failed save or half as much damage on a successful one. A creature must also make this save when it enters the spell's area for the first time on a turn or ends its turn there.\n\nThe cloud moves 10 feet away from you in a direction you choose at the start of each of your turns.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#IncendiaryCloud"
   },
   {
     id: "spell-inflict-wounds",
@@ -2882,7 +3452,10 @@ export const defaultSpells = [
     description: "A creature you touch makes a Constitution saving throw, taking 2d10 Necrotic damage on a failed save or half as much damage on a successful one.",
     higherLevels: "The damage increases by 1d10 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#InflictWounds"
   },
   {
     id: "spell-insect-plague",
@@ -2897,7 +3470,10 @@ export const defaultSpells = [
     description: "Swarming locusts fill a 20-foot-radius Sphere centered on a point you choose within range. The Sphere remains for the duration, and its area is Lightly Obscured and Difficult Terrain.\n\nWhen the area appears, each creature in it makes a Constitution saving throw, taking 4d10 Piercing damage on a failed save or half as much damage on a successful one. A creature must also make this save when it enters the spell's area for the first time on a turn or ends its turn there.",
     higherLevels: "The damage increases by 1d10 for each slot level above 5.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#InsectPlague"
   },
   {
     id: "spell-invisibility",
@@ -2912,7 +3488,10 @@ export const defaultSpells = [
     description: "A creature you touch has the Invisible condition until the spell ends. The spell ends early immediately after the target makes an attack roll, deals damage, or casts a spell.",
     higherLevels: "You can target one additional creature for each slot level above 2.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Invisibility"
   },
 
   // === J ===
@@ -2929,7 +3508,10 @@ export const defaultSpells = [
     description: "You unleash a storm of flashing light and raging thunder in a 10-foot-radius, 40-foot-high Cylinder centered on a point you can see within range. While in this area, creatures have the Blinded and Deafened conditions, and they can't cast spells with a Verbal component.\n\nWhen the storm appears, each creature in it makes a Constitution saving throw, taking 2d10 Radiant damage and 2d10 Thunder damage on a failed save or half as much damage on a successful one. A creature also makes this save when it enters the spell's area for the first time on a turn or ends its turn there.",
     higherLevels: "The Radiant and Thunder damage increase by 1d10 each for every slot level above 5.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#JallarzisStormOfRadiance"
   },
   {
     id: "spell-jump",
@@ -2944,7 +3526,10 @@ export const defaultSpells = [
     description: "You touch a willing creature. Once on each of its turns until the spell ends, that creature can jump up to 30 feet by spending 10 feet of movement.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Jump"
   },
 
   // === K ===
@@ -2961,7 +3546,10 @@ export const defaultSpells = [
     description: "Choose an object that you can see within range. The object can be a door, a box, a chest, a set of manacles, a padlock, or another object that contains a mundane or magical means that prevents access.\n\nA target that is held shut by a mundane lock or that is stuck or barred becomes unlocked, unstuck, or unbarred. If the object has multiple locks, only one of them is unlocked.\n\nIf the target is held shut by Arcane Lock, that spell is suppressed for 10 minutes, during which time the target can be opened and shut normally.\n\nWhen you cast the spell, a loud knock, audible within 300 feet, emanates from the target.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Knock"
   },
 
   // === L ===
@@ -2978,7 +3566,10 @@ export const defaultSpells = [
     description: "Name or describe a famous person, place, or object. The spell brings to your mind a brief summary of the significant lore about what you named. The lore might consist of important details, tales, or even secret information that has never been widely known. If the thing you named isn't famous, you gain no information.\n\nThe more information you already have about the thing, the more precise and detailed the information you receive is.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#LegendLore"
   },
   {
     id: "spell-leomunds-secret-chest",
@@ -2993,7 +3584,10 @@ export const defaultSpells = [
     description: "You hide a chest and all its contents on the Ethereal Plane. You must touch the chest and the miniature replica that serves as a material component for the spell. The chest can hold up to 12 cubic feet of nonliving material (3 feet by 2 feet by 2 feet).\n\nWhile the chest remains on the Ethereal Plane, you can take a Magic action and touch the replica to recall the chest. It appears in an unoccupied space on the ground within 5 feet of you. You can send the chest back by taking a Magic action and touching both the chest and the replica.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#LeomundsSecretChest"
   },
   {
     id: "spell-leomunds-tiny-hut",
@@ -3008,7 +3602,10 @@ export const defaultSpells = [
     description: "A 10-foot Emanation springs into existence around you and remains stationary for the duration. The spell ends if you leave its area.\n\nNine creatures of Medium size or smaller can fit inside the dome with you. The spell fails if its area includes a larger creature or more than nine creatures. Creatures and objects within the dome when you cast this spell can move through it freely. All other creatures and objects are barred from passing through it. Spells and other magical effects can't extend through the dome or be cast through it.\n\nThe atmosphere inside is comfortable and dry, regardless of the weather outside. Until the spell ends, you can command the interior to become dimly lit or dark. The dome is opaque from the outside, but transparent from the inside.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#LeomundsTinyHut"
   },
   {
     id: "spell-lesser-restoration",
@@ -3023,7 +3620,10 @@ export const defaultSpells = [
     description: "You touch a creature and end one condition on it: Blinded, Deafened, Paralyzed, or Poisoned.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#LesserRestoration"
   },
   {
     id: "spell-levitate",
@@ -3038,7 +3638,10 @@ export const defaultSpells = [
     description: "One creature or loose object of your choice that you can see within range rises vertically up to 20 feet and remains suspended there for the duration. The spell can levitate an object that weighs up to 500 pounds. An unwilling creature that succeeds on a Constitution saving throw is unaffected.\n\nThe target can move only by pushing or pulling against a fixed object or surface within reach (such as a wall or a ceiling), which allows it to move as if it were climbing. You can change the target's altitude by up to 20 feet in either direction on your turn. If you are the target, you can move up or down as part of your move. Otherwise, you can take a Magic action to move the target, which must remain within the spell's range.\n\nWhen the spell ends, the target floats gently to the ground if it is still aloft.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Levitate"
   },
   {
     id: "spell-light",
@@ -3053,7 +3656,10 @@ export const defaultSpells = [
     description: "You touch one object that is no larger than 10 feet in any dimension. Until the spell ends, the object sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. The light can be colored as you like.\n\nCompletely covering the object with something opaque blocks the light. The spell ends if you cast it again.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Light"
   },
   {
     id: "spell-lightning-arrow",
@@ -3068,7 +3674,10 @@ export const defaultSpells = [
     description: "As your attack hits or misses the target, the weapon or ammunition you're using transforms into a lightning bolt. Instead of taking any damage or other effects from the attack, the target takes 4d8 Lightning damage on a hit or half as much on a miss. Each creature within 10 feet of the target then makes a Dexterity saving throw, taking 2d8 Lightning damage on a failed save or half as much on a successful one.",
     higherLevels: "The damage for both effects increases by 1d8 for each slot level above 3.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#LightningArrow"
   },
   {
     id: "spell-lightning-bolt",
@@ -3083,7 +3692,10 @@ export const defaultSpells = [
     description: "A stroke of lightning forming a 100-foot-long, 5-foot-wide Line blasts out from you in a direction you choose. Each creature in the Line makes a Dexterity saving throw, taking 8d6 Lightning damage on a failed save or half as much damage on a successful one.",
     higherLevels: "The damage increases by 1d6 for each slot level above 3.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#LightningBolt"
   },
   {
     id: "spell-locate-animals-or-plants",
@@ -3098,7 +3710,10 @@ export const defaultSpells = [
     description: "Describe or name a specific kind of Beast or plant. Concentrating on the voice of nature in your surroundings, you learn the direction and distance to the closest creature or plant of that kind within 5 miles, if any are present.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#LocateAnimalsOrPlants"
   },
   {
     id: "spell-locate-creature",
@@ -3113,7 +3728,10 @@ export const defaultSpells = [
     description: "Describe or name a creature that is familiar to you. You sense the direction to the creature's location if that creature is within 1,000 feet of you. If the creature is moving, you know the direction of its movement.\n\nThe spell can locate a specific creature known to you or the nearest creature of a specific kind (such as a human or a unicorn) if you have seen such a creature up close—within 30 feet—at least once. If the creature you described or named is in a different form, this spell doesn't locate it.\n\nThis spell can't locate a creature if any thickness of running water blocks a direct path between you and the creature.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#LocateCreature"
   },
   {
     id: "spell-locate-object",
@@ -3128,7 +3746,10 @@ export const defaultSpells = [
     description: "Describe or name an object that is familiar to you. You sense the direction to the object's location if that object is within 1,000 feet of you. If the object is in motion, you know the direction of its movement.\n\nThe spell can locate a specific object known to you if you have seen it up close—within 30 feet—at least once. Alternatively, the spell can locate the nearest object of a particular kind, such as a certain kind of apparel, jewelry, furniture, tool, or weapon.\n\nThis spell can't locate an object if any thickness of lead blocks a direct path between you and the object.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#LocateObject"
   },
   {
     id: "spell-longstrider",
@@ -3143,7 +3764,10 @@ export const defaultSpells = [
     description: "You touch a creature. The target's Speed increases by 10 feet until the spell ends.",
     higherLevels: "You can target one additional creature for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Longstrider"
   },
 
   // === M ===
@@ -3160,7 +3784,10 @@ export const defaultSpells = [
     description: "You touch a willing creature who isn't wearing armor. Until the spell ends, the target's base AC becomes 13 plus its Dexterity modifier. The spell ends early if the target dons armor.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MageArmor"
   },
   {
     id: "spell-mage-hand",
@@ -3175,7 +3802,10 @@ export const defaultSpells = [
     description: "A spectral, floating hand appears at a point you choose within range. The hand lasts for the duration. The hand vanishes if it is ever more than 30 feet away from you or if you cast this spell again.\n\nYou can use the hand to manipulate an object, open an unlocked door or container, stow or retrieve an item from an open container, or pour the contents out of a vial.\n\nYou can move the hand up to 30 feet each time you use it. The hand can't attack, activate magic items, or carry more than 10 pounds.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MageHand"
   },
   {
     id: "spell-magic-circle",
@@ -3190,7 +3820,10 @@ export const defaultSpells = [
     description: "You create a 10-foot-radius, 20-foot-tall Cylinder of magical energy centered on a point on the ground that you can see within range. Glowing runes appear wherever the Cylinder intersects with the floor or other surface.\n\nChoose one or more of the following types of creatures: Celestials, Elementals, Fey, Fiends, or Undead. The circle affects a creature of the chosen type in the following ways:\n\nThe creature can't willingly enter the Cylinder by nonmagical means. If the creature tries to use teleportation or interplanar travel to do so, it must first succeed on a Charisma saving throw.\n\nThe creature has Disadvantage on attack rolls against targets within the Cylinder.\n\nTargets within the Cylinder can't be possessed by or gain the Charmed or Frightened condition from the creature.\n\nWhen you cast this spell, you can elect to cause its magic to operate in the reverse direction, preventing a creature of the specified type from leaving the Cylinder.",
     higherLevels: "The spell's duration increases by 1 hour for each slot level above 3.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MagicCircle"
   },
   {
     id: "spell-magic-jar",
@@ -3205,7 +3838,10 @@ export const defaultSpells = [
     description: "Your body falls into a catatonic state as your soul leaves it and enters the container you used for the spell's material component. While your soul inhabits the container, you can try to possess any Humanoid within 100 feet of the container. The target must succeed on a Charisma saving throw or have its soul displaced into the container while your soul takes over its body.\n\nYour possession of a host ends if: you use a Bonus Action to end it, the host body drops to 0 HP, the container is destroyed, or Dispel Magic is cast on the host. When a possession ends, your soul returns to the container if it's within 100 feet; otherwise, you die.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MagicJar"
   },
   {
     id: "spell-magic-missile",
@@ -3220,7 +3856,10 @@ export const defaultSpells = [
     description: "You create three glowing darts of magical force. Each dart hits a creature of your choice that you can see within range. A dart deals 1d4 + 1 Force damage to its target. The darts all strike simultaneously, and you can direct them to hit one creature or several.",
     higherLevels: "The spell creates one more dart for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MagicMissile"
   },
   {
     id: "spell-magic-mouth",
@@ -3235,7 +3874,10 @@ export const defaultSpells = [
     description: "You implant a message within an object in range, a message that is uttered when a trigger condition is met. Choose an object that you can see and that isn't being worn or carried by another creature. Then speak the message, which must be 25 words or fewer, though it can be delivered over as long as 10 minutes. Finally, determine the circumstance that will trigger the spell to deliver your message.\n\nWhen that trigger occurs, a magical mouth appears on the object and recites the message in your voice and at the same volume you spoke. If the object you chose has a mouth or something that looks like a mouth (for example, the mouth of a statue), the magical mouth appears there. When you cast this spell, you can have the spell end after it delivers its message, or it can remain and repeat its message whenever the trigger occurs.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MagicMouth"
   },
   {
     id: "spell-magic-weapon",
@@ -3250,7 +3892,10 @@ export const defaultSpells = [
     description: "You touch a nonmagical weapon. Until the spell ends, that weapon becomes a +1 magic weapon.",
     higherLevels: "The bonus increases to +2 with a level 3-5 spell slot, or +3 with a level 6+ spell slot.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MagicWeapon"
   },
   {
     id: "spell-major-image",
@@ -3265,7 +3910,10 @@ export const defaultSpells = [
     description: "You create the image of an object, a creature, or some other visible phenomenon that is no larger than a 20-foot Cube. The image appears at a spot that you can see within range and lasts for the duration. It seems completely real, including sounds, smells, and temperature appropriate to the thing depicted. You can't create sufficient heat or cold to cause damage, a sound loud enough to deal Thunder damage or deafen a creature, or a smell that might sicken a creature.\n\nAs long as you are within range of the illusion, you can take a Magic action to cause the image to move to any other spot within range. As the image changes location, you can alter its appearance so that its movements appear natural for the image.\n\nPhysical interaction with the image reveals it to be an illusion. A creature that takes a Study action to examine the image can determine that it is an illusion with a successful Intelligence (Investigation) check against your spell save DC. If a creature discerns the illusion for what it is, the creature can see through the image, and its other sensory qualities become faint to the creature.",
     higherLevels: "The spell lasts until dispelled, without requiring Concentration, when cast with a level 6+ spell slot.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MajorImage"
   },
   {
     id: "spell-mass-cure-wounds",
@@ -3280,7 +3928,10 @@ export const defaultSpells = [
     description: "A wave of healing energy washes out from a point you can see within range. Choose up to six creatures in a 30-foot-radius Sphere centered on that point. Each target regains Hit Points equal to 5d8 plus your spellcasting ability modifier.",
     higherLevels: "The healing increases by 1d8 for each slot level above 5.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MassCureWounds"
   },
   {
     id: "spell-mass-heal",
@@ -3295,7 +3946,10 @@ export const defaultSpells = [
     description: "A flood of healing energy flows from you into creatures around you. You restore up to 700 Hit Points, divided as you choose among any number of creatures that you can see within range. Creatures healed by this spell are also cured of all Poisoned conditions and diseases, and any effect making them Blinded or Deafened. This spell has no effect on Constructs or Undead.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MassHeal"
   },
   {
     id: "spell-mass-healing-word",
@@ -3310,7 +3964,10 @@ export const defaultSpells = [
     description: "Up to six creatures of your choice that you can see within range regain Hit Points equal to 2d4 plus your spellcasting ability modifier.",
     higherLevels: "The healing increases by 1d4 for each slot level above 3.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MassHealingWord"
   },
   {
     id: "spell-mass-suggestion",
@@ -3325,7 +3982,10 @@ export const defaultSpells = [
     description: "You suggest a course of activity—described in no more than 25 words—to up to twelve creatures you can see within range that can hear and understand you. The suggestion must sound achievable and not involve anything that would obviously deal damage to any of the targets or their allies. For example, you could say, \"Walk to the village down that road, and help the villagers there harvest crops until sunset.\"\n\nOn a failed Wisdom save, a target pursues the suggested course of action. A suggested activity can continue for the entire duration. If the suggested activity can be completed in a shorter time, the spell ends for a target upon completing it.",
     higherLevels: "Level 7: 10 days. Level 8: 30 days. Level 9: 366 days.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MassSuggestion"
   },
   {
     id: "spell-maze",
@@ -3340,7 +4000,10 @@ export const defaultSpells = [
     description: "You banish a creature that you can see within range into a labyrinthine demiplane. The target remains there for the duration or until it escapes the maze.\n\nThe target can take a Study action to try to escape. When it does so, it makes a DC 20 Intelligence (Investigation) check. If it succeeds, it escapes, and the spell ends.\n\nWhen the spell ends, the target reappears in the space it left or, if that space is occupied, in the nearest unoccupied space.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Maze"
   },
   {
     id: "spell-meld-into-stone",
@@ -3355,7 +4018,10 @@ export const defaultSpells = [
     description: "You step into a stone object or surface large enough to fully contain your body, melding yourself and your equipment into the stone for the duration. Using your movement, you step into the stone at a point you can touch. Nothing of your presence remains visible or otherwise detectable by nonmagical senses.\n\nWhile merged with the stone, you can't see what occurs outside it, and any Wisdom (Perception) checks you make to hear sounds outside it are made with Disadvantage. You can cast spells on yourself while merged in stone.\n\nYou can use your movement to leave the stone where you entered it, which ends the spell. You otherwise can't move. Minor physical damage to the stone doesn't harm you, but its partial destruction or a change in its shape ends the spell and expels you.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MeldIntoStone"
   },
   {
     id: "spell-mending",
@@ -3370,7 +4036,10 @@ export const defaultSpells = [
     description: "This spell repairs a single break or tear in an object you touch, such as a broken chain link, two halves of a broken key, a torn cloak, or a leaking wineskin. As long as the break or tear is no larger than 1 foot in any dimension, you mend it, leaving no trace of the former damage.\n\nThis spell can physically repair a magic item, but it can't restore magic to such an object.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Mending"
   },
   {
     id: "spell-message",
@@ -3385,7 +4054,10 @@ export const defaultSpells = [
     description: "You point toward a creature within range and whisper a message. The target (and only the target) hears the message and can reply in a whisper that only you can hear.\n\nYou can cast this spell through solid objects if you are familiar with the target and know it is beyond the barrier. Magical silence, 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood blocks the spell.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Message"
   },
   {
     id: "spell-meteor-swarm",
@@ -3400,7 +4072,10 @@ export const defaultSpells = [
     description: "Blazing orbs of fire plummet to the ground at four different points you can see within range. Each creature in a 40-foot-radius Sphere centered on each point you choose must make a Dexterity saving throw. A creature takes 20d6 Fire damage and 20d6 Bludgeoning damage on a failed save, or half as much damage on a successful one. A creature in the area of more than one fiery orb is affected only once.\n\nFlammable objects in the area that aren't being worn or carried start burning.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MeteorSwarm"
   },
   {
     id: "spell-mind-blank",
@@ -3415,7 +4090,10 @@ export const defaultSpells = [
     description: "Until the spell ends, one willing creature you touch has Immunity to Psychic damage and the Charmed condition. The target is also unaffected by anything that would sense its emotions or read its thoughts, Divination spells, and the Frightened condition.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MindBlank"
   },
   {
     id: "spell-mind-sliver",
@@ -3430,7 +4108,10 @@ export const defaultSpells = [
     description: "You try to temporarily sliver the mind of one creature you can see within range. The target must succeed on an Intelligence saving throw or take 1d6 Psychic damage and subtract 1d4 from the first saving throw it makes before the end of your next turn.",
     higherLevels: "The damage increases by 1d6 when you reach levels 5 (2d6), 11 (3d6), and 17 (4d6).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MindSliver"
   },
   {
     id: "spell-mind-spike",
@@ -3445,7 +4126,10 @@ export const defaultSpells = [
     description: "You reach into the mind of one creature you can see within range. The target makes a Wisdom saving throw, taking 3d8 Psychic damage on a failed save or half as much damage on a successful one. On a failed save, you also know the target's location until the spell ends, even if the target is hidden, Invisible, on a different plane of existence, or behind total cover.",
     higherLevels: "The damage increases by 1d8 for each slot level above 2.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MindSpike"
   },
   {
     id: "spell-minor-illusion",
@@ -3460,7 +4144,10 @@ export const defaultSpells = [
     description: "You create a sound or an image of an object within range that lasts for the duration.\n\nSound. If you create a sound, its volume can range from a whisper to a scream. It can be your voice, someone else's voice, a lion's roar, a beating of drums, or any other sound you choose. The sound continues unabated throughout the duration, or you can make discrete sounds at different times before the spell ends.\n\nImage. If you create an image of an object—such as a chair, muddy footprints, or a small chest—it must be no larger than a 5-foot Cube. The image can't create sound, light, smell, or any other sensory effect. Physical interaction with the image reveals it to be an illusion, since things can pass through it.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MinorIllusion"
   },
   {
     id: "spell-mirage-arcane",
@@ -3475,7 +4162,10 @@ export const defaultSpells = [
     description: "You make terrain in an area up to 1 mile square look, sound, smell, and even feel like some other sort of terrain. Open fields or a road could be made to resemble a swamp, hill, crevasse, or some other difficult or impassable terrain. A pond can be made to seem like a grassy meadow, a precipice like a gentle slope, or a rock-strewn gully like a wide and smooth road.\n\nSimilarly, you can alter the appearance of structures or add them where none are present. The spell doesn't disguise, conceal, or add creatures.\n\nThe illusion includes audible, visual, tactile, and olfactory elements. Creatures with Truesight can see through the illusion, but are not otherwise assisted in navigating it.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MirageArcane"
   },
   {
     id: "spell-mirror-image",
@@ -3490,7 +4180,10 @@ export const defaultSpells = [
     description: "Three illusory duplicates of yourself appear in your space. Until the spell ends, the duplicates move with you and mimic your actions, shifting position so it's impossible to track which image is real.\n\nEach time a creature targets you with an attack roll during the spell's duration, roll a d6 to determine whether the attack instead targets one of your duplicates. With three duplicates, you must roll a 6 or higher to change the attack's target to a duplicate. With two duplicates: 4 or higher. With one duplicate: 2 or higher.\n\nA duplicate's AC equals 10 plus your Dexterity modifier. If an attack hits a duplicate, the duplicate is destroyed. A duplicate can be destroyed only by an attack that hits it. It ignores all other damage and effects. The spell ends when all three duplicates are destroyed.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MirrorImage"
   },
   {
     id: "spell-mislead",
@@ -3505,7 +4198,10 @@ export const defaultSpells = [
     description: "You gain the Invisible condition at the same time that an illusory double of you appears where you are standing. The double lasts for the duration, but the invisibility ends immediately after you make an attack roll, deal damage, or cast a spell.\n\nAs a Magic action, you can move the illusory double up to twice your Speed and make it gesture, speak, and behave in whatever way you choose. It is intangible and invulnerable.\n\nYou can see through its eyes and hear through its ears as if you were located where it is.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Mislead"
   },
   {
     id: "spell-misty-step",
@@ -3520,7 +4216,10 @@ export const defaultSpells = [
     description: "Briefly surrounded by silvery mist, you teleport up to 30 feet to an unoccupied space you can see.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MistyStep"
   },
   {
     id: "spell-modify-memory",
@@ -3535,7 +4234,10 @@ export const defaultSpells = [
     description: "You attempt to reshape another creature's memories. One creature that you can see within range makes a Wisdom saving throw. If you are fighting the creature, it has Advantage on the save. On a failed save, the target has the Charmed condition for the duration. While Charmed in this way, the target also has the Incapacitated condition and is unaware of its surroundings, though it can still hear you.\n\nA Remove Curse or Greater Restoration spell cast on the target restores the creature's true memory.\n\nYou can affect the target's memory of an event that it experienced within the last 24 hours and that lasted no more than 10 minutes. You can permanently eliminate all memory of the event, allow the target to recall the event with perfect clarity, change its memory of the event's details, or create a memory of some other event.",
     higherLevels: "Level 6: 7 days. Level 7: 30 days. Level 8: 1 year. Level 9: any past event.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ModifyMemory"
   },
   {
     id: "spell-moonbeam",
@@ -3550,7 +4252,10 @@ export const defaultSpells = [
     description: "A silvery beam of pale light shines down in a 5-foot-radius, 40-foot-high Cylinder centered on a point within range. Until the spell ends, Dim Light fills the Cylinder.\n\nWhen a creature enters the spell's area for the first time on a turn or starts its turn there, it makes a Constitution saving throw, taking 2d10 Radiant damage on a failed save or half as much damage on a successful one.\n\nA shapechanger makes its saving throw with Disadvantage. If it fails, it also instantly reverts to its original form and can't assume a different form until it leaves the spell's area.\n\nOn your later turns, you can take a Magic action to move the beam up to 60 feet in any direction.",
     higherLevels: "The damage increases by 1d10 for each slot level above 2.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Moonbeam"
   },
   {
     id: "spell-mordenkainens-faithful-hound",
@@ -3565,7 +4270,10 @@ export const defaultSpells = [
     description: "You conjure a phantom watchdog in an unoccupied space that you can see within range. The hound remains for the duration or until you dismiss it as a Bonus Action. No one but you can see the hound, and it is intangible and invulnerable.\n\nWhen a Small or larger creature comes within 30 feet of the hound without first speaking a password that you specify when you cast this spell, the hound starts barking loudly. The hound has Truesight with a range of 30 feet.\n\nAt the start of each of your turns, the hound attempts to bite one enemy within 5 feet of it that is hostile to you. The hound's attack bonus equals your spellcasting ability modifier plus your Proficiency Bonus. On a hit, the hound deals 4d8 Piercing damage.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MordenkainensFaithfulHound"
   },
   {
     id: "spell-mordenkainens-magnificent-mansion",
@@ -3580,7 +4288,10 @@ export const defaultSpells = [
     description: "You conjure a shimmering door in range that lasts for the duration. The door leads to an extradimensional dwelling and can be opened or closed at will. While the door is closed, it is imperceptible.\n\nBeyond the door is a magnificent foyer with numerous chambers. The dwelling's atmosphere is clean, fresh, and warm. You can create any floor plan you like for the residence. It contains sufficient furniture and food to serve a nine-course banquet for up to 100 people. 100 near-transparent servants attend to those within. You decide the appearance of these servants and their attire. They are completely obedient to your orders.\n\nEach servant can perform tasks that a human servant could do but can't attack or take any action that would directly harm another creature. The servants can open doors, serve food and drink, and so on.\n\nAnything inside the mansion when the spell ends is expelled to the space just outside the door.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MordenkainensMagnificentMansion"
   },
   {
     id: "spell-mordenkainens-private-sanctum",
@@ -3595,7 +4306,10 @@ export const defaultSpells = [
     description: "You make an area within range magically secure. The area is a Cube that can be as small as 5 feet or as large as 100 feet on each side. The spell lasts for the duration.\n\nWhen you cast the spell, you decide what sort of security the spell provides, choosing any or all of the following properties:\n\nSound can't pass through the barrier at the edge of the warded area.\nLight, including that produced by magical sources, can't pass through the barrier.\nSensors created by Divination spells can't appear inside the protected area or pass through the barrier.\nCreatures in the area can't be targeted by Divination spells.\nNothing can teleport into or out of the warded area.\nPlanar travel is blocked within the warded area.\n\nCasting this spell on the same spot every day for 365 days makes the spell last until dispelled.",
     higherLevels: "The spell's area increases by 100 feet for each slot level above 4.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MordenkainensPrivateSanctum"
   },
   {
     id: "spell-move-earth",
@@ -3610,7 +4324,10 @@ export const defaultSpells = [
     description: "Choose an area of terrain no larger than 40 feet on a side within range. You can reshape dirt, sand, or clay in the area in any manner you choose for the duration. You can raise or lower the area's elevation, create or fill in a trench, erect or flatten a wall, or form a pillar. The extent of any such changes can't exceed half the area's largest dimension. So, if you affect a 40-foot square, you can create a pillar up to 20 feet high, raise or lower the square's elevation by up to 20 feet, dig a trench up to 20 feet deep, and so on. It takes 10 minutes for these changes to complete. Because the transformation occurs slowly, creatures in the area can't usually be trapped or injured.\n\nAt the end of every 10 minutes you spend concentrating on the spell, you can choose a new area of terrain to affect. This spell can't manipulate natural stone or stone construction.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#MoveEarth"
   },
 
   // === N ===
@@ -3627,7 +4344,10 @@ export const defaultSpells = [
     description: "For the duration, you hide a target that you touch from Divination spells. The target can be a willing creature, a place, or an object no larger than 10 feet in any dimension. The target can't be targeted by any Divination spell or perceived through magical scrying sensors.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Nondetection"
   },
   {
     id: "spell-nystuls-magic-aura",
@@ -3642,7 +4362,10 @@ export const defaultSpells = [
     description: "You place an illusion on a creature or an object you touch so that Divination spells reveal false information about it. The target can be a willing creature or an object that isn't being carried or worn by another creature.\n\nWhen you cast the spell, choose one or both of the following effects. The effect lasts for the duration. If you cast this spell on the same creature or object every day for 30 days, placing the same effect on it each time, the illusion lasts until it is dispelled.\n\nFalse Aura. You change the way the target appears to spells and magical effects, such as Detect Magic, that detect magical auras. You can make a nonmagical object appear magical, a magical object appear nonmagical, or change the object's magical aura so that it appears to belong to a specific school of magic that you choose.\n\nMask. You change the way the target appears to spells and magical effects that detect creature types, such as Detect Evil and Good. You choose a creature type, and other spells and magical effects treat the target as if it were that type.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#NystulsMagicAura"
   },
 
   // === O ===
@@ -3659,7 +4382,10 @@ export const defaultSpells = [
     description: "A frigid globe of cold energy streaks from your fingertips to a point of your choice within range, where it explodes in a 60-foot-radius Sphere. Each creature in the area makes a Constitution saving throw, taking 10d6 Cold damage on a failed save or half as much damage on a successful one.\n\nIf the globe strikes a body of water, it freezes the water to a depth of 6 inches over an area 30 feet square. This ice lasts for 1 minute. Creatures that were swimming on the surface of frozen water are trapped in the ice and have the Restrained condition. A trapped creature can take an action to make a Strength check against your spell save DC to break free.\n\nYou can refrain from firing the globe after completing the spell's casting. If you do so, a globe about the size of a sling bullet, cool to the touch, appears in your hand. At any time thereafter, you or another creature can throw the globe (to a range of 40 feet) or hurl it with a sling (to the sling's normal range). It shatters on impact, with the same effect as the normal casting of the spell. You can also set the globe down without shattering it. After 1 minute, if the globe hasn't already shattered, it explodes.",
     higherLevels: "The damage increases by 1d6 for each slot level above 6.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#OtilukesFreezingSphere"
   },
   {
     id: "spell-otiluke-s-resilient-sphere",
@@ -3674,7 +4400,10 @@ export const defaultSpells = [
     description: "A shimmering Sphere of force encloses a Large or smaller creature or object within range. An unwilling creature must make a Dexterity saving throw. On a failed save, the creature is enclosed for the duration.\n\nNothing—not physical objects, energy, or other spell effects—can pass through the barrier, in or out, though a creature in the Sphere can breathe there. The Sphere is immune to all damage. A creature in the Sphere can take an action to push against the Sphere's walls and thus roll it at up to half the creature's Speed. Similarly, the globe can be picked up and moved.\n\nA Disintegrate spell targeting the globe destroys it without harming anything inside.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#OtilukesResilientSphere"
   },
   {
     id: "spell-otto-s-irresistible-dance",
@@ -3689,7 +4418,10 @@ export const defaultSpells = [
     description: "One creature that you can see within range must make a Wisdom saving throw. On a failed save, the target dances for the duration. While dancing, the target must use all its movement to dance without leaving its space and has Disadvantage on Dexterity saving throws and attack rolls, and other creatures have Advantage on attack rolls against it. On each of its turns, the dancing target can take an action to repeat the save. On a successful save, the spell ends on it.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#OttosIrresistibleDance"
   },
 
   // === P ===
@@ -3706,7 +4438,10 @@ export const defaultSpells = [
     description: "You radiate a concealing aura in a 30-foot Emanation for the duration. While in the aura, you and each creature you choose have a +10 bonus to Dexterity (Stealth) checks and leave no tracks.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PassWithoutTrace"
   },
   {
     id: "spell-passwall",
@@ -3721,7 +4456,10 @@ export const defaultSpells = [
     description: "A passage appears at a point that you can see on a wooden, plaster, or stone surface (such as a wall, ceiling, or floor) within range and lasts for the duration. You choose the opening's dimensions: up to 5 feet wide, 8 feet tall, and 20 feet deep. The passage creates no instability in the surrounding structure.\n\nWhen the opening disappears, any creatures or objects still in the passage created by the spell are safely ejected to an unoccupied space nearest to the surface on which you cast the spell.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Passwall"
   },
   {
     id: "spell-phantasmal-force",
@@ -3736,7 +4474,10 @@ export const defaultSpells = [
     description: "You attempt to craft an illusion in the mind of a creature you can see within range. The target makes an Intelligence saving throw. On a failed save, you create a phantasmal object, creature, or other visible phenomenon that is no larger than a 10-foot Cube and that is perceivable only to the target for the duration. The phantasm includes sound, temperature, and other stimuli.\n\nThe target can take an action to examine the phantasm with an Intelligence (Investigation) check against your spell save DC. If the check succeeds, the target realizes that the phantasm is an illusion, and the spell ends.\n\nWhile the spell lasts, the target treats the phantasm as if it were real. The target rationalizes any illogical outcomes from interacting with the phantasm. An affected target is so convinced of the phantasm's reality that it can even take damage from the illusion. A phantasm created to appear as a creature can attack the target. The phantasm deals 1d6 Psychic damage on a hit.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PhantasmalForce"
   },
   {
     id: "spell-phantasmal-killer",
@@ -3751,7 +4492,10 @@ export const defaultSpells = [
     description: "You tap into the nightmares of a creature you can see within range and create an illusory manifestation of its deepest fears, visible only to that creature. The target makes a Wisdom saving throw. On a failed save, the target takes 4d10 Psychic damage and has the Frightened condition for the duration. On a successful save, the target takes half as much damage, isn't Frightened, and the spell ends.\n\nFor the duration, the Frightened target repeats the save at the end of each of its turns, taking 4d10 Psychic damage on a failed save or ending the spell on a successful one.",
     higherLevels: "The damage increases by 1d10 for each slot level above 4.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PhantasmalKiller"
   },
   {
     id: "spell-phantom-steed",
@@ -3766,7 +4510,10 @@ export const defaultSpells = [
     description: "A Large, horse-like creature appears on the ground in an unoccupied space of your choice within range. You decide the creature's appearance, and it is equipped with a saddle, bit, and bridle. Any of the equipment created by the spell vanishes in a puff of smoke if it is carried more than 10 feet away from the steed.\n\nFor the duration, you or a creature you choose can ride the steed. The steed uses the Riding Horse stat block, except it has a Speed of 100 feet and can travel 13 miles in an hour. When the spell ends, the steed gradually fades, giving the rider 1 minute to dismount. The spell ends early if the steed takes any damage.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PhantomSteed"
   },
   {
     id: "spell-planar-ally",
@@ -3781,7 +4528,10 @@ export const defaultSpells = [
     description: "You beseech an otherworldly entity for aid. The being must be known to you: a god, a demon prince, or some other being of cosmic power. That entity sends a Celestial, an Elemental, or a Fiend loyal to it to aid you, making the creature appear in an unoccupied space within range. If you know a specific creature's name, you can speak that name when you cast this spell to request that creature, though you might get a different creature anyway (DM's choice).\n\nWhen the creature appears, it is under no compulsion to behave in any particular way. You can ask the creature to perform a service in exchange for payment, but it isn't obliged to do so. The more hazardous the service, the greater the payment required.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PlanarAlly"
   },
   {
     id: "spell-planar-binding",
@@ -3796,7 +4546,10 @@ export const defaultSpells = [
     description: "You attempt to bind a Celestial, an Elemental, a Fey, or a Fiend to your service. The creature must be within range for the entire casting of the spell. At the completion of the casting, the target must succeed on a Charisma saving throw or be bound to serve you for the duration. If the creature was summoned or created by another spell, that spell's duration is extended to match the duration of this spell.\n\nA bound creature must follow your commands to the best of its ability. However, if the creature is Hostile toward you, it tries to twist your commands to achieve its own objectives.",
     higherLevels: "Level 6: 10 days. Level 7: 30 days. Level 8: 180 days. Level 9: 366 days.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PlanarBinding"
   },
   {
     id: "spell-plane-shift",
@@ -3811,7 +4564,10 @@ export const defaultSpells = [
     description: "You and up to eight willing creatures who link hands in a circle are transported to a different plane of existence. You can specify a target destination in general terms, such as the City of Brass on the Elemental Plane of Fire or the palace of Dispater on the second level of the Nine Hells, and you appear in or near that destination, at the DM's discretion.\n\nAlternatively, if you know the sigil sequence of a teleportation circle on another plane of existence, this spell can take you to that circle. If the teleportation circle is too small to hold all the creatures you transported, they appear in the closest unoccupied spaces next to the circle.\n\nYou can use this spell to banish an unwilling creature to another plane. Choose a creature within reach, which makes a Charisma saving throw. On a failed save, the creature is transported to a random location on the plane you specify. Once there, the creature must find its own way back to your current plane of existence.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PlaneShift"
   },
   {
     id: "spell-plant-growth",
@@ -3826,7 +4582,10 @@ export const defaultSpells = [
     description: "This spell channels vitality into plants. The casting time you use determines whether the spell has the Overgrowth or the Enrichment effect.\n\nOvergrowth. Choose a point within range. All normal plants in a 100-foot-radius Sphere centered on that point become thick and overgrown. A creature moving through that area must spend 4 feet of movement for every 1 foot it moves. You can exclude one or more areas of any size within the spell's area from being affected.\n\nEnrichment. All plants in a half-mile radius centered on a point within range become enriched for 365 days. The plants yield twice the normal amount of food when harvested.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PlantGrowth"
   },
   {
     id: "spell-poison-spray",
@@ -3841,7 +4600,10 @@ export const defaultSpells = [
     description: "You spray toxic mist at a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 1d12 Poison damage.",
     higherLevels: "The damage increases by 1d12 when you reach levels 5 (2d12), 11 (3d12), and 17 (4d12).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PoisonSpray"
   },
   {
     id: "spell-polymorph",
@@ -3856,7 +4618,10 @@ export const defaultSpells = [
     description: "This spell transforms a creature that you can see within range into a new form. An unwilling creature makes a Wisdom saving throw to avoid the effect, and a shapechanger automatically succeeds. The spell has no effect on a target with 0 Hit Points.\n\nThe transformation lasts for the duration or until the target drops to 0 Hit Points or dies. The new form can be any Beast whose Challenge Rating is equal to or less than the target's (or the target's level if it doesn't have a Challenge Rating).\n\nThe target's statistics, including mental ability scores, are replaced by the statistics of the chosen Beast. It retains its alignment and personality. The target's gear melds into the new form. The target can't use any equipment.\n\nThe target gains a number of Temporary Hit Points equal to the Hit Points of the Beast form. When the Temporary Hit Points are gone, the spell ends.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Polymorph"
   },
   {
     id: "spell-power-word-heal",
@@ -3871,7 +4636,10 @@ export const defaultSpells = [
     description: "A wave of healing energy washes over one creature you can see within range. The target regains all its Hit Points. If the creature has the Charmed, Frightened, Paralyzed, Poisoned, or Stunned condition, the condition ends. If the creature has the Prone condition, it can use its Reaction to stand up.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PowerWordHeal"
   },
   {
     id: "spell-power-word-kill",
@@ -3886,7 +4654,10 @@ export const defaultSpells = [
     description: "You utter a word of power that instantly compels one creature you can see within range to die. If the creature you choose has 100 Hit Points or fewer, it dies. Otherwise, the spell has no effect.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PowerWordKill"
   },
   {
     id: "spell-power-word-stun",
@@ -3901,7 +4672,10 @@ export const defaultSpells = [
     description: "You utter a word of power that stuns one creature you can see within range. If the target has 150 Hit Points or fewer, it has the Stunned condition. Otherwise, the spell has no effect.\n\nThe Stunned target repeats its Constitution save at the end of each of its turns, ending the condition on a success.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PowerWordStun"
   },
   {
     id: "spell-prayer-of-healing",
@@ -3916,7 +4690,10 @@ export const defaultSpells = [
     description: "Up to five creatures of your choice within range each regain Hit Points equal to 2d8 plus your spellcasting ability modifier.",
     higherLevels: "The healing increases by 1d8 for each slot level above 2.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PrayerOfHealing"
   },
   {
     id: "spell-prestidigitation",
@@ -3931,7 +4708,10 @@ export const defaultSpells = [
     description: "This spell is a minor magical trick that novice spellcasters use for practice. You create one of the following magical effects within range:\n\nSensory Effect. You create an instantaneous, harmless sensory effect, such as a shower of sparks, a puff of wind, faint musical notes, or an odd odor.\n\nFire Play. You instantaneously light or snuff out a candle, a torch, or a small campfire.\n\nClean or Soil. You instantaneously clean or soil an object no larger than 1 cubic foot.\n\nMinor Sensation. You chill, warm, or flavor up to 1 cubic foot of nonliving material for 1 hour.\n\nMagic Mark. You make a color, a small mark, or a symbol appear on an object or a surface for 1 hour.\n\nMinor Creation. You create a nonmagical trinket or an illusory image that can fit in your hand. It lasts until the end of your next turn.\n\nYou can have up to three of this spell's non-instantaneous effects active at a time.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Prestidigitation"
   },
   {
     id: "spell-prismatic-spray",
@@ -3946,7 +4726,10 @@ export const defaultSpells = [
     description: "Eight rays of light flash from you in a 60-foot Cone. Each creature in the Cone makes a Dexterity saving throw. For each target, roll 1d8 to determine which color ray affects it, as shown on the Prismatic Spray table.\n\n1 Red: 12d6 Fire damage on a failed save, or half as much damage on a successful one.\n2 Orange: 12d6 Acid damage on a failed save, or half as much damage on a successful one.\n3 Yellow: 12d6 Lightning damage on a failed save, or half as much damage on a successful one.\n4 Green: 12d6 Poison damage on a failed save, or half as much damage on a successful one.\n5 Blue: 12d6 Cold damage on a failed save, or half as much damage on a successful one.\n6 Indigo: On a failed save, the target has the Restrained condition and makes a Constitution saving throw at the end of each of its turns. If it successfully saves three times, the spell ends. If it fails three times, it is Petrified until freed by an effect like Greater Restoration.\n7 Violet: On a failed save, the target has the Blinded condition and makes a Wisdom saving throw at the start of your next turn. If that save succeeds, the condition ends. If it fails, the target is transported to another plane of existence (DM's choice) and is no longer Blinded.\n8 Special: The target is struck by two rays. Roll twice, rerolling any 8.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PrismaticSpray"
   },
   {
     id: "spell-prismatic-wall",
@@ -3961,7 +4744,10 @@ export const defaultSpells = [
     description: "A shimmering, multicolored plane of light forms a vertical opaque wall—up to 90 feet long, 30 feet high, and 1 inch thick—centered on a point you can see within range. Alternatively, you can shape the wall into a sphere up to 30 feet in diameter centered on a point you choose within range. The wall remains in place for the duration. If you position the wall so that it passes through a space occupied by a creature, the spell fails.\n\nThe wall sheds Bright Light in a 100-foot radius and Dim Light for an additional 100 feet. You and creatures you designate when you cast the spell can pass through and be near the wall without harm. The wall consists of seven layers, each with a different color that creates a magical effect. See the full spell description for all layer effects.\n\nThe wall can be destroyed layer by layer by specific means as described in the spell.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PrismaticWall"
   },
   {
     id: "spell-produce-flame",
@@ -3976,7 +4762,10 @@ export const defaultSpells = [
     description: "A flickering flame appears in your hand and remains there for the duration. While there, the flame emits no heat and ignites nothing, and it sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. The spell ends if you cast it again.\n\nUntil the spell ends, you can take a Magic action to hurl fire at a creature or an object within 60 feet of you. Make a ranged spell attack. On a hit, the target takes 1d8 Fire damage.",
     higherLevels: "The damage increases by 1d8 when you reach levels 5 (2d8), 11 (3d8), and 17 (4d8).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ProduceFlame"
   },
   {
     id: "spell-programmed-illusion",
@@ -3991,7 +4780,10 @@ export const defaultSpells = [
     description: "You create an illusion of an object, a creature, or some other visible phenomenon within range that activates when a specific condition occurs. The illusion is imperceptible until then. It must be no larger than a 30-foot Cube, and you decide when you cast the spell how the illusion behaves and what sounds it makes. This scripted performance can last up to 5 minutes.\n\nWhen the trigger occurs, the illusion springs into existence and performs in the manner you described. Once the illusion finishes performing, it disappears and remains dormant for 10 minutes. After this time, the illusion can be activated again.\n\nThe trigger can be as general or as detailed as you like, but it must be based on visual or audible conditions that occur within 30 feet of the area.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ProgrammedIllusion"
   },
   {
     id: "spell-project-image",
@@ -4006,7 +4798,10 @@ export const defaultSpells = [
     description: "You create an illusory copy of yourself that lasts for the duration. The copy can appear at any location within range that you have seen before, regardless of intervening obstacles. The illusion looks and sounds like you, but it is intangible. If the illusion takes any damage, it disappears, and the spell ends.\n\nYou can take a Magic action to move this illusion up to twice your Speed and make it gesture, speak, and behave in whatever way you choose. It mimics your mannerisms perfectly.\n\nYou can see through its eyes and hear through its ears as if you were in its space. As a Bonus Action, you can switch from using its senses to using your own or back again. While you are using its senses, you have the Blinded and Deafened conditions with regard to your own surroundings.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ProjectImage"
   },
   {
     id: "spell-protection-from-energy",
@@ -4021,7 +4816,10 @@ export const defaultSpells = [
     description: "For the duration, the willing creature you touch has Resistance to one damage type of your choice: Acid, Cold, Fire, Lightning, or Thunder.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ProtectionFromEnergy"
   },
   {
     id: "spell-protection-from-evil-and-good",
@@ -4036,7 +4834,10 @@ export const defaultSpells = [
     description: "Until the spell ends, one willing creature you touch is protected against creatures that are Aberrations, Celestials, Elementals, Fey, Fiends, or Undead. The protection grants several benefits:\n\nAttack Disadvantage. Creatures of those types have Disadvantage on attack rolls against the target.\n\nNo Charming, Frightening, or Possession. The target can't be possessed by, or gain the Charmed or Frightened condition from, creatures of those types.\n\nBreak Possession or Charm. If the target is already possessed, Charmed, or Frightened by a creature of those types, the target has Advantage on any new saving throw against the effect.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ProtectionFromEvilAndGood"
   },
   {
     id: "spell-protection-from-poison",
@@ -4051,7 +4852,10 @@ export const defaultSpells = [
     description: "You touch a creature and end the Poisoned condition on it. For the duration, the target has Advantage on saving throws to avoid or end the Poisoned condition and has Resistance to Poison damage.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ProtectionFromPoison"
   },
   {
     id: "spell-purify-food-and-drink",
@@ -4066,7 +4870,10 @@ export const defaultSpells = [
     description: "You remove poison and disease from nonmagical food and drink in a 5-foot-radius Sphere centered on a point within range.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#PurifyFoodAndDrink"
   },
 
   // === Q ===
@@ -4086,7 +4893,10 @@ export const defaultSpells = [
     description: "You touch a dead creature that has been dead for no more than 10 days. If the creature's soul is both willing and at liberty to rejoin the body, the creature returns to life with 1 Hit Point.\n\nThis spell also neutralizes any poisons and cures nonmagical diseases that affected the creature at the time it died. This spell doesn't remove magical diseases, curses, or similar effects; if these aren't removed prior to casting the spell, they affect the target when it returns to life.\n\nThis spell closes all mortal wounds, but it doesn't restore missing body parts. If the creature is lacking body parts or organs integral for its survival—its head, for instance—the spell automatically fails.\n\nComing back from the dead is an ordeal. The target takes a -4 penalty to D20 Tests. Every time the target finishes a Long Rest, the penalty is reduced by 1 until it becomes 0.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#RaiseDead"
   },
   {
     id: "spell-rarys-telepathic-bond",
@@ -4101,7 +4911,10 @@ export const defaultSpells = [
     description: "You forge a telepathic link among up to eight willing creatures of your choice within range, psychically linking each creature to all the others for the duration. Creatures that can't communicate in any language aren't affected.\n\nUntil the spell ends, the targets can communicate telepathically through the bond whether or not they share a language. The communication is possible over any distance, though it can't extend to other planes of existence.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#RarysTelepathicBond"
   },
   {
     id: "spell-ray-of-enfeeblement",
@@ -4116,7 +4929,10 @@ export const defaultSpells = [
     description: "A ray of enervating energy shoots from your finger. Make a ranged spell attack against one creature within range. On a hit, the target deals only half damage with attacks that use Strength until the spell ends.\n\nThe target repeats the save at the end of each of its turns. On a successful save, the spell ends.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#RayOfEnfeeblement"
   },
   {
     id: "spell-ray-of-frost",
@@ -4131,7 +4947,10 @@ export const defaultSpells = [
     description: "A frigid beam of blue-white light streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, it takes 1d8 Cold damage, and its Speed is reduced by 10 feet until the start of your next turn.",
     higherLevels: "The damage increases by 1d8 when you reach levels 5 (2d8), 11 (3d8), and 17 (4d8).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#RayOfFrost"
   },
   {
     id: "spell-ray-of-sickness",
@@ -4146,7 +4965,10 @@ export const defaultSpells = [
     description: "You shoot a ray of sickening energy at a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 2d8 Poison damage and has the Poisoned condition until the end of your next turn.",
     higherLevels: "The damage increases by 1d8 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#RayOfSickness"
   },
   {
     id: "spell-regenerate",
@@ -4161,7 +4983,10 @@ export const defaultSpells = [
     description: "You touch a creature and stimulate its natural healing ability. The target regains 4d8 + 15 Hit Points. For the duration of the spell, the target regains 1 Hit Point at the start of each of its turns (10 Hit Points each minute).\n\nThe target's severed body members (fingers, legs, tails, and so on), if any, are restored after 2 minutes. If you have the severed part and hold it to the stump, the spell instantaneously causes the limb to knit to the stump.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Regenerate"
   },
   {
     id: "spell-reincarnate",
@@ -4176,7 +5001,10 @@ export const defaultSpells = [
     description: "You touch a dead Humanoid or a piece of one. If the creature has been dead no longer than 10 days, the spell forms a new adult body for it and then calls the soul to enter that body. If the target's soul isn't free or willing, the spell fails.\n\nThe magic fashions a new body, which likely causes the creature's species to change. The DM rolls on the Reincarnate table to determine the species of the new body, or the DM chooses one.\n\nThe reincarnated creature recalls its former life. It retains the capabilities it had in its original form, except it exchanges its species traits for the traits of its new form.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Reincarnate"
   },
   {
     id: "spell-remove-curse",
@@ -4191,7 +5019,10 @@ export const defaultSpells = [
     description: "At your touch, all curses affecting one creature or object end. If the object is a cursed magic item, its curse remains, but the spell breaks its owner's Attunement to the object so it can be removed or discarded.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#RemoveCurse"
   },
   {
     id: "spell-resilient-sphere",
@@ -4206,7 +5037,10 @@ export const defaultSpells = [
     description: "A shimmering Sphere of force encloses a Large or smaller creature or object within range. An unwilling creature must make a Dexterity saving throw. On a failed save, the creature is enclosed for the duration.\n\nNothing—not physical objects, energy, or other spell effects—can pass through the barrier, in or out, though a creature in the Sphere can breathe there. The Sphere is immune to all damage. A creature in the Sphere can take an action to push against the Sphere's walls and thus roll it at up to half the creature's Speed.\n\nA Disintegrate spell targeting the globe destroys it without harming anything inside.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ResilientSphere"
   },
   {
     id: "spell-resistance",
@@ -4221,7 +5055,10 @@ export const defaultSpells = [
     description: "You touch one willing creature. Once before the spell ends, the target can roll a d4 and add the number rolled to one saving throw of its choice. It can roll the die before or after making the saving throw. The spell then ends.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Resistance"
   },
   {
     id: "spell-resurrection",
@@ -4236,7 +5073,10 @@ export const defaultSpells = [
     description: "You touch a dead creature that has been dead for no more than a century, didn't die of old age, and isn't Undead. If its soul is free and willing, the target returns to life with all its Hit Points.\n\nThis spell neutralizes any poisons and cures normal diseases afflicting the creature when it died. It doesn't remove magical diseases, Curses, and similar effects. If such effects aren't removed prior to casting the spell, they afflict the target on its return to life.\n\nThis spell closes all mortal wounds and restores any missing body parts.\n\nComing back from the dead is an ordeal. The target takes a -4 penalty to D20 Tests. Every time the target finishes a Long Rest, the penalty is reduced by 1 until it becomes 0.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Resurrection"
   },
   {
     id: "spell-reverse-gravity",
@@ -4251,7 +5091,10 @@ export const defaultSpells = [
     description: "This spell reverses gravity in a 50-foot-radius, 100-foot-high Cylinder centered on a point within range. All creatures and objects in the Cylinder that aren't anchored to the ground fall upward and reach the top of the Cylinder. A creature can make a Dexterity saving throw to grab onto a fixed object it can reach, thus avoiding the fall upward.\n\nIf a ceiling or an anchored object is encountered, falling creatures and objects strike it just as they would during a downward fall. If a creature or object reaches the top of the Cylinder without striking anything, it hovers there for the duration. When the spell ends, affected objects and creatures fall back down.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ReverseGravity"
   },
   {
     id: "spell-revivify",
@@ -4266,7 +5109,10 @@ export const defaultSpells = [
     description: "You touch a creature that has died within the last minute. That creature revives with 1 Hit Point. This spell can't revive a creature that has died of old age, nor does it restore any missing body parts.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Revivify"
   },
   {
     id: "spell-rope-trick",
@@ -4281,7 +5127,10 @@ export const defaultSpells = [
     description: "You touch a rope. One end of it rises into the air until the whole rope hangs perpendicular to the ground. At the upper end, an Invisible entrance opens to an extradimensional space that lasts until the spell ends.\n\nThe extradimensional space can be reached by climbing to the top of the rope. It can hold as many as eight Medium or smaller creatures. The rope can be pulled into the space, making it disappear from view outside.\n\nAttacks and spells can't cross through the entrance into or out of the extradimensional space. However, those inside can see out of it as if through a 3-foot-by-5-foot window centered on the rope.\n\nAnything inside the extradimensional space drops out when the spell ends.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#RopeTrick"
   },
 
   // === S ===
@@ -4298,7 +5147,10 @@ export const defaultSpells = [
     description: "Flame-like radiance descends on a creature that you can see within range. The target must succeed on a Dexterity saving throw or take 1d8 Radiant damage. The target gains no benefit from Half Cover or Three-Quarters Cover for this save.",
     higherLevels: "The damage increases by 1d8 when you reach levels 5 (2d8), 11 (3d8), and 17 (4d8).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SacredFlame"
   },
   {
     id: "spell-sanctuary",
@@ -4313,7 +5165,10 @@ export const defaultSpells = [
     description: "You ward a creature within range. Until the spell ends, any creature who targets the warded creature with an attack roll or a damaging spell must first make a Wisdom saving throw. On a failed save, the creature must choose a new target or lose the attack or spell. This spell doesn't protect the warded creature from areas of effect.\n\nThe spell ends if the warded creature makes an attack roll, casts a spell, or deals damage.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Sanctuary"
   },
   {
     id: "spell-scorching-ray",
@@ -4328,7 +5183,10 @@ export const defaultSpells = [
     description: "You hurl three fiery rays. You can hurl them at one target within range or at several. Make a ranged spell attack for each ray. On a hit, the target takes 2d6 Fire damage.",
     higherLevels: "You create one additional ray for each slot level above 2.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ScorchingRay"
   },
   {
     id: "spell-scrying",
@@ -4343,7 +5201,10 @@ export const defaultSpells = [
     description: "You can see and hear a particular creature you choose that is on the same plane of existence as you. The target makes a Wisdom saving throw, which is modified (see the tables in the full spell description) by how well you know the target and what sort of physical connection you have to it. On a successful save, the target isn't affected, and you can't use this spell on it again for 24 hours.\n\nOn a failed save, the spell creates an Invisible, intangible sensor within 10 feet of the target. You can see and hear through the sensor as if you were there. The sensor moves with the target. A creature that sees the sensor (by seeing Invisible things, for example) sees a luminous orb about the size of your fist.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Scrying"
   },
   {
     id: "spell-searing-smite",
@@ -4358,7 +5219,10 @@ export const defaultSpells = [
     description: "As you hit the target, it takes an extra 1d6 Fire damage from the attack. At the start of each of its turns until the spell ends, the target takes 1d6 Fire damage and then makes a Constitution saving throw. On a failed save, the spell continues. On a successful save, the spell ends.",
     higherLevels: "All the damage increases by 1d6 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SearingSmite"
   },
   {
     id: "spell-see-invisibility",
@@ -4373,7 +5237,10 @@ export const defaultSpells = [
     description: "For the duration, you see creatures and objects that have the Invisible condition as if they were visible, and you can see into the Ethereal Plane. Creatures and objects there appear ghostly.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SeeInvisibility"
   },
   {
     id: "spell-seeming",
@@ -4388,7 +5255,10 @@ export const defaultSpells = [
     description: "You give an illusory appearance to each creature of your choice that you can see within range. An unwilling target can make a Charisma saving throw, and if it succeeds, it is unaffected by this spell.\n\nYou can give the same appearance or different ones to the targets. The spell can change the appearance of the targets' bodies and equipment. You can make each creature seem up to 1 foot shorter or taller and appear heavier or lighter. A target's new appearance must have the same basic arrangement of limbs as the target, but otherwise the illusion can include any details you like. The spell lasts for the duration.\n\nThe changes wrought by this spell fail to hold up to physical inspection. To discern that a target is disguised, a creature must take the Study action to inspect the target's appearance. It then makes an Intelligence (Investigation) check against your spell save DC.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Seeming"
   },
   {
     id: "spell-sending",
@@ -4403,7 +5273,10 @@ export const defaultSpells = [
     description: "You send a short message of 25 words or fewer to a creature you have met or described to you. The target hears the message in its mind, recognizes you as the sender if it knows you, and can answer in a like manner immediately. The spell enables targets to understand the meaning of your message.\n\nYou can send the message across any distance and even to other planes of existence, but if the target is on a different plane than you, there is a 5 percent chance that the message doesn't arrive. You know if the delivery fails.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Sending"
   },
   {
     id: "spell-sequester",
@@ -4418,7 +5291,10 @@ export const defaultSpells = [
     description: "With this spell, a willing creature or an object can be hidden away, safe from detection for the duration. When you cast the spell and touch the target, it becomes Invisible and can't be targeted by Divination spells, the sensors created by Divination spells, or scrying.\n\nIf the target is a creature, it enters suspended animation: time ceases to flow for it, and it doesn't grow older.\n\nYou can set a condition for the spell to end early. The condition can be anything you choose, but it must occur or be visible within 1 mile of the target.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Sequester"
   },
   {
     id: "spell-shapechange",
@@ -4433,7 +5309,10 @@ export const defaultSpells = [
     description: "You shape-shift into another creature for the duration or until you take a Magic action to shape-shift into a different eligible form. The new form must be of a creature that has a Challenge Rating no higher than your level or Challenge Rating. You must have seen the sort of creature before, and it can't be a Construct or an Undead.\n\nWhen you shape-shift, you gain a number of Temporary Hit Points equal to the Hit Points of the form. The transformation also changes your game statistics, but you retain your personality; Hit Points; Hit Point Dice; Intelligence, Wisdom, and Charisma scores; class features; languages; and feats.\n\nYour equipment melds into the new form, and you can't use any of that equipment while you're in this form.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Shapechange"
   },
   {
     id: "spell-shatter",
@@ -4448,7 +5327,10 @@ export const defaultSpells = [
     description: "A loud noise erupts from a point of your choice within range. Each creature in a 10-foot-radius Sphere centered on that point makes a Constitution saving throw, taking 3d8 Thunder damage on a failed save or half as much damage on a successful one. A Construct has Disadvantage on the save.\n\nA nonmagical object that isn't being worn or carried also takes the damage if it's in the spell's area.",
     higherLevels: "The damage increases by 1d8 for each slot level above 2.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Shatter"
   },
   {
     id: "spell-shield",
@@ -4463,7 +5345,10 @@ export const defaultSpells = [
     description: "An imperceptible barrier of magical force protects you. Until the start of your next turn, you have a +5 bonus to AC, including against the triggering attack, and you take no damage from Magic Missile.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Shield"
   },
   {
     id: "spell-shield-of-faith",
@@ -4478,7 +5363,10 @@ export const defaultSpells = [
     description: "A shimmering field appears and surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ShieldOfFaith"
   },
   {
     id: "spell-shillelagh",
@@ -4493,7 +5381,10 @@ export const defaultSpells = [
     description: "A Club or Quarterstaff you are holding is imbued with nature's power. For the duration, you can use your spellcasting ability instead of Strength for the attack and damage rolls of melee attacks using that weapon, and the weapon's damage die becomes a d8. If the weapon isn't magical, it becomes magical for the duration.\n\nThe spell ends early if you cast it again or if you let go of the weapon.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Shillelagh"
   },
   {
     id: "spell-shocking-grasp",
@@ -4508,7 +5399,10 @@ export const defaultSpells = [
     description: "Lightning springs from your hand to deliver a shock to a creature you try to touch. Make a melee spell attack against the target. You have Advantage on the attack roll if the target is wearing armor made of metal. On a hit, the target takes 1d8 Lightning damage, and it can't take Reactions until the start of its next turn.",
     higherLevels: "The damage increases by 1d8 when you reach levels 5 (2d8), 11 (3d8), and 17 (4d8).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ShockingGrasp"
   },
   {
     id: "spell-silence",
@@ -4523,7 +5417,10 @@ export const defaultSpells = [
     description: "For the duration, no sound can be created within or pass through a 20-foot-radius Sphere centered on a point you choose within range. Any creature or object entirely inside the Sphere is immune to Thunder damage, and creatures have the Deafened condition while entirely inside it. Casting a spell that includes a Verbal component is impossible there.",
     higherLevels: null,
     concentration: true,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Silence"
   },
   {
     id: "spell-silent-image",
@@ -4538,7 +5435,10 @@ export const defaultSpells = [
     description: "You create the image of an object, a creature, or some other visible phenomenon that is no larger than a 15-foot Cube. The image appears at a spot within range and lasts for the duration. The image is purely visual; it isn't accompanied by sound, smell, or other sensory effects.\n\nAs a Magic action, you can cause the image to move to any spot within range. As the image changes location, you can alter its appearance so that its movements appear natural for the image.\n\nPhysical interaction with the image reveals it to be an illusion. A creature that takes a Study action to examine the image can determine that it's an illusion with a successful Intelligence (Investigation) check against your spell save DC. If a creature discerns the illusion for what it is, the creature can see through the image.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SilentImage"
   },
   {
     id: "spell-simulacrum",
@@ -4553,7 +5453,10 @@ export const defaultSpells = [
     description: "You create an illusory duplicate of one Beast or Humanoid that is within range for the entire casting of the spell. The simulacrum is partially real, constructed from ice or snow. It can take actions and otherwise be affected as a normal creature.\n\nIt appears to be the same as the original, but it has half the creature's Hit Points and doesn't have equipment. The simulacrum lacks the ability to learn or become more powerful, so it never increases its level or other abilities. If the simulacrum is damaged, you can repair it in an alchemical laboratory, using rare herbs worth 100 GP per Hit Point restored. The simulacrum lasts until it drops to 0 Hit Points.\n\nIf you cast this spell again while you have a simulacrum, the old simulacrum is destroyed.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Simulacrum"
   },
   {
     id: "spell-sleep",
@@ -4568,7 +5471,10 @@ export const defaultSpells = [
     description: "Each creature of your choice in a 5-foot-radius Sphere centered on a point within range must succeed on a Wisdom saving throw or have the Incapacitated condition until the spell ends, the sleeper takes damage, or someone takes an action to shake the sleeper awake.",
     higherLevels: "The Sphere's radius increases by 5 feet for each slot level above 1.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Sleep"
   },
   {
     id: "spell-sleet-storm",
@@ -4583,7 +5489,10 @@ export const defaultSpells = [
     description: "Until the spell ends, sleet falls in a 40-foot-tall, 20-foot-radius Cylinder centered on a point you choose within range. The area is Heavily Obscured, and exposed flames in the area are doused.\n\nThe ground in the area is covered with slick ice, making it Difficult Terrain. When a creature enters the area for the first time on a turn or starts its turn there, it must make a Dexterity saving throw. On a failed save, it has the Prone condition.\n\nIf a creature starts its turn in the area and is concentrating, it must succeed on a Constitution saving throw against your spell save DC or lose Concentration.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SleetStorm"
   },
   {
     id: "spell-slow",
@@ -4598,7 +5507,10 @@ export const defaultSpells = [
     description: "You alter time around up to six creatures of your choice in a 40-foot Cube within range. Each target must succeed on a Wisdom saving throw or be affected by this spell for the duration.\n\nAn affected target's Speed is halved, it takes a -2 penalty to AC and Dexterity saving throws, and it can't take Reactions. On its turn, it can take either an action or a Bonus Action, not both, and it can make only one attack if it takes the Attack action. If it tries to cast a spell with a casting time of an action, roll 1d20. On a 1-10, the spell takes effect at the start of the creature's next turn.\n\nA target repeats the save at the end of each of its turns, ending the effect on itself on a success.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Slow"
   },
   {
     id: "spell-spare-the-dying",
@@ -4613,7 +5525,10 @@ export const defaultSpells = [
     description: "Choose a creature within range that has 0 Hit Points and isn't dead. The creature becomes Stable.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SpareTheDying"
   },
   {
     id: "spell-speak-with-animals",
@@ -4628,7 +5543,10 @@ export const defaultSpells = [
     description: "For the duration, you can comprehend and verbally communicate with Beasts. The knowledge and awareness of many Beasts is limited by their Intelligence, but at minimum, Beasts can give you information about nearby locations and monsters, including whatever they can perceive or have perceived within the past day.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SpeakWithAnimals"
   },
   {
     id: "spell-speak-with-dead",
@@ -4643,7 +5561,10 @@ export const defaultSpells = [
     description: "You grant the semblance of life to a corpse of your choice within range, allowing it to answer questions you pose. The corpse must have a mouth, and this spell fails if the deceased creature was Undead when it died. The spell also fails if the corpse was the target of this spell within the last 10 days.\n\nUntil the spell ends, you can ask the corpse up to five questions. The corpse knows only what it knew in life, including the languages it knew. Answers are usually brief, cryptic, or repetitive, and the corpse is under no compulsion to offer a truthful answer if you are hostile to it or it recognizes you as an enemy. This spell doesn't return the creature's soul to its body, only its animating spirit. Thus, the corpse can't learn new information, doesn't comprehend anything that has happened since it died, and can't speculate about future events.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SpeakWithDead"
   },
   {
     id: "spell-speak-with-plants",
@@ -4658,7 +5579,10 @@ export const defaultSpells = [
     description: "You imbue plants in a 30-foot-radius Emanation with limited sentience and animation, allowing them to communicate with you and follow your simple commands. You can question plants about events in the spell's area within the past day, gaining information about creatures that have passed, weather, and other circumstances.\n\nYou can also turn Difficult Terrain caused by plant growth (such as thickets and undergrowth) into ordinary terrain that lasts for the duration. Or you can turn ordinary terrain where plants are present into Difficult Terrain.\n\nThe spell doesn't enable plants to uproot themselves and move about, but they can move their branches, tendrils, and stalks.\n\nIf a Plant creature is in the area, you can communicate with it as if you shared a common language.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SpeakWithPlants"
   },
   {
     id: "spell-spider-climb",
@@ -4673,7 +5597,10 @@ export const defaultSpells = [
     description: "Until the spell ends, one willing creature you touch gains the ability to move up, down, and across vertical surfaces and upside down along ceilings, while leaving its hands free. The target also gains a Climb Speed equal to its Speed.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SpiderClimb"
   },
   {
     id: "spell-spike-growth",
@@ -4688,7 +5615,10 @@ export const defaultSpells = [
     description: "The ground in a 20-foot-radius Sphere centered on a point within range twists and sprouts hard spikes and thorns. The area becomes Difficult Terrain for the duration. When a creature moves into or within the area, it takes 2d4 Piercing damage for every 5 feet it travels.\n\nThe transformation of the ground is camouflaged to look natural. Any creature that can't see the area when the spell is cast must take a Search action and succeed on a Wisdom (Perception or Survival) check against your spell save DC to recognize the terrain as hazardous before entering it.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SpikeGrowth"
   },
   {
     id: "spell-spirit-guardians",
@@ -4703,7 +5633,10 @@ export const defaultSpells = [
     description: "Spirits of your choice flit around you in a 15-foot Emanation for the duration. If you are good or neutral, their spectral form appears angelic or fey (your choice). If you are evil, they appear fiendish.\n\nWhen you cast this spell, you can designate creatures to be unaffected by it. Any other creature's Speed is halved in the Emanation, and when the creature enters the Emanation for the first time on a turn or starts its turn there, it must make a Wisdom saving throw. On a failed save, the creature takes 3d8 Radiant damage (if you are good or neutral) or 3d8 Necrotic damage (if you are evil). On a successful save, the creature takes half as much damage.",
     higherLevels: "The damage increases by 1d8 for each slot level above 3.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SpiritGuardians"
   },
   {
     id: "spell-spiritual-weapon",
@@ -4718,7 +5651,10 @@ export const defaultSpells = [
     description: "You create a floating, spectral force that resembles a weapon of your choice and lasts for the duration. The force appears in an unoccupied space that you can see within range.\n\nWhen you cast this spell, you can make a melee spell attack against a creature within 5 feet of the force. On a hit, the target takes Force damage equal to 1d8 plus your spellcasting ability modifier.\n\nAs a Bonus Action on your later turns, you can move the force up to 20 feet and make the attack again against a creature within 5 feet of it.",
     higherLevels: "The damage increases by 1d8 for every two slot levels above 2.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SpiritualWeapon"
   },
   {
     id: "spell-staggering-smite",
@@ -4733,7 +5669,10 @@ export const defaultSpells = [
     description: "The target takes an extra 4d6 Psychic damage from the attack, and the target must succeed on a Wisdom saving throw or have the Stunned condition until the end of your next turn.",
     higherLevels: "The extra damage increases by 1d6 for each slot level above 4.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#StaggeringSmite"
   },
   {
     id: "spell-starry-wisp",
@@ -4748,7 +5687,10 @@ export const defaultSpells = [
     description: "You launch a mote of light at one creature or object within range. Make a ranged spell attack against the target. On a hit, the target takes 1d8 Radiant damage, and until the end of your next turn, it emits Dim Light in a 10-foot radius and can't benefit from the Invisible condition.",
     higherLevels: "The damage increases by 1d8 when you reach levels 5 (2d8), 11 (3d8), and 17 (4d8).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#StarryWisp"
   },
   {
     id: "spell-steel-wind-strike",
@@ -4763,7 +5705,10 @@ export const defaultSpells = [
     description: "You flourish the weapon used in the casting and then vanish to strike like the wind. Choose up to five creatures you can see within range. Make a melee spell attack against each target. On a hit, a target takes 6d10 Force damage.\n\nYou then teleport to an unoccupied space you can see within 5 feet of one of the targets.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SteelWindStrike"
   },
   {
     id: "spell-stinking-cloud",
@@ -4778,7 +5723,10 @@ export const defaultSpells = [
     description: "You create a 20-foot-radius Sphere of yellow, nauseating gas centered on a point within range. The cloud is Heavily Obscured. The cloud lingers in the air for the duration or until a strong wind (such as one created by Gust of Wind) disperses it.\n\nEach creature that starts its turn in the Sphere must succeed on a Constitution saving throw or have the Poisoned condition until the end of the current turn. While Poisoned in this way, the creature can't take an action or a Bonus Action.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#StinkingCloud"
   },
   {
     id: "spell-stone-shape",
@@ -4793,7 +5741,10 @@ export const defaultSpells = [
     description: "You touch a stone object of Medium size or smaller or a section of stone no more than 5 feet in any dimension and form it into any shape you like. For example, you could shape a large rock into a weapon, idol, or coffer, or you could make a small passage through a wall, as long as the wall is less than 5 feet thick. You could also shape a stone door or its frame to seal the door shut. The object you create can have up to two hinges and a latch, but finer mechanical detail isn't possible.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#StoneShape"
   },
   {
     id: "spell-stoneskin",
@@ -4808,7 +5759,10 @@ export const defaultSpells = [
     description: "You touch a willing creature. Until the spell ends, the target has Resistance to Bludgeoning, Piercing, and Slashing damage.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Stoneskin"
   },
   {
     id: "spell-storm-of-vengeance",
@@ -4823,7 +5777,10 @@ export const defaultSpells = [
     description: "A churning storm cloud forms for the duration, centered on a point you can see and spreading to a radius of 360 feet. Each creature under the cloud when it appears must make a Constitution saving throw, taking 2d6 Thunder damage on a failed save, or half as much damage on a successful one.\n\nEach round you maintain Concentration on this spell, the storm produces different effects on your turn:\n\nRound 2. Acidic rain. Each creature under the cloud takes 1d6 Acid damage.\n\nRound 3. Lightning bolts. Up to six creatures of your choice under the cloud must make Dexterity saves. A creature takes 10d6 Lightning damage on a failed save or half as much on a successful one.\n\nRound 4. Hailstones. Each creature under the cloud takes 2d6 Bludgeoning damage.\n\nRound 5-10. Gusts and freezing rain. The area under the cloud is Difficult Terrain and Heavily Obscured. Each creature there takes 1d6 Cold damage.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#StormOfVengeance"
   },
   {
     id: "spell-suggestion",
@@ -4838,7 +5795,10 @@ export const defaultSpells = [
     description: "You suggest a course of activity—described in no more than 25 words—to one creature you can see within range that can hear and understand you. The suggestion must sound achievable and not involve anything that would obviously deal damage to the target or its allies. For example, you could say, \"Fetch the key to the cult's treasure vault, and give the key to me.\"\n\nOn a failed Wisdom save, the target pursues the suggestion. The suggested activity can continue for the entire duration. If the suggested activity can be completed in a shorter time, the spell ends for the target upon completing it.\n\nYou can specify conditions that will trigger a special activity during the duration. For example, you could suggest that a knight give her warhorse to the first beggar she meets. If the condition isn't met before the spell ends, the activity isn't performed.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Suggestion"
   },
   {
     id: "spell-summon-aberration",
@@ -4853,7 +5813,10 @@ export const defaultSpells = [
     description: "You call forth an aberrant spirit. It manifests in an unoccupied space that you can see within range and uses the Aberrant Spirit stat block. When you cast the spell, choose Beholderkin, Mind Flayer, or Slaad. The creature resembles an Aberration of that kind, which determines certain details in its stat block. The creature disappears when it drops to 0 Hit Points or when the spell ends.\n\nThe creature is an ally to you and your allies. In combat, the creature shares your Initiative count and takes its turn immediately after yours.",
     higherLevels: "The creature gains 10 additional Hit Points for each slot level above 4.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SummonAberration"
   },
   {
     id: "spell-summon-beast",
@@ -4868,7 +5831,10 @@ export const defaultSpells = [
     description: "You call forth a bestial spirit. It manifests in an unoccupied space that you can see within range and uses the Bestial Spirit stat block. When you cast the spell, choose an environment: Air, Land, or Water. The creature resembles an animal of your choice that is native to the chosen environment, which determines certain details in its stat block. The creature disappears when it drops to 0 Hit Points or when the spell ends.\n\nThe creature is an ally to you and your allies. In combat, the creature shares your Initiative count and takes its turn immediately after yours.",
     higherLevels: "The creature gains 5 additional Hit Points for each slot level above 2.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SummonBeast"
   },
   {
     id: "spell-summon-celestial",
@@ -4883,7 +5849,10 @@ export const defaultSpells = [
     description: "You call forth a celestial spirit. It manifests in an angelic form in an unoccupied space that you can see within range and uses the Celestial Spirit stat block. When you cast the spell, choose Avenger or Defender. Your choice determines certain details in its stat block. The creature disappears when it drops to 0 Hit Points or when the spell ends.\n\nThe creature is an ally to you and your allies. In combat, the creature shares your Initiative count and takes its turn immediately after yours.",
     higherLevels: "The creature gains 10 additional Hit Points for each slot level above 5.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SummonCelestial"
   },
   {
     id: "spell-summon-construct",
@@ -4898,7 +5867,10 @@ export const defaultSpells = [
     description: "You call forth the spirit of a Construct. It manifests in an unoccupied space that you can see within range and uses the Construct Spirit stat block. When you cast the spell, choose a material: Clay, Metal, or Stone. The creature resembles an animate statue made of the chosen material, which determines certain details in its stat block. The creature disappears when it drops to 0 Hit Points or when the spell ends.\n\nThe creature is an ally to you and your allies. In combat, the creature shares your Initiative count and takes its turn immediately after yours.",
     higherLevels: "The creature gains 15 additional Hit Points for each slot level above 4.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SummonConstruct"
   },
   {
     id: "spell-summon-demon",
@@ -4913,7 +5885,10 @@ export const defaultSpells = [
     description: "You call forth a fiendish spirit. It manifests in an unoccupied space that you can see within range and uses the Fiendish Spirit stat block. When you cast the spell, choose Demon, Devil, or Yugoloth. The creature resembles a fiend of the chosen type, which determines certain details in its stat block. The creature disappears when it drops to 0 Hit Points or when the spell ends.\n\nThe creature is an ally to you and your allies. In combat, the creature shares your Initiative count and takes its turn immediately after yours.",
     higherLevels: "The creature gains 10 additional Hit Points for each slot level above 5.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SummonDemon"
   },
   {
     id: "spell-summon-dragon",
@@ -4928,7 +5903,10 @@ export const defaultSpells = [
     description: "You call forth a draconic spirit. It manifests in an unoccupied space that you can see within range and uses the Draconic Spirit stat block. The creature resembles a dragon of a color you choose. The creature disappears when it drops to 0 Hit Points or when the spell ends.\n\nThe creature is an ally to you and your allies. In combat, the creature shares your Initiative count and takes its turn immediately after yours.",
     higherLevels: "The creature gains 10 additional Hit Points for each slot level above 5.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SummonDragon"
   },
   {
     id: "spell-summon-elemental",
@@ -4943,7 +5921,10 @@ export const defaultSpells = [
     description: "You call forth an elemental spirit. It manifests in an unoccupied space that you can see within range and uses the Elemental Spirit stat block. When you cast the spell, choose an element: Air, Earth, Fire, or Water. The creature resembles a bipedal form wreathed in the chosen element, which determines certain details in its stat block. The creature disappears when it drops to 0 Hit Points or when the spell ends.\n\nThe creature is an ally to you and your allies. In combat, the creature shares your Initiative count and takes its turn immediately after yours.",
     higherLevels: "The creature gains 10 additional Hit Points for each slot level above 4.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SummonElemental"
   },
   {
     id: "spell-summon-fey",
@@ -4958,7 +5939,10 @@ export const defaultSpells = [
     description: "You call forth a fey spirit. It manifests in an unoccupied space that you can see within range and uses the Fey Spirit stat block. When you cast the spell, choose a mood: Fuming, Mirthful, or Tricksy. The creature resembles a Fey creature of your choice marked by the chosen mood, which determines certain details in its stat block. The creature disappears when it drops to 0 Hit Points or when the spell ends.\n\nThe creature is an ally to you and your allies. In combat, the creature shares your Initiative count and takes its turn immediately after yours.",
     higherLevels: "The creature gains 10 additional Hit Points for each slot level above 3.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SummonFey"
   },
   {
     id: "spell-summon-undead",
@@ -4973,7 +5957,10 @@ export const defaultSpells = [
     description: "You call forth an undead spirit. It manifests in an unoccupied space that you can see within range and uses the Undead Spirit stat block. When you cast the spell, choose the creature's form: Ghostly, Putrid, or Skeletal. The spirit resembles an Undead creature with the chosen form, which determines certain details in its stat block. The creature disappears when it drops to 0 Hit Points or when the spell ends.\n\nThe creature is an ally to you and your allies. In combat, the creature shares your Initiative count and takes its turn immediately after yours.",
     higherLevels: "The creature gains 10 additional Hit Points for each slot level above 3.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SummonUndead"
   },
   {
     id: "spell-sunbeam",
@@ -4988,7 +5975,10 @@ export const defaultSpells = [
     description: "You launch a sunbeam in a 5-foot-wide, 60-foot-long Line. Each creature in the Line makes a Constitution saving throw. On a failed save, a creature takes 6d8 Radiant damage and has the Blinded condition until the start of your next turn. On a successful save, it takes half as much damage only.\n\nUntil the spell ends, you can take a Magic action to create a new Line of radiance.\n\nFor the duration, a mote of brilliant radiance shines above you. It sheds Bright Light in a 30-foot radius and Dim Light for an additional 30 feet. This light is sunlight.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Sunbeam"
   },
   {
     id: "spell-sunburst",
@@ -5003,7 +5993,10 @@ export const defaultSpells = [
     description: "Brilliant sunlight flashes in a 60-foot-radius Sphere centered on a point you choose within range. Each creature in the Sphere makes a Constitution saving throw. On a failed save, a creature takes 12d6 Radiant damage and has the Blinded condition for 1 minute. On a successful save, it takes half as much damage only.\n\nA creature Blinded by this spell makes another Constitution saving throw at the end of each of its turns, ending the effect on itself on a success.\n\nThis spell dispels any Darkness in its area that was created by a spell.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Sunburst"
   },
   {
     id: "spell-swift-quiver",
@@ -5018,7 +6011,10 @@ export const defaultSpells = [
     description: "When you cast the spell and as a Bonus Action until it ends, you can make two attacks with a weapon that fires ammunition from a Quiver. Each time you make such a ranged attack, the Quiver magically replaces the piece of ammunition with a similar piece of nonmagical ammunition. Any pieces of ammunition created by this spell disintegrate when the spell ends.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#SwiftQuiver"
   },
   {
     id: "spell-symbol",
@@ -5033,7 +6029,10 @@ export const defaultSpells = [
     description: "You inscribe a harmful glyph either on a surface (such as a section of floor or wall) or within an object that can be closed (such as a book or chest). The glyph can cover an area no larger than 10 feet in diameter.\n\nYou set the conditions for the glyph to trigger. When triggered, the glyph erupts to fill a 60-foot-radius Sphere. Each creature in the Sphere is targeted by the glyph's effect, which depends on which symbol you inscribed: Death, Discord, Fear, Pain, Sleep, or Stunning. See the full spell description for specific effects.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Symbol"
   },
 
   // === T ===
@@ -5050,7 +6049,10 @@ export const defaultSpells = [
     description: "You conjure a claw-footed cauldron filled with bubbling liquid. The cauldron appears in an unoccupied space on the ground within 5 feet of you, and it lasts for the duration. The cauldron can't be moved and disappears early if you are more than 5 feet away from it for 1 minute or more.\n\nOnce during the spell's duration, you or an ally can reach into the cauldron and choose one of the potions in the Cauldron Potions table. The chosen potion magically appears in the creature's free hand. Once a potion has been pulled from the cauldron, no more can be withdrawn from it.",
     higherLevels: "One additional potion can be pulled from the cauldron for each slot level above 3.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#TashasBubblingCauldron"
   },
   {
     id: "spell-tashas-hideous-laughter",
@@ -5065,7 +6067,10 @@ export const defaultSpells = [
     description: "One creature of your choice that you can see within range makes a Wisdom saving throw. On a failed save, the target has the Prone and Incapacitated conditions for the duration. A creature with an Intelligence of 4 or less isn't affected.\n\nAt the end of each of its turns and each time it takes damage, the target repeats the save, ending the effect on itself on a success. The target has Advantage on the save if the save is triggered by damage.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#TashasHideousLaughter"
   },
   {
     id: "spell-telekinesis",
@@ -5080,7 +6085,10 @@ export const defaultSpells = [
     description: "You gain the ability to move or manipulate creatures or objects by thought. When you cast the spell and as a Magic action on your later turns, you can exert your will on one creature or object that you can see within range, causing the appropriate effect below. You can affect the same target round after round or choose a new one at any time.\n\nCreature. You make an ability check with your spellcasting ability contested by the creature's Strength check. If you win, you move the creature up to 30 feet in any direction, including upward. Until the end of your next turn, the creature is Restrained. A Huge or larger creature automatically wins the contest.\n\nObject. You can move an object that weighs up to 1,000 pounds up to 30 feet in any direction. You can exert fine control on objects with your telekinetic grip, such as manipulating a tool or opening a container.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Telekinesis"
   },
   {
     id: "spell-telepathy",
@@ -5095,7 +6103,10 @@ export const defaultSpells = [
     description: "You create a telepathic link between yourself and a willing creature with which you are familiar. The creature can be anywhere on the same plane of existence as you. The spell ends if you or the target are no longer on the same plane.\n\nUntil the spell ends, you and the target can instantly share words, images, sounds, and other sensory messages with each other through the link, and the target recognizes you as the creature it is communicating with. The spell enables a creature with an Intelligence of 1 or higher to understand the meaning of your words and any sensory messages you send to it.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Telepathy"
   },
   {
     id: "spell-teleport",
@@ -5110,7 +6121,10 @@ export const defaultSpells = [
     description: "This spell instantly transports you and up to eight willing creatures that you can see within range, or a single object that you can see within range, to a destination you specify. If you target an object, it must be able to fit entirely inside a 10-foot Cube, and it can't be held or carried by an unwilling creature.\n\nThe destination must be known to you, and it must be on the same plane of existence as you. Your familiarity with the destination determines whether you arrive there successfully. The DM rolls percentile dice and consults the Teleportation Outcome table to determine what happens.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Teleport"
   },
   {
     id: "spell-teleportation-circle",
@@ -5125,7 +6139,10 @@ export const defaultSpells = [
     description: "As you cast the spell, you draw a 5-foot-radius circle on the ground inscribed with sigils that link your location to a permanent teleportation circle of your choice whose sigil sequence you know and that is on the same plane of existence as you. A shimmering portal opens within the circle you drew and remains open until the end of your next turn. Any creature that enters the portal instantly appears within 5 feet of the destination circle or in the nearest unoccupied space.\n\nMany temples, guilds, and other important places have permanent teleportation circles. Each circle includes a unique sigil sequence—a string of runes arranged in a particular pattern. You can learn the sequence during your visit to the circle. You can create a permanent circle by casting this spell in the same location every day for one year.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#TeleportationCircle"
   },
   {
     id: "spell-tensers-floating-disk",
@@ -5140,7 +6157,10 @@ export const defaultSpells = [
     description: "This spell creates a circular, horizontal plane of force, 3 feet in diameter and 1 inch thick, that floats 3 feet above the ground in an unoccupied space of your choice that you can see within range. The disk remains for the duration and can hold up to 500 pounds. If more weight is placed on it, the spell ends, and everything on the disk falls to the ground.\n\nThe disk is immobile while you are within 20 feet of it. If you move more than 20 feet away from it, the disk follows you so that it remains within 20 feet of you. It can move across uneven terrain, up or down stairs, and the like, but it can't cross an elevation change of 10 feet or more.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#TensersFloatingDisk"
   },
   {
     id: "spell-thaumaturgy",
@@ -5155,7 +6175,10 @@ export const defaultSpells = [
     description: "You manifest a minor wonder, a sign of supernatural power, within range. You create one of the following magical effects within range:\n\nYour voice booms up to three times as loud as normal for 1 minute.\n\nYou cause flames to flicker, brighten, dim, or change color for 1 minute.\n\nYou cause harmless tremors in the ground for 1 minute.\n\nYou create an instantaneous sound that originates from a point of your choice within range, such as a rumble of thunder, the cry of a raven, or ominous whispers.\n\nYou instantaneously cause an unlocked door or window to fly open or slam shut.\n\nYou alter the appearance of your eyes for 1 minute.\n\nIf you cast this spell multiple times, you can have up to three of its 1-minute effects active at a time.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Thaumaturgy"
   },
   {
     id: "spell-thorn-whip",
@@ -5170,7 +6193,10 @@ export const defaultSpells = [
     description: "You create a vine-like whip covered in thorns that lashes out at your command toward a creature in range. Make a melee spell attack against the target. On a hit, the target takes 1d6 Piercing damage, and if the target is Large or smaller, you can pull the target up to 10 feet closer to you.",
     higherLevels: "The damage increases by 1d6 when you reach levels 5 (2d6), 11 (3d6), and 17 (4d6).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ThornWhip"
   },
   {
     id: "spell-thunderclap",
@@ -5185,7 +6211,10 @@ export const defaultSpells = [
     description: "You create a burst of thunderous sound that can be heard up to 100 feet away. Each creature in a 5-foot Emanation originating from you must succeed on a Constitution saving throw or take 1d6 Thunder damage.",
     higherLevels: "The damage increases by 1d6 when you reach levels 5 (2d6), 11 (3d6), and 17 (4d6).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Thunderclap"
   },
   {
     id: "spell-thunderous-smite",
@@ -5200,7 +6229,10 @@ export const defaultSpells = [
     description: "Your strike rings with thunder that is audible within 300 feet of you, and the target takes an extra 2d6 Thunder damage from the attack. Additionally, if the target is a creature, it must succeed on a Strength saving throw or be pushed 10 feet away from you and have the Prone condition.",
     higherLevels: "The damage increases by 1d6 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ThunderousSmite"
   },
   {
     id: "spell-thunderwave",
@@ -5215,7 +6247,10 @@ export const defaultSpells = [
     description: "A wave of thunderous force sweeps out from you. Each creature in a 15-foot Cube originating from you makes a Constitution saving throw. On a failed save, a creature takes 2d8 Thunder damage and is pushed 10 feet away from you. On a successful save, the creature takes half as much damage only.\n\nIn addition, unsecured objects that are completely within the area of effect are automatically pushed 10 feet away from you, and the spell emits a thunderous boom audible out to 300 feet.",
     higherLevels: "The damage increases by 1d8 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Thunderwave"
   },
   {
     id: "spell-time-stop",
@@ -5230,7 +6265,10 @@ export const defaultSpells = [
     description: "You briefly stop the flow of time for everyone but yourself. No time passes for other creatures, while you take 1d4 + 1 turns in a row, during which you can use actions and move as normal.\n\nThis spell ends if one of the actions you use during this period, or any effects that you create during it, affects a creature other than you or an object being worn or carried by someone other than you. In addition, the spell ends if you move to a place more than 1,000 feet from the location where you cast it.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#TimeStop"
   },
   {
     id: "spell-toll-the-dead",
@@ -5245,7 +6283,10 @@ export const defaultSpells = [
     description: "You point at one creature you can see within range, and the sound of a dolorous bell fills the air around it for a moment. The target must succeed on a Wisdom saving throw or take 1d8 Necrotic damage. If the target is missing any of its Hit Points, it instead takes 1d12 Necrotic damage.",
     higherLevels: "The damage increases by one die when you reach levels 5 (2d8 or 2d12), 11 (3d8 or 3d12), and 17 (4d8 or 4d12).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#TollTheDead"
   },
   {
     id: "spell-tongues",
@@ -5260,7 +6301,10 @@ export const defaultSpells = [
     description: "This spell grants the creature you touch the ability to understand any spoken or signed language that it hears or sees. Moreover, when the target communicates by speaking or signing, any creature that knows at least one language can understand it if that creature can hear the speech or see the signing.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Tongues"
   },
   {
     id: "spell-transport-via-plants",
@@ -5275,7 +6319,10 @@ export const defaultSpells = [
     description: "This spell creates a magical link between a Large or larger inanimate plant within range and another plant, at any distance, on the same plane of existence. You must have seen or touched the destination plant at least once before. For the duration, any creature can step into the target plant and exit from the destination plant by using 5 feet of movement.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#TransportViaPlants"
   },
   {
     id: "spell-tree-stride",
@@ -5290,7 +6337,10 @@ export const defaultSpells = [
     description: "You gain the ability to enter a tree and move from inside it to inside another tree of the same kind within 500 feet. Both trees must be living and at least the same size as you. You must use 5 feet of movement to enter a tree. You instantly know the location of all other trees of the same kind within 500 feet and, as part of the move used to enter the tree, can pass into one of those trees or step out of the tree you're in. You appear in a spot of your choice within 5 feet of the destination tree, using another 5 feet of movement. If you have no movement left, you appear within 5 feet of the tree you entered.\n\nYou can use this transportation ability once each round for the duration.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#TreeStride"
   },
   {
     id: "spell-true-polymorph",
@@ -5305,7 +6355,10 @@ export const defaultSpells = [
     description: "Choose one creature or nonmagical object that you can see within range. The creature shape-shifts into a different creature or into a nonmagical object, or the object shape-shifts into a creature (the object must be neither worn nor carried). The transformation lasts for the duration or until the target drops to 0 Hit Points or dies. If you maintain Concentration on this spell for 1 hour, the spell lasts until dispelled.\n\nThe target's game statistics are replaced by the stat block of the new form, but it retains its Hit Points, Hit Point Dice, alignment, and personality.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#TruePolymorph"
   },
   {
     id: "spell-true-resurrection",
@@ -5320,7 +6373,10 @@ export const defaultSpells = [
     description: "You touch a creature that has been dead for no longer than 200 years and that died for any reason except old age. The creature is revived with all its Hit Points.\n\nThis spell closes all wounds, neutralizes any poison, cures all magical contagions afflicting the creature, and replaces any missing body parts. If the creature was Undead, it is restored to its non-Undead form.\n\nThis spell can also bring back a creature that was destroyed by a Disintegrate spell or similar effect. However, the spell can't restore a creature that has died of old age.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#TrueResurrection"
   },
   {
     id: "spell-true-seeing",
@@ -5335,7 +6391,10 @@ export const defaultSpells = [
     description: "You give a willing creature you touch the ability to see things as they actually are. For the duration, that creature has Truesight with a range of 120 feet, notices secret doors hidden by magic, and can see into the Ethereal Plane, all out to a range of 120 feet.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#TrueSeeing"
   },
   {
     id: "spell-true-strike",
@@ -5350,7 +6409,10 @@ export const defaultSpells = [
     description: "Guided by a flash of magical insight, you make one attack with the weapon used in the spell's casting. The attack uses your spellcasting ability for the attack and damage rolls instead of using Strength or Dexterity. If the attack deals damage, it can be Radiant damage or the weapon's normal damage type (your choice).",
     higherLevels: "The attack deals extra Radiant damage when you reach levels 5 (1d6), 11 (2d6), and 17 (3d6).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#TrueStrike"
   },
 
   // === U ===
@@ -5367,7 +6429,10 @@ export const defaultSpells = [
     description: "This spell creates an Invisible, mindless, shapeless, Medium force that performs simple tasks at your command until the spell ends. The servant springs into existence in an unoccupied space on the ground within range. It has AC 10, 1 Hit Point, a Strength of 2, and can't attack. If it drops to 0 Hit Points, the spell ends.\n\nOnce on each of your turns as a Bonus Action, you can mentally command the servant to move up to 15 feet and interact with an object. The servant can perform simple tasks that a human servant could do, such as fetching things, cleaning, mending, folding clothes, lighting fires, serving food, and pouring drinks. Once you give the command, the servant performs the task to the best of its ability until it completes the task, then waits for your next command.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#UnseenServant"
   },
 
   // === V ===
@@ -5384,7 +6449,10 @@ export const defaultSpells = [
     description: "The touch of your shadow-wreathed hand can siphon life force from others to heal your wounds. Make a melee spell attack against one creature within reach. On a hit, the target takes 3d6 Necrotic damage, and you regain Hit Points equal to half the amount of Necrotic damage dealt.\n\nUntil the spell ends, you can make the attack again on each of your turns as a Magic action, targeting the same creature or a different one.",
     higherLevels: "The damage increases by 1d6 for each slot level above 3.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#VampiricTouch"
   },
   {
     id: "spell-vicious-mockery",
@@ -5399,7 +6467,10 @@ export const defaultSpells = [
     description: "You unleash a string of insults laced with subtle enchantments at one creature you can see within range. If the target can hear you (though it need not understand you), it must succeed on a Wisdom saving throw or take 1d6 Psychic damage and have Disadvantage on the next attack roll it makes before the end of its next turn.",
     higherLevels: "The damage increases by 1d6 when you reach levels 5 (2d6), 11 (3d6), and 17 (4d6).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ViciousMockery"
   },
   {
     id: "spell-vitriolic-sphere",
@@ -5414,7 +6485,10 @@ export const defaultSpells = [
     description: "You point at a location within range, and a glowing 1-foot-diameter ball of acid streaks there and explodes in a 20-foot-radius Sphere. Each creature in that area makes a Dexterity saving throw. On a failed save, a creature takes 10d4 Acid damage and 5d4 Acid damage at the end of its next turn. On a successful save, a creature takes half the initial damage only.",
     higherLevels: "The initial damage increases by 2d4 for each slot level above 4.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#VitriolicSphere"
   },
 
   // === W ===
@@ -5431,7 +6505,10 @@ export const defaultSpells = [
     description: "You create a wall of fire on a solid surface within range. You can make the wall up to 60 feet long, 20 feet high, and 1 foot thick, or a ringed wall up to 20 feet in diameter, 20 feet high, and 1 foot thick. The wall is opaque and lasts for the duration.\n\nWhen the wall appears, each creature in its area makes a Dexterity saving throw, taking 5d8 Fire damage on a failed save or half as much damage on a successful one.\n\nOne side of the wall, selected by you when you cast this spell, deals 5d8 Fire damage to each creature that ends its turn within 10 feet of that side or inside the wall. A creature takes the same damage when it enters the wall for the first time on a turn or ends its turn there.",
     higherLevels: "The damage increases by 1d8 for each slot level above 4.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#WallOfFire"
   },
   {
     id: "spell-wall-of-force",
@@ -5446,7 +6523,10 @@ export const defaultSpells = [
     description: "An Invisible wall of force springs into existence at a point you choose within range. The wall appears in any orientation you choose, as a horizontal or vertical barrier or at an angle. It can be free floating or resting on a solid surface. You can form it into a hemispherical dome or a globe with a radius of up to 10 feet, or you can shape a flat surface made up of ten 10-foot-by-10-foot panels. Each panel must be contiguous with another panel. In any form, the wall is 1/4 inch thick and lasts for the duration. If the wall cuts through a creature's space when it appears, the creature is pushed to one side of the wall (you choose which side).\n\nNothing can physically pass through the wall. It is immune to all damage and can't be dispelled by Dispel Magic. A Disintegrate spell destroys the wall instantly. The wall also extends into the Ethereal Plane, blocking ethereal travel through the wall.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#WallOfForce"
   },
   {
     id: "spell-wall-of-ice",
@@ -5461,7 +6541,10 @@ export const defaultSpells = [
     description: "You create a wall of ice on a solid surface within range. You can form it into a hemispherical dome or a globe with a radius of up to 10 feet, or you can shape a flat surface made up of ten 10-foot-square panels. Each panel must be contiguous with another panel. In any form, the wall is 1 foot thick and lasts for the duration.\n\nIf the wall cuts through a creature's space when it appears, the creature is pushed to one side of the wall (you choose) and makes a Dexterity saving throw, taking 10d6 Cold damage on a failed save or half as much damage on a successful one.\n\nThe wall is an object with AC 12. Each 10-foot section has 30 Hit Points and is Vulnerable to Fire damage. Reducing a section to 0 Hit Points destroys it and leaves behind a sheet of frigid air in its space. A creature moving through the frigid air for the first time on a turn takes 5d6 Cold damage.",
     higherLevels: "The damage from the wall's creation increases by 2d6 and the damage from passing through the frigid air increases by 1d6 for each slot level above 6.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#WallOfIce"
   },
   {
     id: "spell-wall-of-stone",
@@ -5476,7 +6559,10 @@ export const defaultSpells = [
     description: "A nonmagical wall of solid stone springs into existence at a point you choose within range. The wall is 6 inches thick and is composed of ten 10-foot-by-10-foot panels. Each panel must be contiguous with at least one other panel. Alternatively, you can create 10-foot-by-20-foot panels that are only 3 inches thick.\n\nIf the wall cuts through a creature's space when it appears, the creature is pushed to one side of the wall (you choose which side). If a creature would be surrounded on all sides by the wall (or the wall and another solid surface), that creature makes a Dexterity saving throw. On a success, it can use its Reaction to move up to its Speed so that it is no longer enclosed by the wall.\n\nThe wall can have any shape you desire, though it can't occupy the same space as a creature or object. It doesn't need to be vertical or rest on any firm foundation, but it must merge with and be supported by existing stone. Thus, you can use this spell to bridge a chasm or create a ramp.\n\nIf you create a span greater than 20 feet in length, you must halve the size of each panel to create supports. You can crudely shape the wall to create crenellations, battlements, and so on.\n\nEach 10-foot section has AC 15, 30 Hit Points, and Immunity to Poison and Psychic damage. Reducing a section to 0 Hit Points destroys it and might cause connected sections to collapse at the DM's discretion.\n\nIf you maintain your Concentration on this spell for its whole duration, the wall becomes permanent and can't be dispelled. Otherwise, the wall disappears when the spell ends.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#WallOfStone"
   },
   {
     id: "spell-wall-of-thorns",
@@ -5491,7 +6577,10 @@ export const defaultSpells = [
     description: "You create a wall of tangled brush bristling with needle-sharp thorns. The wall appears within range on a solid surface and lasts for the duration. You can make it up to 60 feet long, 10 feet high, and 5 feet thick. You can also shape it into a ring wall up to 20 feet in diameter, 20 feet high, and 5 feet thick. The wall blocks line of sight.\n\nWhen the wall appears, each creature in its area makes a Dexterity saving throw. On a failed save, a creature takes 7d8 Piercing damage, or half as much damage on a successful save.\n\nA creature can move through the wall, albeit slowly and painfully. For every 1 foot a creature moves through the wall, it must spend 4 feet of movement. Furthermore, the first time a creature enters the wall on a turn or ends its turn there, the creature makes a Dexterity saving throw. It takes 7d8 Slashing damage on a failed save, or half as much damage on a successful one.",
     higherLevels: "Both types of damage increase by 1d8 for each slot level above 6.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#WallOfThorns"
   },
   {
     id: "spell-warding-bond",
@@ -5506,7 +6595,10 @@ export const defaultSpells = [
     description: "You touch a willing creature that is wearing a platinum ring from this spell's Material component and create a mystic connection between you until the spell ends. While the target is within 60 feet of you, it gains a +1 bonus to AC and saving throws, and it has Resistance to all damage. Also, each time it takes damage, you take the same amount of damage.\n\nThe spell ends if you drop to 0 Hit Points or if you and the target become separated by more than 60 feet. It also ends if you use an action to dismiss it (no action required). It can also be ended by Dispel Magic.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#WardingBond"
   },
   {
     id: "spell-water-breathing",
@@ -5521,7 +6613,10 @@ export const defaultSpells = [
     description: "This spell grants up to ten willing creatures within range the ability to breathe underwater until the spell ends. Affected creatures also retain their normal mode of respiration.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#WaterBreathing"
   },
   {
     id: "spell-water-walk",
@@ -5536,7 +6631,10 @@ export const defaultSpells = [
     description: "This spell grants the ability to move across any liquid surface—such as water, acid, mud, snow, quicksand, or lava—as if it were harmless solid ground (creatures crossing molten lava can still take damage from the heat). Up to ten willing creatures within range gain this ability for the duration.\n\nAn affected target is also immune to the Restrained condition while moving on a liquid, as if it had a Swim Speed, though the spell doesn't grant a Swim Speed.\n\nIf a target is submerged in a liquid when it receives this spell, the spell carries the target to the surface at a rate of 60 feet per round.",
     higherLevels: null,
     concentration: false,
-    ritual: true
+    ritual: true,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#WaterWalk"
   },
   {
     id: "spell-web",
@@ -5551,7 +6649,10 @@ export const defaultSpells = [
     description: "You conjure a mass of sticky webbing at a point within range. The webs fill a 20-foot Cube there for the duration. The webs are Difficult Terrain and Lightly Obscure their area.\n\nIf the webs aren't anchored between two solid masses (such as walls) or aren't layered across a floor, wall, or ceiling, the web collapses on itself and the spell ends at the start of your next turn.\n\nEach creature that starts its turn in the webs or enters them during its turn must make a Dexterity saving throw. On a failed save, the creature has the Restrained condition while in the webs. A Restrained creature can take an action to make a Strength check against your spell save DC. On a success, it is no longer Restrained.\n\nThe webs are flammable. Any 5-foot Cube of webs exposed to fire burns away in 1 round, dealing 2d4 Fire damage to any creature that starts its turn in the fire.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Web"
   },
   {
     id: "spell-weird",
@@ -5566,7 +6667,10 @@ export const defaultSpells = [
     description: "You try to create illusory terrors in others' minds. Each creature of your choice in a 30-foot-radius Sphere centered on a point within range makes a Wisdom saving throw. On a failed save, a target takes 10d10 Psychic damage and has the Frightened condition for the duration. On a successful save, a target takes half as much damage only.\n\nA Frightened target makes a Wisdom saving throw at the end of each of its turns. On a failed save, it takes 4d10 Psychic damage. On a successful save, the spell ends on that target.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Weird"
   },
   {
     id: "spell-wind-walk",
@@ -5581,7 +6685,10 @@ export const defaultSpells = [
     description: "You and up to ten willing creatures within range assume gaseous forms for the duration, appearing as wisps of cloud. While in this cloud form, a target has a Fly Speed of 300 feet and has Resistance to damage from nonmagical weapons. The only actions a target can take in this form are the Dash action or a Magic action to begin reverting to its normal form. Reverting takes 1 minute, during which the target has the Incapacitated condition. Until the spell ends, the target can revert to cloud form, which also takes 1 minute.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#WindWalk"
   },
   {
     id: "spell-wind-wall",
@@ -5596,7 +6703,10 @@ export const defaultSpells = [
     description: "A wall of strong wind rises from the ground at a point you choose within range. You can make the wall up to 50 feet long, 15 feet high, and 1 foot thick. You can shape the wall in any way you choose so long as it makes one continuous path along the ground. The wall lasts for the duration.\n\nWhen the wall appears, each creature in its area makes a Strength saving throw, taking 3d8 Bludgeoning damage on a failed save or half as much damage on a successful one.\n\nThe strong wind keeps fog, smoke, and other gases at bay. Small or smaller flying creatures or objects can't pass through the wall. Loose, lightweight materials brought into the wall fly upward. Arrows, bolts, and other ordinary projectiles launched at targets behind the wall are deflected upward and miss automatically. Boulders hurled by Giants or siege engines, and similar projectiles, are unaffected.",
     higherLevels: null,
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#WindWall"
   },
   {
     id: "spell-wish",
@@ -5611,7 +6721,10 @@ export const defaultSpells = [
     description: "Wish is the mightiest spell a mortal can cast. By simply speaking aloud, you can alter reality itself.\n\nThe basic use of this spell is to duplicate any spell of level 8 or lower. If you use it this way, you don't need to meet any requirements for that spell, including costly components. The spell simply takes effect.\n\nAlternatively, you can create one of the following effects of your choice:\n\nObject Creation. You create one object of up to 25,000 GP in value that isn't a magic item. It can be no more than 300 feet in any dimension, and it appears in an unoccupied space that you can see on the ground.\n\nInstant Health. You allow up to twenty creatures that you can see to regain all Hit Points, and you end all effects on them listed in Greater Restoration.\n\nResistance. You grant up to ten creatures that you can see Resistance to one damage type that you choose.\n\nSpell Immunity. You grant up to ten creatures that you can see Immunity to a single spell or magical effect for 8 hours.\n\nUndo Misfortune. You undo a single recent event by forcing a reroll of any die roll made within the last round. Reality reshapes itself to accommodate the new result.\n\nYou might be able to achieve something beyond the scope of the above examples. State your wish to the DM as precisely as possible. The DM has great latitude in ruling what occurs; the greater the wish, the greater the likelihood that something goes wrong.\n\nThis spell might simply fail, the effect might only be partially fulfilled, or you might suffer unforeseen consequences. Stress of casting Wish might leave you debilitated. After enduring that stress, each time you cast a spell until you finish a Long Rest, you take 1d10 Necrotic damage per level of that spell. In addition, your Strength drops to 3 for 2d4 days. For each of those days, spending 8 hours resting and doing nothing more than light activity restores your Strength to normal.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#Wish"
   },
   {
     id: "spell-witch-bolt",
@@ -5626,7 +6739,10 @@ export const defaultSpells = [
     description: "A beam of crackling energy lances toward a creature within range, forming a sustained arc of lightning between you and the target. Make a ranged spell attack against that creature. On a hit, the target takes 2d12 Lightning damage.\n\nOn each of your subsequent turns, you can take a Bonus Action to deal 1d12 Lightning damage to the target automatically. The spell ends if the target is ever outside the spell's range or if it has Total Cover from you.",
     higherLevels: "The initial damage increases by 1d12 for each slot level above 1.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#WitchBolt"
   },
   {
     id: "spell-word-of-radiance",
@@ -5641,7 +6757,10 @@ export const defaultSpells = [
     description: "Burning radiance erupts from you in a 5-foot Emanation. Each creature of your choice that you can see in the Emanation must succeed on a Constitution saving throw or take 1d6 Radiant damage.",
     higherLevels: "The damage increases by 1d6 when you reach levels 5 (2d6), 11 (3d6), and 17 (4d6).",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#WordOfRadiance"
   },
   {
     id: "spell-word-of-recall",
@@ -5656,7 +6775,10 @@ export const defaultSpells = [
     description: "You and up to five willing creatures within 5 feet of you instantly teleport to a previously designated sanctuary. You and any creatures that teleport with you appear in the nearest unoccupied space to the spot you designated when you prepared your sanctuary. If you cast this spell without first preparing a sanctuary, the spell has no effect.\n\nYou must designate a sanctuary by casting this spell within a location, such as a temple, dedicated to or strongly linked to your deity. If you attempt to cast the spell in this manner in an area that isn't dedicated to your deity, the spell has no effect.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#WordOfRecall"
   },
   {
     id: "spell-wrathful-smite",
@@ -5671,7 +6793,10 @@ export const defaultSpells = [
     description: "The target takes an extra 1d6 Necrotic damage from the attack, and it must succeed on a Wisdom saving throw or have the Frightened condition until the spell ends. At the end of each of its turns, the Frightened target repeats the save, ending the spell on itself on a success.",
     higherLevels: "The damage increases by 1d6 for each slot level above 1.",
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#WrathfulSmite"
   },
 
   // === X ===
@@ -5691,7 +6816,10 @@ export const defaultSpells = [
     description: "You surround yourself with a majestic aura in a 10-foot Emanation. Whenever the Emanation enters the space of a creature you can see and whenever a creature you can see enters the Emanation or ends its turn there, you can force the creature to make a Wisdom saving throw. On a failed save, the target takes 4d6 Psychic damage and has the Prone condition, and you can push it up to 10 feet away. On a successful save, the target takes half as much damage only.\n\nA creature makes this save only once per turn.",
     higherLevels: "The damage increases by 1d6 for each slot level above 5.",
     concentration: true,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#YolandesRegalPresence"
   },
 
   // === Z ===
@@ -5708,6 +6836,9 @@ export const defaultSpells = [
     description: "You create a magical zone that guards against deception in a 15-foot-radius Sphere centered on a point within range. Until the spell ends, a creature that enters the spell's area for the first time on a turn or starts its turn there makes a Charisma saving throw. On a failed save, a creature can't speak a deliberate lie while in the radius. You know whether a creature succeeds or fails on this saving throw.\n\nAn affected creature is aware of the spell and can avoid answering questions to which it would normally respond with a lie. Such a creature can be evasive yet must be truthful.",
     higherLevels: null,
     concentration: false,
-    ritual: false
+    ritual: false,
+    source: "Player's Handbook (2024)",
+    sourceShort: "PHB 2024",
+    sourceUrl: "https://www.dndbeyond.com/sources/dnd/phb-2024/spell-descriptions#ZoneOfTruth"
   },
 ];
