@@ -81,6 +81,9 @@ export async function POST(request) {
     const existingIndex = spells.findIndex(s => s.id === spell.id);
     if (existingIndex >= 0) {
       spells[existingIndex] = spell;
+      
+      // Sync this spell to any characters that have it
+      syncSpellToCharacters(spell);
     } else {
       spells.push(spell);
     }
@@ -88,7 +91,58 @@ export async function POST(request) {
     saveSpells(spells);
     return NextResponse.json(spell);
   } catch (error) {
+    console.error('Failed to save spell:', error);
     return NextResponse.json({ error: 'Failed to save spell' }, { status: 500 });
+  }
+}
+
+// Sync updated spell to all characters that have it
+function syncSpellToCharacters(updatedSpell) {
+  const PARTY_FILE = path.join(process.cwd(), 'data', 'party.json');
+  
+  try {
+    if (!fs.existsSync(PARTY_FILE)) return;
+    
+    const partyData = JSON.parse(fs.readFileSync(PARTY_FILE, 'utf8'));
+    if (!Array.isArray(partyData)) return;
+    
+    let changed = false;
+    
+    partyData.forEach(character => {
+      if (!character.spells || !Array.isArray(character.spells)) return;
+      
+      character.spells = character.spells.map(charSpell => {
+        // Match by sourceId (spellbook reference) or by spell id
+        if (charSpell.sourceId === updatedSpell.id || charSpell.id === updatedSpell.id) {
+          changed = true;
+          // Preserve the character's unique spell instance id, update everything else
+          return {
+            ...charSpell,
+            name: updatedSpell.name,
+            level: updatedSpell.level,
+            school: updatedSpell.school,
+            castTime: updatedSpell.castingTime,
+            castingTime: updatedSpell.castingTime,
+            range: updatedSpell.range,
+            components: updatedSpell.components,
+            duration: updatedSpell.duration,
+            description: updatedSpell.description,
+            higherLevels: updatedSpell.higherLevels,
+            concentration: updatedSpell.concentration,
+            ritual: updatedSpell.ritual
+          };
+        }
+        return charSpell;
+      });
+    });
+    
+    if (changed) {
+      fs.writeFileSync(PARTY_FILE, JSON.stringify(partyData, null, 2));
+      console.log('Synced spell to characters:', updatedSpell.name);
+    }
+  } catch (error) {
+    console.error('Failed to sync spell to characters:', error);
+    // Don't throw - spell save should still succeed even if sync fails
   }
 }
 
