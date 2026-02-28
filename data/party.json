@@ -48,7 +48,68 @@
       "wis": 1
     },
     "features": [],
-    "spells": [],
+    "spells": [
+      {
+        "id": 1772246062924.9907,
+        "sourceId": "spell-guidance",
+        "name": "Guidance",
+        "level": 0,
+        "school": "Divination",
+        "castTime": "Action",
+        "range": "Touch",
+        "components": "V, S",
+        "duration": "Concentration, up to 1 minute",
+        "description": "You touch a willing creature and choose a skill. Until the spell ends, the creature adds 1d4 to any ability check using the chosen skill.",
+        "higherLevels": null,
+        "concentration": true,
+        "ritual": false
+      },
+      {
+        "id": 1772246062924.9978,
+        "sourceId": "spell-shillelagh",
+        "name": "Shillelagh",
+        "level": 0,
+        "school": "Transmutation",
+        "castTime": "Bonus Action",
+        "range": "Touch",
+        "components": "V, S, M (mistletoe, a shamrock leaf, and a wooden Club or Quarterstaff)",
+        "duration": "1 minute",
+        "description": "A Club or Quarterstaff you are holding is imbued with nature's power. For the duration, you can use your spellcasting ability instead of Strength for the attack and damage rolls of melee attacks using that weapon, and the weapon's damage die becomes a d8. If the weapon isn't magical, it becomes magical for the duration.\n\nThe spell ends early if you cast it again or if you let go of the weapon.",
+        "higherLevels": null,
+        "concentration": false,
+        "ritual": false
+      },
+      {
+        "id": 1772246091871.3198,
+        "sourceId": "spell-cure-wounds",
+        "name": "Cure Wounds",
+        "level": 1,
+        "school": "Abjuration",
+        "castTime": "Action",
+        "range": "Touch",
+        "components": "V, S",
+        "duration": "Instantaneous",
+        "description": "A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier.",
+        "higherLevels": "The healing increases by 2d8 for each slot level above 1.",
+        "concentration": false,
+        "ritual": false
+      },
+      {
+        "id": 1772246091871.506,
+        "sourceId": "spell-ice-knife",
+        "name": "Ice Knife",
+        "level": 1,
+        "school": "Conjuration",
+        "castTime": "Action",
+        "range": "60 feet",
+        "components": "S, M (a drop of water or a piece of ice)",
+        "duration": "Instantaneous",
+        "description": "You create a shard of ice and fling it at one creature within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 Piercing damage. Hit or miss, the shard then explodes. The target and each creature within 5 feet of it must succeed on a Dexterity saving throw or take 2d6 Cold damage.",
+        "higherLevels": "The Cold damage increases by 1d6 for each slot level above 1.",
+        "concentration": false,
+        "ritual": false
+      }
+    ],
     "inventory": [
       {
         "id": 1770233905528,
