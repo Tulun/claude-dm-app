@@ -1,12 +1,27 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Icons from '../components/Icons';
 
 const SCHOOLS = ['Abjuration', 'Conjuration', 'Divination', 'Enchantment', 'Evocation', 'Illusion', 'Necromancy', 'Transmutation'];
 const CLASSES = ['Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger', 'Sorcerer', 'Warlock', 'Wizard'];
 const LEVELS = ['Cantrip', '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th'];
+
+const EMPTY_SPELL = {
+  name: '',
+  level: 0,
+  school: 'Evocation',
+  castingTime: '1 action',
+  range: '60 feet',
+  components: 'V, S',
+  duration: 'Instantaneous',
+  classes: [],
+  description: '',
+  higherLevels: '',
+  concentration: false,
+  ritual: false
+};
 
 export default function SpellbookPage() {
   const [spells, setSpells] = useState([]);
@@ -19,6 +34,13 @@ export default function SpellbookPage() {
   const [editingSpell, setEditingSpell] = useState(null);
   const [showFilters, setShowFilters] = useState(true);
   const [saveStatus, setSaveStatus] = useState('');
+  
+  // New spell creation
+  const [showNewSpellForm, setShowNewSpellForm] = useState(false);
+  const [newSpell, setNewSpell] = useState({ ...EMPTY_SPELL });
+  
+  // Import from image
+  const [showImportModal, setShowImportModal] = useState(false);
 
   // Load spells from API
   useEffect(() => {
@@ -52,33 +74,69 @@ export default function SpellbookPage() {
       });
       if (!res.ok) throw new Error('Failed to save');
       
-      // Update local state
-      setSpells(prev => prev.map(s => s.id === spell.id ? spell : s));
+      const savedSpell = await res.json();
+      
+      // Update or add to local state
+      setSpells(prev => {
+        const exists = prev.some(s => s.id === savedSpell.id);
+        if (exists) {
+          return prev.map(s => s.id === savedSpell.id ? savedSpell : s);
+        } else {
+          return [...prev, savedSpell];
+        }
+      });
+      
       setEditingSpell(null);
       setSaveStatus('Saved!');
       setTimeout(() => setSaveStatus(''), 2000);
+      return savedSpell;
     } catch (err) {
       console.error('Failed to save spell:', err);
       setSaveStatus('Failed to save');
       setTimeout(() => setSaveStatus(''), 3000);
+      return null;
+    }
+  };
+
+  const createNewSpell = async () => {
+    if (!newSpell.name.trim()) {
+      setSaveStatus('Name required');
+      setTimeout(() => setSaveStatus(''), 2000);
+      return;
+    }
+    
+    const spellToSave = {
+      ...newSpell,
+      id: `spell-${newSpell.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${Date.now()}`
+    };
+    
+    const saved = await saveSpell(spellToSave);
+    if (saved) {
+      setNewSpell({ ...EMPTY_SPELL });
+      setShowNewSpellForm(false);
+      setExpandedSpell(saved.id);
+    }
+  };
+
+  const handleImportSpell = async (spell) => {
+    const saved = await saveSpell(spell);
+    if (saved) {
+      setShowImportModal(false);
+      setExpandedSpell(saved.id);
     }
   };
 
   const filteredSpells = useMemo(() => {
     return spells.filter(spell => {
-      // Search filter
       if (search && !spell.name.toLowerCase().includes(search.toLowerCase())) {
         return false;
       }
-      // School filter
       if (selectedSchools.length > 0 && !selectedSchools.includes(spell.school)) {
         return false;
       }
-      // Class filter
-      if (selectedClasses.length > 0 && !spell.classes.some(c => selectedClasses.includes(c))) {
+      if (selectedClasses.length > 0 && !spell.classes?.some(c => selectedClasses.includes(c))) {
         return false;
       }
-      // Level filter
       if (selectedLevels.length > 0) {
         const levelLabel = spell.level === 0 ? 'Cantrip' : `${spell.level}${getOrdinalSuffix(spell.level)}`;
         if (!selectedLevels.includes(levelLabel)) {
@@ -146,6 +204,20 @@ export default function SpellbookPage() {
               </span>
             )}
             <button
+              onClick={() => setShowImportModal(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 transition-colors"
+            >
+              <Icons.Image />
+              Import from Image
+            </button>
+            <button
+              onClick={() => setShowNewSpellForm(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 transition-colors"
+            >
+              <Icons.Plus />
+              New Spell
+            </button>
+            <button
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-stone-800 hover:bg-stone-700 transition-colors"
             >
@@ -154,6 +226,23 @@ export default function SpellbookPage() {
             </button>
           </div>
         </div>
+
+        {/* New Spell Form */}
+        {showNewSpellForm && (
+          <div className="bg-emerald-900/20 border border-emerald-700/50 rounded-xl p-4 mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-emerald-400">Create New Spell</h2>
+              <button onClick={() => setShowNewSpellForm(false)} className="text-stone-400 hover:text-white text-xl">&times;</button>
+            </div>
+            <SpellForm 
+              spell={newSpell} 
+              onChange={setNewSpell} 
+              onSave={createNewSpell}
+              onCancel={() => setShowNewSpellForm(false)}
+              saveLabel="Create Spell"
+            />
+          </div>
+        )}
 
         {/* Search and Filters */}
         {showFilters && (
@@ -295,6 +384,506 @@ export default function SpellbookPage() {
           )}
         </div>
       </div>
+
+      {/* Import from Image Modal */}
+      <ImportSpellModal 
+        isOpen={showImportModal}
+        onClose={() => setShowImportModal(false)}
+        onImport={handleImportSpell}
+        existingSpells={spells}
+      />
+    </div>
+  );
+}
+
+// Reusable spell form component
+function SpellForm({ spell, onChange, onSave, onCancel, saveLabel = "Save Changes" }) {
+  const updateField = (field, value) => {
+    onChange({ ...spell, [field]: value });
+  };
+
+  const toggleClass = (cls) => {
+    const classes = spell.classes || [];
+    if (classes.includes(cls)) {
+      updateField('classes', classes.filter(c => c !== cls));
+    } else {
+      updateField('classes', [...classes, cls]);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Basic Info Row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div>
+          <label className="text-xs text-stone-500 block mb-1">Name *</label>
+          <input
+            type="text"
+            value={spell.name}
+            onChange={(e) => updateField('name', e.target.value)}
+            className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+            placeholder="Spell name"
+          />
+        </div>
+        <div>
+          <label className="text-xs text-stone-500 block mb-1">Level</label>
+          <select
+            value={spell.level}
+            onChange={(e) => updateField('level', parseInt(e.target.value))}
+            className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+          >
+            {[0,1,2,3,4,5,6,7,8,9].map(l => (
+              <option key={l} value={l}>{l === 0 ? 'Cantrip' : l}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="text-xs text-stone-500 block mb-1">School</label>
+          <select
+            value={spell.school}
+            onChange={(e) => updateField('school', e.target.value)}
+            className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+          >
+            {SCHOOLS.map(s => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        </div>
+        <div className="flex items-end gap-4">
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={spell.concentration || false}
+              onChange={(e) => updateField('concentration', e.target.checked)}
+              className="rounded"
+            />
+            Concentration
+          </label>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={spell.ritual || false}
+              onChange={(e) => updateField('ritual', e.target.checked)}
+              className="rounded"
+            />
+            Ritual
+          </label>
+        </div>
+      </div>
+
+      {/* Classes */}
+      <div>
+        <label className="text-xs text-stone-500 block mb-1">Classes</label>
+        <div className="flex flex-wrap gap-1">
+          {CLASSES.map(cls => (
+            <button
+              key={cls}
+              type="button"
+              onClick={() => toggleClass(cls)}
+              className={`px-2 py-1 rounded text-xs transition-colors ${
+                spell.classes?.includes(cls)
+                  ? 'bg-emerald-600 text-emerald-100'
+                  : 'bg-stone-700 text-stone-300 hover:bg-stone-600'
+              }`}
+            >
+              {cls}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Spell Properties */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div>
+          <label className="text-xs text-stone-500 block mb-1">Casting Time</label>
+          <input
+            type="text"
+            value={spell.castingTime || ''}
+            onChange={(e) => updateField('castingTime', e.target.value)}
+            className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+            placeholder="1 action"
+          />
+        </div>
+        <div>
+          <label className="text-xs text-stone-500 block mb-1">Range</label>
+          <input
+            type="text"
+            value={spell.range || ''}
+            onChange={(e) => updateField('range', e.target.value)}
+            className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+            placeholder="60 feet"
+          />
+        </div>
+        <div>
+          <label className="text-xs text-stone-500 block mb-1">Components</label>
+          <input
+            type="text"
+            value={spell.components || ''}
+            onChange={(e) => updateField('components', e.target.value)}
+            className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+            placeholder="V, S, M"
+          />
+        </div>
+        <div>
+          <label className="text-xs text-stone-500 block mb-1">Duration</label>
+          <input
+            type="text"
+            value={spell.duration || ''}
+            onChange={(e) => updateField('duration', e.target.value)}
+            className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+            placeholder="Instantaneous"
+          />
+        </div>
+      </div>
+
+      {/* Description */}
+      <div>
+        <label className="text-xs text-stone-500 block mb-1">Description</label>
+        <textarea
+          value={spell.description || ''}
+          onChange={(e) => updateField('description', e.target.value)}
+          rows={6}
+          className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+          placeholder="Describe what the spell does..."
+        />
+      </div>
+
+      {/* Higher Levels */}
+      <div>
+        <label className="text-xs text-stone-500 block mb-1">
+          {spell.level === 0 ? 'Cantrip Upgrade' : 'At Higher Levels'}
+        </label>
+        <textarea
+          value={spell.higherLevels || ''}
+          onChange={(e) => updateField('higherLevels', e.target.value)}
+          rows={2}
+          className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+          placeholder="Optional: describe scaling effects..."
+        />
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex justify-end gap-3 pt-2">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600 transition-colors text-sm"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          onClick={onSave}
+          className="px-4 py-2 rounded-lg bg-amber-700 hover:bg-amber-600 transition-colors text-sm flex items-center gap-2"
+        >
+          <Icons.Check className="w-4 h-4" /> {saveLabel}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Import from Image Modal
+function ImportSpellModal({ isOpen, onClose, onImport, existingSpells }) {
+  const [isDragging, setIsDragging] = useState(false);
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [isParsing, setIsParsing] = useState(false);
+  const [parsedSpell, setParsedSpell] = useState(null);
+  const [error, setError] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const [editedSpell, setEditedSpell] = useState(null);
+  const fileInputRef = useRef(null);
+
+  // Check for existing spell with same name
+  const existingMatch = useMemo(() => {
+    if (parsedSpell && existingSpells?.length > 0) {
+      return existingSpells.find(s => 
+        s.name.toLowerCase().trim() === parsedSpell.name.toLowerCase().trim()
+      );
+    }
+    return null;
+  }, [parsedSpell, existingSpells]);
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      processImage(file);
+    }
+  };
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      processImage(file);
+    }
+  };
+
+  const processImage = (file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64 = e.target.result;
+      setImagePreview(base64);
+      const base64Data = base64.split(',')[1];
+      setImage({ data: base64Data, mediaType: file.type });
+      setError(null);
+      setParsedSpell(null);
+      setEditedSpell(null);
+      setEditMode(false);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleParse = async () => {
+    if (!image) return;
+    
+    setIsParsing(true);
+    setError(null);
+    
+    try {
+      const response = await fetch('/api/parse-spell', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: image.data, mediaType: image.mediaType }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.error) {
+        setError(data.error);
+      } else {
+        setParsedSpell(data.spell);
+        setEditedSpell(data.spell);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsParsing(false);
+    }
+  };
+
+  const handleImport = (updateExisting = false) => {
+    const spellToImport = editMode ? editedSpell : parsedSpell;
+    if (spellToImport) {
+      if (updateExisting && existingMatch) {
+        // Keep the existing spell's ID
+        onImport({ ...spellToImport, id: existingMatch.id });
+      } else {
+        onImport(spellToImport);
+      }
+      resetModal();
+    }
+  };
+
+  const resetModal = () => {
+    setImage(null);
+    setImagePreview(null);
+    setParsedSpell(null);
+    setEditedSpell(null);
+    setError(null);
+    setEditMode(false);
+  };
+
+  const handleClose = () => {
+    resetModal();
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={handleClose}>
+      <div 
+        className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-4xl max-h-[90vh] flex flex-col"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="p-4 border-b border-stone-700 flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-purple-400 flex items-center gap-2">
+              <Icons.Image />
+              Import Spell from Image
+            </h2>
+            <p className="text-sm text-stone-400">Upload a screenshot of a spell description</p>
+          </div>
+          <button onClick={handleClose} className="text-stone-400 hover:text-white text-2xl">&times;</button>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto p-4">
+          {!parsedSpell ? (
+            /* Upload Area */
+            <div className="space-y-4">
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+                className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
+                  isDragging 
+                    ? 'border-purple-500 bg-purple-900/20' 
+                    : 'border-stone-600 hover:border-purple-500 hover:bg-stone-800/50'
+                }`}
+              >
+                {imagePreview ? (
+                  <img src={imagePreview} alt="Spell preview" className="max-h-64 mx-auto rounded-lg" />
+                ) : (
+                  <>
+                    <Icons.Upload className="w-12 h-12 mx-auto mb-4 text-stone-500" />
+                    <p className="text-stone-400">Drag and drop an image here, or click to select</p>
+                    <p className="text-sm text-stone-500 mt-2">Supports PNG, JPG, WebP</p>
+                  </>
+                )}
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+
+              {error && (
+                <div className="bg-red-900/30 border border-red-700 rounded-lg p-3 text-red-400 text-sm">
+                  {error}
+                </div>
+              )}
+
+              {imagePreview && (
+                <div className="flex justify-center gap-3">
+                  <button
+                    onClick={resetModal}
+                    className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600 transition-colors"
+                  >
+                    Clear
+                  </button>
+                  <button
+                    onClick={handleParse}
+                    disabled={isParsing}
+                    className="px-6 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 disabled:bg-stone-700 transition-colors flex items-center gap-2"
+                  >
+                    {isParsing ? (
+                      <>
+                        <Icons.Sparkles className="w-4 h-4 animate-spin" />
+                        Parsing...
+                      </>
+                    ) : (
+                      <>
+                        <Icons.Wand className="w-4 h-4" />
+                        Parse Spell
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            /* Parsed Spell Preview/Edit */
+            <div className="space-y-4">
+              {existingMatch && (
+                <div className="bg-amber-900/30 border border-amber-700 rounded-lg p-3 flex items-start gap-3">
+                  <Icons.Info className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-amber-400 font-medium">Spell already exists</p>
+                    <p className="text-sm text-amber-300/80">
+                      A spell named "{existingMatch.name}" already exists. You can update it or create a new entry.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-bold text-amber-400">{editMode ? 'Edit Spell' : 'Parsed Spell'}</h3>
+                {!editMode && (
+                  <button
+                    onClick={() => setEditMode(true)}
+                    className="flex items-center gap-2 px-3 py-1 rounded bg-stone-700 hover:bg-stone-600 text-sm"
+                  >
+                    <Icons.Edit className="w-4 h-4" /> Edit
+                  </button>
+                )}
+              </div>
+
+              {editMode ? (
+                <SpellForm
+                  spell={editedSpell}
+                  onChange={setEditedSpell}
+                  onSave={() => handleImport(false)}
+                  onCancel={() => setEditMode(false)}
+                  saveLabel="Import Spell"
+                />
+              ) : (
+                /* Preview */
+                <div className="bg-stone-800/50 border border-stone-700 rounded-lg p-4 space-y-3">
+                  <div>
+                    <h4 className="text-xl font-bold text-purple-400">{parsedSpell.name}</h4>
+                    <p className="text-stone-400 italic">
+                      {parsedSpell.school} {parsedSpell.level === 0 ? 'cantrip' : `level ${parsedSpell.level}`}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <p><span className="text-stone-500">Casting Time:</span> {parsedSpell.castingTime}</p>
+                    <p><span className="text-stone-500">Range:</span> {parsedSpell.range}</p>
+                    <p><span className="text-stone-500">Components:</span> {parsedSpell.components}</p>
+                    <p><span className="text-stone-500">Duration:</span> {parsedSpell.duration}</p>
+                  </div>
+                  <p className="text-sm"><span className="text-stone-500">Classes:</span> {parsedSpell.classes?.join(', ') || 'None'}</p>
+                  <div className="flex gap-2">
+                    {parsedSpell.concentration && <span className="px-2 py-1 bg-amber-900/30 text-amber-400 rounded text-xs">Concentration</span>}
+                    {parsedSpell.ritual && <span className="px-2 py-1 bg-blue-900/30 text-blue-400 rounded text-xs">Ritual</span>}
+                  </div>
+                  <p className="text-stone-300 text-sm whitespace-pre-wrap">{parsedSpell.description}</p>
+                  {parsedSpell.higherLevels && (
+                    <p className="text-sm">
+                      <span className="text-amber-400 font-medium">{parsedSpell.level === 0 ? 'Cantrip Upgrade.' : 'At Higher Levels.'}</span>{' '}
+                      {parsedSpell.higherLevels}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        {parsedSpell && !editMode && (
+          <div className="p-4 border-t border-stone-700 flex justify-end gap-3">
+            <button
+              onClick={resetModal}
+              className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600 transition-colors"
+            >
+              Parse Another
+            </button>
+            {existingMatch && (
+              <button
+                onClick={() => handleImport(true)}
+                className="px-4 py-2 rounded-lg bg-amber-700 hover:bg-amber-600 transition-colors"
+              >
+                Update Existing
+              </button>
+            )}
+            <button
+              onClick={() => handleImport(false)}
+              className="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 transition-colors flex items-center gap-2"
+            >
+              <Icons.Plus className="w-4 h-4" />
+              {existingMatch ? 'Create New' : 'Import Spell'}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -302,7 +891,6 @@ export default function SpellbookPage() {
 function SpellCard({ spell, expanded, editing, onToggle, onEdit, onSave, onCancel }) {
   const [editedSpell, setEditedSpell] = useState(spell);
   
-  // Reset edited spell when spell prop changes or editing starts
   useEffect(() => {
     setEditedSpell(spell);
   }, [spell, editing]);
@@ -317,22 +905,9 @@ function SpellCard({ spell, expanded, editing, onToggle, onEdit, onSave, onCance
     onSave(editedSpell);
   };
 
-  const updateField = (field, value) => {
-    setEditedSpell(prev => ({ ...prev, [field]: value }));
-  };
-
-  const toggleClass = (cls) => {
-    const classes = editedSpell.classes || [];
-    if (classes.includes(cls)) {
-      updateField('classes', classes.filter(c => c !== cls));
-    } else {
-      updateField('classes', [...classes, cls]);
-    }
-  };
-
   return (
     <div className={`border rounded-lg overflow-hidden transition-all ${expanded ? 'border-amber-700/50 bg-stone-800/80' : 'border-stone-700/50 bg-stone-800/30 hover:bg-stone-800/50'}`}>
-      {/* Header - always visible */}
+      {/* Header */}
       <div className="flex items-center justify-between p-4">
         <button
           onClick={onToggle}
@@ -380,190 +955,31 @@ function SpellCard({ spell, expanded, editing, onToggle, onEdit, onSave, onCance
       {expanded && (
         <div className="px-4 pb-4 border-t border-stone-700/50">
           {editing ? (
-            /* Edit Mode */
-            <div className="pt-4 space-y-4">
-              {/* Basic Info Row */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div>
-                  <label className="text-xs text-stone-500 block mb-1">Name</label>
-                  <input
-                    type="text"
-                    value={editedSpell.name}
-                    onChange={(e) => updateField('name', e.target.value)}
-                    className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-stone-500 block mb-1">Level</label>
-                  <select
-                    value={editedSpell.level}
-                    onChange={(e) => updateField('level', parseInt(e.target.value))}
-                    className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-                  >
-                    {[0,1,2,3,4,5,6,7,8,9].map(l => (
-                      <option key={l} value={l}>{l === 0 ? 'Cantrip' : l}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-xs text-stone-500 block mb-1">School</label>
-                  <select
-                    value={editedSpell.school}
-                    onChange={(e) => updateField('school', e.target.value)}
-                    className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-                  >
-                    {SCHOOLS.map(s => (
-                      <option key={s} value={s}>{s}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="flex items-end gap-4">
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={editedSpell.concentration || false}
-                      onChange={(e) => updateField('concentration', e.target.checked)}
-                      className="rounded"
-                    />
-                    Concentration
-                  </label>
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={editedSpell.ritual || false}
-                      onChange={(e) => updateField('ritual', e.target.checked)}
-                      className="rounded"
-                    />
-                    Ritual
-                  </label>
-                </div>
-              </div>
-
-              {/* Classes */}
-              <div>
-                <label className="text-xs text-stone-500 block mb-1">Classes</label>
-                <div className="flex flex-wrap gap-1">
-                  {CLASSES.map(cls => (
-                    <button
-                      key={cls}
-                      onClick={() => toggleClass(cls)}
-                      className={`px-2 py-1 rounded text-xs transition-colors ${
-                        editedSpell.classes?.includes(cls)
-                          ? 'bg-emerald-600 text-emerald-100'
-                          : 'bg-stone-700 text-stone-300 hover:bg-stone-600'
-                      }`}
-                    >
-                      {cls}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Spell Properties */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div>
-                  <label className="text-xs text-stone-500 block mb-1">Casting Time</label>
-                  <input
-                    type="text"
-                    value={editedSpell.castingTime || ''}
-                    onChange={(e) => updateField('castingTime', e.target.value)}
-                    className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-stone-500 block mb-1">Range</label>
-                  <input
-                    type="text"
-                    value={editedSpell.range || ''}
-                    onChange={(e) => updateField('range', e.target.value)}
-                    className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-stone-500 block mb-1">Components</label>
-                  <input
-                    type="text"
-                    value={editedSpell.components || ''}
-                    onChange={(e) => updateField('components', e.target.value)}
-                    className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-stone-500 block mb-1">Duration</label>
-                  <input
-                    type="text"
-                    value={editedSpell.duration || ''}
-                    onChange={(e) => updateField('duration', e.target.value)}
-                    className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-                  />
-                </div>
-              </div>
-
-              {/* Description */}
-              <div>
-                <label className="text-xs text-stone-500 block mb-1">Description</label>
-                <textarea
-                  value={editedSpell.description || ''}
-                  onChange={(e) => updateField('description', e.target.value)}
-                  rows={6}
-                  className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-                />
-              </div>
-
-              {/* Higher Levels */}
-              <div>
-                <label className="text-xs text-stone-500 block mb-1">
-                  {editedSpell.level === 0 ? 'Cantrip Upgrade' : 'At Higher Levels'}
-                </label>
-                <textarea
-                  value={editedSpell.higherLevels || ''}
-                  onChange={(e) => updateField('higherLevels', e.target.value)}
-                  rows={2}
-                  className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-                />
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex justify-end gap-3 pt-2">
-                <button
-                  onClick={onCancel}
-                  className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600 transition-colors text-sm"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSave}
-                  className="px-4 py-2 rounded-lg bg-amber-700 hover:bg-amber-600 transition-colors text-sm flex items-center gap-2"
-                >
-                  <Icons.Check className="w-4 h-4" /> Save Changes
-                </button>
-              </div>
+            <div className="pt-4">
+              <SpellForm
+                spell={editedSpell}
+                onChange={setEditedSpell}
+                onSave={handleSave}
+                onCancel={onCancel}
+              />
             </div>
           ) : (
-            /* View Mode */
             <div className="pt-4 spell-content">
-              {/* Spell Header */}
               <div className="mb-4">
                 <h2 className="text-2xl font-bold italic text-purple-400">{spell.name}</h2>
                 <p className="text-stone-400 italic">{spell.school} {levelText} ({spell.classes?.join(', ') || 'No classes'})</p>
               </div>
-
-              {/* Spell Properties */}
               <div className="space-y-1 mb-4">
                 <p><span className="font-bold">Casting Time:</span> {spell.castingTime}</p>
                 <p><span className="font-bold">Range:</span> {spell.range}</p>
                 <p><span className="font-bold">Components:</span> {spell.components}</p>
                 <p><span className="font-bold">Duration:</span> {spell.duration}</p>
               </div>
-
-              {/* Description */}
               <div className="space-y-3 text-stone-200">
                 {(spell.description || '').split('\n\n').map((paragraph, i) => (
                   <p key={i} dangerouslySetInnerHTML={{ __html: formatSpellText(paragraph) }} />
                 ))}
               </div>
-
-              {/* At Higher Levels / Cantrip Upgrade */}
               {spell.higherLevels && (
                 <p className="mt-4">
                   <span className="font-bold italic text-amber-400">
@@ -601,7 +1017,6 @@ function getSchoolColor(school) {
 }
 
 function formatSpellText(text) {
-  // Bold key terms
   return text
     .replace(/\b(Sphere|Cube|Cone|Line|Cylinder|Emanation)\b/g, '<span class="text-purple-400 font-semibold">$1</span>')
     .replace(/\b(\d+d\d+)\b/g, '<span class="font-mono text-amber-300">$1</span>')
