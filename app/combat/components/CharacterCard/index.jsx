@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Icons from '../../../components/Icons';
 import { EditableField, HpBar, Tooltip } from '../../../components/ui';
-import InventoryDisplay from './InventoryDisplay';
 import QuickActionsModal from './QuickActionsModal';
 import QuickResourcesModal from './QuickResourcesModal';
 import CharacterSheetModal from './CharacterSheetModal';
