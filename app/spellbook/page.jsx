@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef } from 'react';
-import Link from 'next/link';
 import Icons from '../components/Icons';
+import Navbar from '../components/Navbar';
 
 const SCHOOLS = ['Abjuration', 'Conjuration', 'Divination', 'Enchantment', 'Evocation', 'Illusion', 'Necromancy', 'Transmutation'];
 const CLASSES = ['Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger', 'Sorcerer', 'Warlock', 'Wizard'];
@@ -169,30 +169,7 @@ export default function SpellbookPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100">
-      {/* Navigation */}
-      <nav className="border-b border-amber-900/30 bg-stone-900/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <div className="p-2 rounded-lg bg-gradient-to-br from-amber-600 to-amber-800">
-                <Icons.Sword />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-amber-400">DM's Toolkit</h1>
-                <p className="text-xs text-stone-400">Spellbook</p>
-              </div>
-            </Link>
-            <div className="flex gap-2">
-              <Link href="/" className="px-4 py-2 rounded-lg text-stone-300 hover:bg-stone-800 transition-colors">Combat</Link>
-              <Link href="/?tab=characters" className="px-4 py-2 rounded-lg text-stone-300 hover:bg-stone-800 transition-colors">Characters</Link>
-              <Link href="/encounters" className="px-4 py-2 rounded-lg text-stone-300 hover:bg-stone-800 transition-colors">Encounters</Link>
-              <Link href="/templates" className="px-4 py-2 rounded-lg text-stone-300 hover:bg-stone-800 transition-colors">Templates</Link>
-              <Link href="/spellbook" className="px-4 py-2 rounded-lg bg-amber-700 text-amber-100 transition-colors">Spellbook</Link>
-              <Link href="/dm" className="px-4 py-2 rounded-lg text-stone-300 hover:bg-stone-800 transition-colors">DM</Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="max-w-7xl mx-auto p-4">
         {/* Header */}

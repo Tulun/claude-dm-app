@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Icons from './components/Icons';
+import Navbar from './components/Navbar';
 import { defaultPartyData, defaultEnemyTemplates } from './components/defaultData';
 import CharacterCard from './components/CharacterCard';
 import InitiativeItem from './components/InitiativeItem';
@@ -328,30 +329,14 @@ export default function DMAdminTool() {
     <div className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100">
       <div className="fixed inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
 
-      <header className="relative border-b border-amber-900/30 bg-stone-900/80 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <button onClick={() => { setActiveTab('combat'); router.push('/'); }} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center shadow-lg"><Icons.Dice /></div>
-              <div className="text-left">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">DM&apos;s Toolkit</h1>
-                <p className="text-xs text-stone-400">5th Edition Combat Manager</p>
-              </div>
-            </button>
-            <div className="flex items-center gap-4">
-              {saveStatus && <span className="text-xs text-amber-400 bg-amber-900/30 px-2 py-1 rounded">{saveStatus}</span>}
-              <div className="flex gap-1 bg-stone-800 rounded-lg p-1">
-                <button onClick={() => { setActiveTab('combat'); router.push('/'); }} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'combat' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Sword /> Combat</button>
-                <button onClick={() => { setActiveTab('characters'); router.push('/?tab=characters'); }} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'characters' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Shield /> Characters</button>
-                <Link href="/encounters" className="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-stone-700"><Icons.Scroll /> Encounters</Link>
-                <button onClick={() => { setActiveTab('templates'); router.push('/?tab=templates'); }} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${activeTab === 'templates' ? 'bg-amber-700' : 'hover:bg-stone-700'}`}><Icons.Book /> Templates</button>
-                <Link href="/spellbook" className="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-stone-700"><Icons.Sparkles /> Spellbook</Link>
-                <Link href="/dm" className="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-stone-700"><Icons.Crown /> DM</Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Navbar 
+        activeTab={activeTab} 
+        onTabChange={(tab) => {
+          setActiveTab(tab);
+          router.push(tab === 'combat' ? '/' : `/?tab=${tab}`);
+        }}
+        saveStatus={saveStatus}
+      />
 
       {activeTab === 'combat' ? (
         <main className="relative max-w-7xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
