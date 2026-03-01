@@ -11,6 +11,29 @@
   },
   "sessionNotes": {
     "current": "",
-    "sessions": []
+    "sessions": [],
+    "cards": [
+      {
+        "id": "card-1772327978097",
+        "title": "Important NPCs",
+        "content": "Some idiot\n\nSome Jabroni",
+        "colorIndex": 0,
+        "createdAt": "2026-03-01T01:19:38.097Z"
+      },
+      {
+        "id": "card-1772327998754",
+        "title": "Loot & Rewards",
+        "content": "GOLDDDDD\n\nMagic shit they won't get",
+        "colorIndex": 1,
+        "createdAt": "2026-03-01T01:19:58.754Z"
+      },
+      {
+        "id": "card-1772328042500",
+        "title": "Nunya Business",
+        "content": "Wouldn't you like to know.",
+        "colorIndex": 2,
+        "createdAt": "2026-03-01T01:20:42.500Z"
+      }
+    ]
   }
 }

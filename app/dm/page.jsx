@@ -10,7 +10,7 @@ import SessionTab from './components/SessionTab';
 export default function DMPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('characters');
+  const [activeTab, setActiveTab] = useState('session');
   const [saveStatus, setSaveStatus] = useState('');
 
   // Load DM data
