@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Icons from '../Icons';
+import Icons from '../../../components/Icons';
 
 const CardHeader = ({ 
   character, 

@@ -1,6 +1,6 @@
 'use client';
 
-import Icons from '../Icons';
+import Icons from '../../../components/Icons';
 
 const StatBlockModal = ({ isOpen, onClose, character }) => {
   if (!isOpen || !character) return null;

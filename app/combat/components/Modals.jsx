@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import Icons from './Icons';
+import Icons from '../../components/Icons';
 
 // CR values for filtering - expanded range
 const CR_OPTIONS = [

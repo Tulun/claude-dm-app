@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import Icons from './Icons';
+import Icons from '../../components/Icons';
 import ImportMonsterModal from './ImportMonsterModal';
 
 // CR values for filtering

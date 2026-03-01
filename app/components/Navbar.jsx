@@ -10,27 +10,28 @@ export default function Navbar({ onTabChange, activeTab, saveStatus }) {
   
   // Determine active page from pathname or activeTab prop
   const getActivePage = () => {
+    if (pathname === '/combat') {
+      if (activeTab) return activeTab;
+      const tab = searchParams.get('tab');
+      if (tab === 'characters') return 'characters';
+      if (tab === 'templates') return 'templates';
+      return 'combat';
+    }
     if (pathname === '/encounters') return 'encounters';
     if (pathname === '/spellbook') return 'spellbook';
     if (pathname === '/dm') return 'dm';
-    if (pathname === '/templates') return 'templates';
     if (pathname === '/character') return 'characters';
     
-    // For main page, check tab
-    if (activeTab) return activeTab;
-    const tab = searchParams.get('tab');
-    if (tab === 'characters') return 'characters';
-    if (tab === 'templates') return 'templates';
     return 'combat';
   };
   
   const active = getActivePage();
   
   const navItems = [
-    { key: 'combat', label: 'Combat', href: '/', icon: Icons.Sword },
-    { key: 'characters', label: 'Characters', href: '/?tab=characters', icon: Icons.Shield },
+    { key: 'combat', label: 'Combat', href: '/combat', icon: Icons.Sword },
+    { key: 'characters', label: 'Characters', href: '/combat?tab=characters', icon: Icons.Shield },
     { key: 'encounters', label: 'Encounters', href: '/encounters', icon: Icons.Scroll },
-    { key: 'templates', label: 'Templates', href: '/?tab=templates', icon: Icons.Book },
+    { key: 'templates', label: 'Templates', href: '/combat?tab=templates', icon: Icons.Book },
     { key: 'spellbook', label: 'Spellbook', href: '/spellbook', icon: Icons.Sparkles },
     { key: 'dm', label: 'DM', href: '/dm', icon: Icons.Crown },
   ];
@@ -48,7 +49,7 @@ export default function Navbar({ onTabChange, activeTab, saveStatus }) {
       <div className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <Link href="/combat" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <div className="p-2 rounded-lg bg-gradient-to-br from-amber-600 to-amber-800">
               <Icons.Dice className="w-5 h-5" />
             </div>

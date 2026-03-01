@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useMemo } from 'react';
-import Icons from './Icons';
+import Icons from '../../components/Icons';
 
 const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [] }) => {
   const [isDragging, setIsDragging] = useState(false);

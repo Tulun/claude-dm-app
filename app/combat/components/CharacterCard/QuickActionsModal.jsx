@@ -1,6 +1,6 @@
 'use client';
 
-import Icons from '../Icons';
+import Icons from '../../../components/Icons';
 
 const QuickActionsModal = ({ isOpen, character, onUpdate, onClose, displayAC, spellcastingInfo }) => {
   if (!isOpen) return null;

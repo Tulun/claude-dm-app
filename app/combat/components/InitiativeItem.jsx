@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import Icons from './Icons';
+import Icons from '../../components/Icons';
 
 // Calculate AC from equipped items (same logic as CharacterCard)
 const getCalculatedAC = (character) => {

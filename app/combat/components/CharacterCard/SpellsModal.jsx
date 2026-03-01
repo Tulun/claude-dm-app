@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import Icons from '../Icons';
+import Icons from '../../../components/Icons';
 
 // Classes that prepare spells (vs known spells)
 const PREPARED_CASTER_CLASSES = ['Cleric', 'Druid', 'Paladin', 'Wizard'];

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Icons from '../Icons';
+import Icons from '../../../components/Icons';
 
 const NotesModal = ({ isOpen, character, onUpdate, onClose }) => {
   const [notesText, setNotesText] = useState(character.combatNotes || '');

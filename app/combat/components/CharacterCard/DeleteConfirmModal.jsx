@@ -1,6 +1,6 @@
 'use client';
 
-import Icons from '../Icons';
+import Icons from '../../../components/Icons';
 
 const DeleteConfirmModal = ({ isOpen, onClose, character, isEnemy, onRemove }) => {
   if (!isOpen) return null;

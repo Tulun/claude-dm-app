@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Icons from '../Icons';
-import { Tooltip } from '../ui';
+import Icons from '../../../components/Icons';
+import { Tooltip } from '../../../components/ui';
 import { MASTERY_DESC, PROPERTY_DESC, ARMOR_DESC } from './utils';
 
 const InventoryDisplay = ({ items, character, getModNum, getProfBonus }) => {

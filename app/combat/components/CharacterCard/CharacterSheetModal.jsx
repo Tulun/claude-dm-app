@@ -1,6 +1,6 @@
 'use client';
 
-import Icons from '../Icons';
+import Icons from '../../../components/Icons';
 
 const SKILLS = [
   { name: 'Acrobatics', stat: 'dex' },

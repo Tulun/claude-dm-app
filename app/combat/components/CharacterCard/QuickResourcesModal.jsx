@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Icons from '../Icons';
+import Icons from '../../../components/Icons';
 
 const QuickResourcesModal = ({ isOpen, character, onUpdate, onClose }) => {
   if (!isOpen) return null;
