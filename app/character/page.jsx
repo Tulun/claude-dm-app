@@ -149,9 +149,9 @@ export default function CharacterPage() {
     return character?.class?.toLowerCase() === 'druid' && parseInt(character?.level) >= 2;
   };
   
-  // New tab order: spells, resources, wild shape (druid), inventory, features, feats, companions, notes
-  const baseTabs = ['spells', 'resources', 'inventory', 'features', 'feats', 'companions', 'notes'];
-  const tabs = isDruid() ? ['spells', 'resources', 'wild shape', 'inventory', 'features', 'feats', 'companions', 'notes'] : baseTabs;
+  // New tab order: spells, resources, wild shape (druid), inventory, class, feats, companions, notes
+  const baseTabs = ['spells', 'resources', 'inventory', 'class', 'feats', 'companions', 'notes'];
+  const tabs = isDruid() ? ['spells', 'resources', 'wild shape', 'inventory', 'class', 'feats', 'companions', 'notes'] : baseTabs;
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100">
@@ -304,7 +304,7 @@ export default function CharacterPage() {
               {activeTab === 'wild shape' && <WildShapeTab character={character} onUpdate={updateField} templates={templates} />}
               {activeTab === 'companions' && <CompanionsTab character={character} onUpdate={updateField} />}
               {activeTab === 'spells' && <SpellsTab character={character} onUpdate={updateField} />}
-              {activeTab === 'features' && <FeaturesTab character={character} onUpdate={updateField} />}
+              {activeTab === 'class' && <FeaturesTab character={character} onUpdate={updateField} />}
               {activeTab === 'feats' && <FeatsTab character={character} onUpdate={updateField} />}
               {activeTab === 'background' && <BackgroundTab character={character} onUpdate={updateField} />}
               {activeTab === 'notes' && <NotesTab character={character} onUpdate={updateField} />}

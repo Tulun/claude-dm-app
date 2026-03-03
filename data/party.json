@@ -761,7 +761,7 @@
     "con": 16,
     "int": 10,
     "wis": 14,
-    "cha": 14,
+    "cha": 15,
     "spellStat": "cha",
     "id": "party-1770417737904",
     "currentHp": 43,
@@ -778,12 +778,22 @@
     "saveProficiencies": {},
     "features": [
       {
-        "id": 1772549223991,
+        "id": 1772567159352,
         "name": "Inspiring Leader",
-        "description": "After 10-minute speech, grant up to 6 creatures temp HP equal to your level + WIS or CHA mod. 1/Long Rest per creature.",
+        "description": "After rest, 10-minute speech grants up to 6 creatures temp HP = level + WIS or CHA mod.",
         "source": "General",
         "category": "General",
         "prerequisite": "WIS or CHA 13+",
+        "abilityBoost": {
+          "options": [
+            "wis",
+            "cha"
+          ],
+          "amount": 1
+        },
+        "chosenAbility": "cha",
+        "chosenAbility2": null,
+        "asiMode": null,
         "custom": false
       }
     ],
