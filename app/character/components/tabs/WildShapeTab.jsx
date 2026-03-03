@@ -39,6 +39,7 @@ export default function WildShapeTab({ character, onUpdate, templates = [] }) {
   const [expandedFormId, setExpandedFormId] = useState(null);
   const [showBeastPicker, setShowBeastPicker] = useState(false);
   const [crFilter, setCrFilter] = useState(null);
+  const [beastSearch, setBeastSearch] = useState('');
 
   // Get druid level
   const getDruidLevel = () => {
@@ -87,6 +88,20 @@ export default function WildShapeTab({ character, onUpdate, templates = [] }) {
       templateId: beast.id,
       name: beast.name,
       currentHp: beast.maxHp,
+      // Store beast stats for use in combat
+      ac: beast.ac,
+      maxHp: beast.maxHp,
+      speed: beast.speed,
+      cr: beast.cr,
+      str: beast.str,
+      dex: beast.dex,
+      con: beast.con,
+      int: beast.int,
+      wis: beast.wis,
+      cha: beast.cha,
+      senses: beast.senses,
+      traits: beast.traits,
+      actions: beast.actions,
     };
     onUpdate('wildShapeForms', [...wildShapeForms, newForm]);
   };
@@ -404,6 +419,18 @@ export default function WildShapeTab({ character, onUpdate, templates = [] }) {
                 Choose from beasts in your templates (CR {rules.maxCR} or lower{!rules.flySpeed && ', no fly speed'})
               </p>
               
+              {/* Search Field */}
+              <div className="mt-3">
+                <input
+                  type="text"
+                  value={beastSearch}
+                  onChange={(e) => setBeastSearch(e.target.value)}
+                  placeholder="Search beasts..."
+                  className="w-full bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-lime-600"
+                  autoFocus
+                />
+              </div>
+              
               {/* CR Filter */}
               <div className="flex gap-2 mt-3">
                 <button
@@ -438,12 +465,13 @@ export default function WildShapeTab({ character, onUpdate, templates = [] }) {
                 <div className="space-y-2">
                   {availableBeasts
                     .filter(b => crFilter === null || formatCR(b.cr) === crFilter)
+                    .filter(b => !beastSearch || b.name.toLowerCase().includes(beastSearch.toLowerCase()))
                     .map(beast => {
                       const alreadyKnown = wildShapeForms.some(f => f.templateId === beast.id);
                       return (
                         <button
                           key={beast.id}
-                          onClick={() => { addForm(beast); setShowBeastPicker(false); }}
+                          onClick={() => { addForm(beast); setShowBeastPicker(false); setBeastSearch(''); }}
                           disabled={alreadyKnown}
                           className={`w-full text-left p-3 rounded-lg border transition-colors ${
                             alreadyKnown
@@ -472,7 +500,7 @@ export default function WildShapeTab({ character, onUpdate, templates = [] }) {
 
             <div className="p-4 border-t border-stone-700">
               <button
-                onClick={() => setShowBeastPicker(false)}
+                onClick={() => { setShowBeastPicker(false); setBeastSearch(''); }}
                 className="w-full py-2 rounded-lg bg-stone-700 hover:bg-stone-600"
               >
                 Cancel

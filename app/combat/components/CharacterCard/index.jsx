@@ -15,7 +15,7 @@ import SpellsModal from './SpellsModal';
 import { parseSpellcasting } from './spellcastingParser';
 import { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, getCalculatedAC } from './utils';
 
-const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onToggleExpand, showResources }) => {
+const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onToggleExpand, showResources, templates = [] }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(false);
   const [showQuickResources, setShowQuickResources] = useState(false);
@@ -41,7 +41,15 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   const spellAttack = getSpellAttackBonus(character);
   const calculatedAC = getCalculatedAC(character);
   const baseAC = character.acOverride || calculatedAC || character.ac || 10;
-  const displayAC = baseAC + (parseInt(tempAC) || 0);
+  const tempAcValue = parseInt(tempAC) || 0;
+  
+  // Check for wild shape - use beast AC when active
+  const activeWildShapeForm = character.wildShapeActive 
+    ? (character.wildShapeForms || []).find(f => f.id === character.wildShapeFormId)
+    : null;
+  const displayAC = activeWildShapeForm ? (activeWildShapeForm.ac || 10) : (baseAC + tempAcValue);
+  const isWildShapeAC = !!activeWildShapeForm;
+  
   const spellcastingInfo = parseSpellcasting(character);
   const isNpc = character.isNpc;
 
@@ -66,7 +74,14 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               {isEnemy ? <Icons.Skull /> : <Icons.Shield />}
             </div>
             <div>
-              <h3 className={`font-bold text-lg ${isDead ? 'line-through text-stone-500' : ''}`}>{character.name}</h3>
+              <h3 className={`font-bold text-lg ${isDead ? 'line-through text-stone-500' : ''}`}>
+                {character.name}
+                {activeWildShapeForm && (
+                  <span className="ml-2 text-sm font-normal text-lime-400">
+                    🐾 {activeWildShapeForm.name}
+                  </span>
+                )}
+              </h3>
               <p className="text-xs text-stone-400">
                 {character.classes?.length > 0 
                   ? character.classes.map(c => `${c.name} ${c.level}`).join(' / ')
@@ -235,13 +250,21 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               </>
             ) : (
               <button
-                onClick={(e) => { e.stopPropagation(); setTempAcDelta(String(tempAC || '')); setShowTempAcEditor(true); }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm cursor-pointer transition-colors ${tempAC > 0 ? 'bg-amber-900/40 text-amber-400 hover:bg-amber-900/50 shadow-[0_0_10px_rgba(251,191,36,0.4)]' : character.acEffect ? 'bg-cyan-900/30 text-cyan-400 hover:bg-cyan-900/40' : 'bg-stone-800/60 text-stone-300 hover:bg-stone-700/60'}`}
-                title={tempAC > 0 ? `Base ${baseAC} + ${tempAC} temp bonus` : "Click to add temp AC bonus"}
+                onClick={(e) => { e.stopPropagation(); if (!isWildShapeAC) { setTempAcDelta(String(tempAC || '')); setShowTempAcEditor(true); } }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                  isWildShapeAC 
+                    ? 'bg-lime-900/40 text-lime-400 cursor-default' 
+                    : tempAC > 0 
+                      ? 'bg-amber-900/40 text-amber-400 hover:bg-amber-900/50 shadow-[0_0_10px_rgba(251,191,36,0.4)] cursor-pointer' 
+                      : character.acEffect 
+                        ? 'bg-cyan-900/30 text-cyan-400 hover:bg-cyan-900/40 cursor-pointer' 
+                        : 'bg-stone-800/60 text-stone-300 hover:bg-stone-700/60 cursor-pointer'
+                }`}
+                title={isWildShapeAC ? `Wild Shape: ${activeWildShapeForm?.name} AC` : tempAC > 0 ? `Base ${baseAC} + ${tempAC} temp bonus` : "Click to add temp AC bonus"}
               >
                 <Icons.Shield />
                 <span className="font-mono font-medium">{displayAC}</span>
-                <span className="text-xs text-stone-500">AC</span>
+                <span className={`text-xs ${isWildShapeAC ? 'text-lime-500' : 'text-stone-500'}`}>{isWildShapeAC ? '🐾' : 'AC'}</span>
               </button>
             )}
           </div>
@@ -364,11 +387,21 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
         <div className="px-3 pb-2 grid grid-cols-6 gap-1 text-center border-t border-stone-700/30 pt-2">
           {['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'].map(label => {
             const key = label.toLowerCase();
+            
+            // Check if wild shape is active and get the active form
+            const wildShapeForm = character.wildShapeActive 
+              ? (character.wildShapeForms || []).find(f => f.id === character.wildShapeFormId)
+              : null;
+            
+            // Use beast stats for STR/DEX/CON when wild shaped
+            const usesBeastStat = wildShapeForm && ['str', 'dex', 'con'].includes(key);
+            const statValue = usesBeastStat ? (wildShapeForm[key] || 10) : (character[key] || 10);
+            
             return (
-              <div key={label} className="bg-stone-800/50 rounded p-1">
-                <div className="text-[10px] text-stone-500">{label}</div>
-                <div className="text-sm font-bold">{character[key] || 10}</div>
-                <div className="text-xs text-stone-400">{getMod(character[key])}</div>
+              <div key={label} className={`rounded p-1 ${usesBeastStat ? 'bg-lime-900/50' : 'bg-stone-800/50'}`}>
+                <div className={`text-[10px] ${usesBeastStat ? 'text-lime-500' : 'text-stone-500'}`}>{label}</div>
+                <div className={`text-sm font-bold ${usesBeastStat ? 'text-lime-400' : ''}`}>{statValue}</div>
+                <div className={`text-xs ${usesBeastStat ? 'text-lime-400/70' : 'text-stone-400'}`}>{getMod(statValue)}</div>
               </div>
             );
           })}
@@ -565,7 +598,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
       {/* Modals */}
       <DeleteConfirmModal isOpen={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)} character={character} isEnemy={isEnemy} onRemove={onRemove} />
       <QuickActionsModal isOpen={showQuickActions} onClose={() => setShowQuickActions(false)} character={character} onUpdate={onUpdate} displayAC={displayAC} spellcastingInfo={spellcastingInfo} />
-      <QuickResourcesModal isOpen={showQuickResources} onClose={() => setShowQuickResources(false)} character={character} onUpdate={onUpdate} />
+      <QuickResourcesModal isOpen={showQuickResources} onClose={() => setShowQuickResources(false)} character={character} onUpdate={onUpdate} templates={templates} />
       <CharacterSheetModal isOpen={showCharacterSheet} onClose={() => setShowCharacterSheet(false)} character={character} />
       <InventoryModal isOpen={showInventory} onClose={() => setShowInventory(false)} character={character} onUpdate={onUpdate} />
       <NotesModal isOpen={showNotesPopup} onClose={() => setShowNotesPopup(false)} character={character} onUpdate={onUpdate} />

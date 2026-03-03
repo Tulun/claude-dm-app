@@ -29,7 +29,7 @@
       {
         "id": 1772499568807,
         "name": "Spirit Totem",
-        "current": 1,
+        "current": 0,
         "max": 1,
         "options": [
           {
@@ -44,7 +44,8 @@
             "name": "Unicorn Spirit",
             "description": "The unicorn spirit lends its protection to those nearby. You and your allies gain advantage on all ability checks made to detect creatures in the spirit’s aura. In addition, if you cast a spell using a spell slot that restores hit points to any creature inside or outside the aura, each creature of your choice in the aura also regains hit points equal to your druid level."
           }
-        ]
+        ],
+        "lastUsed": "Bear Spirit"
       }
     ],
     "str": 10,
@@ -524,33 +525,134 @@
         "initiative": 15
       }
     ],
-    "tempHp": 4,
+    "tempHp": 9,
     "wildShapeForms": [
       {
-        "id": 1772503025538,
-        "templateId": "mm-spider",
-        "name": "Spider",
-        "currentHp": 1
-      },
-      {
-        "id": 1772503055221,
-        "templateId": "mm-rat",
-        "name": "Rat",
-        "currentHp": 1
-      },
-      {
-        "id": 1772503066398,
-        "templateId": "mm-riding-horse",
-        "name": "Riding Horse",
-        "currentHp": 13
-      },
-      {
-        "id": 1772503082392,
+        "id": 1772504065336,
         "templateId": "mm-wolf",
         "name": "Wolf",
-        "currentHp": 11
+        "currentHp": 11,
+        "ac": 13,
+        "maxHp": 11,
+        "speed": 40,
+        "cr": "1/4",
+        "str": 12,
+        "dex": 15,
+        "con": 12,
+        "int": 3,
+        "wis": 12,
+        "cha": 6,
+        "senses": "Passive Perception 13",
+        "traits": [
+          {
+            "name": "Keen Hearing and Smell",
+            "description": "Advantage on Perception checks that rely on hearing or smell."
+          },
+          {
+            "name": "Pack Tactics",
+            "description": "Advantage on attack rolls if an ally is within 5 ft of target."
+          }
+        ],
+        "actions": [
+          {
+            "name": "Bite",
+            "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4+2) Piercing. DC 11 STR save or Prone."
+          }
+        ]
+      },
+      {
+        "id": 1772504075083,
+        "templateId": "mm-riding-horse",
+        "name": "Riding Horse",
+        "currentHp": 13,
+        "ac": 10,
+        "maxHp": 13,
+        "speed": 60,
+        "cr": "1/4",
+        "str": 16,
+        "dex": 10,
+        "con": 12,
+        "int": 2,
+        "wis": 11,
+        "cha": 7,
+        "senses": "Passive Perception 10",
+        "traits": [],
+        "actions": [
+          {
+            "name": "Hooves",
+            "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (2d4+3) Bludgeoning damage."
+          }
+        ]
+      },
+      {
+        "id": 1772504096786,
+        "templateId": "mm-rat",
+        "name": "Rat",
+        "currentHp": 1,
+        "ac": 10,
+        "maxHp": 1,
+        "speed": 20,
+        "cr": "0",
+        "str": 2,
+        "dex": 11,
+        "con": 9,
+        "int": 2,
+        "wis": 10,
+        "cha": 4,
+        "senses": "Darkvision 30 ft., Passive Perception 10",
+        "traits": [
+          {
+            "name": "Keen Smell",
+            "description": "Advantage on Perception checks that rely on smell."
+          }
+        ],
+        "actions": [
+          {
+            "name": "Bite",
+            "description": "Melee Attack Roll: +0, reach 5 ft. Hit: 1 Piercing damage."
+          }
+        ]
+      },
+      {
+        "id": 1772504103840,
+        "templateId": "mm-spider",
+        "name": "Spider",
+        "currentHp": 1,
+        "ac": 12,
+        "maxHp": 1,
+        "speed": "20, climb 20",
+        "cr": "0",
+        "str": 2,
+        "dex": 14,
+        "con": 8,
+        "int": 1,
+        "wis": 10,
+        "cha": 2,
+        "senses": "Darkvision 30 ft., Passive Perception 10",
+        "traits": [
+          {
+            "name": "Spider Climb",
+            "description": "Can climb difficult surfaces including ceilings."
+          },
+          {
+            "name": "Web Sense",
+            "description": "Knows location of creatures touching same web."
+          },
+          {
+            "name": "Web Walker",
+            "description": "Ignores movement restrictions from webs."
+          }
+        ],
+        "actions": [
+          {
+            "name": "Bite",
+            "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 1 Piercing. DC 9 CON or 2 (1d4) Poison damage (half on save)."
+          }
+        ]
       }
-    ]
+    ],
+    "wildShapeActive": false,
+    "wildShapeFormId": null
   },
   {
     "name": "Braadlei",
