@@ -197,7 +197,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                       : 'text-purple-500 hover:text-purple-400 hover:bg-purple-900/30'
                   }`}
                 >
-                  <Icons.Sparkles />
+                  <Icons.Flame className="w-5 h-5" />
                 </button>
               </Tooltip>
             )}

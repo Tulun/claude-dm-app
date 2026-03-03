@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Icons from '../../../components/Icons';
 import { CLASS_FEATURES, SUBCLASS_FEATURES } from '../constants';
 
 // Multi-select component with tooltip support
@@ -79,20 +78,6 @@ function MultiSelectWithTooltips({
 
 export default function FeaturesTab({ character, onUpdate }) {
   const [expandedMultiSelects, setExpandedMultiSelects] = useState({});
-
-  const addFeature = () => {
-    const newFeature = { id: Date.now(), name: '', description: '', source: '' };
-    onUpdate('features', [...(character.features || []), newFeature]);
-  };
-
-  const updateFeature = (id, field, value) => {
-    onUpdate('features', character.features.map(f => f.id === id ? { ...f, [field]: value } : f));
-  };
-
-  const removeFeature = (id) => {
-    onUpdate('features', character.features.filter(f => f.id !== id));
-  };
-
   const characterClasses = character.classes?.length > 0 
     ? character.classes 
     : character.class ? [{ name: character.class, level: character.level || 1, subclass: character.subclass }] : [];
@@ -252,32 +237,6 @@ export default function FeaturesTab({ character, onUpdate }) {
           </div>
         </div>
       )}
-
-      <div>
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="text-sm font-bold text-stone-400">Other Features & Traits</h3>
-          <button onClick={addFeature} className="px-3 py-1 rounded bg-emerald-800 hover:bg-emerald-700 text-xs flex items-center gap-1">
-            <Icons.Plus /> Add Feature
-          </button>
-        </div>
-        
-        <div className="space-y-3">
-          {(character.features || []).map(feature => (
-            <div key={feature.id} className="bg-stone-800 rounded-lg p-3">
-              <div className="flex items-start justify-between gap-2 mb-2">
-                <input type="text" value={feature.name} onChange={(e) => updateFeature(feature.id, 'name', e.target.value)}
-                  className="bg-transparent font-bold focus:outline-none flex-1" placeholder="Feature name" />
-                <input type="text" value={feature.source} onChange={(e) => updateFeature(feature.id, 'source', e.target.value)}
-                  className="bg-stone-700 rounded px-2 py-0.5 text-xs text-stone-400 w-32 focus:outline-none" placeholder="Source" />
-                <button onClick={() => removeFeature(feature.id)} className="text-red-500 hover:text-red-400">×</button>
-              </div>
-              <textarea value={feature.description} onChange={(e) => updateFeature(feature.id, 'description', e.target.value)}
-                className="w-full bg-transparent text-sm text-stone-300 focus:outline-none resize-none" rows={2} placeholder="Description..." />
-            </div>
-          ))}
-        </div>
-        {(character.features || []).length === 0 && <div className="text-center text-stone-500 py-4">No custom features yet.</div>}
-      </div>
     </div>
   );
 }

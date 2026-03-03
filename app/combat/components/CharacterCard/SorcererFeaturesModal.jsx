@@ -180,12 +180,12 @@ export default function SorcererFeaturesModal({ isOpen, onClose, character, onUp
               </div>
               <button
                 onClick={toggleInnateSorcery}
-                className={`relative w-14 h-7 rounded-full transition-colors ${
+                className={`relative flex-shrink-0 w-12 h-6 rounded-full transition-colors ${
                   innateSorceryActive ? 'bg-purple-600' : 'bg-stone-700'
                 }`}
               >
-                <span className={`absolute top-1 w-5 h-5 rounded-full bg-white transition-transform ${
-                  innateSorceryActive ? 'left-8' : 'left-1'
+                <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${
+                  innateSorceryActive ? 'left-6' : 'left-0.5'
                 }`} />
               </button>
             </div>

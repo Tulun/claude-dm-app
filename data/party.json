@@ -11,7 +11,7 @@
       {
         "id": 1770233816410,
         "name": "Wild Shape",
-        "current": 1,
+        "current": 0,
         "max": 2
       },
       {
@@ -585,7 +585,118 @@
         ]
       },
       {
-        "id": 1772504096786,
+        "id": 1772509473276,
+        "templateId": "mm-giant-badger",
+        "name": "Giant Badger",
+        "currentHp": 13,
+        "ac": 10,
+        "maxHp": 13,
+        "speed": "30, burrow 10",
+        "cr": "1/4",
+        "str": 13,
+        "dex": 10,
+        "con": 15,
+        "int": 2,
+        "wis": 12,
+        "cha": 5,
+        "senses": "Darkvision 30 ft., Passive Perception 11",
+        "traits": [
+          {
+            "name": "Keen Smell",
+            "description": "Advantage on Perception checks that rely on smell."
+          }
+        ],
+        "actions": [
+          {
+            "name": "Multiattack",
+            "description": "Makes one Bite and one Claws attack."
+          },
+          {
+            "name": "Bite",
+            "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Piercing damage."
+          },
+          {
+            "name": "Claws",
+            "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 6 (2d4+1) Slashing damage."
+          }
+        ]
+      },
+      {
+        "id": 1772509485786,
+        "templateId": "mm-giant-wolf-spider",
+        "name": "Giant Wolf Spider",
+        "currentHp": 11,
+        "ac": 13,
+        "maxHp": 11,
+        "speed": "40, climb 40",
+        "cr": "1/4",
+        "str": 12,
+        "dex": 16,
+        "con": 13,
+        "int": 3,
+        "wis": 12,
+        "cha": 4,
+        "senses": "Blindsight 10 ft., Darkvision 60 ft., Passive Perception 13",
+        "traits": [
+          {
+            "name": "Spider Climb",
+            "description": "Can climb difficult surfaces including ceilings."
+          },
+          {
+            "name": "Web Sense",
+            "description": "Knows location of creatures touching same web."
+          },
+          {
+            "name": "Web Walker",
+            "description": "Ignores movement restrictions from webs."
+          }
+        ],
+        "actions": [
+          {
+            "name": "Bite",
+            "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Piercing. DC 11 CON or 7 (2d6) Poison (half on save). If Poison reduces to 0 HP, stable but Poisoned 1 hour and Paralyzed while Poisoned."
+          }
+        ]
+      },
+      {
+        "id": 1772509517635,
+        "templateId": "mm-panther",
+        "name": "Panther",
+        "currentHp": 13,
+        "ac": 12,
+        "maxHp": 13,
+        "speed": "50, climb 40",
+        "cr": "1/4",
+        "str": 14,
+        "dex": 15,
+        "con": 10,
+        "int": 3,
+        "wis": 14,
+        "cha": 7,
+        "senses": "Passive Perception 14",
+        "traits": [
+          {
+            "name": "Keen Smell",
+            "description": "Advantage on Perception checks that rely on smell."
+          },
+          {
+            "name": "Pounce",
+            "description": "If moves 20+ ft straight toward target then hits with Claw, DC 12 STR or Prone. If Prone, can make one Bite as Bonus Action."
+          }
+        ],
+        "actions": [
+          {
+            "name": "Bite",
+            "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing damage."
+          },
+          {
+            "name": "Claw",
+            "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Slashing damage."
+          }
+        ]
+      },
+      {
+        "id": 1772509614894,
         "templateId": "mm-rat",
         "name": "Rat",
         "currentHp": 1,
@@ -612,47 +723,10 @@
             "description": "Melee Attack Roll: +0, reach 5 ft. Hit: 1 Piercing damage."
           }
         ]
-      },
-      {
-        "id": 1772504103840,
-        "templateId": "mm-spider",
-        "name": "Spider",
-        "currentHp": 1,
-        "ac": 12,
-        "maxHp": 1,
-        "speed": "20, climb 20",
-        "cr": "0",
-        "str": 2,
-        "dex": 14,
-        "con": 8,
-        "int": 1,
-        "wis": 10,
-        "cha": 2,
-        "senses": "Darkvision 30 ft., Passive Perception 10",
-        "traits": [
-          {
-            "name": "Spider Climb",
-            "description": "Can climb difficult surfaces including ceilings."
-          },
-          {
-            "name": "Web Sense",
-            "description": "Knows location of creatures touching same web."
-          },
-          {
-            "name": "Web Walker",
-            "description": "Ignores movement restrictions from webs."
-          }
-        ],
-        "actions": [
-          {
-            "name": "Bite",
-            "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 1 Piercing. DC 9 CON or 2 (1d4) Poison damage (half on save)."
-          }
-        ]
       }
     ],
-    "wildShapeActive": true,
-    "wildShapeFormId": 1772504075083
+    "wildShapeActive": false,
+    "wildShapeFormId": null
   },
   {
     "name": "Braadlei",
@@ -702,7 +776,17 @@
       "Intimidation": 2
     },
     "saveProficiencies": {},
-    "features": [],
+    "features": [
+      {
+        "id": 1772549223991,
+        "name": "Inspiring Leader",
+        "description": "After 10-minute speech, grant up to 6 creatures temp HP equal to your level + WIS or CHA mod. 1/Long Rest per creature.",
+        "source": "General",
+        "category": "General",
+        "prerequisite": "WIS or CHA 13+",
+        "custom": false
+      }
+    ],
     "spells": [
       {
         "id": 1772482583381.771,

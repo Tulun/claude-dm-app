@@ -15,6 +15,7 @@ import {
   InventoryTab,
   SpellsTab,
   FeaturesTab,
+  FeatsTab,
   BackgroundTab,
   NotesTab,
   CompanionsTab,
@@ -148,8 +149,9 @@ export default function CharacterPage() {
     return character?.class?.toLowerCase() === 'druid' && parseInt(character?.level) >= 2;
   };
   
-  const baseTabs = ['resources', 'inventory', 'companions', 'spells', 'features', 'background', 'notes'];
-  const tabs = isDruid() ? ['resources', 'inventory', 'wild shape', 'companions', 'spells', 'features', 'background', 'notes'] : baseTabs;
+  // New tab order: spells, resources, wild shape (druid), inventory, features, feats, companions, notes
+  const baseTabs = ['spells', 'resources', 'inventory', 'features', 'feats', 'companions', 'notes'];
+  const tabs = isDruid() ? ['spells', 'resources', 'wild shape', 'inventory', 'features', 'feats', 'companions', 'notes'] : baseTabs;
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100">
@@ -303,6 +305,7 @@ export default function CharacterPage() {
               {activeTab === 'companions' && <CompanionsTab character={character} onUpdate={updateField} />}
               {activeTab === 'spells' && <SpellsTab character={character} onUpdate={updateField} />}
               {activeTab === 'features' && <FeaturesTab character={character} onUpdate={updateField} />}
+              {activeTab === 'feats' && <FeatsTab character={character} onUpdate={updateField} />}
               {activeTab === 'background' && <BackgroundTab character={character} onUpdate={updateField} />}
               {activeTab === 'notes' && <NotesTab character={character} onUpdate={updateField} />}
             </div>
