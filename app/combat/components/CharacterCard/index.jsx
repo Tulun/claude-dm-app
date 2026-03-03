@@ -12,6 +12,8 @@ import NotesModal from './NotesModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import StatBlockModal from './StatBlockModal';
 import SpellsModal from './SpellsModal';
+import DruidFeaturesModal from './DruidFeaturesModal';
+import SorcererFeaturesModal from './SorcererFeaturesModal';
 import { parseSpellcasting } from './spellcastingParser';
 import { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, getCalculatedAC } from './utils';
 
@@ -30,6 +32,8 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   const [showNotesPopup, setShowNotesPopup] = useState(false);
   const [showStatBlock, setShowStatBlock] = useState(false);
   const [showSpells, setShowSpells] = useState(false);
+  const [showDruidFeatures, setShowDruidFeatures] = useState(false);
+  const [showSorcererFeatures, setShowSorcererFeatures] = useState(false);
   
   const isDead = character.currentHp <= 0;
   const characterType = character.class ? 'party' : 'template';
@@ -52,6 +56,22 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   
   const spellcastingInfo = parseSpellcasting(character);
   const isNpc = character.isNpc;
+
+  // Check for class-specific features
+  const isDruid = () => {
+    if (character.classes) {
+      const druid = character.classes.find(c => c.name?.toLowerCase() === 'druid');
+      return druid && parseInt(druid.level) >= 2;
+    }
+    return character.class?.toLowerCase() === 'druid' && parseInt(character.level) >= 2;
+  };
+
+  const isSorcerer = () => {
+    if (character.classes) {
+      return character.classes.some(c => c.name?.toLowerCase() === 'sorcerer');
+    }
+    return character.class?.toLowerCase() === 'sorcerer';
+  };
 
   // Determine card colors - NPCs get teal, enemies get red, party gets emerald
   const cardColors = isDead 
@@ -146,6 +166,36 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                 <button 
                   onClick={(e) => { e.stopPropagation(); setShowQuickResources(true); }}
                   className="p-2 rounded-lg text-amber-400 hover:bg-amber-900/30 transition-colors"
+                >
+                  <Icons.Sparkles />
+                </button>
+              </Tooltip>
+            )}
+            {/* Druid Wild Shape Button */}
+            {!isEnemy && isDruid() && (
+              <Tooltip text="Wild Shape">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setShowDruidFeatures(true); }}
+                  className={`p-2 rounded-lg transition-colors ${
+                    character.wildShapeActive 
+                      ? 'text-lime-400 bg-lime-900/30 hover:bg-lime-900/40' 
+                      : 'text-lime-500 hover:text-lime-400 hover:bg-lime-900/30'
+                  }`}
+                >
+                  <span className="text-lg">🐾</span>
+                </button>
+              </Tooltip>
+            )}
+            {/* Sorcerer Features Button */}
+            {!isEnemy && isSorcerer() && (
+              <Tooltip text="Sorcerer Features">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setShowSorcererFeatures(true); }}
+                  className={`p-2 rounded-lg transition-colors ${
+                    character.innateSorcery 
+                      ? 'text-purple-400 bg-purple-900/30 hover:bg-purple-900/40' 
+                      : 'text-purple-500 hover:text-purple-400 hover:bg-purple-900/30'
+                  }`}
                 >
                   <Icons.Sparkles />
                 </button>
@@ -604,6 +654,8 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
       <NotesModal isOpen={showNotesPopup} onClose={() => setShowNotesPopup(false)} character={character} onUpdate={onUpdate} />
       <StatBlockModal isOpen={showStatBlock} onClose={() => setShowStatBlock(false)} character={character} />
       <SpellsModal isOpen={showSpells} onClose={() => setShowSpells(false)} character={character} />
+      <DruidFeaturesModal isOpen={showDruidFeatures} onClose={() => setShowDruidFeatures(false)} character={character} onUpdate={onUpdate} />
+      <SorcererFeaturesModal isOpen={showSorcererFeatures} onClose={() => setShowSorcererFeatures(false)} character={character} onUpdate={onUpdate} />
     </div>
   );
 };

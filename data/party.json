@@ -651,8 +651,8 @@
         ]
       }
     ],
-    "wildShapeActive": false,
-    "wildShapeFormId": null
+    "wildShapeActive": true,
+    "wildShapeFormId": 1772504075083
   },
   {
     "name": "Braadlei",
@@ -987,7 +987,7 @@
       {
         "id": 1770433645271,
         "name": "Sorcery Points",
-        "current": 0,
+        "current": 1,
         "max": 4
       },
       {

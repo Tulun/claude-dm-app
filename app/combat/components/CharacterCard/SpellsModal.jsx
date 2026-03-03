@@ -50,6 +50,7 @@ export default function SpellsModal({ isOpen, onClose, character }) {
   const [expandedSpell, setExpandedSpell] = useState(null);
   const [levelFilter, setLevelFilter] = useState(null);
   const [showPreparedOnly, setShowPreparedOnly] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const allSpells = character?.spells || [];
   const casterInfo = getPreparedCasterInfo(character);
@@ -57,10 +58,27 @@ export default function SpellsModal({ isOpen, onClose, character }) {
   const maxPrepared = calculateMaxPrepared(character, casterInfo);
   
   // For prepared casters, filter by prepared status (cantrips and always-prepared always show)
+  // Also filter by search query
   const spells = useMemo(() => {
-    if (!preparedCaster || !showPreparedOnly) return allSpells;
-    return allSpells.filter(s => s.prepared || s.alwaysPrepared || parseInt(s.level) === 0);
-  }, [allSpells, preparedCaster, showPreparedOnly]);
+    let filtered = allSpells;
+    
+    // Prepared caster filter
+    if (preparedCaster && showPreparedOnly) {
+      filtered = filtered.filter(s => s.prepared || s.alwaysPrepared || parseInt(s.level) === 0);
+    }
+    
+    // Search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(s => 
+        s.name?.toLowerCase().includes(query) ||
+        s.school?.toLowerCase().includes(query) ||
+        s.description?.toLowerCase().includes(query)
+      );
+    }
+    
+    return filtered;
+  }, [allSpells, preparedCaster, showPreparedOnly, searchQuery]);
 
   // Count stats (exclude always-prepared from the count against max)
   const preparedCount = allSpells.filter(s => s.prepared && parseInt(s.level) > 0 && !s.alwaysPrepared).length;
@@ -156,6 +174,19 @@ export default function SpellsModal({ isOpen, onClose, character }) {
               </button>
             </div>
           )}
+
+          {/* Search Input */}
+          {allSpells.length > 5 && (
+            <div className="mt-3">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search spells..."
+                className="w-full bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-600 placeholder-stone-500"
+              />
+            </div>
+          )}
         </div>
 
         {/* Level Filter Tabs */}
@@ -192,7 +223,19 @@ export default function SpellsModal({ isOpen, onClose, character }) {
           {spells.length === 0 ? (
             <div className="text-center py-12 text-stone-500">
               <Icons.Sparkles className="w-12 h-12 mx-auto mb-3 opacity-30" />
-              {preparedCaster && showPreparedOnly && allSpells.length > 0 ? (
+              {searchQuery.trim() ? (
+                <>
+                  <p>No spells match "{searchQuery}"</p>
+                  <p className="text-xs mt-1">
+                    <button 
+                      onClick={() => setSearchQuery('')}
+                      className="text-purple-400 hover:text-purple-300"
+                    >
+                      Clear search
+                    </button>
+                  </p>
+                </>
+              ) : preparedCaster && showPreparedOnly && allSpells.length > 0 ? (
                 <>
                   <p>No spells prepared</p>
                   <p className="text-xs mt-1">
