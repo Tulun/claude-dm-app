@@ -8141,6 +8141,79 @@
       "source": "Xanathar's Guide to Everything",
       "sourceShort": "XGtE",
       "sourceUrl": "https://dnd5e.wikidot.com/spell:healing-spirit"
+    },
+    {
+      "name": "Sorcerous Burst",
+      "level": 0,
+      "school": "Evocation",
+      "castingTime": "1 action",
+      "range": "120 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "classes": [
+        "Sorcerer"
+      ],
+      "description": "You cast sorcerous energy at one creature or object within range. Make a ranged spell attack against the target. On a hit, the target takes 1d8 damage of a type you choose: Acid, Cold, Fire, Lightning, Poison, Psychic, or Thunder.\n\nIf you roll an 8 on a d8 for this spell, you can roll another d8, and add it to the damage. When you cast this spell, the maximum number of these d8s you can add to the spell's damage equals your spellcasting ability modifier.",
+      "higherLevels": "The damage increases by 1d8 when you reach levels 5 (2d8), 11 (3d8), and 17 (4d8).",
+      "concentration": false,
+      "ritual": false,
+      "id": "spell-sorcerous-burst-1772484517148"
+    },
+    {
+      "name": "Shape Water",
+      "level": 0,
+      "school": "Transmutation",
+      "castingTime": "1 action",
+      "range": "30 feet",
+      "components": "S",
+      "duration": "Instantaneous",
+      "classes": [
+        "Druid",
+        "Sorcerer",
+        "Wizard"
+      ],
+      "description": "You choose an area of water that you can see within range and that fits within a 5-foot cube. You manipulate it in one of the following ways:\n\n• You instantaneously move or otherwise change the flow of the water as you direct, up to 5 feet in any direction. This movement doesn't have enough force to cause damage.\n• You cause the water to form into simple shapes and animate at your direction. This change lasts for 1 hour.\n• You change the water's color or opacity. The water must be changed in the same way throughout. This change lasts for 1 hour.\n• You freeze the water, provided that there are no creatures in it. The water unfreezes in 1 hour.\n\nIf you cast this spell multiple times, you can have no more than two of its non-instantaneous effects active at a time, and you can dismiss such an effect as an action.",
+      "higherLevels": null,
+      "concentration": false,
+      "ritual": false,
+      "id": "spell-shape-water-1772484581102"
+    },
+    {
+      "name": "Chromatic Orb",
+      "level": 1,
+      "school": "Evocation",
+      "castingTime": "1 action",
+      "range": "90 ft.",
+      "components": "V, S, M (a diamond worth 50+ GP)",
+      "duration": "Instantaneous",
+      "classes": [
+        "Sorcerer",
+        "Wizard"
+      ],
+      "description": "You hurl an orb of energy at a target within range. Choose Acid, Cold, Fire, Lightning, Poison, or Thunder for the type of orb you create, and then make a ranged spell attack against the target. On a hit, the target takes 3d8 damage of the chosen type.\n\nIf you roll the same number on two or more of the d8s, the orb leaps to a different target of your choice within 30 feet of the target. Make an attack roll against the new target, and make a new damage roll. The orb can't leap again unless you cast the spell with a level 2+ spell slot.",
+      "higherLevels": "The damage increases by 1d8 for each spell slot level above 1. The orb can leap a maximum number of times equal to the level of the slot expended, and a creature can be targeted only once by each casting of this spell.",
+      "concentration": false,
+      "ritual": false,
+      "id": "spell-chromatic-orb-1772484713047"
+    },
+    {
+      "name": "Dragons Breath",
+      "level": 2,
+      "school": "Transmutation",
+      "castingTime": "1 Bonus Action",
+      "range": "Touch (15 ft.)",
+      "components": "V, S, M (a hot pepper)",
+      "duration": "1 Minute",
+      "classes": [
+        "Sorcerer",
+        "Wizard",
+        "Artificer"
+      ],
+      "description": "You touch one willing creature, and choose Acid, Cold, Fire, Lightning, or Poison. Until the spell ends, the target can take a Magic action to exhale a 15-foot Cone. Each creature in that area makes a Dexterity saving throw, taking 3d6 damage of the chosen type on a failed save or half as much damage on a successful one.",
+      "higherLevels": "The damage increases by 1d6 for each spell slot level above 2.",
+      "concentration": false,
+      "ritual": false,
+      "id": "spell-dragons-breath-1772484802463"
     }
   ]
 }

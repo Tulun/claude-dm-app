@@ -221,6 +221,7 @@ export default function SpellsModal({ isOpen, onClose, character }) {
                   expanded={expandedSpell === spell.id}
                   onToggle={() => setExpandedSpell(expandedSpell === spell.id ? null : spell.id)}
                   showPreparedBadge={preparedCaster && !showPreparedOnly}
+                  character={character}
                 />
               ))}
             </div>
@@ -241,6 +242,7 @@ export default function SpellsModal({ isOpen, onClose, character }) {
                         expanded={expandedSpell === spell.id}
                         onToggle={() => setExpandedSpell(expandedSpell === spell.id ? null : spell.id)}
                         showPreparedBadge={preparedCaster && !showPreparedOnly && parseInt(spell.level) > 0}
+                        character={character}
                       />
                     ))}
                   </div>
@@ -254,7 +256,49 @@ export default function SpellsModal({ isOpen, onClose, character }) {
   );
 }
 
-function SpellRow({ spell, expanded, onToggle, showPreparedBadge }) {
+// Abbreviate casting time for compact display
+function abbreviateCastTime(castTime) {
+  if (!castTime) return '—';
+  const lower = castTime.toLowerCase();
+  if (lower.startsWith('reaction')) return 'Reaction';
+  if (lower.startsWith('bonus action')) return 'Bonus';
+  if (lower === '1 action') return 'Action';
+  if (lower.includes('minute')) return castTime.match(/\d+\s*min/i)?.[0] || castTime;
+  if (lower.includes('hour')) return castTime.match(/\d+\s*h(ou)?r/i)?.[0] || castTime;
+  return castTime;
+}
+
+// Extract save type from spell description
+function extractSaveType(description) {
+  if (!description) return null;
+  const lower = description.toLowerCase();
+  const saveMatch = lower.match(/(strength|dexterity|constitution|intelligence|wisdom|charisma)\s+sav(e|ing)/i);
+  if (saveMatch) {
+    const stat = saveMatch[1].toLowerCase();
+    const abbrev = { strength: 'STR', dexterity: 'DEX', constitution: 'CON', intelligence: 'INT', wisdom: 'WIS', charisma: 'CHA' };
+    return abbrev[stat] || null;
+  }
+  return null;
+}
+
+// Calculate spell save DC: 8 + proficiency + spellcasting mod
+// +1 if Innate Sorcery is active (Sorcerer feature)
+function calculateSpellDC(character) {
+  if (!character?.spellStat) return null;
+  const getMod = (score) => Math.floor(((parseInt(score) || 10) - 10) / 2);
+  const profBonus = Math.ceil(1 + (parseInt(character.level) || 1) / 4);
+  const statMap = { int: 'int', wis: 'wis', cha: 'cha' };
+  const stat = statMap[character.spellStat];
+  if (!stat) return null;
+  let dc = 8 + profBonus + getMod(character[stat]);
+  
+  // Innate Sorcery gives +1 to spell save DC when active
+  if (character.innateSorcery) dc += 1;
+  
+  return dc;
+}
+
+function SpellRow({ spell, expanded, onToggle, showPreparedBadge, character }) {
   const hasDetails = spell.description || spell.components || spell.duration;
   
   return (
@@ -300,13 +344,27 @@ function SpellRow({ spell, expanded, onToggle, showPreparedBadge }) {
 
         {/* Cast Time */}
         <span className="text-xs text-stone-400 w-20 text-center flex-shrink-0">
-          {spell.castTime || spell.castingTime || '—'}
+          {abbreviateCastTime(spell.castTime || spell.castingTime)}
         </span>
 
         {/* Range */}
         <span className="text-xs text-stone-400 w-16 text-center flex-shrink-0">
           {spell.range || '—'}
         </span>
+
+        {/* Save DC */}
+        {(() => {
+          const saveType = extractSaveType(spell.description);
+          const dc = calculateSpellDC(character);
+          if (saveType && dc) {
+            return (
+              <span className="text-xs text-red-400 w-16 text-center flex-shrink-0" title={`${saveType} Save DC ${dc}`}>
+                {saveType} {dc}
+              </span>
+            );
+          }
+          return <span className="w-16 flex-shrink-0" />;
+        })()}
 
         {/* Expand/Collapse */}
         {hasDetails && (
@@ -326,6 +384,11 @@ function SpellRow({ spell, expanded, onToggle, showPreparedBadge }) {
       {expanded && hasDetails && (
         <div className="px-3 pb-3 border-t border-stone-700/50">
           <div className="pt-3 space-y-2 text-sm">
+            {(spell.castTime || spell.castingTime) && (
+              <p className="text-stone-400">
+                <span className="text-stone-500">Casting Time:</span> {spell.castTime || spell.castingTime}
+              </p>
+            )}
             {spell.components && (
               <p className="text-stone-400">
                 <span className="text-stone-500">Components:</span> {spell.components}

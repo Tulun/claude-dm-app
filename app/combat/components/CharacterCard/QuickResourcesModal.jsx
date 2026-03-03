@@ -143,6 +143,36 @@ const QuickResourcesModal = ({ isOpen, character, onUpdate, onClose }) => {
             </div>
           )}
 
+          {/* Metamagic Options - Show for Sorcerers with Metamagic feature */}
+          {(() => {
+            // Find Metamagic feature and its options
+            const metamagicFeature = (character.features || []).find(f => 
+              f.name?.toLowerCase().includes('metamagic')
+            );
+            const metamagicOptions = metamagicFeature?.options || [];
+            
+            if (!isSorcerer || metamagicOptions.length === 0) return null;
+            
+            return (
+              <div className="bg-orange-900/20 border border-orange-700/50 rounded-lg p-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <Icons.Sparkles className="text-orange-400" />
+                  <span className="font-medium text-orange-300">Metamagic Options</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {metamagicOptions.map((option, idx) => (
+                    <span 
+                      key={idx} 
+                      className="px-3 py-1.5 bg-orange-900/40 border border-orange-700/50 rounded-lg text-sm text-orange-200"
+                    >
+                      {option}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Resources Section */}
           {hasResources && (
             <div className="space-y-3">

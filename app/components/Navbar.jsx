@@ -37,11 +37,20 @@ export default function Navbar({ onTabChange, activeTab, saveStatus }) {
   ];
 
   const handleClick = (item, e) => {
-    // If on main page and clicking a tab that uses onTabChange
-    if (onTabChange && (item.key === 'combat' || item.key === 'characters' || item.key === 'templates')) {
+    // If on combat page and clicking a tab that uses onTabChange
+    if (onTabChange && pathname === '/combat' && (item.key === 'combat' || item.key === 'characters' || item.key === 'templates')) {
       e.preventDefault();
       onTabChange(item.key);
     }
+  };
+
+  const handleLogoClick = (e) => {
+    // If we have onTabChange, use it to switch to combat tab
+    if (onTabChange && pathname === '/combat') {
+      e.preventDefault();
+      onTabChange('combat');
+    }
+    // Otherwise, let the Link navigate normally
   };
 
   return (
@@ -49,7 +58,11 @@ export default function Navbar({ onTabChange, activeTab, saveStatus }) {
       <div className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/combat" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <Link 
+            href="/combat" 
+            onClick={handleLogoClick}
+            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+          >
             <div className="p-2 rounded-lg bg-gradient-to-br from-amber-600 to-amber-800">
               <Icons.Dice className="w-5 h-5" />
             </div>

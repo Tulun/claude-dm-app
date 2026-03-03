@@ -7,6 +7,18 @@ const SCHOOLS = ['Abjuration', 'Conjuration', 'Divination', 'Enchantment', 'Evoc
 const CLASSES = ['Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger', 'Sorcerer', 'Warlock', 'Wizard'];
 const LEVELS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+// Abbreviate casting time for compact display
+function abbreviateCastTime(castTime) {
+  if (!castTime) return '—';
+  const lower = castTime.toLowerCase();
+  if (lower.startsWith('reaction')) return 'Reaction';
+  if (lower.startsWith('bonus action')) return 'Bonus';
+  if (lower === '1 action') return 'Action';
+  if (lower.includes('minute')) return castTime.match(/\d+\s*min/i)?.[0] || castTime;
+  if (lower.includes('hour')) return castTime.match(/\d+\s*h(ou)?r/i)?.[0] || castTime;
+  return castTime;
+}
+
 export default function SpellPickerModal({ isOpen, onClose, onAddSpells, characterSpells = [], characterClasses = [] }) {
   const [allSpells, setAllSpells] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -265,7 +277,7 @@ export default function SpellPickerModal({ isOpen, onClose, onAddSpells, charact
                           )}
                         </div>
                         <p className="text-xs text-stone-400">
-                          {getLevelLabel(spell.level)} {spell.school} • {spell.castingTime} • {spell.range}
+                          {getLevelLabel(spell.level)} {spell.school} • {abbreviateCastTime(spell.castingTime)} • {spell.range}
                         </p>
                       </div>
 
@@ -288,6 +300,9 @@ export default function SpellPickerModal({ isOpen, onClose, onAddSpells, charact
                     {isExpanded && (
                       <div className="px-3 pb-3 pt-0 border-t border-stone-700/50 mt-0">
                         <div className="pt-3 space-y-2 text-sm">
+                          <p className="text-stone-400">
+                            <span className="text-stone-500">Casting Time:</span> {spell.castingTime}
+                          </p>
                           <p className="text-stone-400">
                             <span className="text-stone-500">Components:</span> {spell.components}
                           </p>

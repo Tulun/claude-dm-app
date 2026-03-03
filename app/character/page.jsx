@@ -153,7 +153,20 @@ export default function CharacterPage() {
       <header className="border-b border-stone-800 bg-stone-900 sticky top-0 z-10">
         <div className="max-w-[1800px] mx-auto px-4 py-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => router.back()} className="p-1.5 rounded bg-stone-800 hover:bg-stone-700">
+            {/* Logo - click to go back to combat */}
+            <button 
+              onClick={() => router.push('/combat')} 
+              className="flex items-center gap-2 hover:opacity-80 transition-opacity mr-2"
+            >
+              <div className="p-1.5 rounded-lg bg-gradient-to-br from-amber-600 to-amber-800">
+                <Icons.Dice className="w-4 h-4" />
+              </div>
+              <span className="text-amber-400 font-bold hidden sm:inline">DM's Toolkit</span>
+            </button>
+            
+            <div className="h-6 w-px bg-stone-700"></div>
+            
+            <button onClick={() => router.back()} className="p-1.5 rounded bg-stone-800 hover:bg-stone-700" title="Go back">
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                 <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
               </svg>

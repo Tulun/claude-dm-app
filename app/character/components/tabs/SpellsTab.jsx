@@ -313,13 +313,27 @@ export default function SpellsTab({ character, onUpdate }) {
 
                             {/* Cast Time */}
                             <span className="text-xs text-stone-400 w-20 text-center flex-shrink-0">
-                              {spell.castTime || spell.castingTime || '—'}
+                              {abbreviateCastTime(spell.castTime || spell.castingTime)}
                             </span>
 
                             {/* Range */}
                             <span className="text-xs text-stone-400 w-16 text-center flex-shrink-0">
                               {spell.range || '—'}
                             </span>
+
+                            {/* Save DC */}
+                            {(() => {
+                              const saveType = extractSaveType(spell.description);
+                              const dc = calculateSpellDC(character);
+                              if (saveType && dc) {
+                                return (
+                                  <span className="text-xs text-red-400 w-16 text-center flex-shrink-0" title={`${saveType} Save DC ${dc}`}>
+                                    {saveType} {dc}
+                                  </span>
+                                );
+                              }
+                              return <span className="w-16 flex-shrink-0" />;
+                            })()}
 
                             {/* Expand/Collapse Indicator */}
                             {hasDetails && (
@@ -332,6 +346,24 @@ export default function SpellsTab({ character, onUpdate }) {
                                   <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
                                 </svg>
                               </div>
+                            )}
+
+                            {/* Always Prepared Toggle (for non-cantrips) */}
+                            {preparedCaster && parseInt(spell.level) > 0 && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleAlwaysPrepared(spell.id);
+                                }}
+                                className={`p-1 flex-shrink-0 transition-colors ${
+                                  spell.alwaysPrepared 
+                                    ? 'text-cyan-400 hover:text-cyan-300' 
+                                    : 'text-stone-600 hover:text-cyan-400'
+                                }`}
+                                title={spell.alwaysPrepared ? 'Remove always prepared (subclass spell)' : 'Mark as always prepared (subclass spell)'}
+                              >
+                                <Icons.Star className="w-3 h-3" />
+                              </button>
                             )}
 
                             {/* Remove */}
@@ -350,6 +382,11 @@ export default function SpellsTab({ character, onUpdate }) {
                           {isExpanded && hasDetails && (
                             <div className="px-3 pb-3 border-t border-stone-700/50">
                               <div className="pt-3 space-y-2 text-sm">
+                                {(spell.castTime || spell.castingTime) && (
+                                  <p className="text-stone-400">
+                                    <span className="text-stone-500">Casting Time:</span> {spell.castTime || spell.castingTime}
+                                  </p>
+                                )}
                                 {spell.components && (
                                   <p className="text-stone-400">
                                     <span className="text-stone-500">Components:</span> {spell.components}
@@ -424,6 +461,54 @@ function getOrdinalSuffix(n) {
   const s = ['th', 'st', 'nd', 'rd'];
   const v = n % 100;
   return s[(v - 20) % 10] || s[v] || s[0];
+}
+
+// Abbreviate casting time for compact display
+function abbreviateCastTime(castTime) {
+  if (!castTime) return '—';
+  const lower = castTime.toLowerCase();
+  if (lower.startsWith('reaction')) return 'Reaction';
+  if (lower.startsWith('bonus action')) return 'Bonus';
+  if (lower === '1 action') return 'Action';
+  if (lower.includes('minute')) return castTime.match(/\d+\s*min/i)?.[0] || castTime;
+  if (lower.includes('hour')) return castTime.match(/\d+\s*h(ou)?r/i)?.[0] || castTime;
+  return castTime;
+}
+
+// Extract save type from spell description
+function extractSaveType(description) {
+  if (!description) return null;
+  const lower = description.toLowerCase();
+  
+  // Match patterns like "Strength saving throw", "a Dexterity save", "Constitution saving throw"
+  const saveMatch = lower.match(/(strength|dexterity|constitution|intelligence|wisdom|charisma)\s+sav(e|ing)/i);
+  if (saveMatch) {
+    const stat = saveMatch[1].toLowerCase();
+    const abbrev = { strength: 'STR', dexterity: 'DEX', constitution: 'CON', intelligence: 'INT', wisdom: 'WIS', charisma: 'CHA' };
+    return abbrev[stat] || null;
+  }
+  return null;
+}
+
+// Calculate spell save DC: 8 + proficiency + spellcasting mod
+// +1 if Innate Sorcery is active (Sorcerer feature)
+function calculateSpellDC(character) {
+  if (!character.spellStat) return null;
+  
+  const getMod = (score) => Math.floor(((parseInt(score) || 10) - 10) / 2);
+  const profBonus = Math.ceil(1 + (parseInt(character.level) || 1) / 4);
+  
+  const statMap = { int: 'int', wis: 'wis', cha: 'cha' };
+  const stat = statMap[character.spellStat];
+  if (!stat) return null;
+  
+  const mod = getMod(character[stat]);
+  let dc = 8 + profBonus + mod;
+  
+  // Innate Sorcery gives +1 to spell save DC when active
+  if (character.innateSorcery) dc += 1;
+  
+  return dc;
 }
 
 function getCharacterClasses(character) {

@@ -122,13 +122,15 @@ export default function StatsBar({ character, isParty, onUpdate }) {
           {STATS.map(stat => {
             const statMod = getMod(character[stat]);
             return (
-              <div key={stat} className="bg-stone-800 rounded p-2 text-center w-16">
+              <div key={stat} className="bg-stone-800 rounded p-2 text-center w-16 group">
                 <div className="text-[10px] text-stone-500 uppercase">{stat}</div>
                 <input 
-                  type="text" 
+                  type="number" 
+                  min="1"
+                  max="30"
                   value={character[stat] || 10} 
                   onChange={(e) => onUpdate(stat, parseInt(e.target.value) || 10)}
-                  className="w-full bg-transparent text-xl font-bold text-center focus:outline-none" 
+                  className="w-full bg-transparent text-xl font-bold text-center focus:outline-none focus:bg-stone-700/50 rounded hover:bg-stone-700/30 transition-colors cursor-text [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
                 />
                 <div className="text-sm text-stone-400 font-mono">{formatMod(statMod)}</div>
               </div>
