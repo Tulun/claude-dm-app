@@ -5,3 +5,4 @@ export { default as FeaturesTab } from './FeaturesTab';
 export { default as BackgroundTab } from './BackgroundTab';
 export { default as NotesTab } from './NotesTab';
 export { default as CompanionsTab } from './CompanionsTab';
+export { default as WildShapeTab } from './WildShapeTab';

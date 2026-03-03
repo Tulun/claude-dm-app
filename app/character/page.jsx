@@ -18,6 +18,7 @@ import {
   BackgroundTab,
   NotesTab,
   CompanionsTab,
+  WildShapeTab,
   formatClasses,
 } from './components';
 
@@ -28,6 +29,7 @@ export default function CharacterPage() {
   const type = searchParams.get('type');
   
   const [character, setCharacter] = useState(null);
+  const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState('');
   const [hasChanges, setHasChanges] = useState(false);
@@ -41,10 +43,14 @@ export default function CharacterPage() {
     const loadCharacter = async () => {
       if (!id || !type) { setLoading(false); return; }
       try {
-        const endpoint = type === 'party' ? '/api/party' : '/api/templates';
-        const res = await fetch(endpoint);
-        if (res.ok) {
-          const data = await res.json();
+        // Load both character and templates
+        const [charRes, templatesRes] = await Promise.all([
+          fetch(type === 'party' ? '/api/party' : '/api/templates'),
+          fetch('/api/templates'),
+        ]);
+        
+        if (charRes.ok) {
+          const data = await charRes.json();
           const found = data.find(c => c.id === id);
           if (found) {
             // Initialize missing fields
@@ -57,6 +63,11 @@ export default function CharacterPage() {
             if (!found.advantages) found.advantages = [];
             setCharacter(found);
           }
+        }
+        
+        if (templatesRes.ok) {
+          const templatesData = await templatesRes.json();
+          setTemplates(templatesData || []);
         }
       } catch (err) { console.error('Error loading character:', err); }
       setLoading(false);
@@ -127,7 +138,18 @@ export default function CharacterPage() {
   }
 
   const isParty = type === 'party';
-  const tabs = ['resources', 'inventory', 'companions', 'spells', 'features', 'background', 'notes'];
+  
+  // Check if character is a druid level 2+
+  const isDruid = () => {
+    if (character?.classes) {
+      const druid = character.classes.find(c => c.name?.toLowerCase() === 'druid');
+      return druid && parseInt(druid.level) >= 2;
+    }
+    return character?.class?.toLowerCase() === 'druid' && parseInt(character?.level) >= 2;
+  };
+  
+  const baseTabs = ['resources', 'inventory', 'companions', 'spells', 'features', 'background', 'notes'];
+  const tabs = isDruid() ? ['resources', 'inventory', 'wild shape', 'companions', 'spells', 'features', 'background', 'notes'] : baseTabs;
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100">
@@ -277,6 +299,7 @@ export default function CharacterPage() {
             <div className="bg-stone-900 rounded-lg p-4 min-h-[500px]">
               {activeTab === 'resources' && <ResourcesTab character={character} onUpdate={updateField} />}
               {activeTab === 'inventory' && <InventoryTab character={character} onUpdate={updateField} />}
+              {activeTab === 'wild shape' && <WildShapeTab character={character} onUpdate={updateField} templates={templates} />}
               {activeTab === 'companions' && <CompanionsTab character={character} onUpdate={updateField} />}
               {activeTab === 'spells' && <SpellsTab character={character} onUpdate={updateField} />}
               {activeTab === 'features' && <FeaturesTab character={character} onUpdate={updateField} />}

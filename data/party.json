@@ -6,7 +6,7 @@
     "ac": 15,
     "maxHp": 35,
     "speed": 30,
-    "notes": "6 temp hp ",
+    "notes": "",
     "resources": [
       {
         "id": 1770233816410,
@@ -25,6 +25,26 @@
         "name": "2nd Level Spell Slot",
         "current": 0,
         "max": 3
+      },
+      {
+        "id": 1772499568807,
+        "name": "Spirit Totem",
+        "current": 1,
+        "max": 1,
+        "options": [
+          {
+            "name": "Bear Spirit",
+            "description": "The bear spirit grants you and your allies its might and endurance. Each creature of your choice in the aura when the spirit appears gains temporary hit points equal to 5 + your druid level. In addition, you and your allies gain advantage on Strength checks and Strength saving throws while in the aura."
+          },
+          {
+            "name": "Hawk Spirit",
+            "description": "The hawk spirit is a consummate hunter, aiding you and your allies with its keen sight. When a creature makes an attack roll against a target in the spirit’s aura, you can use your reaction to grant advantage to that attack roll. In addition, you and your allies have advantage on Wisdom (Perception) checks while in the aura."
+          },
+          {
+            "name": "Unicorn Spirit",
+            "description": "The unicorn spirit lends its protection to those nearby. You and your allies gain advantage on all ability checks made to detect creatures in the spirit’s aura. In addition, if you cast a spell using a spell slot that restores hit points to any creature inside or outside the aura, each creature of your choice in the aura also regains hit points equal to your druid level."
+          }
+        ]
       }
     ],
     "str": 10,
@@ -179,6 +199,230 @@
         "ritual": true,
         "prepared": true,
         "alwaysPrepared": true
+      },
+      {
+        "id": 1772499460201.1946,
+        "sourceId": "spell-fog-cloud",
+        "name": "Fog Cloud",
+        "level": 1,
+        "school": "Conjuration",
+        "castTime": "Action",
+        "range": "120 feet",
+        "components": "V, S",
+        "duration": "Concentration, up to 1 hour",
+        "description": "You create a 20-foot-radius Sphere of fog centered on a point within range. The Sphere is Heavily Obscured. It lasts for the duration or until a strong wind (such as one created by Gust of Wind) disperses it.",
+        "higherLevels": "The fog's radius increases by 20 feet for each slot level above 1.",
+        "concentration": true,
+        "ritual": false,
+        "prepared": false
+      },
+      {
+        "id": 1772499460201.1353,
+        "sourceId": "spell-healing-word",
+        "name": "Healing Word",
+        "level": 1,
+        "school": "Abjuration",
+        "castTime": "Bonus Action",
+        "range": "60 feet",
+        "components": "V",
+        "duration": "Instantaneous",
+        "description": "A creature of your choice that you can see within range regains Hit Points equal to 2d4 plus your spellcasting ability modifier.",
+        "higherLevels": "The healing increases by 2d4 for each slot level above 1.",
+        "concentration": false,
+        "ritual": false,
+        "prepared": false
+      },
+      {
+        "id": 1772499460201.9822,
+        "sourceId": "spell-jump",
+        "name": "Jump",
+        "level": 1,
+        "school": "Transmutation",
+        "castTime": "Bonus Action",
+        "range": "Touch",
+        "components": "V, S, M (a grasshopper's hind leg)",
+        "duration": "1 minute",
+        "description": "You touch a willing creature. Once on each of its turns until the spell ends, that creature can jump up to 30 feet by spending 10 feet of movement.",
+        "higherLevels": null,
+        "concentration": false,
+        "ritual": false,
+        "prepared": false
+      },
+      {
+        "id": 1772499460201.7373,
+        "sourceId": "spell-protection-from-evil-and-good",
+        "name": "Protection from Evil and Good",
+        "level": 1,
+        "school": "Abjuration",
+        "castTime": "Action",
+        "range": "Touch",
+        "components": "V, S, M (a flask of Holy Water worth 25+ GP, which the spell consumes)",
+        "duration": "Concentration, up to 10 minutes",
+        "description": "Until the spell ends, one willing creature you touch is protected against creatures that are Aberrations, Celestials, Elementals, Fey, Fiends, or Undead. The protection grants several benefits:\n\nAttack Disadvantage. Creatures of those types have Disadvantage on attack rolls against the target.\n\nNo Charming, Frightening, or Possession. The target can't be possessed by, or gain the Charmed or Frightened condition from, creatures of those types.\n\nBreak Possession or Charm. If the target is already possessed, Charmed, or Frightened by a creature of those types, the target has Advantage on any new saving throw against the effect.",
+        "higherLevels": null,
+        "concentration": true,
+        "ritual": false,
+        "prepared": false
+      },
+      {
+        "id": 1772499460201.371,
+        "sourceId": "spell-longstrider",
+        "name": "Longstrider",
+        "level": 1,
+        "school": "Transmutation",
+        "castTime": "Action",
+        "range": "Touch",
+        "components": "V, S, M (a pinch of dirt)",
+        "duration": "1 hour",
+        "description": "You touch a creature. The target's Speed increases by 10 feet until the spell ends.",
+        "higherLevels": "You can target one additional creature for each slot level above 1.",
+        "concentration": false,
+        "ritual": false,
+        "prepared": false
+      },
+      {
+        "id": 1772499460201.5032,
+        "sourceId": "spell-purify-food-and-drink",
+        "name": "Purify Food and Drink",
+        "level": 1,
+        "school": "Transmutation",
+        "castTime": "Action",
+        "range": "10 feet",
+        "components": "V, S",
+        "duration": "Instantaneous",
+        "description": "You remove poison and disease from nonmagical food and drink in a 5-foot-radius Sphere centered on a point within range.",
+        "higherLevels": null,
+        "concentration": false,
+        "ritual": true,
+        "prepared": false
+      },
+      {
+        "id": 1772499460201.944,
+        "sourceId": "spell-thunderwave",
+        "name": "Thunderwave",
+        "level": 1,
+        "school": "Evocation",
+        "castTime": "Action",
+        "range": "Self (15-foot cube)",
+        "components": "V, S",
+        "duration": "Instantaneous",
+        "description": "A wave of thunderous force sweeps out from you. Each creature in a 15-foot Cube originating from you makes a Constitution saving throw. On a failed save, a creature takes 2d8 Thunder damage and is pushed 10 feet away from you. On a successful save, a creature takes half as much damage only.\n\nIn addition, unsecured objects that are completely within the area are pushed 10 feet away from you, and a thunderous boom is audible within 300 feet.",
+        "higherLevels": "The damage increases by 1d8 for each slot level above 1.",
+        "concentration": false,
+        "ritual": false,
+        "prepared": false
+      },
+      {
+        "id": 1772499530644.4521,
+        "sourceId": "spell-aid",
+        "name": "Aid",
+        "level": 2,
+        "school": "Abjuration",
+        "castTime": "Action",
+        "range": "30 feet",
+        "components": "V, S, M (a strip of white cloth)",
+        "duration": "8 hours",
+        "description": "Choose up to three creatures within range. Each target's Hit Point maximum and current Hit Points increase by 5 for the duration.",
+        "higherLevels": "Each target's Hit Points increase by 5 for each slot level above 2.",
+        "concentration": false,
+        "ritual": false,
+        "prepared": false
+      },
+      {
+        "id": 1772499530644.2383,
+        "sourceId": "spell-barkskin",
+        "name": "Barkskin",
+        "level": 2,
+        "school": "Transmutation",
+        "castTime": "Bonus Action",
+        "range": "Touch",
+        "components": "V, S, M (a handful of bark)",
+        "duration": "1 hour",
+        "description": "You touch a willing creature. Until the spell ends, the target's skin assumes a bark-like appearance, and the target has an Armor Class of 17 if its AC is lower than that.",
+        "higherLevels": null,
+        "concentration": false,
+        "ritual": false,
+        "prepared": false
+      },
+      {
+        "id": 1772499530644.075,
+        "sourceId": "spell-enhance-ability",
+        "name": "Enhance Ability",
+        "level": 2,
+        "school": "Transmutation",
+        "castTime": "Action",
+        "range": "Touch",
+        "components": "V, S, M (fur or a feather)",
+        "duration": "Concentration, up to 1 hour",
+        "description": "You touch a creature and choose Strength, Dexterity, Constitution, Intelligence, Wisdom, or Charisma. For the duration, the target has Advantage on ability checks using the chosen ability.",
+        "higherLevels": "You can target one additional creature for each slot level above 2. You can choose a different ability for each target.",
+        "concentration": true,
+        "ritual": false,
+        "prepared": false
+      },
+      {
+        "id": 1772499530644.2349,
+        "sourceId": "spell-heat-metal",
+        "name": "Heat Metal",
+        "level": 2,
+        "school": "Transmutation",
+        "castTime": "Action",
+        "range": "60 feet",
+        "components": "V, S, M (a piece of iron and a flame)",
+        "duration": "Concentration, up to 1 minute",
+        "description": "Choose a manufactured metal object, such as a metal weapon or a suit of heavy or medium metal armor, that you can see within range. You cause the object to glow red-hot. Any creature in physical contact with the object takes 2d8 Fire damage when you cast the spell. Until the spell ends, you can take a Bonus Action on each of your later turns to deal this damage again if the creature is still in contact with the object.\n\nIf a creature is holding or wearing the object and takes the damage from it, the creature must succeed on a Constitution saving throw or drop the object if it can. If it doesn't drop the object, it has Disadvantage on attack rolls and ability checks until the start of your next turn.",
+        "higherLevels": "The damage increases by 1d8 for each slot level above 2.",
+        "concentration": true,
+        "ritual": false,
+        "prepared": false
+      },
+      {
+        "id": 1772499530644.3486,
+        "sourceId": "spell-hold-person",
+        "name": "Hold Person",
+        "level": 2,
+        "school": "Enchantment",
+        "castTime": "Action",
+        "range": "60 feet",
+        "components": "V, S, M (a straight piece of iron)",
+        "duration": "Concentration, up to 1 minute",
+        "description": "Choose a Humanoid that you can see within range. The target must succeed on a Wisdom saving throw or have the Paralyzed condition for the duration. At the end of each of its turns, the target repeats the save, ending the spell on itself on a success.",
+        "higherLevels": "You can target one additional Humanoid for each slot level above 2.",
+        "concentration": true,
+        "ritual": false,
+        "prepared": false
+      },
+      {
+        "id": 1772499530644.0647,
+        "sourceId": "spell-pass-without-trace",
+        "name": "Pass without Trace",
+        "level": 2,
+        "school": "Abjuration",
+        "castTime": "Action",
+        "range": "Self (30-foot emanation)",
+        "components": "V, S, M (ashes from burned mistletoe)",
+        "duration": "Concentration, up to 1 hour",
+        "description": "You radiate a concealing aura in a 30-foot Emanation for the duration. While in the aura, you and each creature you choose have a +10 bonus to Dexterity (Stealth) checks and leave no tracks.",
+        "higherLevels": null,
+        "concentration": true,
+        "ritual": false,
+        "prepared": false
+      },
+      {
+        "id": 1772499530644.3604,
+        "sourceId": "spell-spike-growth",
+        "name": "Spike Growth",
+        "level": 2,
+        "school": "Transmutation",
+        "castTime": "Action",
+        "range": "150 feet",
+        "components": "V, S, M (seven thorns)",
+        "duration": "Concentration, up to 10 minutes",
+        "description": "The ground in a 20-foot-radius Sphere centered on a point within range twists and sprouts hard spikes and thorns. The area becomes Difficult Terrain for the duration. When a creature moves into or within the area, it takes 2d4 Piercing damage for every 5 feet it travels.\n\nThe transformation of the ground is camouflaged to look natural. Any creature that can't see the area when the spell is cast must take a Search action and succeed on a Wisdom (Perception or Survival) check against your spell save DC to recognize the terrain as hazardous before entering it.",
+        "higherLevels": null,
+        "concentration": true,
+        "ritual": false,
+        "prepared": false
       }
     ],
     "inventory": [
@@ -280,7 +524,33 @@
         "initiative": 15
       }
     ],
-    "tempHp": 4
+    "tempHp": 4,
+    "wildShapeForms": [
+      {
+        "id": 1772503025538,
+        "templateId": "mm-spider",
+        "name": "Spider",
+        "currentHp": 1
+      },
+      {
+        "id": 1772503055221,
+        "templateId": "mm-rat",
+        "name": "Rat",
+        "currentHp": 1
+      },
+      {
+        "id": 1772503066398,
+        "templateId": "mm-riding-horse",
+        "name": "Riding Horse",
+        "currentHp": 13
+      },
+      {
+        "id": 1772503082392,
+        "templateId": "mm-wolf",
+        "name": "Wolf",
+        "currentHp": 11
+      }
+    ]
   },
   {
     "name": "Braadlei",
