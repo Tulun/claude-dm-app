@@ -778,9 +778,9 @@
     "saveProficiencies": {},
     "features": [
       {
-        "id": 1772567159352,
+        "id": 1772576556182,
         "name": "Inspiring Leader",
-        "description": "After rest, 10-minute speech grants up to 6 creatures temp HP = level + WIS or CHA mod.",
+        "description": "Bolstering Performance: When you finish a Short or Long Rest, you can give an inspiring performance (speech, song, or dance). Choose up to 6 allies within 30 feet who witness it. They each gain Temporary HP equal to your level + the modifier of the ability you increased with this feat.",
         "source": "General",
         "category": "General",
         "prerequisite": "WIS or CHA 13+",

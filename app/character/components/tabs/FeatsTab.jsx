@@ -162,7 +162,22 @@ export default function FeatsTab({ character, onUpdate }) {
   };
 
   const updateFeature = (id, field, value) => { onUpdate('features', character.features.map(f => f.id === id ? { ...f, [field]: value } : f)); };
-  const removeFeature = (id) => { onUpdate('features', character.features.filter(f => f.id !== id)); };
+  
+  const removeFeature = (id) => {
+    const feature = character.features.find(f => f.id === id);
+    if (feature && feature.chosenAbility && !feature.custom) {
+      // Reverse the stat boost
+      const boost = feature.abilityBoost?.special === 'asi' ? (feature.asiMode === 'single' ? 2 : 1) : (feature.abilityBoost?.amount || 1);
+      const currentVal = character[feature.chosenAbility] || 10;
+      onUpdate(feature.chosenAbility, Math.max(currentVal - boost, 1));
+      if (feature.chosenAbility2) {
+        const currentVal2 = character[feature.chosenAbility2] || 10;
+        onUpdate(feature.chosenAbility2, Math.max(currentVal2 - 1, 1));
+      }
+    }
+    onUpdate('features', character.features.filter(f => f.id !== id));
+  };
+  
   const features = character.features || [];
 
   return (
