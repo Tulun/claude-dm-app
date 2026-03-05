@@ -778,7 +778,7 @@
     "saveProficiencies": {},
     "features": [
       {
-        "id": 1772576556182,
+        "id": 1772585910208,
         "name": "Inspiring Leader",
         "description": "Bolstering Performance: When you finish a Short or Long Rest, you can give an inspiring performance (speech, song, or dance). Choose up to 6 allies within 30 feet who witness it. They each gain Temporary HP equal to your level + the modifier of the ability you increased with this feat.",
         "source": "General",
@@ -1126,7 +1126,16 @@
       "con": 1,
       "cha": 1
     },
-    "features": [],
+    "features": [
+      {
+        "id": 1772586355277,
+        "name": "Metamagic",
+        "description": "Sorcerer feature allowing you to twist spells.",
+        "options": [
+          "Twinned Spell"
+        ]
+      }
+    ],
     "spells": [
       {
         "id": 1772329595949.5176,

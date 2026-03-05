@@ -40,6 +40,7 @@ export default function WildShapeTab({ character, onUpdate, templates = [] }) {
   const [showBeastPicker, setShowBeastPicker] = useState(false);
   const [crFilter, setCrFilter] = useState(null);
   const [beastSearch, setBeastSearch] = useState('');
+  const [formSort, setFormSort] = useState('name'); // 'name' or 'cr'
 
   // Get druid level
   const getDruidLevel = () => {
@@ -289,7 +290,24 @@ export default function WildShapeTab({ character, onUpdate, templates = [] }) {
       {/* Known Forms */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-medium text-stone-300">Known Beast Forms</h3>
+          <div className="flex items-center gap-3">
+            <h3 className="font-medium text-stone-300">Known Beast Forms</h3>
+            <div className="flex items-center gap-1 text-xs">
+              <span className="text-stone-500">Sort:</span>
+              <button
+                onClick={() => setFormSort('name')}
+                className={`px-2 py-0.5 rounded ${formSort === 'name' ? 'bg-lime-700 text-white' : 'bg-stone-700 text-stone-400 hover:bg-stone-600'}`}
+              >
+                Name
+              </button>
+              <button
+                onClick={() => setFormSort('cr')}
+                className={`px-2 py-0.5 rounded ${formSort === 'cr' ? 'bg-lime-700 text-white' : 'bg-stone-700 text-stone-400 hover:bg-stone-600'}`}
+              >
+                CR
+              </button>
+            </div>
+          </div>
           <button
             onClick={() => setShowBeastPicker(true)}
             disabled={wildShapeForms.length >= rules.knownForms}
@@ -310,9 +328,16 @@ export default function WildShapeTab({ character, onUpdate, templates = [] }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            {wildShapeForms.map(form => {
-              const beast = templates.find(t => t.id === form.templateId);
-              if (!beast) return null;
+            {[...wildShapeForms]
+              .map(form => ({ form, beast: templates.find(t => t.id === form.templateId) }))
+              .filter(({ beast }) => beast)
+              .sort((a, b) => {
+                if (formSort === 'cr') {
+                  return parseCR(a.beast.cr) - parseCR(b.beast.cr);
+                }
+                return a.beast.name.localeCompare(b.beast.name);
+              })
+              .map(({ form, beast }) => {
               const isActive = character.wildShapeActive && character.wildShapeFormId === form.id;
               const isExpanded = expandedFormId === form.id;
 

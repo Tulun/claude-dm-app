@@ -34,7 +34,7 @@ export default function CharacterPage() {
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState('');
   const [hasChanges, setHasChanges] = useState(false);
-  const [activeTab, setActiveTab] = useState('resources');
+  const [activeTab, setActiveTab] = useState('spells');
   const [showProfModal, setShowProfModal] = useState(false);
   const [showSavesModal, setShowSavesModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

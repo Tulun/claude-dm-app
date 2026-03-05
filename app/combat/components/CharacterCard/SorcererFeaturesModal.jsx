@@ -17,8 +17,6 @@ const METAMAGIC_OPTIONS = {
 };
 
 export default function SorcererFeaturesModal({ isOpen, onClose, character, onUpdate }) {
-  const [expandedMeta, setExpandedMeta] = useState(null);
-  
   if (!isOpen) return null;
 
   const resources = character.resources || [];
@@ -49,22 +47,31 @@ export default function SorcererFeaturesModal({ isOpen, onClose, character, onUp
   // Innate Sorcery
   const innateSorceryActive = character.innateSorcery || false;
 
-  // Find metamagic options from features - check multiple possible structures
-  const metamagicFeature = features.find(f => 
-    f.name?.toLowerCase().includes('metamagic')
-  );
-  // Options could be in .options array or .selectedOptions or similar
+  // Find metamagic options from classFeatures (selected in Class tab)
   let knownMetamagic = [];
-  if (metamagicFeature) {
-    if (Array.isArray(metamagicFeature.options)) {
-      knownMetamagic = metamagicFeature.options;
-    } else if (Array.isArray(metamagicFeature.selectedOptions)) {
-      knownMetamagic = metamagicFeature.selectedOptions;
-    } else if (typeof metamagicFeature.description === 'string') {
-      // Try to parse from description
-      const match = metamagicFeature.description.match(/Options?:\s*([^.]+)/i);
-      if (match) {
-        knownMetamagic = match[1].split(/,\s*/).map(s => s.trim());
+  
+  // Check classFeatures for Sorcerer:Metamagic selection
+  const metamagicSelection = character.classFeatures?.['Sorcerer:Metamagic'];
+  if (metamagicSelection) {
+    // It's stored as comma-separated string like "Quickened Spell,Twinned Spell"
+    knownMetamagic = metamagicSelection.split(',').filter(Boolean).map(s => s.trim());
+  }
+  
+  // Fallback: check features array for legacy data
+  if (knownMetamagic.length === 0) {
+    const metamagicFeature = features.find(f => 
+      f.name?.toLowerCase().includes('metamagic')
+    );
+    if (metamagicFeature) {
+      if (Array.isArray(metamagicFeature.options)) {
+        knownMetamagic = metamagicFeature.options;
+      } else if (Array.isArray(metamagicFeature.selectedOptions)) {
+        knownMetamagic = metamagicFeature.selectedOptions;
+      } else if (typeof metamagicFeature.description === 'string') {
+        const match = metamagicFeature.description.match(/Options?:\s*([^.]+)/i);
+        if (match) {
+          knownMetamagic = match[1].split(/,\s*/).map(s => s.trim());
+        }
       }
     }
   }
@@ -347,15 +354,11 @@ export default function SorcererFeaturesModal({ isOpen, onClose, character, onUp
                 <div className="space-y-2">
                   {knownMetamagic.map((name, idx) => {
                     const meta = METAMAGIC_OPTIONS[name] || { cost: '?', description: 'Unknown metamagic option' };
-                    const isExpanded = expandedMeta === idx;
                     const canUse = sorceryPoints >= meta.cost;
                     
                     return (
-                      <div key={idx} className="bg-stone-900/50 rounded-lg overflow-hidden">
-                        <div 
-                          className="flex items-center justify-between p-3 cursor-pointer hover:bg-stone-800/50"
-                          onClick={() => setExpandedMeta(isExpanded ? null : idx)}
-                        >
+                      <div key={idx} className="bg-stone-900/50 rounded-lg p-3">
+                        <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-3">
                             <span className="text-amber-400 font-medium">{name}</span>
                             <span className={`text-xs px-2 py-0.5 rounded ${
@@ -364,28 +367,19 @@ export default function SorcererFeaturesModal({ isOpen, onClose, character, onUp
                               {meta.cost} SP
                             </span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={(e) => { e.stopPropagation(); useSorceryPoints(meta.cost); }}
-                              disabled={!canUse}
-                              className={`px-3 py-1 rounded text-xs ${
-                                canUse 
-                                  ? 'bg-amber-700 hover:bg-amber-600 text-amber-100' 
-                                  : 'bg-stone-800 text-stone-600 cursor-not-allowed'
-                              }`}
-                            >
-                              Use
-                            </button>
-                            <span className={`text-stone-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`}>
-                              ▼
-                            </span>
-                          </div>
+                          <button
+                            onClick={() => useSorceryPoints(meta.cost)}
+                            disabled={!canUse}
+                            className={`px-3 py-1 rounded text-xs ${
+                              canUse 
+                                ? 'bg-amber-700 hover:bg-amber-600 text-amber-100' 
+                                : 'bg-stone-800 text-stone-600 cursor-not-allowed'
+                            }`}
+                          >
+                            Use
+                          </button>
                         </div>
-                        {isExpanded && (
-                          <div className="px-3 pb-3 text-sm text-stone-400">
-                            {meta.description}
-                          </div>
-                        )}
+                        <p className="text-sm text-stone-400">{meta.description}</p>
                       </div>
                     );
                   })}

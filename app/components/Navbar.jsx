@@ -19,6 +19,7 @@ export default function Navbar({ onTabChange, activeTab, saveStatus }) {
     }
     if (pathname === '/encounters') return 'encounters';
     if (pathname === '/spellbook') return 'spellbook';
+    if (pathname === '/magic-items') return 'magic-items';
     if (pathname === '/dm') return 'dm';
     if (pathname === '/character') return 'characters';
     
@@ -33,6 +34,7 @@ export default function Navbar({ onTabChange, activeTab, saveStatus }) {
     { key: 'encounters', label: 'Encounters', href: '/encounters', icon: Icons.Scroll },
     { key: 'templates', label: 'Templates', href: '/combat?tab=templates', icon: Icons.Book },
     { key: 'spellbook', label: 'Spellbook', href: '/spellbook', icon: Icons.Sparkles },
+    { key: 'magic-items', label: 'Magic Items', href: '/magic-items', icon: Icons.Wand },
     { key: 'dm', label: 'DM', href: '/dm', icon: Icons.Crown },
   ];
 
