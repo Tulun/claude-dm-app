@@ -2,16 +2,17 @@
 // Accurate descriptions and class requirements
 
 export const ITEM_CATEGORIES = ['Armor', 'Potion', 'Ring', 'Rod', 'Scroll', 'Staff', 'Wand', 'Weapon', 'Wondrous'];
-export const RARITIES = ['Common', 'Uncommon', 'Rare', 'Very Rare', 'Legendary', 'Artifact'];
+export const RARITIES = ['Common', 'Uncommon', 'Rare', 'Very Rare', 'Legendary', 'Artifact', 'Varies'];
 export const CLASSES = ['Barbarian', 'Bard', 'Cleric', 'Druid', 'Fighter', 'Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Warlock', 'Wizard'];
-export const RARITY_VALUES = { 'Common': 100, 'Uncommon': 400, 'Rare': 4000, 'Very Rare': 40000, 'Legendary': 200000, 'Artifact': null };
+export const RARITY_VALUES = { 'Common': 100, 'Uncommon': 400, 'Rare': 4000, 'Very Rare': 40000, 'Legendary': 200000, 'Artifact': null, 'Varies': null };
 export const RARITY_COLORS = {
   'Common': { bg: 'bg-stone-700', text: 'text-stone-300', border: 'border-stone-600' },
   'Uncommon': { bg: 'bg-green-900/50', text: 'text-green-400', border: 'border-green-700' },
   'Rare': { bg: 'bg-blue-900/50', text: 'text-blue-400', border: 'border-blue-700' },
   'Very Rare': { bg: 'bg-purple-900/50', text: 'text-purple-400', border: 'border-purple-700' },
   'Legendary': { bg: 'bg-amber-900/50', text: 'text-amber-400', border: 'border-amber-700' },
-  'Artifact': { bg: 'bg-red-900/50', text: 'text-red-400', border: 'border-red-700' }
+  'Artifact': { bg: 'bg-red-900/50', text: 'text-red-400', border: 'border-red-700' },
+  'Varies': { bg: 'bg-gradient-to-r from-green-900/50 via-blue-900/50 to-purple-900/50', text: 'text-cyan-400', border: 'border-cyan-700' }
 };
 
 export const MAGIC_ITEMS = [
@@ -94,6 +95,8 @@ export const MAGIC_ITEMS = [
     description: 'This weapon or piece of ammunition is made of adamantine, one of the hardest substances in existence. Whenever this weapon or piece of ammunition hits an object, the hit is a Critical Hit.' },
   { id: 'alchemy-jug', name: 'Alchemy Jug', category: 'Wondrous', rarity: 'Uncommon', attunement: false,
     description: 'This ceramic jug appears to be able to hold a gallon of liquid and weighs 12 pounds whether full or empty. You can take a Magic action and name one liquid from the Alchemy Jug Liquids table to cause the jug to produce the chosen liquid. You can then uncork the jug and pour out up to 2 gallons per minute. Maximum production per day varies by liquid: Acid (8 oz), Basic Poison (1/2 oz), Beer (4 gal), Honey (1 gal), Mayonnaise (2 gal), Oil (1 qt), Vinegar (2 gal), Fresh Water (8 gal), Salt Water (12 gal), Wine (1 gal).' },
+  { id: 'ammunition-plus', name: 'Ammunition, +1, +2, or +3', category: 'Weapon', rarity: 'Varies', attunement: false, weaponType: 'Any Ammunition',
+    description: 'You have a bonus to attack rolls and damage rolls made with this piece of magic ammunition. The bonus is determined by its rarity: Uncommon (+1), Rare (+2), or Very Rare (+3). Once it hits a target, the ammunition is no longer magical.' },
   { id: 'amulet-proof-detection', name: 'Amulet of Proof against Detection and Location', category: 'Wondrous', rarity: 'Uncommon', attunement: true,
     description: 'While wearing this amulet, you are hidden from Divination magic. You can\'t be targeted by such magic or perceived through magical scrying sensors.' },
   { id: 'bag-holding', name: 'Bag of Holding', category: 'Wondrous', rarity: 'Uncommon', attunement: false,
@@ -184,8 +187,7 @@ export const MAGIC_ITEMS = [
     description: 'This wand has 3 charges. While holding it, you can take a Magic action to expend 1 charge, and if a secret door or trap is within 30 feet of you, the wand pulses and points at the one nearest to you. The wand regains 1d3 expended charges daily at dawn.' },
   { id: 'wand-web', name: 'Wand of Web', category: 'Wand', rarity: 'Uncommon', attunement: true, classes: ['Bard', 'Cleric', 'Druid', 'Sorcerer', 'Warlock', 'Wizard'],
     description: 'This wand has 7 charges. While holding it, you can take a Magic action to expend 1 charge to cast the Web spell (save DC 15) from it. The wand regains 1d6 + 1 expended charges daily at dawn. If you expend the last charge, roll a d20. On a 1, the wand crumbles into ashes and is destroyed.' },
-  { id: 'weapon-plus-1', name: '+1 Weapon', category: 'Weapon', rarity: 'Uncommon', attunement: false, weaponType: 'Any',
-    description: 'You have a +1 bonus to attack rolls and damage rolls made with this magic weapon.' },
+
   { id: 'winged-boots', name: 'Winged Boots', category: 'Wondrous', rarity: 'Uncommon', attunement: true,
     description: 'While you wear these boots, you have a Fly Speed equal to your walking speed. You can use the boots to fly for up to 4 hours, all at once or in several shorter flights, each one using a minimum of 1 minute. If you are flying when the time expires, you descend at 30 feet per round until you land. The boots regain 2 hours of flying capability for every 12 hours they aren\'t in use.' },
   { id: 'baba-yaga-broom', name: "Baba Yaga's Dancing Broom", category: 'Wondrous', rarity: 'Uncommon', attunement: false,
@@ -196,8 +198,8 @@ export const MAGIC_ITEMS = [
   // ===== RARE =====
   { id: 'amulet-health', name: 'Amulet of Health', category: 'Wondrous', rarity: 'Rare', attunement: true,
     description: 'Your Constitution score is 19 while you wear this amulet. It has no effect on you if your Constitution is already 19 or higher.' },
-  { id: 'armor-plus-1', name: '+1 Armor', category: 'Armor', rarity: 'Rare', attunement: false, armorType: 'Light, Medium, or Heavy',
-    description: 'You have a +1 bonus to AC while wearing this armor.' },
+  { id: 'armor-plus', name: 'Armor, +1, +2, or +3', category: 'Armor', rarity: 'Varies', attunement: false, armorType: 'Any Light, Medium, or Heavy',
+    description: 'You have a bonus to Armor Class while wearing this armor. The bonus is determined by its rarity: Rare (+1), Very Rare (+2), or Legendary (+3).' },
   { id: 'armor-resistance', name: 'Armor of Resistance', category: 'Armor', rarity: 'Rare', attunement: true, armorType: 'Light, Medium, or Heavy',
     description: 'You have Resistance to one type of damage while you wear this armor. The DM chooses the type or determines it randomly from: Acid, Cold, Fire, Force, Lightning, Necrotic, Poison, Psychic, Radiant, or Thunder.' },
   { id: 'belt-dwarvenkind', name: 'Belt of Dwarvenkind', category: 'Wondrous', rarity: 'Rare', attunement: true,
@@ -258,18 +260,18 @@ export const MAGIC_ITEMS = [
     description: 'This wand has 7 charges. While holding it, you can take a Magic action to expend 1 or more charges to cast the Fireball spell (save DC 15) from it. For 1 charge, you cast the 3rd-level version. Increase the spell\'s level by 1 for each additional charge you expend. The wand regains 1d6 + 1 charges daily at dawn. If you expend the last charge, roll a d20. On a 1, the wand crumbles into ashes.' },
   { id: 'wand-lightning-bolts', name: 'Wand of Lightning Bolts', category: 'Wand', rarity: 'Rare', attunement: true, classes: ['Bard', 'Cleric', 'Druid', 'Sorcerer', 'Warlock', 'Wizard'],
     description: 'This wand has 7 charges. While holding it, you can take a Magic action to expend 1 or more charges to cast the Lightning Bolt spell (save DC 15) from it. For 1 charge, you cast the 3rd-level version. Increase the spell\'s level by 1 for each additional charge you expend. The wand regains 1d6 + 1 charges daily at dawn. If you expend the last charge, roll a d20. On a 1, the wand crumbles into ashes.' },
-  { id: 'weapon-plus-2', name: '+2 Weapon', category: 'Weapon', rarity: 'Rare', attunement: false, weaponType: 'Any',
-    description: 'You have a +2 bonus to attack rolls and damage rolls made with this magic weapon.' },
+
   { id: 'wings-flying', name: 'Wings of Flying', category: 'Wondrous', rarity: 'Rare', attunement: true,
     description: 'While wearing this cloak, you can take a Magic action to speak its command word. This turns the cloak into a pair of bat wings or bird wings on your back for 1 hour or until you repeat the command word. The wings give you a Fly Speed of 60 feet. When they disappear, you can\'t use them again for 1d12 hours.' },
+  { id: 'weapon-plus', name: 'Weapon, +1, +2, or +3', category: 'Weapon', rarity: 'Varies', attunement: false, weaponType: 'Any',
+    description: 'You have a bonus to attack rolls and damage rolls made with this magic weapon. The bonus is determined by its rarity: Uncommon (+1), Rare (+2), or Very Rare (+3).' },
 
   // ===== VERY RARE =====
   { id: 'amulet-planes', name: 'Amulet of the Planes', category: 'Wondrous', rarity: 'Very Rare', attunement: true,
     description: 'While wearing this amulet, you can take a Magic action to name a location that you are familiar with on another plane of existence. Then make a DC 15 Intelligence check. On a success, you cast the Plane Shift spell. On a failure, you and each creature and object within 15 feet of you travel to a random destination.' },
   { id: 'animated-shield', name: 'Animated Shield', category: 'Armor', rarity: 'Very Rare', attunement: true, armorType: 'Shield',
     description: 'While holding this Shield, you can take a Bonus Action to speak its command word. It then animates, hovering in your space to protect you as if you were wielding it, leaving your hands free. The shield remains animated for 1 minute, until you take a Bonus Action to end this effect, or until you have the Incapacitated condition or die, at which point the shield falls to the ground or into your hand if you have one free.' },
-  { id: 'armor-plus-2', name: '+2 Armor', category: 'Armor', rarity: 'Very Rare', attunement: false, armorType: 'Light, Medium, or Heavy',
-    description: 'You have a +2 bonus to AC while wearing this armor.' },
+
   { id: 'belt-giant-strength', name: 'Belt of Giant Strength', category: 'Wondrous', rarity: 'Very Rare', attunement: true,
     description: 'While wearing this belt, your Strength score changes to a score granted by the belt. The type of giant determines the score: Hill (21), Stone (23), Frost (23), Fire (25), Cloud (27), Storm (29). If your Strength is already equal to or greater than the belt\'s score, the belt has no effect.' },
   { id: 'carpet-flying', name: 'Carpet of Flying', category: 'Wondrous', rarity: 'Very Rare', attunement: false,
@@ -320,14 +322,12 @@ export const MAGIC_ITEMS = [
     description: 'This book contains guidelines for influencing and charming others. If you spend 48 hours over 6 days or fewer studying its contents, your Charisma score increases by 2, to a maximum of 30. The tome then loses its magic, but regains it in a century.' },
   { id: 'tome-understanding', name: 'Tome of Understanding', category: 'Wondrous', rarity: 'Very Rare', attunement: false,
     description: 'This book contains intuition and insight exercises. If you spend 48 hours over 6 days or fewer studying its contents, your Wisdom score increases by 2, to a maximum of 30. The tome then loses its magic, but regains it in a century.' },
-  { id: 'weapon-plus-3', name: '+3 Weapon', category: 'Weapon', rarity: 'Very Rare', attunement: false, weaponType: 'Any',
-    description: 'You have a +3 bonus to attack rolls and damage rolls made with this magic weapon.' },
+
 
   // ===== LEGENDARY =====
   { id: 'armor-invulnerability', name: 'Armor of Invulnerability', category: 'Armor', rarity: 'Legendary', attunement: true, armorType: 'Plate',
     description: 'You have Resistance to nonmagical damage while you wear this armor. Additionally, you can take a Magic action to make yourself immune to nonmagical damage for 10 minutes or until you are no longer wearing the armor. Once this special action is used, it can\'t be used again until the next dawn.' },
-  { id: 'armor-plus-3', name: '+3 Armor', category: 'Armor', rarity: 'Legendary', attunement: false, armorType: 'Light, Medium, or Heavy',
-    description: 'You have a +3 bonus to AC while wearing this armor.' },
+
   { id: 'cloak-invisibility', name: 'Cloak of Invisibility', category: 'Wondrous', rarity: 'Legendary', attunement: true,
     description: 'While wearing this cloak, you can pull its hood over your head to cause yourself to become Invisible. While you are Invisible, anything you are carrying or wearing is Invisible with you. You become visible when you cease wearing the hood. Pulling the hood up or down requires a Magic action. Deduct the time you are Invisible, in increments of 1 minute, from the cloak\'s maximum duration of 2 hours. After 2 hours of use, the cloak ceases to function. For every uninterrupted period of 12 hours the cloak goes unused, it regains 1 hour of duration.' },
   { id: 'cubic-gate', name: 'Cubic Gate', category: 'Wondrous', rarity: 'Legendary', attunement: false,

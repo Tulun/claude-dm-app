@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Navbar from '../components/Navbar';
 import { MAGIC_ITEMS, ITEM_CATEGORIES, RARITIES, CLASSES, RARITY_COLORS, RARITY_VALUES, searchItems, sortItems } from './magicItems';
 
@@ -12,10 +12,9 @@ export default function MagicItemsPage() {
   const [rarityFilter, setRarityFilter] = useState('All');
   const [classFilter, setClassFilter] = useState('All');
   const [attunementFilter, setAttunementFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('name');
-  const [sortDir, setSortDir] = useState('asc');
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [expandedLetters, setExpandedLetters] = useState({});
 
   // Load custom items from localStorage
   useEffect(() => {
@@ -30,14 +29,12 @@ export default function MagicItemsPage() {
 
   // Filter and sort items
   useEffect(() => {
-    const allItems = [...MAGIC_ITEMS, ...customItems];
     let filtered = searchItems(search, {
       category: categoryFilter,
       rarity: rarityFilter,
       classReq: classFilter,
       attunement: attunementFilter === 'yes' ? true : attunementFilter === 'no' ? false : undefined
     });
-    // Include custom items in search
     if (customItems.length > 0) {
       const customFiltered = customItems.filter(item => {
         if (search && !item.name.toLowerCase().includes(search.toLowerCase()) && !item.description.toLowerCase().includes(search.toLowerCase())) return false;
@@ -50,9 +47,19 @@ export default function MagicItemsPage() {
       });
       filtered = [...filtered.filter(i => !i.custom), ...customFiltered];
     }
-    const sorted = sortItems(filtered, sortBy, sortDir);
+    const sorted = sortItems(filtered, 'name', 'asc');
     setItems(sorted);
-  }, [search, categoryFilter, rarityFilter, classFilter, attunementFilter, sortBy, sortDir, customItems]);
+  }, [search, categoryFilter, rarityFilter, classFilter, attunementFilter, customItems]);
+
+  // Group items by first letter
+  const groupedItems = items.reduce((acc, item) => {
+    const letter = item.name[0].toUpperCase();
+    if (!acc[letter]) acc[letter] = [];
+    acc[letter].push(item);
+    return acc;
+  }, {});
+
+  const alphabet = Object.keys(groupedItems).sort();
 
   const addCustomItem = (item) => {
     const newItem = { ...item, id: `custom-${Date.now()}`, custom: true };
@@ -71,114 +78,152 @@ export default function MagicItemsPage() {
     }
   };
 
-  const toggleSort = (field) => {
-    if (sortBy === field) setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
-    else { setSortBy(field); setSortDir('asc'); }
+  const clearFilters = () => {
+    setSearch('');
+    setCategoryFilter('All');
+    setRarityFilter('All');
+    setClassFilter('All');
+    setAttunementFilter('all');
+  };
+
+  const hasActiveFilters = search || categoryFilter !== 'All' || rarityFilter !== 'All' || classFilter !== 'All' || attunementFilter !== 'all';
+
+  const toggleLetter = (letter) => {
+    setExpandedLetters(prev => ({ ...prev, [letter]: !prev[letter] }));
+  };
+
+  const scrollToLetter = (letter) => {
+    const element = document.getElementById(`section-${letter}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100">
+    <div className="h-screen bg-stone-950 text-stone-100 flex flex-col overflow-hidden">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto p-4">
-        {/* Page Title */}
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold text-amber-400">Magic Item Glossary</h1>
-          <button onClick={() => setShowAddModal(true)} className="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-sm font-medium">
-            + Add Custom Item
-          </button>
-        </div>
-        {/* Filters */}
-        <div className="bg-stone-900 rounded-lg p-4 mb-4 space-y-3">
-          <div className="flex flex-wrap gap-3">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search items..."
-              className="flex-1 min-w-[200px] bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 focus:outline-none focus:border-amber-600"
-            />
-            <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="bg-stone-800 border border-stone-700 rounded-lg px-3 py-2">
-              <option value="All">All Categories</option>
-              {ITEM_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
-            <select value={rarityFilter} onChange={(e) => setRarityFilter(e.target.value)} className="bg-stone-800 border border-stone-700 rounded-lg px-3 py-2">
-              <option value="All">All Rarities</option>
-              {RARITIES.map(r => <option key={r} value={r}>{r}</option>)}
-            </select>
-            <select value={classFilter} onChange={(e) => setClassFilter(e.target.value)} className="bg-stone-800 border border-stone-700 rounded-lg px-3 py-2">
-              <option value="All">All Classes</option>
-              {CLASSES.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
-            <select value={attunementFilter} onChange={(e) => setAttunementFilter(e.target.value)} className="bg-stone-800 border border-stone-700 rounded-lg px-3 py-2">
-              <option value="all">Attunement: Any</option>
-              <option value="yes">Requires Attunement</option>
-              <option value="no">No Attunement</option>
-            </select>
-          </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-stone-500">Sort by:</span>
-            {['name', 'rarity', 'category'].map(field => (
-              <button key={field} onClick={() => toggleSort(field)} className={`px-3 py-1 rounded ${sortBy === field ? 'bg-amber-700 text-white' : 'bg-stone-700 text-stone-300 hover:bg-stone-600'}`}>
-                {field.charAt(0).toUpperCase() + field.slice(1)} {sortBy === field && (sortDir === 'asc' ? '↑' : '↓')}
-              </button>
-            ))}
-            <span className="ml-auto text-stone-500">{items.length} items</span>
-          </div>
-        </div>
-
-        {/* Rarity Value Reference */}
-        <div className="bg-stone-900/50 rounded-lg p-3 mb-4 flex flex-wrap gap-4 text-xs">
-          <span className="text-stone-500">Base Values:</span>
-          {RARITIES.filter(r => RARITY_VALUES[r]).map(r => (
-            <span key={r} className={RARITY_COLORS[r].text}>
-              {r}: {RARITY_VALUES[r].toLocaleString()} GP
-            </span>
-          ))}
-          <span className="text-red-400">Artifact: Priceless</span>
-        </div>
-
-        {/* Items List */}
-        <div className="space-y-6">
-          {items.length === 0 ? (
-            <div className="text-center py-12 text-stone-500">No items found matching your criteria.</div>
-          ) : (
-            items.map(item => {
-              const colors = RARITY_COLORS[item.rarity] || RARITY_COLORS['Common'];
-              // Build subtitle like "Armor (Any Medium or Heavy), Uncommon"
-              let subtitle = item.category;
-              if (item.weaponType) subtitle = `Weapon (${item.weaponType})`;
-              else if (item.armorType) subtitle = `Armor (${item.armorType})`;
-              subtitle += `, ${item.rarity}`;
-              if (item.attunement) {
-                subtitle += item.classes ? ` (Requires Attunement by ${item.classes.join(', ')})` : ' (Requires Attunement)';
-              }
-              
-              return (
-                <div key={item.id} className="border-b border-amber-800/30 pb-4">
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <h3 className={`text-lg font-bold italic ${colors.text}`}>
-                        {item.name}
-                        {item.custom && <span className="ml-2 text-xs px-1.5 py-0.5 rounded bg-cyan-900/50 text-cyan-400 not-italic">Custom</span>}
-                        {item.cursed && <span className="ml-2 text-xs text-red-400 not-italic">⚠ Cursed</span>}
-                      </h3>
-                      <p className="text-sm text-stone-400 italic">{subtitle}</p>
-                    </div>
-                    {item.custom && (
-                      <div className="flex gap-2">
-                        <button onClick={() => setEditingItem(item)} className="px-2 py-1 rounded text-xs bg-stone-700 hover:bg-stone-600">Edit</button>
-                        <button onClick={() => deleteCustomItem(item.id)} className="px-2 py-1 rounded text-xs bg-red-900/50 hover:bg-red-800/50 text-red-400">Delete</button>
-                      </div>
-                    )}
-                  </div>
-                  <div className="mt-2 h-px bg-gradient-to-r from-amber-600 to-transparent w-full"></div>
-                  <p className="mt-3 text-stone-300 leading-relaxed">{item.description}</p>
-                </div>
-              );
-            })
+      {/* Fixed Filter Bar */}
+      <div className="flex-shrink-0 bg-stone-900 border-b border-stone-800 px-4 py-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search magic items..."
+            className="flex-1 min-w-[200px] bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-600"
+          />
+          <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-sm">
+            <option value="All">All Types</option>
+            {ITEM_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+          <select value={rarityFilter} onChange={(e) => setRarityFilter(e.target.value)} className="bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-sm">
+            <option value="All">All Rarities</option>
+            {RARITIES.map(r => <option key={r} value={r}>{r}</option>)}
+          </select>
+          <select value={classFilter} onChange={(e) => setClassFilter(e.target.value)} className="bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-sm">
+            <option value="All">All Classes</option>
+            {CLASSES.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+          <select value={attunementFilter} onChange={(e) => setAttunementFilter(e.target.value)} className="bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-sm">
+            <option value="all">Attunement: Any</option>
+            <option value="yes">Required</option>
+            <option value="no">Not Required</option>
+          </select>
+          {hasActiveFilters && (
+            <button onClick={clearFilters} className="px-3 py-2 rounded-lg text-xs bg-red-900/30 text-red-400 hover:bg-red-900/50">
+              Clear
+            </button>
           )}
+          <button onClick={() => setShowAddModal(true)} className="px-3 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-sm font-medium">
+            + Custom
+          </button>
+          <span className="text-stone-500 text-sm">{items.length} items</span>
         </div>
+      </div>
+
+      {/* Main Layout - Both panels scroll independently */}
+      <div className="flex flex-1 min-h-0">
+        {/* A-Z Sidebar */}
+        <aside className="w-72 flex-shrink-0 bg-stone-900 border-r border-stone-800 overflow-y-auto pb-8">
+          {/* Sidebar Header */}
+          <div className="sticky top-0 z-10 bg-gradient-to-r from-amber-700 to-amber-800 px-4 py-2">
+            <h2 className="font-bold text-white">Magic Items A–Z</h2>
+          </div>
+          
+          {/* Letter Groups */}
+          <div>
+            {alphabet.length === 0 ? (
+              <div className="p-4 text-stone-500 text-sm">No items match your filters</div>
+            ) : (
+              alphabet.map(letter => (
+                <div key={letter}>
+                  {/* Letter Header */}
+                  <button
+                    onClick={() => toggleLetter(letter)}
+                    className="w-full flex items-center justify-between px-4 py-2 bg-stone-800/50 hover:bg-stone-800 text-amber-400 font-medium border-b border-stone-800"
+                  >
+                    <span>Magic Items ({letter})</span>
+                    <span className="text-stone-500">
+                      {expandedLetters[letter] ? '▼' : '›'}
+                    </span>
+                  </button>
+                  
+                  {/* Items under this letter */}
+                  {expandedLetters[letter] && (
+                    <div className="bg-stone-950">
+                      {groupedItems[letter].map(item => (
+                        <button
+                          key={item.id}
+                          onClick={() => scrollToLetter(letter)}
+                          className="w-full text-left px-6 py-2 text-sm border-b border-stone-900 flex items-center justify-between text-stone-300 hover:bg-stone-800 hover:text-white"
+                        >
+                          <span>{item.name}</span>
+                          <span className="text-stone-600">›</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+        </aside>
+
+        {/* Main Content - Infinite Scroll */}
+        <main className="flex-1 overflow-y-auto bg-stone-950 p-6">
+          {items.length === 0 ? (
+            <div className="flex items-center justify-center h-64 text-stone-500">
+              <div className="text-center">
+                <p className="text-lg">No items found</p>
+                <p className="text-sm mt-1">Try adjusting your filters</p>
+              </div>
+            </div>
+          ) : (
+            <div className="max-w-4xl mx-auto space-y-8">
+              {alphabet.map(letter => (
+                <section key={letter} id={`section-${letter}`}>
+                  {/* Letter Header */}
+                  <h2 className="text-lg font-bold text-amber-400 border-b border-amber-800/50 pb-2 mb-4">
+                    Magic Items ({letter})
+                  </h2>
+                  
+                  {/* Items */}
+                  <div className="space-y-6">
+                    {groupedItems[letter].map(item => (
+                      <ItemCard 
+                        key={item.id} 
+                        item={item} 
+                        onEdit={() => setEditingItem(item)}
+                        onDelete={() => deleteCustomItem(item.id)}
+                      />
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          )}
+        </main>
       </div>
 
       {/* Add/Edit Modal */}
@@ -193,16 +238,68 @@ export default function MagicItemsPage() {
   );
 }
 
+function ItemCard({ item, onEdit, onDelete }) {
+  const colors = RARITY_COLORS[item.rarity] || RARITY_COLORS['Common'];
+  
+  let subtitle = item.category;
+  if (item.weaponType) subtitle = `Weapon (${item.weaponType})`;
+  else if (item.armorType) subtitle = `Armor (${item.armorType})`;
+  subtitle += `, ${item.rarity}`;
+  if (item.attunement) {
+    subtitle += item.classes ? ` (Requires Attunement by ${item.classes.join(', ')})` : ' (Requires Attunement)';
+  }
+  
+  return (
+    <article id={`item-${item.id}`} className="pb-5 border-b border-stone-800">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h3 className={`text-xl font-bold italic ${colors.text}`}>
+            {item.name}
+          </h3>
+          <p className="text-sm text-stone-400 italic">{subtitle}</p>
+        </div>
+        {item.custom && (
+          <div className="flex gap-2 flex-shrink-0">
+            <button onClick={onEdit} className="px-2 py-1 rounded text-xs bg-stone-700 hover:bg-stone-600">Edit</button>
+            <button onClick={onDelete} className="px-2 py-1 rounded text-xs bg-red-900/50 hover:bg-red-800/50 text-red-400">Delete</button>
+          </div>
+        )}
+      </div>
+      
+      {(item.custom || item.cursed) && (
+        <div className="flex gap-2 mt-1">
+          {item.custom && <span className="text-xs px-2 py-0.5 rounded bg-cyan-900/50 text-cyan-400">Custom</span>}
+          {item.cursed && <span className="text-xs px-2 py-0.5 rounded bg-red-900/50 text-red-400">⚠ Cursed</span>}
+        </div>
+      )}
+      
+      <div className="mt-2 h-px bg-gradient-to-r from-amber-600/60 to-transparent"></div>
+      
+      <p className="mt-3 text-stone-300 leading-relaxed">{item.description}</p>
+    </article>
+  );
+}
+
 function ItemModal({ item, onSave, onClose }) {
   const [form, setForm] = useState(item || {
     name: '', category: 'Wondrous', rarity: 'Common', attunement: false,
-    requirements: '', description: '', weaponType: '', armorType: '', cursed: false
+    classes: [], description: '', weaponType: '', armorType: '', cursed: false
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.name.trim()) return alert('Name is required');
+    if (!form.description.trim()) return alert('Description is required');
     onSave(form);
+  };
+
+  const toggleClass = (cls) => {
+    const classes = form.classes || [];
+    if (classes.includes(cls)) {
+      setForm({ ...form, classes: classes.filter(c => c !== cls) });
+    } else {
+      setForm({ ...form, classes: [...classes, cls] });
+    }
   };
 
   return (
@@ -244,22 +341,33 @@ function ItemModal({ item, onSave, onClose }) {
 
           {form.attunement && (
             <div>
-              <label className="text-xs text-stone-500">Attunement Requirements (optional)</label>
-              <input type="text" value={form.requirements} onChange={e => setForm({...form, requirements: e.target.value})} placeholder="e.g., Spellcaster, Paladin" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 mt-1" />
+              <label className="text-xs text-stone-500">Class Requirements (optional)</label>
+              <div className="flex flex-wrap gap-1 mt-1">
+                {CLASSES.map(cls => (
+                  <button
+                    key={cls}
+                    type="button"
+                    onClick={() => toggleClass(cls)}
+                    className={`px-2 py-1 rounded text-xs ${(form.classes || []).includes(cls) ? 'bg-amber-700 text-white' : 'bg-stone-700 text-stone-400'}`}
+                  >
+                    {cls}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
           {form.category === 'Weapon' && (
             <div>
               <label className="text-xs text-stone-500">Weapon Type</label>
-              <input type="text" value={form.weaponType} onChange={e => setForm({...form, weaponType: e.target.value})} placeholder="e.g., Any Sword, Longbow" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 mt-1" />
+              <input type="text" value={form.weaponType || ''} onChange={e => setForm({...form, weaponType: e.target.value})} placeholder="e.g., Any Sword, Longbow" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 mt-1" />
             </div>
           )}
 
           {form.category === 'Armor' && (
             <div>
               <label className="text-xs text-stone-500">Armor Type</label>
-              <input type="text" value={form.armorType} onChange={e => setForm({...form, armorType: e.target.value})} placeholder="e.g., Plate, Medium or Heavy" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 mt-1" />
+              <input type="text" value={form.armorType || ''} onChange={e => setForm({...form, armorType: e.target.value})} placeholder="e.g., Plate, Medium or Heavy" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 mt-1" />
             </div>
           )}
 
