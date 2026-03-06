@@ -92,10 +92,10 @@ export default function MagicItemsPage() {
     setExpandedLetters(prev => ({ ...prev, [letter]: !prev[letter] }));
   };
 
-  const scrollToLetter = (letter) => {
-    const element = document.getElementById(`section-${letter}`);
+  const scrollToItem = (itemId) => {
+    const element = document.getElementById(`item-${itemId}`);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      element.scrollIntoView({ behavior: 'instant', block: 'start' });
     }
   };
 
@@ -175,7 +175,7 @@ export default function MagicItemsPage() {
                       {groupedItems[letter].map(item => (
                         <button
                           key={item.id}
-                          onClick={() => scrollToLetter(letter)}
+                          onClick={() => scrollToItem(item.id)}
                           className="w-full text-left px-6 py-2 text-sm border-b border-stone-900 flex items-center justify-between text-stone-300 hover:bg-stone-800 hover:text-white"
                         >
                           <span>{item.name}</span>
