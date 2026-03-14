@@ -6645,7 +6645,7 @@
       "skills": "Athletics +4, Deception +4",
       "senses": "Passive Perception 10",
       "languages": "Any two",
-      "isNpc": true,
+      "isNpc": false,
       "traits": [],
       "actions": [
         {

@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import CharactersTab from './components/CharactersTab';
 import WorldTab from './components/WorldTab';
 import SessionTab from './components/SessionTab';
+import NPCGeneratorTab from './components/NPCGeneratorTab';
 
 export default function DMPage() {
   const [data, setData] = useState(null);
@@ -110,6 +111,17 @@ export default function DMPage() {
             <Icons.Note className="w-4 h-4" />
             Session Notes
           </button>
+          <button
+            onClick={() => setActiveTab('npcgen')}
+            className={`px-4 py-2 rounded-t-lg flex items-center gap-2 transition-colors ${
+              activeTab === 'npcgen' 
+                ? 'bg-stone-800 text-amber-400 border-b-2 border-amber-500' 
+                : 'text-stone-400 hover:text-stone-200'
+            }`}
+          >
+            <Icons.Dice />
+            NPC Generator
+          </button>
         </div>
 
         {/* Tab Content */}
@@ -121,6 +133,9 @@ export default function DMPage() {
         )}
         {activeTab === 'session' && (
           <SessionTab data={data} onSave={saveData} />
+        )}
+        {activeTab === 'npcgen' && (
+          <NPCGeneratorTab data={data} onSave={saveData} />
         )}
       </div>
     </div>

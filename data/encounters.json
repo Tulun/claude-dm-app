@@ -1,23 +1,30 @@
 [
   {
-    "id": "encounter-1772500622174",
-    "name": "Goblins",
+    "id": "encounter-1773446868248",
+    "name": "Bandit Ambush",
     "monsters": [
       {
-        "id": "mm-goblin-hexer-1772500628820-o3l95",
-        "templateId": "mm-goblin-hexer",
-        "name": "Goblin Hexer",
+        "id": "mm-bandit-1773446948303-4buaq",
+        "templateId": "mm-bandit",
+        "name": "Bandit",
+        "customName": "",
+        "quantity": 5
+      },
+      {
+        "id": "mm-bandit-captain-1773447059894-6vq1b",
+        "templateId": "mm-bandit-captain",
+        "name": "Bandit Captain",
         "customName": "",
         "quantity": 1
       },
       {
-        "id": "mm-hobgoblin-captain-1772500628820-xnm6c",
-        "templateId": "mm-hobgoblin-captain",
-        "name": "Hobgoblin Captain",
+        "id": "mm-riding-horse-1773447081411-kk5rm",
+        "templateId": "mm-riding-horse",
+        "name": "Riding Horse",
         "customName": "",
-        "quantity": 1
+        "quantity": 6
       }
     ],
-    "createdAt": "2026-03-03T01:17:02.174Z"
+    "createdAt": "2026-03-14T00:07:48.248Z"
   }
 ]

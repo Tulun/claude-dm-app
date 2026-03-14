@@ -116,6 +116,7 @@ const EncounterEditor = ({
   calculateEncounterStats,
 }) => {
   const [showAddMonster, setShowAddMonster] = useState(false);
+  const [expandedMonsters, setExpandedMonsters] = useState({});
   const [selectedMonsters, setSelectedMonsters] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCRs, setSelectedCRs] = useState([]);
@@ -280,43 +281,191 @@ const EncounterEditor = ({
               No monsters yet. Click "Add Monster" to get started.
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-3">
               {encounter.monsters.map(monster => {
                 const template = templates.find(t => t.id === monster.templateId);
+                const isExpanded = expandedMonsters[monster.id];
+                const getMod = (score) => {
+                  const mod = Math.floor(((parseInt(score) || 10) - 10) / 2);
+                  return mod >= 0 ? `+${mod}` : `${mod}`;
+                };
                 return (
-                  <div key={monster.id} className="bg-stone-800/50 rounded-lg p-3 flex items-center gap-3">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs bg-red-900/50 text-red-300 px-1.5 py-0.5 rounded">
-                          CR {template?.cr || '?'}
-                        </span>
-                        <span className="font-medium">{monster.name}</span>
+                  <div key={monster.id} className="bg-stone-800/50 border border-stone-700/50 rounded-lg overflow-hidden">
+                    {/* Header row */}
+                    <div className="p-3 flex items-center gap-3">
+                      <button
+                        onClick={() => setExpandedMonsters(prev => ({ ...prev, [monster.id]: !prev[monster.id] }))}
+                        className="text-stone-400 hover:text-stone-200 transition-colors"
+                      >
+                        <Icons.ChevronDown className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                      </button>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs bg-red-900/50 text-red-300 px-1.5 py-0.5 rounded font-medium">
+                            CR {template?.cr || '?'}
+                          </span>
+                          <span className="font-medium">{monster.name}</span>
+                          {template && (
+                            <span className="text-xs text-stone-500">
+                              {template.size} {template.creatureType}
+                            </span>
+                          )}
+                        </div>
+                        {/* Quick stats row */}
+                        {template && (
+                          <div className="flex items-center gap-3 mt-1 text-xs text-stone-400">
+                            <span className="flex items-center gap-1">
+                              <Icons.Shield className="w-3 h-3 text-blue-400" />
+                              <span className="text-blue-300">{template.ac}</span>
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Icons.Heart className="w-3 h-3 text-red-400" />
+                              <span className="text-red-300">{template.maxHp}</span>
+                              {template.hitDice && <span className="text-stone-500">({template.hitDice})</span>}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Icons.Boot className="w-3 h-3 text-amber-400" />
+                              <span className="text-stone-300">{template.speed} ft</span>
+                            </span>
+                            {template.xp > 0 && (
+                              <span className="text-amber-400">{template.xp} XP</span>
+                            )}
+                          </div>
+                        )}
+                        <input
+                          type="text"
+                          value={monster.customName}
+                          onChange={(e) => updateMonster(monster.id, { customName: e.target.value })}
+                          placeholder="Custom name (optional)"
+                          className="mt-1.5 w-full bg-stone-700/50 rounded px-2 py-1 text-sm placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                        />
                       </div>
-                      <input
-                        type="text"
-                        value={monster.customName}
-                        onChange={(e) => updateMonster(monster.id, { customName: e.target.value })}
-                        placeholder="Custom name (optional)"
-                        className="mt-1 w-full bg-stone-700/50 rounded px-2 py-1 text-sm placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
-                      />
-                    </div>
-                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => updateMonster(monster.id, { quantity: Math.max(1, monster.quantity - 1) })}
+                          className="w-7 h-7 rounded bg-stone-700 hover:bg-stone-600 flex items-center justify-center"
+                        >−</button>
+                        <span className="w-8 text-center font-mono">{monster.quantity}</span>
+                        <button
+                          onClick={() => updateMonster(monster.id, { quantity: monster.quantity + 1 })}
+                          className="w-7 h-7 rounded bg-stone-700 hover:bg-stone-600 flex items-center justify-center"
+                        >+</button>
+                      </div>
                       <button
-                        onClick={() => updateMonster(monster.id, { quantity: Math.max(1, monster.quantity - 1) })}
-                        className="w-7 h-7 rounded bg-stone-700 hover:bg-stone-600 flex items-center justify-center"
-                      >−</button>
-                      <span className="w-8 text-center font-mono">{monster.quantity}</span>
-                      <button
-                        onClick={() => updateMonster(monster.id, { quantity: monster.quantity + 1 })}
-                        className="w-7 h-7 rounded bg-stone-700 hover:bg-stone-600 flex items-center justify-center"
-                      >+</button>
+                        onClick={() => removeMonster(monster.id)}
+                        className="text-red-400 hover:text-red-300 p-1"
+                      >
+                        <Icons.Trash />
+                      </button>
                     </div>
-                    <button
-                      onClick={() => removeMonster(monster.id)}
-                      className="text-red-400 hover:text-red-300 p-1"
-                    >
-                      <Icons.Trash />
-                    </button>
+
+                    {/* Expanded stat block */}
+                    {isExpanded && template && (
+                      <div className="border-t border-stone-700/50 px-4 py-3 bg-stone-900/30 space-y-3">
+                        {/* Ability Scores */}
+                        <div className="grid grid-cols-6 gap-2 text-center">
+                          {['str', 'dex', 'con', 'int', 'wis', 'cha'].map(stat => (
+                            <div key={stat} className="bg-stone-800 rounded-lg py-1.5 px-1">
+                              <div className="text-[10px] uppercase tracking-wider text-stone-500 font-medium">{stat}</div>
+                              <div className="text-sm font-bold text-stone-200">{template[stat] || 10}</div>
+                              <div className="text-xs text-amber-400">{getMod(template[stat])}</div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Properties */}
+                        <div className="text-xs space-y-1">
+                          {template.savingThrows && (
+                            <div><span className="text-stone-500 font-medium">Saving Throws:</span> <span className="text-stone-300">{template.savingThrows}</span></div>
+                          )}
+                          {template.skills && (
+                            <div><span className="text-stone-500 font-medium">Skills:</span> <span className="text-stone-300">{template.skills}</span></div>
+                          )}
+                          {template.vulnerabilities && (
+                            <div><span className="text-stone-500 font-medium">Vulnerabilities:</span> <span className="text-yellow-400">{template.vulnerabilities}</span></div>
+                          )}
+                          {template.resistances && (
+                            <div><span className="text-stone-500 font-medium">Resistances:</span> <span className="text-stone-300">{template.resistances}</span></div>
+                          )}
+                          {template.immunities && (
+                            <div><span className="text-stone-500 font-medium">Immunities:</span> <span className="text-stone-300">{template.immunities}</span></div>
+                          )}
+                          {template.senses && (
+                            <div><span className="text-stone-500 font-medium">Senses:</span> <span className="text-stone-300">{template.senses}</span></div>
+                          )}
+                          {template.languages && (
+                            <div><span className="text-stone-500 font-medium">Languages:</span> <span className="text-stone-300">{template.languages}</span></div>
+                          )}
+                        </div>
+
+                        {/* Traits */}
+                        {template.traits && template.traits.length > 0 && (
+                          <div>
+                            <div className="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-1">Traits</div>
+                            <div className="space-y-1.5">
+                              {template.traits.map((trait, i) => (
+                                <div key={i} className="text-xs">
+                                  <span className="font-semibold text-stone-200">{trait.name}.</span>{' '}
+                                  <span className="text-stone-400">{trait.description}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Actions */}
+                        {template.actions && template.actions.length > 0 && (
+                          <div>
+                            <div className="text-xs font-semibold text-red-400 uppercase tracking-wider mb-1">Actions</div>
+                            <div className="space-y-1.5">
+                              {template.actions.map((action, i) => (
+                                <div key={i} className="text-xs">
+                                  <span className="font-semibold text-stone-200">{action.name}.</span>{' '}
+                                  <span className="text-stone-400">{action.description}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Reactions */}
+                        {template.reactions && template.reactions.length > 0 && (
+                          <div>
+                            <div className="text-xs font-semibold text-purple-400 uppercase tracking-wider mb-1">Reactions</div>
+                            <div className="space-y-1.5">
+                              {template.reactions.map((reaction, i) => (
+                                <div key={i} className="text-xs">
+                                  <span className="font-semibold text-stone-200">{reaction.name}.</span>{' '}
+                                  <span className="text-stone-400">{reaction.description}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Legendary Actions */}
+                        {template.legendaryActions && template.legendaryActions.length > 0 && (
+                          <div>
+                            <div className="text-xs font-semibold text-amber-500 uppercase tracking-wider mb-1">Legendary Actions</div>
+                            <div className="space-y-1.5">
+                              {template.legendaryActions.map((la, i) => (
+                                <div key={i} className="text-xs">
+                                  <span className="font-semibold text-stone-200">{la.name}.</span>{' '}
+                                  <span className="text-stone-400">{la.description}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Notes */}
+                        {template.notes && (
+                          <div className="text-xs text-stone-500 italic border-t border-stone-700/30 pt-2">
+                            {template.notes}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 );
               })}
