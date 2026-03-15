@@ -525,7 +525,7 @@
         "initiative": 15
       }
     ],
-    "tempHp": 9,
+    "tempHp": 6,
     "wildShapeForms": [
       {
         "id": 1772504065336,
@@ -1067,7 +1067,7 @@
       }
     ],
     "tempAC": 0,
-    "tempHp": 10
+    "tempHp": 6
   },
   {
     "name": "Marshuh",
@@ -1111,7 +1111,7 @@
     "cha": 17,
     "spellStat": "cha",
     "id": "party-1770431961400",
-    "currentHp": 23,
+    "currentHp": 30,
     "initiative": 8,
     "skillProficiencies": {
       "Deception": 1,
@@ -1460,6 +1460,7 @@
       "Sorcerer:Metamagic": "Quickened Spell,Twinned Spell"
     },
     "acEffect": "draconicResilience",
-    "innateSorcery": true
+    "innateSorcery": true,
+    "tempHp": 6
   }
 ]
