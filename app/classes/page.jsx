@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Icons from '../components/Icons';
 import Navbar from '../components/Navbar';
 import { CLASS_DATA } from './classData';
+import ClassIcons from './ClassIcons';
 
 // ─── Class Icon Component ────────────────────────────────────────
 
@@ -22,7 +23,7 @@ function ClassIcon({ classInfo, isSelected, onClick }) {
       }}
     >
       <div
-        className={`w-14 h-14 rounded-xl flex items-center justify-center text-2xl transition-all duration-200 ${
+        className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-200 ${
           isSelected ? 'shadow-lg' : 'group-hover:shadow-md'
         }`}
         style={{
@@ -32,7 +33,10 @@ function ClassIcon({ classInfo, isSelected, onClick }) {
           boxShadow: isSelected ? `0 4px 20px ${classInfo.color}40` : 'none',
         }}
       >
-        {classInfo.emoji}
+        {ClassIcons[classInfo.id]
+          ? ClassIcons[classInfo.id]({ size: 36, color: isSelected ? '#fff' : classInfo.color })
+          : <span className="text-2xl">{classInfo.emoji}</span>
+        }
       </div>
       <span
         className={`text-xs font-semibold tracking-wide transition-colors ${
@@ -66,29 +70,20 @@ function StatBadge({ label, value, color = 'amber' }) {
 // ─── Feature List ────────────────────────────────────────────────
 
 function FeatureItem({ feature, color }) {
-  const [expanded, setExpanded] = useState(false);
   return (
-    <div
-      className="border-b border-stone-700/30 last:border-0 cursor-pointer group"
-      onClick={() => setExpanded(!expanded)}
-    >
-      <div className="flex items-center gap-3 py-2.5 px-1">
+    <div className="border-b border-stone-700/30 last:border-0">
+      <div className="flex items-start gap-3 py-2.5 px-1">
         <span
-          className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded shrink-0"
+          className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded shrink-0 mt-0.5"
           style={{ background: `${color}25`, color: color }}
         >
           L{feature.level}
         </span>
-        <span className="font-medium text-sm text-stone-200 flex-1">{feature.name}</span>
-        <Icons.ChevronDown
-          className={`w-3 h-3 text-stone-500 transition-transform ${expanded ? 'rotate-180' : ''}`}
-        />
-      </div>
-      {expanded && (
-        <div className="pb-3 pl-12 pr-4 text-xs text-stone-400 leading-relaxed">
-          {feature.desc}
+        <div className="flex-1 min-w-0">
+          <span className="font-medium text-sm text-stone-200">{feature.name}</span>
+          <p className="text-xs text-stone-400 leading-relaxed mt-0.5">{feature.desc}</p>
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -133,9 +128,8 @@ function SubclassCard({ subclass, color, isExpanded, onToggle }) {
 
 // ─── Main Class View ─────────────────────────────────────────────
 
-function ClassView({ classInfo }) {
-  const [activeSection, setActiveSection] = useState('overview');
-  const [expandedSubclass, setExpandedSubclass] = useState(null);
+function ClassView({ classInfo, selectedSubclass, onSelectSubclass }) {
+  const activeSubclass = selectedSubclass !== null ? classInfo.subclasses[selectedSubclass] : null;
 
   return (
     <div className="animate-fadeIn">
@@ -150,84 +144,54 @@ function ClassView({ classInfo }) {
         <div className="relative p-6">
           <div className="flex items-start gap-5">
             <div
-              className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl shadow-xl shrink-0"
+              className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-xl shrink-0"
               style={{
                 background: `linear-gradient(135deg, ${classInfo.color}, ${classInfo.color}BB)`,
                 boxShadow: `0 8px 32px ${classInfo.color}30`,
               }}
             >
-              {classInfo.emoji}
+              {ClassIcons[classInfo.id]
+                ? ClassIcons[classInfo.id]({ size: 52, color: '#fff' })
+                : <span className="text-4xl">{classInfo.emoji}</span>
+              }
             </div>
             <div className="flex-1 min-w-0">
-              <h2 className="text-3xl font-extrabold text-stone-100">{classInfo.name}</h2>
+              <h2 className="text-3xl font-extrabold text-stone-100">
+                {activeSubclass ? activeSubclass.name : classInfo.name}
+              </h2>
               <p className="text-sm mt-1 italic" style={{ color: `${classInfo.color}CC` }}>
-                {classInfo.tagline}
+                {activeSubclass ? activeSubclass.tagline : classInfo.tagline}
               </p>
-              <p className="text-sm text-stone-400 mt-3 leading-relaxed">{classInfo.description}</p>
+              <p className="text-sm text-stone-400 mt-3 leading-relaxed">
+                {activeSubclass ? activeSubclass.description : classInfo.description}
+              </p>
             </div>
           </div>
 
-          {/* Quick Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 mt-5">
-            <StatBadge label="Hit Die" value={classInfo.hitDie} color="red" />
-            <StatBadge label="Primary Ability" value={classInfo.primaryAbility} color="amber" />
-            <StatBadge label="Saving Throws" value={classInfo.savingThrows.join(', ')} color="blue" />
-            <StatBadge label="Armor" value={classInfo.armorProf} color="green" />
-            <StatBadge label="Weapons" value={classInfo.weaponProf} color="purple" />
-          </div>
+          {/* Quick Stats — only on base class */}
+          {!activeSubclass && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 mt-5">
+              <StatBadge label="Hit Die" value={classInfo.hitDie} color="red" />
+              <StatBadge label="Primary Ability" value={classInfo.primaryAbility} color="amber" />
+              <StatBadge label="Saving Throws" value={classInfo.savingThrows.join(', ')} color="blue" />
+              <StatBadge label="Armor" value={classInfo.armorProf} color="green" />
+              <StatBadge label="Weapons" value={classInfo.weaponProf} color="purple" />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Section Tabs */}
-      <div className="flex gap-2 mb-5 border-b border-stone-700/50 pb-2">
-        {[
-          { key: 'overview', label: 'Class Features' },
-          { key: 'subclasses', label: `Subclasses (${classInfo.subclasses.length})` },
-        ].map(tab => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveSection(tab.key)}
-            className={`px-4 py-2 rounded-t-lg text-sm font-medium transition-colors ${
-              activeSection === tab.key
-                ? 'text-stone-100 border-b-2'
-                : 'text-stone-400 hover:text-stone-200'
-            }`}
-            style={{
-              borderColor: activeSection === tab.key ? classInfo.color : 'transparent',
-            }}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Section Content */}
-      {activeSection === 'overview' && (
-        <div className="bg-stone-800/30 border border-stone-700/30 rounded-xl p-4">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-stone-400 mb-3">
-            Core Class Features
-          </h3>
-          <div>
-            {classInfo.keyFeatures.map((feature, i) => (
-              <FeatureItem key={i} feature={feature} color={classInfo.color} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {activeSection === 'subclasses' && (
-        <div className="space-y-3">
-          {classInfo.subclasses.map((subclass, i) => (
-            <SubclassCard
-              key={i}
-              subclass={subclass}
-              color={classInfo.color}
-              isExpanded={expandedSubclass === i}
-              onToggle={() => setExpandedSubclass(expandedSubclass === i ? null : i)}
-            />
+      {/* Features */}
+      <div className="bg-stone-800/30 border border-stone-700/30 rounded-xl p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-stone-400 mb-3">
+          {activeSubclass ? `${activeSubclass.name} Features` : 'Core Class Features'}
+        </h3>
+        <div>
+          {(activeSubclass ? activeSubclass.features : classInfo.keyFeatures).map((feature, i) => (
+            <FeatureItem key={i} feature={feature} color={classInfo.color} />
           ))}
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -236,25 +200,33 @@ function ClassView({ classInfo }) {
 
 export default function ClassesPage() {
   const [selectedClass, setSelectedClass] = useState(CLASS_DATA[0].id);
+  const [selectedSubclass, setSelectedSubclass] = useState(null);
   const contentRef = useRef(null);
 
   const classInfo = CLASS_DATA.find(c => c.id === selectedClass);
 
   const handleClassSelect = (classId) => {
     setSelectedClass(classId);
-    // Scroll content to top on class change
+    setSelectedSubclass(null);
+    if (contentRef.current) {
+      contentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleSubclassSelect = (index) => {
+    setSelectedSubclass(selectedSubclass === index ? null : index);
     if (contentRef.current) {
       contentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100 overflow-hidden">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto p-4">
+      <div className="max-w-7xl mx-auto w-full px-4 flex flex-col flex-1 min-h-0">
         {/* Page Header */}
-        <div className="mb-6">
+        <div className="py-4 shrink-0">
           <h1 className="text-3xl font-bold text-amber-400 flex items-center gap-3">
             <Icons.BookOpen className="w-8 h-8" />
             Class Guide
@@ -262,9 +234,9 @@ export default function ClassesPage() {
           <p className="text-stone-400">5th Edition class and subclass reference</p>
         </div>
 
-        {/* Class Selector */}
-        <div className="mb-6 bg-stone-800/30 border border-stone-700/30 rounded-2xl p-3">
-          <div className="flex items-center gap-1 overflow-x-auto pb-1 justify-center flex-wrap">
+        {/* Class Selector — fixed, never scrolls */}
+        <div className="shrink-0 bg-stone-800/30 border border-stone-700/30 rounded-2xl p-4 mb-2">
+          <div className="flex items-center gap-1 overflow-x-auto py-1 justify-center flex-wrap">
             {CLASS_DATA.map(cls => (
               <ClassIcon
                 key={cls.id}
@@ -276,9 +248,60 @@ export default function ClassesPage() {
           </div>
         </div>
 
-        {/* Class Detail */}
-        <div ref={contentRef}>
-          {classInfo && <ClassView key={classInfo.id} classInfo={classInfo} />}
+        {/* Subclass Selector — also fixed */}
+        {classInfo && (
+          <div className="shrink-0 mb-4">
+            <div className="flex items-center gap-2 overflow-x-auto py-1 justify-center flex-wrap">
+              {/* Base class button */}
+              <button
+                onClick={() => { setSelectedSubclass(null); if (contentRef.current) contentRef.current.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  selectedSubclass === null
+                    ? 'text-white shadow-md'
+                    : 'text-stone-400 hover:text-stone-200 bg-stone-800/30 hover:bg-stone-800/60'
+                }`}
+                style={selectedSubclass === null ? {
+                  background: `linear-gradient(135deg, ${classInfo.color}CC, ${classInfo.color}90)`,
+                  boxShadow: `0 2px 12px ${classInfo.color}30`,
+                } : {}}
+              >
+                {classInfo.name}
+              </button>
+
+              <span className="text-stone-600 text-xs">|</span>
+
+              {/* Subclass buttons */}
+              {classInfo.subclasses.map((sub, i) => (
+                <button
+                  key={i}
+                  onClick={() => handleSubclassSelect(i)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    selectedSubclass === i
+                      ? 'text-white shadow-md'
+                      : 'text-stone-400 hover:text-stone-200 bg-stone-800/30 hover:bg-stone-800/60'
+                  }`}
+                  style={selectedSubclass === i ? {
+                    background: `linear-gradient(135deg, ${classInfo.color}CC, ${classInfo.color}90)`,
+                    boxShadow: `0 2px 12px ${classInfo.color}30`,
+                  } : {}}
+                >
+                  {sub.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Class Detail — scrollable */}
+        <div ref={contentRef} className="flex-1 overflow-y-auto min-h-0 pb-8">
+          {classInfo && (
+            <ClassView
+              key={`${classInfo.id}-${selectedSubclass}`}
+              classInfo={classInfo}
+              selectedSubclass={selectedSubclass}
+              onSelectSubclass={handleSubclassSelect}
+            />
+          )}
         </div>
       </div>
 
