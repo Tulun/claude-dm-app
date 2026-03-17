@@ -1048,13 +1048,16 @@
         "armorType": "Light"
       },
       {
-        "id": 1770433434941,
+        "id": 1773600227612,
         "name": "Hat of Disguise",
         "quantity": 1,
         "weight": "",
-        "description": "While wearing this hat, you can cast the Disguise Self spell. The spell ends if the hat is removed.",
+        "description": "While wearing this hat, you can take a Magic action to cast the Disguise Self spell from it at will. The spell ends if the hat is removed.",
         "itemType": "gear",
-        "equipped": true
+        "magicItemId": "hat-disguise",
+        "rarity": "Uncommon",
+        "attunement": true,
+        "acBonus": ""
       }
     ],
     "advantages": [],

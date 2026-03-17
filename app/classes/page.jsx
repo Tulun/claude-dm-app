@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Icons from '../components/Icons';
 import Navbar from '../components/Navbar';
 import { CLASS_DATA } from './classData';
+import { CLASS_DETAILS, PROF_BONUS } from './classDetails';
 import ClassIcons from './ClassIcons';
 
 // ─── Class Icon Component ────────────────────────────────────────
@@ -128,69 +129,220 @@ function SubclassCard({ subclass, color, isExpanded, onToggle }) {
 
 // ─── Main Class View ─────────────────────────────────────────────
 
-function ClassView({ classInfo, selectedSubclass, onSelectSubclass }) {
+function ClassView({ classInfo, selectedSubclass, onSelectSubclass, scrollContainer }) {
   const activeSubclass = selectedSubclass !== null ? classInfo.subclasses[selectedSubclass] : null;
+  const details = CLASS_DETAILS[classInfo.id];
+
+  const scrollTo = (id) => {
+    const el = document.getElementById(id);
+    if (el && scrollContainer?.current) {
+      const containerTop = scrollContainer.current.getBoundingClientRect().top;
+      const elTop = el.getBoundingClientRect().top;
+      scrollContainer.current.scrollBy({ top: elTop - containerTop - 8, behavior: 'smooth' });
+    }
+  };
+
+  // Build sidebar items based on current view
+  const sidebarItems = [];
+  if (!activeSubclass) {
+    sidebarItems.push({ id: 'section-overview', label: classInfo.name });
+    if (details) sidebarItems.push({ id: 'section-traits', label: 'Core Traits' });
+    sidebarItems.push({ id: 'section-features', label: 'Class Features' });
+    // Add individual features as sub-items
+    classInfo.keyFeatures.forEach((f) => {
+      sidebarItems.push({ id: `feature-${f.level}-${f.name.replace(/\s+/g, '-').toLowerCase()}`, label: `Level ${f.level}: ${f.name}`, indent: true });
+    });
+    if (details?.levelTable) sidebarItems.push({ id: 'section-levels', label: 'Level Table' });
+    if (details?.multiclass) sidebarItems.push({ id: 'section-multiclass', label: 'Multiclassing' });
+    // Subclasses section
+    sidebarItems.push({ id: 'section-subclasses-nav', label: `${classInfo.name} Subclasses`, header: true });
+    classInfo.subclasses.forEach((sub, i) => {
+      sidebarItems.push({ id: `subclass-${i}`, label: sub.name, action: () => onSelectSubclass(i) });
+    });
+  } else {
+    sidebarItems.push({ id: 'section-overview', label: activeSubclass.name });
+    sidebarItems.push({ id: 'section-features', label: 'Subclass Features' });
+    activeSubclass.features.forEach((f) => {
+      sidebarItems.push({ id: `feature-${f.level}-${f.name.replace(/\s+/g, '-').toLowerCase()}`, label: `Level ${f.level}: ${f.name}`, indent: true });
+    });
+    sidebarItems.push({ id: 'back-to-class', label: `← Back to ${classInfo.name}`, action: () => onSelectSubclass(null) });
+  }
 
   return (
-    <div className="animate-fadeIn">
-      {/* Class Header */}
-      <div className="relative overflow-hidden rounded-2xl mb-6" style={{ background: `linear-gradient(135deg, ${classInfo.color}15, ${classInfo.color}05)` }}>
-        <div
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage: `radial-gradient(circle at 80% 20%, ${classInfo.color}, transparent 60%)`,
-          }}
-        />
-        <div className="relative p-6">
-          <div className="flex items-start gap-5">
-            <div
-              className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-xl shrink-0"
-              style={{
-                background: `linear-gradient(135deg, ${classInfo.color}, ${classInfo.color}BB)`,
-                boxShadow: `0 8px 32px ${classInfo.color}30`,
-              }}
-            >
-              {ClassIcons[classInfo.id]
-                ? ClassIcons[classInfo.id]({ size: 52, color: '#fff' })
-                : <span className="text-4xl">{classInfo.emoji}</span>
-              }
-            </div>
-            <div className="flex-1 min-w-0">
-              <h2 className="text-3xl font-extrabold text-stone-100">
-                {activeSubclass ? activeSubclass.name : classInfo.name}
-              </h2>
-              <p className="text-sm mt-1 italic" style={{ color: `${classInfo.color}CC` }}>
-                {activeSubclass ? activeSubclass.tagline : classInfo.tagline}
-              </p>
-              <p className="text-sm text-stone-400 mt-3 leading-relaxed">
-                {activeSubclass ? activeSubclass.description : classInfo.description}
-              </p>
-            </div>
-          </div>
-
-          {/* Quick Stats — only on base class */}
-          {!activeSubclass && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 mt-5">
-              <StatBadge label="Hit Die" value={classInfo.hitDie} color="red" />
-              <StatBadge label="Primary Ability" value={classInfo.primaryAbility} color="amber" />
-              <StatBadge label="Saving Throws" value={classInfo.savingThrows.join(', ')} color="blue" />
-              <StatBadge label="Armor" value={classInfo.armorProf} color="green" />
-              <StatBadge label="Weapons" value={classInfo.weaponProf} color="purple" />
-            </div>
-          )}
+    <div className="flex gap-6">
+      {/* Sidebar */}
+      <div className="w-56 shrink-0 hidden lg:block">
+        <div className="sticky top-0 space-y-0.5 text-xs max-h-[calc(100vh-300px)] overflow-y-auto pr-2">
+          {sidebarItems.map((item, i) => {
+            if (item.header) {
+              return (
+                <div key={i} className="pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-stone-500 border-t border-stone-700/30 mt-2">
+                  {item.label}
+                </div>
+              );
+            }
+            return (
+              <button
+                key={i}
+                onClick={() => item.action ? item.action() : scrollTo(item.id)}
+                className={`w-full text-left px-2 py-1.5 rounded transition-colors ${
+                  item.indent
+                    ? 'pl-5 text-stone-500 hover:text-stone-300 hover:bg-stone-800/30'
+                    : 'text-stone-300 hover:text-stone-100 hover:bg-stone-800/50 font-medium'
+                }`}
+              >
+                {item.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Features */}
-      <div className="bg-stone-800/30 border border-stone-700/30 rounded-xl p-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-stone-400 mb-3">
-          {activeSubclass ? `${activeSubclass.name} Features` : 'Core Class Features'}
-        </h3>
-        <div>
-          {(activeSubclass ? activeSubclass.features : classInfo.keyFeatures).map((feature, i) => (
-            <FeatureItem key={i} feature={feature} color={classInfo.color} />
-          ))}
+      {/* Main Content */}
+      <div className="flex-1 min-w-0 animate-fadeIn space-y-6">
+        {/* Class Header */}
+        <div id="section-overview" className="relative overflow-hidden rounded-2xl" style={{ background: `linear-gradient(135deg, ${classInfo.color}15, ${classInfo.color}05)` }}>
+          <div
+            className="absolute inset-0 opacity-5"
+            style={{
+              backgroundImage: `radial-gradient(circle at 80% 20%, ${classInfo.color}, transparent 60%)`,
+            }}
+          />
+          <div className="relative p-6">
+            <div className="flex items-start gap-5">
+              <div
+                className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-xl shrink-0"
+                style={{
+                  background: `linear-gradient(135deg, ${classInfo.color}, ${classInfo.color}BB)`,
+                  boxShadow: `0 8px 32px ${classInfo.color}30`,
+                }}
+              >
+                {ClassIcons[classInfo.id]
+                  ? ClassIcons[classInfo.id]({ size: 52, color: '#fff' })
+                  : <span className="text-4xl">{classInfo.emoji}</span>
+                }
+              </div>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-3xl font-extrabold text-stone-100">
+                  {activeSubclass ? activeSubclass.name : classInfo.name}
+                </h2>
+                <p className="text-sm mt-1 italic" style={{ color: `${classInfo.color}CC` }}>
+                  {activeSubclass ? activeSubclass.tagline : classInfo.tagline}
+                </p>
+                <p className="text-sm text-stone-400 mt-3 leading-relaxed">
+                  {activeSubclass ? activeSubclass.description : classInfo.description}
+                </p>
+              </div>
+            </div>
+
+            {!activeSubclass && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 mt-5">
+                <StatBadge label="Hit Die" value={classInfo.hitDie} color="red" />
+                <StatBadge label="Primary Ability" value={classInfo.primaryAbility} color="amber" />
+                <StatBadge label="Saving Throws" value={classInfo.savingThrows.join(', ')} color="blue" />
+                <StatBadge label="Armor" value={classInfo.armorProf} color="green" />
+                <StatBadge label="Weapons" value={classInfo.weaponProf} color="purple" />
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Core Traits Table */}
+        {!activeSubclass && details && (
+          <div id="section-traits" className="bg-stone-800/30 border border-stone-700/30 rounded-xl overflow-hidden">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-stone-400 px-4 pt-4 pb-2">
+              Core {classInfo.name} Traits
+            </h3>
+            <div className="divide-y divide-stone-700/30">
+              {[
+                { label: 'Primary Ability', value: classInfo.primaryAbility },
+                { label: 'Hit Point Die', value: `${classInfo.hitDie} per ${classInfo.name} level` },
+                { label: 'Saving Throws', value: classInfo.savingThrows.join(' and ') },
+                { label: 'Skill Proficiencies', value: details.skillChoices },
+                { label: 'Weapon Proficiencies', value: classInfo.weaponProf },
+                { label: 'Armor Training', value: classInfo.armorProf },
+                { label: 'Starting Equipment', value: details.startingEquipment },
+              ].map((row, i) => (
+                <div key={i} className={`flex gap-4 px-4 py-2.5 ${i % 2 === 0 ? 'bg-stone-800/20' : ''}`}>
+                  <span className="text-sm font-semibold text-stone-300 w-44 shrink-0">{row.label}</span>
+                  <span className="text-sm text-stone-400 flex-1">{row.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Features */}
+        <div id="section-features" className="bg-stone-800/30 border border-stone-700/30 rounded-xl p-4">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-stone-400 mb-3">
+            {activeSubclass ? `${activeSubclass.name} Features` : 'Core Class Features'}
+          </h3>
+          <div>
+            {(activeSubclass ? activeSubclass.features : classInfo.keyFeatures).map((feature, i) => (
+              <div key={i} id={`feature-${feature.level}-${feature.name.replace(/\s+/g, '-').toLowerCase()}`}>
+                <FeatureItem feature={feature} color={classInfo.color} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Level Progression Table */}
+        {!activeSubclass && details && details.levelTable && (
+          <div id="section-levels" className="bg-stone-800/30 border border-stone-700/30 rounded-xl overflow-hidden">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-stone-400 px-4 pt-4 pb-2">
+              {classInfo.name} Features by Level
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-stone-700/50">
+                    <th className="px-3 py-2 text-left text-xs font-semibold text-stone-400 uppercase tracking-wider w-14">Lvl</th>
+                    <th className="px-3 py-2 text-left text-xs font-semibold text-stone-400 uppercase tracking-wider w-12">Prof</th>
+                    <th className="px-3 py-2 text-left text-xs font-semibold text-stone-400 uppercase tracking-wider">Features</th>
+                    {details.tableColumns.map((col, i) => (
+                      <th key={i} className="px-3 py-2 text-center text-xs font-semibold text-stone-400 uppercase tracking-wider whitespace-nowrap">{col}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {details.levelTable.map((row, lvl) => (
+                    <tr key={lvl} className={`border-b border-stone-700/20 ${lvl % 2 === 0 ? 'bg-stone-800/20' : ''}`}>
+                      <td className="px-3 py-2 text-stone-300 font-mono text-center">{lvl + 1}</td>
+                      <td className="px-3 py-2 text-stone-400 font-mono text-center">+{PROF_BONUS[lvl + 1]}</td>
+                      <td className="px-3 py-2 text-stone-300">
+                        {row.features === '—' ? <span className="text-stone-600">—</span> : row.features}
+                      </td>
+                      {row.cols.map((val, i) => (
+                        <td key={i} className="px-3 py-2 text-center text-stone-400 font-mono">
+                          {val === '—' ? <span className="text-stone-600">—</span> : val}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Multiclass Info */}
+        {!activeSubclass && details && details.multiclass && (
+          <div id="section-multiclass" className="bg-stone-800/30 border border-stone-700/30 rounded-xl p-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-stone-400 mb-3">
+              Multiclassing
+            </h3>
+            <div className="space-y-2 text-sm">
+              <div>
+                <span className="font-semibold text-stone-300">Requirement: </span>
+                <span className="text-stone-400">{details.multiclass.requirements}</span>
+              </div>
+              <div>
+                <span className="font-semibold text-stone-300">You gain: </span>
+                <span className="text-stone-400">{details.multiclass.gains}</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -300,6 +452,7 @@ export default function ClassesPage() {
               classInfo={classInfo}
               selectedSubclass={selectedSubclass}
               onSelectSubclass={handleSubclassSelect}
+              scrollContainer={contentRef}
             />
           )}
         </div>

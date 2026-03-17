@@ -16,16 +16,13 @@ export default function MagicItemsPage() {
   const [editingItem, setEditingItem] = useState(null);
   const [expandedLetters, setExpandedLetters] = useState({});
 
-  // Load custom items from localStorage
+  // Load custom items from API
   useEffect(() => {
-    const saved = localStorage.getItem('customMagicItems');
-    if (saved) setCustomItems(JSON.parse(saved));
+    fetch('/api/magic-items')
+      .then(res => res.json())
+      .then(data => { if (Array.isArray(data)) setCustomItems(data); })
+      .catch(err => console.error('Failed to load custom magic items:', err));
   }, []);
-
-  // Save custom items
-  useEffect(() => {
-    localStorage.setItem('customMagicItems', JSON.stringify(customItems));
-  }, [customItems]);
 
   // Filter and sort items
   useEffect(() => {
@@ -61,20 +58,38 @@ export default function MagicItemsPage() {
 
   const alphabet = Object.keys(groupedItems).sort();
 
-  const addCustomItem = (item) => {
-    const newItem = { ...item, id: `custom-${Date.now()}`, custom: true };
-    setCustomItems([...customItems, newItem]);
+  const saveCustomItem = async (item) => {
+    try {
+      const res = await fetch('/api/magic-items', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...item, custom: true }),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setCustomItems(updated);
+      }
+    } catch (err) {
+      console.error('Failed to save magic item:', err);
+    }
     setShowAddModal(false);
-  };
-
-  const updateCustomItem = (item) => {
-    setCustomItems(customItems.map(i => i.id === item.id ? item : i));
     setEditingItem(null);
   };
 
-  const deleteCustomItem = (id) => {
-    if (confirm('Delete this custom item?')) {
-      setCustomItems(customItems.filter(i => i.id !== id));
+  const deleteCustomItem = async (id) => {
+    if (!confirm('Delete this custom item?')) return;
+    try {
+      const res = await fetch('/api/magic-items', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setCustomItems(updated);
+      }
+    } catch (err) {
+      console.error('Failed to delete magic item:', err);
     }
   };
 
@@ -216,6 +231,16 @@ export default function MagicItemsPage() {
                         item={item} 
                         onEdit={() => setEditingItem(item)}
                         onDelete={() => deleteCustomItem(item.id)}
+                        onCopyAndEdit={(srcItem) => {
+                          const copy = {
+                            ...srcItem,
+                            id: `custom-${Date.now()}`,
+                            name: `${srcItem.name} (Custom)`,
+                            custom: true,
+                          };
+                          setEditingItem(copy);
+                          setShowAddModal(true);
+                        }}
                       />
                     ))}
                   </div>
@@ -230,7 +255,7 @@ export default function MagicItemsPage() {
       {(showAddModal || editingItem) && (
         <ItemModal
           item={editingItem}
-          onSave={editingItem ? updateCustomItem : addCustomItem}
+          onSave={saveCustomItem}
           onClose={() => { setShowAddModal(false); setEditingItem(null); }}
         />
       )}
@@ -238,7 +263,7 @@ export default function MagicItemsPage() {
   );
 }
 
-function ItemCard({ item, onEdit, onDelete }) {
+function ItemCard({ item, onEdit, onDelete, onCopyAndEdit }) {
   const colors = RARITY_COLORS[item.rarity] || RARITY_COLORS['Common'];
   
   let subtitle = item.category;
@@ -258,12 +283,18 @@ function ItemCard({ item, onEdit, onDelete }) {
           </h3>
           <p className="text-sm text-stone-400 italic">{subtitle}</p>
         </div>
-        {item.custom && (
-          <div className="flex gap-2 flex-shrink-0">
-            <button onClick={onEdit} className="px-2 py-1 rounded text-xs bg-stone-700 hover:bg-stone-600">Edit</button>
-            <button onClick={onDelete} className="px-2 py-1 rounded text-xs bg-red-900/50 hover:bg-red-800/50 text-red-400">Delete</button>
-          </div>
-        )}
+        <div className="flex gap-2 flex-shrink-0">
+          {item.custom ? (
+            <>
+              <button onClick={onEdit} className="px-2 py-1 rounded text-xs bg-stone-700 hover:bg-stone-600">Edit</button>
+              <button onClick={onDelete} className="px-2 py-1 rounded text-xs bg-red-900/50 hover:bg-red-800/50 text-red-400">Delete</button>
+            </>
+          ) : (
+            <button onClick={() => onCopyAndEdit(item)} className="px-2 py-1 rounded text-xs bg-stone-700 hover:bg-stone-600" title="Create an editable copy of this item">
+              Copy & Edit
+            </button>
+          )}
+        </div>
       </div>
       
       {(item.custom || item.cursed) && (

@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Icons from '../../../components/Icons';
 import { Tooltip } from '../../../components/ui';
+import { MAGIC_ITEMS, RARITY_COLORS, ITEM_CATEGORIES, RARITIES } from '../../../magic-items/magicItems';
 
 const WEAPON_PROPERTIES = [
   { name: 'Ammunition', desc: 'Requires ammunition to fire. Drawing ammo is part of the attack.' },
@@ -54,12 +55,247 @@ const PropButton = ({ prop, isSelected, onClick, color = 'amber' }) => {
   );
 };
 
+// ─── Delete Confirmation Modal ───────────────────────────────────
+
+function DeleteConfirmModal({ itemName, onConfirm, onCancel }) {
+  return (
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100]" onClick={onCancel}>
+      <div className="bg-stone-800 border border-stone-700 rounded-xl p-5 max-w-sm w-full mx-4 shadow-2xl" onClick={e => e.stopPropagation()}>
+        <h3 className="text-lg font-bold text-stone-100 mb-2">Delete Item</h3>
+        <p className="text-sm text-stone-400 mb-4">
+          Are you sure you want to delete <span className="text-stone-200 font-medium">{itemName || 'this item'}</span>? This cannot be undone.
+        </p>
+        <div className="flex gap-2 justify-end">
+          <button onClick={onCancel} className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600 text-sm">
+            Cancel
+          </button>
+          <button onClick={onConfirm} className="px-4 py-2 rounded-lg bg-red-700 hover:bg-red-600 text-sm text-white">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Add Item Modal ──────────────────────────────────────────────
+
+function AddItemModal({ onAdd, onClose }) {
+  const [mode, setMode] = useState('search'); // 'search' or 'custom'
+  const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [rarityFilter, setRarityFilter] = useState('');
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  // Custom item fields
+  const [customName, setCustomName] = useState('');
+  const [customType, setCustomType] = useState('gear');
+
+  const filteredItems = useMemo(() => {
+    return MAGIC_ITEMS
+      .filter(item => {
+        if (categoryFilter && item.category !== categoryFilter) return false;
+        if (rarityFilter && item.rarity !== rarityFilter) return false;
+        if (search && !item.name.toLowerCase().includes(search.toLowerCase())) return false;
+        return true;
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [search, categoryFilter, rarityFilter]);
+
+  const handleAddMagicItem = (magicItem) => {
+    const itemType = magicItem.category === 'Weapon' ? 'weapon' : magicItem.category === 'Armor' ? 'armor' : 'gear';
+    const newItem = {
+      id: Date.now(),
+      name: magicItem.name,
+      quantity: 1,
+      weight: '',
+      description: magicItem.description,
+      itemType,
+      magicItemId: magicItem.id,
+      rarity: magicItem.rarity,
+      attunement: magicItem.attunement,
+    };
+    onAdd(newItem);
+    onClose();
+  };
+
+  const handleAddCustom = () => {
+    if (!customName.trim()) return;
+    const newItem = {
+      id: Date.now(),
+      name: customName.trim(),
+      quantity: 1,
+      weight: '',
+      description: '',
+      itemType: customType,
+    };
+    onAdd(newItem);
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100] p-4" onClick={onClose}>
+      <div className="bg-stone-900 border border-stone-700 rounded-xl max-w-2xl w-full max-h-[80vh] flex flex-col shadow-2xl" onClick={e => e.stopPropagation()}>
+        {/* Header */}
+        <div className="p-4 border-b border-stone-700">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-bold text-amber-400">Add Item</h2>
+            <button onClick={onClose} className="text-stone-400 hover:text-stone-200 p-1"><Icons.X /></button>
+          </div>
+
+          {/* Mode Toggle */}
+          <div className="flex gap-2 mb-3">
+            <button
+              onClick={() => setMode('search')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                mode === 'search' ? 'bg-amber-700 text-amber-100' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'
+              }`}
+            >
+              <span className="flex items-center gap-2"><Icons.Search /> Search Magic Items</span>
+            </button>
+            <button
+              onClick={() => setMode('custom')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                mode === 'custom' ? 'bg-amber-700 text-amber-100' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'
+              }`}
+            >
+              <span className="flex items-center gap-2"><Icons.Plus /> Custom Item</span>
+            </button>
+          </div>
+
+          {mode === 'search' && (
+            <>
+              <div className="relative mb-2">
+                <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500" />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Search magic items..."
+                  className="w-full pl-10 pr-4 py-2 bg-stone-800 border border-stone-700 rounded-lg text-sm focus:outline-none focus:border-amber-700"
+                  autoFocus
+                />
+              </div>
+              <div className="flex gap-2">
+                <select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)} className="bg-stone-800 border border-stone-700 rounded-lg px-2 py-1 text-xs focus:outline-none">
+                  <option value="">All Categories</option>
+                  {ITEM_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+                <select value={rarityFilter} onChange={e => setRarityFilter(e.target.value)} className="bg-stone-800 border border-stone-700 rounded-lg px-2 py-1 text-xs focus:outline-none">
+                  <option value="">All Rarities</option>
+                  {RARITIES.map(r => <option key={r} value={r}>{r}</option>)}
+                </select>
+                <span className="text-xs text-stone-500 self-center ml-auto">{filteredItems.length} items</span>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto p-4">
+          {mode === 'search' ? (
+            <div className="space-y-1">
+              {filteredItems.map(item => {
+                const rc = RARITY_COLORS[item.rarity] || RARITY_COLORS.Common;
+                const isSelected = selectedItem?.id === item.id;
+                return (
+                  <div key={item.id}>
+                    <button
+                      onClick={() => setSelectedItem(isSelected ? null : item)}
+                      className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
+                        isSelected ? 'bg-amber-900/30 ring-1 ring-amber-700/50' : 'hover:bg-stone-800'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${rc.bg} ${rc.text}`}>
+                          {item.rarity}
+                        </span>
+                        <span className="text-sm font-medium text-stone-200">{item.name}</span>
+                        <span className="text-xs text-stone-500 ml-auto">{item.category}</span>
+                        {item.attunement && <span className="text-[10px] text-amber-500">(A)</span>}
+                      </div>
+                    </button>
+                    {isSelected && (
+                      <div className="ml-3 mr-3 mb-2 p-3 bg-stone-800/50 rounded-lg border border-stone-700/50">
+                        <p className="text-xs text-stone-400 leading-relaxed mb-3">{item.description}</p>
+                        <button
+                          onClick={() => handleAddMagicItem(item)}
+                          className="px-4 py-1.5 rounded-lg bg-amber-700 hover:bg-amber-600 text-sm text-white font-medium"
+                        >
+                          Add to Inventory
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+              {filteredItems.length === 0 && (
+                <div className="text-center py-8 text-stone-500 text-sm">No magic items found.</div>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs text-stone-400 mb-1">Item Name</label>
+                <input
+                  type="text"
+                  value={customName}
+                  onChange={e => setCustomName(e.target.value)}
+                  placeholder="e.g. Rope (50 ft), Healing Potion, +1 Longsword..."
+                  className="w-full bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-700"
+                  autoFocus
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-stone-400 mb-1">Item Type</label>
+                <div className="flex gap-2">
+                  {[
+                    { value: 'gear', label: 'Gear', icon: Icons.FolderOpen },
+                    { value: 'weapon', label: 'Weapon', icon: Icons.Sword },
+                    { value: 'armor', label: 'Armor', icon: Icons.Shield },
+                  ].map(opt => (
+                    <button
+                      key={opt.value}
+                      onClick={() => setCustomType(opt.value)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-colors ${
+                        customType === opt.value
+                          ? opt.value === 'weapon' ? 'bg-red-800 text-red-200' : opt.value === 'armor' ? 'bg-blue-800 text-blue-200' : 'bg-amber-800 text-amber-200'
+                          : 'bg-stone-800 text-stone-400 hover:bg-stone-700'
+                      }`}
+                    >
+                      <opt.icon /> {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <button
+                onClick={handleAddCustom}
+                disabled={!customName.trim()}
+                className={`w-full py-2 rounded-lg text-sm font-medium transition-colors ${
+                  customName.trim()
+                    ? 'bg-amber-700 hover:bg-amber-600 text-white'
+                    : 'bg-stone-700 text-stone-500 cursor-not-allowed'
+                }`}
+              >
+                Add Custom Item
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main InventoryTab ───────────────────────────────────────────
+
 export default function InventoryTab({ character, onUpdate }) {
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null); // { id, name }
 
-  const addItem = () => {
-    const newItem = { id: Date.now(), name: '', quantity: 1, weight: '', description: '', itemType: 'gear' };
+  const addItem = (newItem) => {
     onUpdate('inventory', [...(character.inventory || []), newItem]);
   };
 
@@ -67,8 +303,11 @@ export default function InventoryTab({ character, onUpdate }) {
     onUpdate('inventory', character.inventory.map(i => i.id === id ? { ...i, [field]: value } : i));
   };
 
-  const removeItem = (id) => {
-    onUpdate('inventory', character.inventory.filter(i => i.id !== id));
+  const confirmDelete = () => {
+    if (deleteTarget) {
+      onUpdate('inventory', character.inventory.filter(i => i.id !== deleteTarget.id));
+      setDeleteTarget(null);
+    }
   };
 
   const setItemType = (id, type) => {
@@ -102,7 +341,7 @@ export default function InventoryTab({ character, onUpdate }) {
   return (
     <div>
       <div className="flex justify-end mb-3">
-        <button onClick={addItem} className="px-3 py-1 rounded bg-amber-800 hover:bg-amber-700 text-xs flex items-center gap-1">
+        <button onClick={() => setShowAddModal(true)} className="px-3 py-1 rounded bg-amber-800 hover:bg-amber-700 text-xs flex items-center gap-1">
           <Icons.Plus /> Add Item
         </button>
       </div>
@@ -111,6 +350,7 @@ export default function InventoryTab({ character, onUpdate }) {
         {(character.inventory || []).map((item, index) => {
           const isWeapon = item.itemType === 'weapon';
           const isArmor = item.itemType === 'armor';
+          const rc = item.rarity ? (RARITY_COLORS[item.rarity] || {}) : {};
           
           return (
             <div key={item.id} draggable onDragStart={(e) => handleDragStart(e, index)} onDragOver={(e) => handleDragOver(e, index)}
@@ -130,6 +370,11 @@ export default function InventoryTab({ character, onUpdate }) {
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center gap-3">
                     <input type="text" value={item.name} onChange={(e) => updateItem(item.id, 'name', e.target.value)} className="bg-transparent font-medium focus:outline-none flex-1" placeholder="Item name" />
+                    {item.rarity && (
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${rc.bg || ''} ${rc.text || ''}`}>
+                        {item.rarity}
+                      </span>
+                    )}
                     <div className="flex items-center gap-1">
                       <span className="text-xs text-stone-500">Qty:</span>
                       <input type="text" value={item.quantity} onChange={(e) => updateItem(item.id, 'quantity', e.target.value)} className="bg-stone-900 rounded px-2 py-0.5 w-12 text-center text-sm focus:outline-none" />
@@ -138,7 +383,10 @@ export default function InventoryTab({ character, onUpdate }) {
                       <span className="text-xs text-stone-500">Wt:</span>
                       <input type="text" value={item.weight || ''} onChange={(e) => updateItem(item.id, 'weight', e.target.value)} className="bg-transparent text-sm focus:outline-none w-16 text-stone-400" placeholder="1 lb" />
                     </div>
-                    <button onClick={() => removeItem(item.id)} className="text-red-500 hover:text-red-400 text-lg">×</button>
+                    <button
+                      onClick={() => setDeleteTarget({ id: item.id, name: item.name || 'Unnamed item' })}
+                      className="text-red-500 hover:text-red-400 text-lg"
+                    >×</button>
                   </div>
 
                   {isWeapon && (
@@ -222,7 +470,11 @@ export default function InventoryTab({ character, onUpdate }) {
           );
         })}
       </div>
-      {(character.inventory || []).length === 0 && <div className="text-center text-stone-500 py-8">No items yet.</div>}
+      {(character.inventory || []).length === 0 && <div className="text-center text-stone-500 py-8">No items yet. Click "Add Item" to get started.</div>}
+
+      {/* Modals */}
+      {showAddModal && <AddItemModal onAdd={addItem} onClose={() => setShowAddModal(false)} />}
+      {deleteTarget && <DeleteConfirmModal itemName={deleteTarget.name} onConfirm={confirmDelete} onCancel={() => setDeleteTarget(null)} />}
     </div>
   );
 }
