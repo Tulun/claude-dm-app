@@ -7,7 +7,7 @@ const DATA_FILE = path.join(process.cwd(), 'data', 'magic-items.json');
 const DATA_DIR = path.join(process.cwd(), 'data');
 
 // Increment when adding new default items or fields
-const ITEMS_VERSION = 1;
+const ITEMS_VERSION = 2;
 
 function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) {
