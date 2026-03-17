@@ -303,7 +303,146 @@ export default function InventoryTab({ character, onUpdate }) {
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState(null); // { id, name }
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [expandedItems, setExpandedItems] = useState({});
+  const [editingItems, setEditingItems] = useState({});
+
+  // Base weapon data for property/damage lookups
+  const BASE_WEAPONS = {
+    'club': { damage: '1d4', type: 'Bludgeoning', props: ['Light'] },
+    'dagger': { damage: '1d4', type: 'Piercing', props: ['Finesse', 'Light', 'Thrown'] },
+    'greatclub': { damage: '1d8', type: 'Bludgeoning', props: ['Two-Handed'] },
+    'handaxe': { damage: '1d6', type: 'Slashing', props: ['Light', 'Thrown'] },
+    'javelin': { damage: '1d6', type: 'Piercing', props: ['Thrown'] },
+    'light hammer': { damage: '1d4', type: 'Bludgeoning', props: ['Light', 'Thrown'] },
+    'mace': { damage: '1d6', type: 'Bludgeoning', props: [] },
+    'quarterstaff': { damage: '1d6', type: 'Bludgeoning', props: ['Versatile'] },
+    'sickle': { damage: '1d4', type: 'Slashing', props: ['Light'] },
+    'spear': { damage: '1d6', type: 'Piercing', props: ['Thrown', 'Versatile'] },
+    'light crossbow': { damage: '1d8', type: 'Piercing', props: ['Ammunition', 'Loading', 'Two-Handed'], ranged: true },
+    'dart': { damage: '1d4', type: 'Piercing', props: ['Finesse', 'Thrown'], ranged: true },
+    'shortbow': { damage: '1d6', type: 'Piercing', props: ['Ammunition', 'Two-Handed'], ranged: true },
+    'sling': { damage: '1d4', type: 'Bludgeoning', props: ['Ammunition'], ranged: true },
+    'battleaxe': { damage: '1d8', type: 'Slashing', props: ['Versatile'] },
+    'flail': { damage: '1d8', type: 'Bludgeoning', props: [] },
+    'glaive': { damage: '1d10', type: 'Slashing', props: ['Heavy', 'Reach', 'Two-Handed'] },
+    'greataxe': { damage: '1d12', type: 'Slashing', props: ['Heavy', 'Two-Handed'] },
+    'greatsword': { damage: '2d6', type: 'Slashing', props: ['Heavy', 'Two-Handed'] },
+    'halberd': { damage: '1d10', type: 'Slashing', props: ['Heavy', 'Reach', 'Two-Handed'] },
+    'lance': { damage: '1d10', type: 'Piercing', props: ['Heavy', 'Reach'] },
+    'longsword': { damage: '1d8', type: 'Slashing', props: ['Versatile'] },
+    'maul': { damage: '2d6', type: 'Bludgeoning', props: ['Heavy', 'Two-Handed'] },
+    'morningstar': { damage: '1d8', type: 'Piercing', props: [] },
+    'pike': { damage: '1d10', type: 'Piercing', props: ['Heavy', 'Reach', 'Two-Handed'] },
+    'rapier': { damage: '1d8', type: 'Piercing', props: ['Finesse'] },
+    'scimitar': { damage: '1d6', type: 'Slashing', props: ['Finesse', 'Light'] },
+    'shortsword': { damage: '1d6', type: 'Piercing', props: ['Finesse', 'Light'] },
+    'trident': { damage: '1d8', type: 'Piercing', props: ['Thrown', 'Versatile'] },
+    'war pick': { damage: '1d8', type: 'Piercing', props: ['Versatile'] },
+    'warhammer': { damage: '1d8', type: 'Bludgeoning', props: ['Versatile'] },
+    'whip': { damage: '1d4', type: 'Slashing', props: ['Finesse', 'Reach'] },
+    'blowgun': { damage: '1', type: 'Piercing', props: ['Ammunition', 'Loading'], ranged: true },
+    'hand crossbow': { damage: '1d6', type: 'Piercing', props: ['Ammunition', 'Light', 'Loading'], ranged: true },
+    'heavy crossbow': { damage: '1d10', type: 'Piercing', props: ['Ammunition', 'Heavy', 'Loading', 'Two-Handed'], ranged: true },
+    'longbow': { damage: '1d8', type: 'Piercing', props: ['Ammunition', 'Heavy', 'Two-Handed'], ranged: true },
+  };
+
+  // Try to find the base weapon type from item name or weaponType field
+  const findBaseWeapon = (item) => {
+    const name = (item.name || '').toLowerCase();
+    const wType = (item.weaponType || '').toLowerCase();
+    
+    // Direct match on weaponType field (e.g. "Dagger", "Longsword")
+    for (const [key, data] of Object.entries(BASE_WEAPONS)) {
+      if (wType === key || wType.includes(key)) return data;
+    }
+    // Match from item name (e.g. "Dagger of Venom" → dagger, "Sun Blade" → longsword)
+    for (const [key, data] of Object.entries(BASE_WEAPONS)) {
+      if (name.startsWith(key) || name.includes(` ${key}`)) return data;
+    }
+    // Special cases for magic items
+    if (wType.includes('sword') || name.includes('sword') || name.includes('blade')) {
+      if (name.includes('short')) return BASE_WEAPONS['shortsword'];
+      if (name.includes('great')) return BASE_WEAPONS['greatsword'];
+      return BASE_WEAPONS['longsword']; // default sword
+    }
+    if (wType.includes('axe') || name.includes('axe')) {
+      if (name.includes('great') || name.includes('battle')) return BASE_WEAPONS['battleaxe'];
+      return BASE_WEAPONS['handaxe'];
+    }
+    if (wType.includes('bow') || name.includes('bow')) {
+      if (name.includes('long') || wType.includes('long')) return BASE_WEAPONS['longbow'];
+      if (name.includes('cross')) return BASE_WEAPONS['light crossbow'];
+      return BASE_WEAPONS['shortbow'];
+    }
+    return null;
+  };
+
+  // Calculate weapon attack/damage based on character stats
+  const getWeaponStats = (item) => {
+    if (item.itemType !== 'weapon') return null;
+    
+    const getMod = (score) => Math.floor(((parseInt(score) || 10) - 10) / 2);
+    const strMod = getMod(character.str);
+    const dexMod = getMod(character.dex);
+    
+    // Get base weapon data
+    const base = findBaseWeapon(item);
+    const itemProps = item.weaponProperties || [];
+    const props = itemProps.length > 0 ? itemProps : (base?.props || []);
+    
+    // Determine ability modifier
+    const isFinesse = props.includes('Finesse');
+    const isRanged = base?.ranged || (item.weaponType || '').toLowerCase().includes('ranged');
+    let abilityMod;
+    if (isFinesse) {
+      abilityMod = Math.max(strMod, dexMod);
+    } else if (isRanged) {
+      abilityMod = dexMod;
+    } else {
+      abilityMod = strMod;
+    }
+    
+    // Proficiency bonus (assume proficient)
+    const profBonus = parseInt(character.profBonus) || Math.ceil(1 + (parseInt(character.level) || 1) / 4) + 1;
+    
+    // Magic bonus from item name or description
+    let magicBonus = 0;
+    const nameMatch = (item.name || '').match(/\+(\d)/);
+    if (nameMatch) {
+      magicBonus = parseInt(nameMatch[1]);
+    } else {
+      const descMatch = (item.description || '').match(/\+(\d) bonus to attack/);
+      if (descMatch) magicBonus = parseInt(descMatch[1]);
+    }
+    
+    // Attack bonus
+    const attackBonus = abilityMod + profBonus + magicBonus;
+    
+    // Damage dice: use item's set damage, or base weapon damage
+    const damageDice = item.damage || base?.damage || '';
+    
+    // Damage modifier
+    const damageMod = abilityMod + magicBonus;
+    
+    // Damage type: use item's set type, or base weapon type
+    const damageType = item.damageType || base?.type || '';
+    
+    return {
+      attackBonus: attackBonus >= 0 ? `+${attackBonus}` : `${attackBonus}`,
+      damage: damageDice ? `${damageDice}${damageMod >= 0 ? '+' + damageMod : damageMod}` : null,
+      damageType,
+      damageDice,
+      abilityMod,
+      magicBonus,
+      properties: props,
+      isRanged,
+    };
+  };
+
+  const toggleExpand = (id) => {
+    setExpandedItems(prev => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const addItem = (newItem) => {
     onUpdate('inventory', [...(character.inventory || []), newItem]);
@@ -356,126 +495,181 @@ export default function InventoryTab({ character, onUpdate }) {
         </button>
       </div>
       
-      <div className="space-y-3">
+      <div className="space-y-1">
         {(character.inventory || []).map((item, index) => {
           const isWeapon = item.itemType === 'weapon';
           const isArmor = item.itemType === 'armor';
+          const isMagicItem = !!item.magicItemId;
+          const isExpanded = expandedItems[item.id];
           const rc = item.rarity ? (RARITY_COLORS[item.rarity] || {}) : {};
+          const weaponStats = isWeapon ? getWeaponStats(item) : null;
           
           return (
             <div key={item.id} draggable onDragStart={(e) => handleDragStart(e, index)} onDragOver={(e) => handleDragOver(e, index)}
               onDragLeave={handleDragLeave} onDrop={(e) => handleDrop(e, index)} onDragEnd={handleDragEnd}
-              className={`rounded-lg overflow-hidden transition-all ${draggedIndex === index ? 'opacity-50' : ''} ${dragOverIndex === index ? 'ring-2 ring-amber-400' : ''} ${item.equipped ? 'ring-2 ring-green-500/50' : ''} ${isWeapon ? 'bg-red-900/20 border border-red-800/50' : isArmor ? 'bg-blue-900/20 border border-blue-800/50' : 'bg-stone-800'}`}>
-              <div className="p-3 flex items-start gap-3">
-                <div className="cursor-grab active:cursor-grabbing text-stone-600 hover:text-stone-400 pt-1"><Icons.GripVertical /></div>
+              className={`rounded-lg overflow-hidden transition-all ${draggedIndex === index ? 'opacity-50' : ''} ${dragOverIndex === index ? 'ring-2 ring-amber-400' : ''} ${item.equipped ? 'ring-1 ring-green-500/50' : ''} ${isWeapon ? 'bg-red-900/15 border border-red-800/30' : isArmor ? 'bg-blue-900/15 border border-blue-800/30' : 'bg-stone-800/50 border border-stone-700/30'}`}>
+              
+              {/* Collapsed row — always visible */}
+              <div className="px-3 py-2 flex items-center gap-2 cursor-pointer hover:bg-stone-700/20 transition-colors" onClick={() => toggleExpand(item.id)}>
+                <div className="cursor-grab active:cursor-grabbing text-stone-600 hover:text-stone-400" onClick={e => e.stopPropagation()}><Icons.GripVertical /></div>
                 
-                <div className="flex flex-col gap-1 items-center">
-                  <button onClick={() => setItemType(item.id, 'weapon')} className={`p-1.5 rounded ${isWeapon ? 'bg-red-800 text-red-200' : 'bg-stone-700 text-stone-400 hover:bg-stone-600'}`} title="Weapon"><Icons.Sword /></button>
-                  <button onClick={() => setItemType(item.id, 'armor')} className={`p-1.5 rounded ${isArmor ? 'bg-blue-800 text-blue-200' : 'bg-stone-700 text-stone-400 hover:bg-stone-600'}`} title="Armor"><Icons.Shield /></button>
-                  {(isArmor || isWeapon) && (
-                    <button onClick={() => updateItem(item.id, 'equipped', !item.equipped)} className={`p-1 rounded text-[10px] font-bold ${item.equipped ? 'bg-green-700 text-green-200' : 'bg-stone-700 text-stone-500 hover:bg-stone-600'}`} title={item.equipped ? 'Equipped' : 'Click to equip'}>{item.equipped ? 'ON' : 'EQ'}</button>
-                  )}
-                </div>
+                {/* Type badge */}
+                {isWeapon && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-900/50 text-red-400 shrink-0">WPN</span>}
+                {isArmor && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-900/50 text-blue-400 shrink-0">ARM</span>}
+                {!isWeapon && !isArmor && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-stone-700 text-stone-400 shrink-0">ITM</span>}
                 
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center gap-3">
-                    <input type="text" value={item.name} onChange={(e) => updateItem(item.id, 'name', e.target.value)} className="bg-transparent font-medium focus:outline-none flex-1" placeholder="Item name" />
-                    {item.rarity && (
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${rc.bg || ''} ${rc.text || ''}`}>
-                        {item.rarity}
-                      </span>
-                    )}
+                {/* Equipped indicator */}
+                {item.equipped && <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" title="Equipped" />}
+                
+                {/* Name */}
+                <span className="font-medium text-sm text-stone-200 flex-1 truncate">{item.name || 'Unnamed item'}</span>
+                
+                {/* Quick stats — calculated */}
+                {isWeapon && weaponStats && (
+                  <span className="text-xs font-mono shrink-0 flex items-center gap-2">
+                    <span className="text-amber-400">{weaponStats.attackBonus}</span>
+                    {weaponStats.damage && <span className="text-red-400">{weaponStats.damage}</span>}
+                  </span>
+                )}
+                {isArmor && item.baseAC && <span className="text-xs text-blue-400 font-mono">AC {item.baseAC}</span>}
+                
+                {/* Rarity badge */}
+                {item.rarity && (
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${rc.bg || ''} ${rc.text || ''}`}>
+                    {item.rarity}
+                  </span>
+                )}
+                
+                {/* Qty */}
+                {parseInt(item.quantity) > 1 && <span className="text-xs text-stone-500">×{item.quantity}</span>}
+                
+                {/* Expand chevron */}
+                <Icons.ChevronDown className={`w-3.5 h-3.5 text-stone-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                
+                {/* Delete */}
+                <button
+                  onClick={(e) => { e.stopPropagation(); setDeleteTarget({ id: item.id, name: item.name || 'Unnamed item' }); }}
+                  className="text-red-500/50 hover:text-red-400 text-sm ml-1"
+                >×</button>
+              </div>
+
+              {/* Expanded details */}
+              {isExpanded && (
+                <div className="px-3 pb-3 pt-1 border-t border-stone-700/20 space-y-2">
+                  {/* Controls row — universal */}
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <button onClick={() => updateItem(item.id, 'equipped', !item.equipped)}
+                      className={`px-2 py-1 rounded text-xs font-medium ${item.equipped ? 'bg-green-700 text-green-200' : 'bg-stone-700 text-stone-400 hover:bg-stone-600'}`}>
+                      {item.equipped ? '✓ Equipped' : 'Equip'}
+                    </button>
                     <div className="flex items-center gap-1">
                       <span className="text-xs text-stone-500">Qty:</span>
                       <input type="text" value={item.quantity} onChange={(e) => updateItem(item.id, 'quantity', e.target.value)} className="bg-stone-900 rounded px-2 py-0.5 w-12 text-center text-sm focus:outline-none" />
                     </div>
-                    <div className="flex items-center gap-1">
-                      <span className="text-xs text-stone-500">Wt:</span>
-                      <input type="text" value={item.weight || ''} onChange={(e) => updateItem(item.id, 'weight', e.target.value)} className="bg-transparent text-sm focus:outline-none w-16 text-stone-400" placeholder="1 lb" />
-                    </div>
-                    <button
-                      onClick={() => setDeleteTarget({ id: item.id, name: item.name || 'Unnamed item' })}
-                      className="text-red-500 hover:text-red-400 text-lg"
-                    >×</button>
+                    {item.attunement && <span className="text-xs text-amber-400">Requires Attunement</span>}
+                    {!isMagicItem && !editingItems[item.id] && (
+                      <button onClick={() => setEditingItems(prev => ({ ...prev, [item.id]: true }))}
+                        className="px-2 py-1 rounded text-xs bg-stone-700 text-stone-400 hover:bg-stone-600 ml-auto">
+                        Edit
+                      </button>
+                    )}
+                    {!isMagicItem && editingItems[item.id] && (
+                      <button onClick={() => setEditingItems(prev => ({ ...prev, [item.id]: false }))}
+                        className="px-2 py-1 rounded text-xs bg-amber-700 text-amber-200 ml-auto">
+                        Done
+                      </button>
+                    )}
                   </div>
 
-                  {isWeapon && (
-                    <>
-                      <div className="flex flex-wrap items-center gap-3 text-sm">
-                        <div className="flex items-center gap-1">
-                          <span className="text-xs text-red-400">{(item.weaponProperties || []).includes('Versatile') ? '1H Dmg:' : 'Damage:'}</span>
-                          <input type="text" value={item.damage || ''} onChange={(e) => updateItem(item.id, 'damage', e.target.value)} className="bg-stone-900 border border-red-800/50 rounded px-2 py-0.5 w-16 text-center text-red-300 focus:outline-none" placeholder="1d8" />
-                        </div>
-                        {(item.weaponProperties || []).includes('Versatile') && (
-                          <div className="flex items-center gap-1">
-                            <span className="text-xs text-red-400">2H Dmg:</span>
-                            <input type="text" value={item.damage2h || ''} onChange={(e) => updateItem(item.id, 'damage2h', e.target.value)} className="bg-stone-900 border border-red-800/50 rounded px-2 py-0.5 w-16 text-center text-red-300 focus:outline-none" placeholder="1d10" />
-                          </div>
-                        )}
-                        <div className="flex items-center gap-1">
-                          <span className="text-xs text-red-400">Type:</span>
-                          <select value={item.damageType || ''} onChange={(e) => updateItem(item.id, 'damageType', e.target.value)} className="bg-stone-900 border border-red-800/50 rounded px-2 py-0.5 text-sm text-red-300 focus:outline-none">
-                            <option value="">--</option><option value="Bludgeoning">Bludgeoning</option><option value="Piercing">Piercing</option><option value="Slashing">Slashing</option>
-                          </select>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <span className="text-xs text-purple-400">Mastery:</span>
-                          <select value={item.mastery || ''} onChange={(e) => updateItem(item.id, 'mastery', e.target.value)} className="bg-stone-900 border border-purple-800/50 rounded px-2 py-0.5 text-sm text-purple-300 focus:outline-none">
-                            <option value="">None</option>
-                            {WEAPON_MASTERIES.map(m => <option key={m.name} value={m.name}>{m.name}</option>)}
-                          </select>
-                        </div>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-xs text-stone-500">Properties:</span>
-                        {WEAPON_PROPERTIES.map(prop => <PropButton key={prop.name} prop={prop} isSelected={(item.weaponProperties || []).includes(prop.name)} onClick={() => toggleProperty(item.id, 'weaponProperties', prop.name)} color="amber" />)}
-                      </div>
-                      {item.mastery && <div className="text-xs text-purple-400 bg-purple-900/20 rounded px-2 py-1"><span className="font-medium">{item.mastery}:</span> {WEAPON_MASTERIES.find(m => m.name === item.mastery)?.desc}</div>}
-                    </>
+                  {/* Stats display — read-only for all */}
+                  {isWeapon && weaponStats && !editingItems[item.id] && (
+                    <div className="flex flex-wrap items-center gap-3 text-xs">
+                      <span className="text-stone-400">Attack: <span className="text-amber-300 font-mono font-bold">{weaponStats.attackBonus}</span></span>
+                      {weaponStats.damage && <span className="text-stone-400">Damage: <span className="text-red-300 font-mono font-bold">{weaponStats.damage}</span> {weaponStats.damageType && <span className="text-stone-500">{weaponStats.damageType}</span>}</span>}
+                      {item.mastery && <span className="text-stone-400">Mastery: <span className="text-purple-300">{item.mastery}</span></span>}
+                      {weaponStats.properties.length > 0 && (
+                        <span className="text-stone-400">Properties: <span className="text-amber-300/70">{weaponStats.properties.join(', ')}</span></span>
+                      )}
+                    </div>
                   )}
-
-                  {isArmor && (
-                    <>
-                      <div className="flex flex-wrap items-center gap-3 text-sm">
-                        <div className="flex items-center gap-1">
-                          <span className="text-xs text-blue-400">Base AC:</span>
-                          <input type="text" value={item.baseAC || ''} onChange={(e) => updateItem(item.id, 'baseAC', e.target.value)} className="bg-stone-900 border border-blue-800/50 rounded px-2 py-0.5 w-14 text-center text-blue-300 focus:outline-none" placeholder="14" />
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <span className="text-xs text-blue-400">Type:</span>
-                          <select value={item.armorType || ''} onChange={(e) => updateItem(item.id, 'armorType', e.target.value)} className="bg-stone-900 border border-blue-800/50 rounded px-2 py-0.5 text-sm text-blue-300 focus:outline-none">
-                            <option value="">--</option><option value="Light">Light</option><option value="Medium">Medium</option><option value="Heavy">Heavy</option><option value="Shield">Shield</option>
-                          </select>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <span className="text-xs text-blue-400">STR Req:</span>
-                          <input type="text" value={item.strRequired || ''} onChange={(e) => updateItem(item.id, 'strRequired', e.target.value)} className="bg-stone-900 border border-blue-800/50 rounded px-2 py-0.5 w-12 text-center text-blue-300 focus:outline-none" placeholder="13" />
-                        </div>
-                        <label className="flex items-center gap-1 cursor-pointer">
-                          <input type="checkbox" checked={item.stealthDisadv || false} onChange={(e) => updateItem(item.id, 'stealthDisadv', e.target.checked)} className="rounded bg-stone-700 border-blue-800" />
-                          <span className="text-xs text-blue-400">Stealth Disadv.</span>
-                        </label>
-                      </div>
-                      {item.armorType && <div className="text-xs text-blue-400 bg-blue-900/20 rounded px-2 py-1"><span className="font-medium">{item.armorType}:</span> {ARMOR_PROPERTIES.find(p => p.name === item.armorType)?.desc}</div>}
-                    </>
-                  )}
-
-                  {!isWeapon && !isArmor && (
-                    <div className="flex flex-wrap items-center gap-3 text-sm">
-                      <label className="flex items-center gap-1 cursor-pointer">
-                        <input type="checkbox" checked={item.equipped || false} onChange={(e) => updateItem(item.id, 'equipped', e.target.checked)} className="rounded bg-stone-700" />
-                        <span className="text-xs text-stone-400">Equipped</span>
-                      </label>
-                      <div className="flex items-center gap-1">
-                        <span className="text-xs text-cyan-400">AC Bonus:</span>
-                        <input type="text" value={item.acBonus || ''} onChange={(e) => updateItem(item.id, 'acBonus', e.target.value)} className="bg-stone-900 border border-cyan-800/50 rounded px-2 py-0.5 w-14 text-center text-cyan-300 focus:outline-none" placeholder="+1" />
-                      </div>
+                  {isArmor && (item.baseAC || item.armorType) && !editingItems[item.id] && (
+                    <div className="flex flex-wrap items-center gap-3 text-xs text-stone-400">
+                      {item.baseAC && <span>Base AC: <span className="text-blue-300 font-mono">{item.baseAC}</span></span>}
+                      {item.armorType && <span>Type: <span className="text-blue-300">{item.armorType}</span></span>}
                     </div>
                   )}
 
-                  <input type="text" value={item.description || ''} onChange={(e) => updateItem(item.id, 'description', e.target.value)} className="w-full bg-transparent text-sm text-stone-400 focus:outline-none" placeholder="Description or notes..." />
+                  {/* Description — universal */}
+                  {item.description && !editingItems[item.id] && (
+                    <p className="text-xs text-stone-400 leading-relaxed">{item.description}</p>
+                  )}
+
+                  {/* Edit mode — custom items only */}
+                  {!isMagicItem && editingItems[item.id] && (
+                    <div className="space-y-2 pt-1 border-t border-stone-700/20">
+                      <div className="flex items-center gap-3">
+                        <input type="text" value={item.name} onChange={(e) => updateItem(item.id, 'name', e.target.value)} className="bg-stone-900/50 border border-stone-700/50 rounded px-2 py-1 font-medium text-sm focus:outline-none focus:border-amber-700/50 flex-1" placeholder="Item name" />
+                        <div className="flex items-center gap-1">
+                          <span className="text-xs text-stone-500">Wt:</span>
+                          <input type="text" value={item.weight || ''} onChange={(e) => updateItem(item.id, 'weight', e.target.value)} className="bg-stone-900/50 border border-stone-700/50 rounded text-sm focus:outline-none w-16 text-stone-400 px-2 py-1" placeholder="1 lb" />
+                        </div>
+                      </div>
+
+                      {isWeapon && (
+                        <>
+                          <div className="flex flex-wrap items-center gap-3 text-sm">
+                            <div className="flex items-center gap-1">
+                              <span className="text-xs text-red-400">Damage:</span>
+                              <input type="text" value={item.damage || ''} onChange={(e) => updateItem(item.id, 'damage', e.target.value)} className="bg-stone-900 border border-red-800/50 rounded px-2 py-0.5 w-16 text-center text-red-300 focus:outline-none" placeholder="1d8" />
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <span className="text-xs text-red-400">Type:</span>
+                              <select value={item.damageType || ''} onChange={(e) => updateItem(item.id, 'damageType', e.target.value)} className="bg-stone-900 border border-red-800/50 rounded px-2 py-0.5 text-sm text-red-300 focus:outline-none">
+                                <option value="">--</option><option value="Bludgeoning">Bludgeoning</option><option value="Piercing">Piercing</option><option value="Slashing">Slashing</option>
+                              </select>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <span className="text-xs text-purple-400">Mastery:</span>
+                              <select value={item.mastery || ''} onChange={(e) => updateItem(item.id, 'mastery', e.target.value)} className="bg-stone-900 border border-purple-800/50 rounded px-2 py-0.5 text-sm text-purple-300 focus:outline-none">
+                                <option value="">None</option>
+                                {WEAPON_MASTERIES.map(m => <option key={m.name} value={m.name}>{m.name}</option>)}
+                              </select>
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <span className="text-xs text-stone-500">Properties:</span>
+                            {WEAPON_PROPERTIES.map(prop => <PropButton key={prop.name} prop={prop} isSelected={(item.weaponProperties || []).includes(prop.name)} onClick={() => toggleProperty(item.id, 'weaponProperties', prop.name)} color="amber" />)}
+                          </div>
+                        </>
+                      )}
+
+                      {isArmor && (
+                        <div className="flex flex-wrap items-center gap-3 text-sm">
+                          <div className="flex items-center gap-1">
+                            <span className="text-xs text-blue-400">Base AC:</span>
+                            <input type="text" value={item.baseAC || ''} onChange={(e) => updateItem(item.id, 'baseAC', e.target.value)} className="bg-stone-900 border border-blue-800/50 rounded px-2 py-0.5 w-14 text-center text-blue-300 focus:outline-none" placeholder="14" />
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="text-xs text-blue-400">Type:</span>
+                            <select value={item.armorType || ''} onChange={(e) => updateItem(item.id, 'armorType', e.target.value)} className="bg-stone-900 border border-blue-800/50 rounded px-2 py-0.5 text-sm text-blue-300 focus:outline-none">
+                              <option value="">--</option><option value="Light">Light</option><option value="Medium">Medium</option><option value="Heavy">Heavy</option><option value="Shield">Shield</option>
+                            </select>
+                          </div>
+                        </div>
+                      )}
+
+                      {!isWeapon && !isArmor && (
+                        <div className="flex items-center gap-1">
+                          <span className="text-xs text-cyan-400">AC Bonus:</span>
+                          <input type="text" value={item.acBonus || ''} onChange={(e) => updateItem(item.id, 'acBonus', e.target.value)} className="bg-stone-900 border border-cyan-800/50 rounded px-2 py-0.5 w-14 text-center text-cyan-300 focus:outline-none" placeholder="+1" />
+                        </div>
+                      )}
+
+                      <input type="text" value={item.description || ''} onChange={(e) => updateItem(item.id, 'description', e.target.value)} className="w-full bg-stone-900/50 border border-stone-700/50 rounded px-2 py-1 text-sm text-stone-400 focus:outline-none focus:border-amber-700/50" placeholder="Description or notes..." />
+                    </div>
+                  )}
                 </div>
-              </div>
+              )}
             </div>
           );
         })}

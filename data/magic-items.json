@@ -2446,6 +2446,185 @@
       "rarity": "Very Rare",
       "attunement": false,
       "description": "These iron horseshoes come in a set of four. While all four shoes are affixed to the hooves of a horse or similar creature, they allow the creature to move normally while floating 4 inches above the ground. This effect means the creature can cross or stand above nonsolid or unstable surfaces. The creature leaves no tracks and ignores Difficult Terrain. In addition, the creature can move at normal speed for up to 12 hours a day without suffering Exhaustion from a forced march."
+    },
+    {
+      "id": "instrument-bards",
+      "name": "Instrument of the Bards",
+      "category": "Wondrous",
+      "rarity": "Varies",
+      "attunement": true,
+      "description": "An Instrument of the Bards is superior to an ordinary instrument in every way. Seven types exist, each granting the ability to cast specific spells. All instruments can cast Fly, Invisibility, Levitate, and Protection from Evil and Good, plus additional spells unique to each type. Types: Anstruth Harp (Very Rare), Canaith Mandolin (Rare), Cli Lyre (Rare), Doss Lute (Uncommon), Fochlucan Bandore (Uncommon), Mac-Fuirmidh Cittern (Uncommon), Ollamh Harp (Legendary). If a creature other than a Bard attempts to play it, they take 2d4 Psychic damage."
+    },
+    {
+      "id": "keoghtoms-ointment",
+      "name": "Keoghtom's Ointment",
+      "category": "Wondrous",
+      "rarity": "Uncommon",
+      "attunement": false,
+      "description": "This glass jar, 3 inches in diameter, contains 1d4 + 1 doses of a thick mixture that smells faintly of aloe. As a Magic action, one dose can be applied to the skin. The creature that receives it regains 2d8 + 2 Hit Points, ceases to be Poisoned, and is cured of any disease."
+    },
+    {
+      "id": "lock-trickery",
+      "name": "Lock of Trickery",
+      "category": "Wondrous",
+      "rarity": "Common",
+      "attunement": false,
+      "description": "This lock appears to be an ordinary lock and comes with a single key. The lock can be picked with Thieves' Tools and a successful DC 15 Dexterity check. However, the lock magically resets after 1 minute, relocking even if the key was not used."
+    },
+    {
+      "id": "mace-smiting",
+      "name": "Mace of Smiting",
+      "category": "Weapon",
+      "rarity": "Rare",
+      "attunement": false,
+      "weaponType": "Mace",
+      "description": "You gain a +1 bonus to attack and damage rolls made with this magic weapon. The bonus increases to +3 when you use the mace to attack a Construct. When you roll a 20 on an attack roll made with this weapon, the target takes an extra 2d6 Bludgeoning damage, or 4d6 Bludgeoning damage if it's a Construct. If a Construct has 25 Hit Points or fewer after taking this damage, it is destroyed."
+    },
+    {
+      "id": "mariners-armor",
+      "name": "Mariner's Armor",
+      "category": "Armor",
+      "rarity": "Uncommon",
+      "attunement": false,
+      "description": "While wearing this armor, you have a Swimming Speed equal to your Walking Speed. In addition, whenever you start your turn underwater with 0 Hit Points, the armor causes you to rise 60 feet toward the surface. The armor is decorated with fish and shell motifs."
+    },
+    {
+      "id": "medallion-thoughts",
+      "name": "Medallion of Thoughts",
+      "category": "Wondrous",
+      "rarity": "Uncommon",
+      "attunement": true,
+      "description": "The medallion has 3 charges. While wearing it, you can take a Magic action and expend 1 charge to cast Detect Thoughts (save DC 13) from it. The medallion regains 1d3 expended charges daily at dawn."
+    },
+    {
+      "id": "mirror-life-trapping",
+      "name": "Mirror of Life Trapping",
+      "category": "Wondrous",
+      "rarity": "Very Rare",
+      "attunement": false,
+      "description": "When this 4-foot-tall mirror is looked at directly, any creature that sees its reflection must succeed on a DC 15 Charisma save or be trapped inside one of the mirror's twelve extradimensional cells. The mirror can trap up to twelve creatures. A trapped creature can be freed by speaking its name, breaking the mirror, or by another creature trading places. The mirror weighs 50 pounds and has AC 11, 10 HP, and Vulnerability to Bludgeoning damage."
+    },
+    {
+      "id": "moonblade",
+      "name": "Moonblade",
+      "category": "Weapon",
+      "rarity": "Legendary",
+      "attunement": true,
+      "weaponType": "Longsword",
+      "description": "Of all the magic items created by the elves, one of the most prized and jealously guarded is a Moonblade. Each Moonblade is a sentient, neutral good weapon with Intelligence 12, Wisdom 10, and Charisma 12. It gains a new property for each elf who bonds with it. A Moonblade has 1d6 + 1 runes already on it when discovered, each granting a random property. It functions as a +1 weapon and deals an extra 1d6 Slashing damage to Undead."
+    },
+    {
+      "id": "natures-mantle",
+      "name": "Nature's Mantle",
+      "category": "Wondrous",
+      "rarity": "Uncommon",
+      "attunement": true,
+      "description": "This cloak shifts color and texture to blend with the terrain around you. While wearing the cloak, you can use it as a spellcasting focus for your Druid or Ranger spells. While in an area that is lightly obscured, you can Hide as a Bonus Action even if you are being directly observed."
+    },
+    {
+      "id": "night-caller",
+      "name": "Night Caller",
+      "category": "Wondrous",
+      "rarity": "Uncommon",
+      "attunement": false,
+      "description": "This small whistle is made from transparent crystal and resembles a tiny dragon skull. You can blow the whistle in darkness or under the night sky to cast Animate Dead on a corpse or pile of bones within 120 feet. Once used, the whistle can't be used again in this way for 7 days."
+    },
+    {
+      "id": "philter-love",
+      "name": "Philter of Love",
+      "category": "Potion",
+      "rarity": "Uncommon",
+      "attunement": false,
+      "description": "The next time you see a creature within 10 minutes after drinking this philter, you become Charmed by that creature for 1 hour. If the creature is of a species and gender you are normally attracted to, you regard it as your true love while Charmed. This potion's rose-hued, effervescent liquid contains one easy-to-miss bubble shaped like a heart."
+    },
+    {
+      "id": "potion-mind-reading",
+      "name": "Potion of Mind Reading",
+      "category": "Potion",
+      "rarity": "Rare",
+      "attunement": false,
+      "description": "When you drink this potion, you gain the effect of the Detect Thoughts spell (save DC 13). The potion's dense, purple liquid has an ovoid cloud of pink floating in it."
+    },
+    {
+      "id": "potion-poison",
+      "name": "Potion of Poison",
+      "category": "Potion",
+      "rarity": "Uncommon",
+      "attunement": false,
+      "description": "This concoction looks, smells, and tastes like a Potion of Healing or other beneficial potion. However, it is actually poison masked by illusion magic. An Identify spell reveals its true nature. If you drink it, you take 3d6 Poison damage, and you must succeed on a DC 13 Constitution saving throw or be Poisoned. While Poisoned this way, you take 3d6 Poison damage at the start of each of your turns. At the end of each of your turns, you can repeat the save, ending the effect on a success."
+    },
+    {
+      "id": "quaals-feather-token",
+      "name": "Quaal's Feather Token",
+      "category": "Wondrous",
+      "rarity": "Rare",
+      "attunement": false,
+      "description": "This tiny object looks like a feather. Different types exist, each usable only once: Anchor (holds a vessel in place), Bird (flies to deliver a message up to 50 miles), Fan (creates a gentle breeze or gust of wind), Swan Boat (becomes a giant swan-shaped boat for 24 hours, holds 32 Medium creatures), Tree (becomes a 60-foot oak for duration), Whip (becomes a +3 whip that deals 1d6+3 Force damage)."
+    },
+    {
+      "id": "quiver-ehlonna",
+      "name": "Quiver of Ehlonna",
+      "category": "Wondrous",
+      "rarity": "Uncommon",
+      "attunement": false,
+      "description": "Each of the quiver's three compartments connects to an extradimensional space. The shortest compartment can hold up to 60 arrows, bolts, or similar objects. The midsize compartment holds up to 18 javelins or similar objects. The longest compartment holds up to 6 long objects, such as bows, quarterstaffs, or spears. You can draw any item the quiver contains as if doing so from a regular quiver or scabbard."
+    },
+    {
+      "id": "rod-pact-keeper",
+      "name": "Rod of the Pact Keeper",
+      "category": "Rod",
+      "rarity": "Varies",
+      "attunement": true,
+      "description": "While holding this rod, you gain a bonus to spell attack rolls and to the saving throw DCs of your Warlock spells. The bonus is determined by the rod's rarity: +1 (Uncommon), +2 (Rare), or +3 (Very Rare). In addition, you can regain one Warlock spell slot as a Magic action while holding the rod. You can't use this property again until you finish a Long Rest."
+    },
+    {
+      "id": "saddle-cavalier",
+      "name": "Saddle of the Cavalier",
+      "category": "Wondrous",
+      "rarity": "Uncommon",
+      "attunement": false,
+      "description": "While in this saddle on a mount, you can't be dismounted against your will if you're conscious, and attack rolls against the mount have Disadvantage."
+    },
+    {
+      "id": "staff-striking",
+      "name": "Staff of Striking",
+      "category": "Staff",
+      "rarity": "Very Rare",
+      "attunement": true,
+      "description": "This staff can be wielded as a magic Quarterstaff that grants a +3 bonus to attack and damage rolls made with it. The staff has 10 charges. When you hit with a melee attack using it, you can expend up to 3 charges. For each charge you expend, the target takes an extra 1d6 Force damage. The staff regains 1d6 + 4 expended charges daily at dawn. If you expend the last charge, roll a d20. On a 1, the staff becomes a nonmagical Quarterstaff."
+    },
+    {
+      "id": "staff-python",
+      "name": "Staff of the Python",
+      "category": "Staff",
+      "rarity": "Uncommon",
+      "attunement": true,
+      "description": "You can take a Magic action to throw this staff to an unoccupied space within 10 feet, where it becomes a Giant Constrictor Snake. The snake is under your control and shares your Initiative count. On your turn, you can mentally command the snake if it is within 60 feet. If the snake is reduced to 0 HP, it reverts to staff form and can't be used this way again for 1 hour. Otherwise, you can take a Bonus Action to revert it."
+    },
+    {
+      "id": "stone-earth-elementals",
+      "name": "Stone of Controlling Earth Elementals",
+      "category": "Wondrous",
+      "rarity": "Rare",
+      "attunement": false,
+      "description": "If the stone is touching the ground, you can take a Magic action to speak its command word and summon an Earth Elemental, as if you had cast the Conjure Elemental spell. The stone can't be used this way again until the next dawn."
+    },
+    {
+      "id": "sword-answering",
+      "name": "Sword of Answering",
+      "category": "Weapon",
+      "rarity": "Legendary",
+      "attunement": true,
+      "weaponType": "Longsword",
+      "description": "You gain a +3 bonus to attack and damage rolls made with this sword. In addition, while you hold the sword, you can use your Reaction to make a melee attack with it against any creature in your reach that damages you. You have Advantage on this attack. Nine swords of answering are known to exist, each aligned to a different alignment."
+    },
+    {
+      "id": "well-many-worlds",
+      "name": "Well of Many Worlds",
+      "category": "Wondrous",
+      "rarity": "Legendary",
+      "attunement": false,
+      "description": "This fine black cloth, soft as silk, is folded up to the dimensions of a handkerchief. It unfolds into a circular sheet 6 feet in diameter. You can take a Magic action to unfold and place the well on a solid surface, whereupon it creates a two-way portal to another world or plane of existence. Each time the item opens a portal, the DM decides where it leads. You can take a Magic action to close an open portal by taking hold of the edges of the cloth and folding it up. The well can't be used again for 1d8 hours."
     }
   ]
 }

@@ -993,6 +993,17 @@
     ],
     "inventory": [
       {
+        "id": 1773708947058,
+        "name": "Dagger of Venom",
+        "quantity": 1,
+        "weight": "",
+        "description": "You gain a +1 bonus to attack and damage rolls made with this magic weapon. You can take a Magic action to cause thick, black poison to coat the blade. The poison remains for 1 minute or until an attack using this weapon hits a creature. That creature must succeed on a DC 15 Constitution saving throw or take 2d10 Poison damage and become Poisoned for 1 minute. The dagger can't be used this way again until the next dawn.",
+        "itemType": "weapon",
+        "magicItemId": "dagger-venom",
+        "rarity": "Rare",
+        "attunement": false
+      },
+      {
         "id": 1770433222146,
         "name": "Dagger +1",
         "quantity": 1,
@@ -1003,14 +1014,11 @@
         "baseAC": "",
         "stealthDisadv": false,
         "strRequired": "",
-        "damage": "1d4+1",
+        "damage": "",
         "damageType": "Piercing",
-        "weaponProperties": [
-          "Finesse",
-          "Light",
-          "Thrown"
-        ],
-        "mastery": "Nick"
+        "weaponProperties": [],
+        "mastery": "",
+        "equipped": false
       },
       {
         "id": 1770433345695,
@@ -1048,7 +1056,7 @@
         "armorType": "Light"
       },
       {
-        "id": 1773600227612,
+        "id": 1773710957004,
         "name": "Hat of Disguise",
         "quantity": 1,
         "weight": "",
@@ -1057,7 +1065,7 @@
         "magicItemId": "hat-disguise",
         "rarity": "Uncommon",
         "attunement": true,
-        "acBonus": ""
+        "equipped": true
       }
     ],
     "advantages": [],
