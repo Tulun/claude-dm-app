@@ -1,5 +1,5 @@
 {
-  "_version": 11,
+  "_version": 12,
   "templates": [
     {
       "id": "mm-awakened-shrub",
@@ -35,7 +35,8 @@
           "name": "Rake",
           "description": "Melee Attack Roll: +1, reach 5 ft. Hit: 1 (1d4-1) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-baboon",
@@ -69,7 +70,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +1, reach 5 ft. Hit: 1 (1d4-1) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-badger",
@@ -103,7 +105,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 1 Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-bat",
@@ -141,7 +144,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +0, reach 5 ft. Hit: 1 Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-cat",
@@ -176,7 +180,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +0, reach 5 ft. Hit: 1 Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-commoner",
@@ -205,7 +210,8 @@
           "name": "Club",
           "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 2 (1d4) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-crab",
@@ -240,7 +246,8 @@
           "name": "Claw",
           "description": "Melee Attack Roll: +0, reach 5 ft. Hit: 1 Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-deer",
@@ -269,7 +276,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 2 (1d4) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-eagle",
@@ -304,7 +312,8 @@
           "name": "Talons",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-frog",
@@ -338,7 +347,8 @@
           "description": "Long jump up to 10 ft, high jump up to 5 ft, with or without running start."
         }
       ],
-      "actions": []
+      "actions": [],
+      "source": "mm"
     },
     {
       "id": "mm-giant-fire-beetle",
@@ -372,7 +382,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +1, reach 5 ft. Hit: 2 (1d6-1) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-goat",
@@ -410,7 +421,8 @@
           "name": "Ram",
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 3 (1d4+1) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-hawk",
@@ -445,7 +457,8 @@
           "name": "Talons",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 1 Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-homunculus",
@@ -480,7 +493,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 1 Piercing damage. DC 10 CON or Poisoned for 1 minute. If fails by 5+, also Unconscious while Poisoned."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-hyena",
@@ -515,7 +529,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 3 (1d6) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-jackal",
@@ -554,7 +569,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +1, reach 5 ft. Hit: 1 (1d4-1) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-lemure",
@@ -594,7 +610,8 @@
           "name": "Fist",
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 2 (1d4) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-lizard",
@@ -623,7 +640,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +0, reach 5 ft. Hit: 1 Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-myconid-sprout",
@@ -665,7 +683,8 @@
           "name": "Rapport Spores",
           "description": "10-foot radius. DC 10 CON or linked telepathically for 1 hour. Can communicate simple ideas while within 30 ft."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-octopus",
@@ -712,7 +731,8 @@
           "name": "Ink Cloud (1/Day)",
           "description": "If underwater, 5-ft radius cloud of ink. Area heavily obscured for 1 minute. Octopus can Dash as Bonus Action."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-owl",
@@ -751,7 +771,8 @@
           "name": "Talons",
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 1 Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-quipper",
@@ -789,7 +810,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 1 Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-rat",
@@ -823,7 +845,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +0, reach 5 ft. Hit: 1 Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-raven",
@@ -858,7 +881,8 @@
           "name": "Beak",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 1 Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-scorpion",
@@ -887,7 +911,8 @@
           "name": "Sting",
           "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 1 Piercing damage. DC 9 CON or 4 (1d8) Poison damage (half on save)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-sea-horse",
@@ -916,7 +941,8 @@
           "description": "Can breathe only underwater."
         }
       ],
-      "actions": []
+      "actions": [],
+      "source": "mm"
     },
     {
       "id": "mm-shrieker",
@@ -952,7 +978,8 @@
           "name": "Shriek",
           "description": "When bright light or creature within 30 ft, shrieks audible within 300 ft. Continues until disturbance ends and for 1d4 rounds after."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-spider",
@@ -995,7 +1022,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 1 Piercing. DC 9 CON or 2 (1d4) Poison damage (half on save)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-vulture",
@@ -1034,7 +1062,8 @@
           "name": "Beak",
           "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 2 (1d4) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-weasel",
@@ -1069,7 +1098,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 1 Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-bandit",
@@ -1102,7 +1132,8 @@
           "name": "Light Crossbow",
           "description": "Ranged Attack Roll: +3, range 80/320 ft. Hit: 5 (1d8+1) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-cultist",
@@ -1136,7 +1167,8 @@
           "name": "Scimitar",
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-guard",
@@ -1167,7 +1199,8 @@
           "description": "Melee or Ranged Attack Roll: +3, reach 5 ft. or range 20/60 ft. Hit: 4 (1d6+1) Piercing damage."
         }
       ],
-      "notes": "Chain Shirt, Shield"
+      "notes": "Chain Shirt, Shield",
+      "source": "mm"
     },
     {
       "id": "mm-kobold",
@@ -1205,7 +1238,8 @@
           "name": "Sling",
           "description": "Ranged Attack Roll: +4, range 30/120 ft. Hit: 4 (1d4+2) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-rat",
@@ -1243,7 +1277,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-acolyte",
@@ -1277,7 +1312,8 @@
           "name": "Spellcasting",
           "description": "Casts one of the following spells using Wisdom as the spellcasting ability (spell save DC 12). At will: Light, Thaumaturgy. 1/day each: Bless, Sanctuary."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-axe-beak",
@@ -1306,7 +1342,8 @@
           "name": "Beak",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8+2) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-blink-dog",
@@ -1345,7 +1382,8 @@
           "name": "Teleport (Recharge 4-6)",
           "description": "Teleports up to 40 ft to an unoccupied space it can see. Before or after teleporting, can make one Bite attack."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-boar",
@@ -1383,7 +1421,8 @@
           "name": "Tusk",
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-constrictor-snake",
@@ -1416,7 +1455,8 @@
           "name": "Constrict",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8+2) Bludgeoning. Target is Grappled (escape DC 14). Until grapple ends, target is Restrained, and snake can't Constrict another target."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-draft-horse",
@@ -1445,7 +1485,8 @@
           "name": "Hooves",
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 9 (2d4+4) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-drow",
@@ -1489,7 +1530,8 @@
           "description": "Ranged Attack Roll: +4, range 30/120 ft. Hit: 5 (1d6+2) Piercing. DC 13 CON or Poisoned 1 hour. If fails by 5+, also Unconscious while Poisoned."
         }
       ],
-      "notes": "Chain Shirt. Innate Spellcasting (CHA, DC 11): At will: Dancing Lights. 1/day: Darkness, Faerie Fire."
+      "notes": "Chain Shirt. Innate Spellcasting (CHA, DC 11): At will: Dancing Lights. 1/day: Darkness, Faerie Fire.",
+      "source": "mm"
     },
     {
       "id": "mm-elk",
@@ -1527,7 +1569,8 @@
           "name": "Hooves",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (2d4+3) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-flying-sword",
@@ -1567,7 +1610,8 @@
           "name": "Longsword",
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 5 (1d8+1) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-badger",
@@ -1609,7 +1653,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 6 (2d4+1) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-bat",
@@ -1647,7 +1692,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-centipede",
@@ -1676,7 +1722,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Piercing. DC 11 CON or 10 (3d6) Poison (half on save). If Poison reduces to 0 HP, stable but Poisoned 1 hour and Paralyzed while Poisoned."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-frog",
@@ -1719,7 +1766,8 @@
           "name": "Swallow",
           "description": "One Small or smaller creature frog is grappling. Target is swallowed, Blinded and Restrained, Total Cover, 5 (2d4) Acid at start of each frog's turns. If frog dies, target is no longer swallowed."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-lizard",
@@ -1748,7 +1796,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8+2) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-owl",
@@ -1787,7 +1836,8 @@
           "name": "Talons",
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 8 (2d6+1) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-poisonous-snake",
@@ -1816,7 +1866,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 6 (1d4+4) Piercing. DC 11 CON or 10 (3d6) Poison (half on save)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-wolf-spider",
@@ -1859,7 +1910,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Piercing. DC 11 CON or 7 (2d6) Poison (half on save). If Poison reduces to 0 HP, stable but Poisoned 1 hour and Paralyzed while Poisoned."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-goblin",
@@ -1898,7 +1950,8 @@
           "name": "Shortbow",
           "description": "Ranged Attack Roll: +4, range 80/320 ft. Hit: 5 (1d6+2) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-grimlock",
@@ -1938,7 +1991,8 @@
           "name": "Spiked Bone Club",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 5 (1d4+3) Bludgeoning plus 2 (1d4) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-kenku",
@@ -1981,7 +2035,8 @@
           "name": "Shortbow",
           "description": "Ranged Attack Roll: +5, range 80/320 ft. Hit: 6 (1d6+3) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-kuo-toa",
@@ -2037,7 +2092,8 @@
           "description": "Ranged Attack Roll: +3, range 5/15 ft. Hit: Target is Restrained. DC 10 STR to escape. Dealing 5 slashing damage (AC 10) frees target."
         }
       ],
-      "notes": "Shield, Sticky Shield: creature hit by shield is stuck to it, DC 11 STR to pull free."
+      "notes": "Shield, Sticky Shield: creature hit by shield is stuck to it, DC 11 STR to pull free.",
+      "source": "mm"
     },
     {
       "id": "mm-mud-mephit",
@@ -2081,7 +2137,8 @@
           "name": "Mud Breath (Recharge 6)",
           "description": "Exhales mud in 15-foot Cone. DC 11 DEX or Restrained until end of next turn."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-needle-blight",
@@ -2115,7 +2172,8 @@
           "name": "Needles",
           "description": "Ranged Attack Roll: +3, range 30/60 ft. Hit: 8 (2d6+1) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-panther",
@@ -2158,7 +2216,8 @@
           "name": "Claw",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-pixie",
@@ -2193,7 +2252,8 @@
           "name": "Spellcasting",
           "description": "Casts one of the following spells requiring no material components, using Charisma as spellcasting ability (spell save DC 12). At will: Druidcraft. 1/day each: Confusion, Dancing Lights, Detect Evil and Good, Detect Thoughts, Dispel Magic, Entangle, Fly, Phantasmal Force, Polymorph, Sleep."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-pseudodragon",
@@ -2240,7 +2300,8 @@
           "name": "Sting",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Piercing. DC 11 CON or Poisoned 1 hour. If fails by 5+, also Unconscious until Poisoned ends, or takes damage, or someone uses action to shake awake."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-pteranodon",
@@ -2275,7 +2336,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 6 (2d4+1) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-riding-horse",
@@ -2304,7 +2366,8 @@
           "name": "Hooves",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (2d4+3) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-skeleton",
@@ -2339,7 +2402,8 @@
           "name": "Shortbow",
           "description": "Ranged Attack Roll: +4, range 80/320 ft. Hit: 5 (1d6+2) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-smoke-mephit",
@@ -2379,7 +2443,8 @@
           "name": "Cinder Breath (Recharge 6)",
           "description": "15-foot Cone of smoke. DC 10 CON or Blinded until end of mephit's next turn."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-sprite",
@@ -2421,7 +2486,8 @@
           "name": "Invisibility",
           "description": "Magically turns Invisible until attacks, casts spell, or concentration ends."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-steam-mephit",
@@ -2460,7 +2526,8 @@
           "name": "Steam Breath (Recharge 6)",
           "description": "15-foot Cone of steam. DC 10 DEX or 4 (1d8) Fire damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-stirge",
@@ -2489,7 +2556,8 @@
           "name": "Blood Drain",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 5 (1d4+3) Piercing and attaches. While attached, doesn't attack. Instead, at start of each turn, target loses 5 (1d4+3) HP. Detaches after draining 10 HP, or target dies. Target or creature within 5 ft can use action to detach it."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-swarm-of-bats",
@@ -2533,7 +2601,8 @@
           "name": "Bites",
           "description": "Melee Attack Roll: +4, reach 0 ft. (creatures in swarm's space). Hit: 5 (2d4) Piercing, or 2 (1d4) Piercing if swarm has half HP or fewer."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-swarm-of-rats",
@@ -2573,7 +2642,8 @@
           "name": "Bites",
           "description": "Melee Attack Roll: +2, reach 0 ft. (creatures in swarm's space). Hit: 7 (2d6) Piercing, or 3 (1d6) Piercing if swarm has half HP or fewer."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-swarm-of-ravens",
@@ -2610,7 +2680,8 @@
           "name": "Beaks",
           "description": "Melee Attack Roll: +4, reach 5 ft. (creatures in swarm's space). Hit: 7 (2d6) Piercing, or 3 (1d6) Piercing if swarm has half HP or fewer."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-twig-blight",
@@ -2647,7 +2718,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 3 (1d4+1) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-violet-fungus",
@@ -2686,7 +2758,8 @@
           "name": "Rotting Touch",
           "description": "Melee Attack Roll: +2, reach 10 ft. Hit: 4 (1d8) Necrotic damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-wolf",
@@ -2725,7 +2798,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4+2) Piercing. DC 11 STR save or Prone."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-zombie",
@@ -2761,7 +2835,8 @@
           "name": "Slam",
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-aarakocra-skirmisher",
@@ -2800,7 +2875,8 @@
           "name": "Javelin",
           "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 30/120 ft. Hit: 5 (1d6+2) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-animated-broom",
@@ -2843,7 +2919,8 @@
           "name": "Broomstick",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 5 (1d4+3) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-bullywug",
@@ -2899,7 +2976,8 @@
           "description": "Melee or Ranged Attack Roll: +3, reach 5 ft. or range 20/60 ft. Hit: 4 (1d6+1) Piercing damage."
         }
       ],
-      "notes": "Hide Armor, Shield"
+      "notes": "Hide Armor, Shield",
+      "source": "mm"
     },
     {
       "id": "mm-dretch",
@@ -2943,7 +3021,8 @@
           "description": "10-ft radius. Each creature: DC 11 CON or Poisoned until start of its next turn. While Poisoned, can take action or Bonus Action, not both."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-modron-duodrone",
@@ -2990,7 +3069,8 @@
           "description": "Melee or Ranged Attack Roll: +3, reach 5 ft. or range 30/120 ft. Hit: 4 (1d6+1) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-troglodyte",
@@ -3042,7 +3122,8 @@
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Slashing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-winged-kobold",
@@ -3084,7 +3165,8 @@
           "name": "Dropped Rock",
           "description": "Ranged Attack Roll: +5, range 30 ft. (one target directly below). Hit: 6 (1d6+3) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-orc",
@@ -3123,7 +3205,8 @@
           "name": "Javelin",
           "description": "Melee or Ranged Attack Roll: +5, reach 5 ft. or range 30/120 ft. Hit: 6 (1d6+3) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-hobgoblin",
@@ -3162,7 +3245,8 @@
           "description": "Ranged Attack Roll: +3, range 150/600 ft. Hit: 5 (1d8+1) Piercing damage."
         }
       ],
-      "notes": "Chain Mail, Shield"
+      "notes": "Chain Mail, Shield",
+      "source": "mm"
     },
     {
       "id": "mm-gnoll",
@@ -3205,7 +3289,8 @@
           "description": "Ranged Attack Roll: +3, range 150/600 ft. Hit: 5 (1d8+1) Piercing damage."
         }
       ],
-      "notes": "Hide Armor, Shield"
+      "notes": "Hide Armor, Shield",
+      "source": "mm"
     },
     {
       "id": "mm-shadow",
@@ -3251,7 +3336,8 @@
           "name": "Strength Drain",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 9 (2d6+2) Necrotic. Target STR reduced by 1d4. Dies if STR reaches 0. Humanoid slain rises as shadow in 1d4 hours."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-ape",
@@ -3289,7 +3375,8 @@
           "name": "Rock",
           "description": "Ranged Attack Roll: +5, range 25/50 ft. Hit: 6 (1d6+3) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-black-bear",
@@ -3332,7 +3419,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4+2) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-cockatrice",
@@ -3361,7 +3449,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 3 (1d4+1) Piercing. DC 11 CON or Restrained (turning to stone). End of next turn: success ends, failure = Petrified 24 hours."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-crocodile",
@@ -3396,7 +3485,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (1d10+2) Piercing. Target Grappled (escape DC 12), Restrained until grapple ends."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-darkmantle",
@@ -3439,7 +3529,8 @@
           "name": "Darkness Aura (1/Day)",
           "description": "15-ft radius magical Darkness, 10 min (concentration)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-dust-mephit",
@@ -3480,7 +3571,8 @@
           "name": "Blinding Breath (Recharge 6)",
           "description": "15-foot Cone. DC 10 DEX or Blinded 1 minute (save ends)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-goat",
@@ -3518,7 +3610,8 @@
           "name": "Ram",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (2d4+3) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-sea-horse",
@@ -3556,7 +3649,8 @@
           "name": "Ram",
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-wasp",
@@ -3585,7 +3679,8 @@
           "name": "Sting",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing. DC 11 CON or 10 (3d6) Poison (half on save). If reduces to 0 HP, stable but Poisoned 1 hour and Paralyzed."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-gray-ooze",
@@ -3630,7 +3725,8 @@
           "name": "Pseudopod",
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Bludgeoning plus 7 (2d6) Acid."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-ice-mephit",
@@ -3675,7 +3771,8 @@
           "name": "Frost Breath (Recharge 6)",
           "description": "15-foot Cone. DC 10 DEX or 5 (2d4) Cold."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-jackalwere",
@@ -3727,7 +3824,8 @@
           "name": "Sleep Gaze",
           "description": "One creature within 30 ft: DC 10 WIS or Unconscious 10 min."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-lizardfolk",
@@ -3775,7 +3873,8 @@
           "description": "Melee/Ranged Attack Roll: +4, range 30/120 ft. Hit: 5 (1d6+2) Piercing."
         }
       ],
-      "notes": "Natural Armor, Shield"
+      "notes": "Natural Armor, Shield",
+      "source": "mm"
     },
     {
       "id": "mm-magma-mephit",
@@ -3820,7 +3919,8 @@
           "name": "Fire Breath (Recharge 6)",
           "description": "15-foot Cone. DC 11 DEX or 7 (2d6) Fire (half on save)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-magmin",
@@ -3860,7 +3960,8 @@
           "name": "Touch",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d6) Fire. Target ignites, taking 3 (1d6) Fire per turn until doused."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-myconid-adult",
@@ -3906,7 +4007,8 @@
           "name": "Rapport Spores",
           "description": "20-ft radius. DC 11 CON or telepathically linked 1 hour."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-piercer",
@@ -3945,7 +4047,8 @@
           "name": "Drop",
           "description": "Creature below: 3 (1d6) Piercing per 10 ft fallen, max 21 (6d6). DC 15 DEX to avoid."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-reef-shark",
@@ -3984,7 +4087,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8+2) Piercing."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-rust-monster",
@@ -4026,7 +4130,8 @@
           "name": "Antennae",
           "description": "Touch nonmagical ferrous metal. If worn/carried: DC 11 DEX or corrodes."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-gas-spore",
@@ -4065,7 +4170,8 @@
           "name": "Touch",
           "description": "Melee Attack Roll: +0, reach 5 ft. Hit: 1 Poison. Creature: DC 10 CON or infected with death burst disease."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-modron-tridrone",
@@ -4112,7 +4218,8 @@
           "description": "Melee or Ranged Attack Roll: +3, reach 5 ft. or range 30/120 ft. Hit: 4 (1d6+1) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-performer",
@@ -4147,7 +4254,8 @@
           "description": "One ally within 30 ft gains 5 (1d10) Temporary HP and Advantage on one attack roll, ability check, or saving throw in the next minute."
         }
       ],
-      "notes": "Leather Armor"
+      "notes": "Leather Armor",
+      "source": "mm"
     },
     {
       "id": "mm-tough",
@@ -4191,7 +4299,8 @@
           "description": "Ranged Attack Roll: +2, range 100/400 ft. Hit: 5 (1d10) Piercing damage."
         }
       ],
-      "notes": "Leather Armor"
+      "notes": "Leather Armor",
+      "source": "mm"
     },
     {
       "id": "mm-troll-limb",
@@ -4230,7 +4339,8 @@
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4+2) Slashing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-vine-blight",
@@ -4271,7 +4381,8 @@
           "description": "Grasping roots and vines sprout in 15-ft radius. Area becomes difficult terrain for 1 min. Creatures starting turn there: DC 12 STR or Restrained. Can repeat save at end of turn."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-warhorse-skeleton",
@@ -4303,7 +4414,8 @@
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 11 (2d6+4) Bludgeoning damage."
         }
       ],
-      "notes": "Barding (natural)"
+      "notes": "Barding (natural)",
+      "source": "mm"
     },
     {
       "id": "mm-animated-armor",
@@ -4346,7 +4458,8 @@
           "name": "Slam",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-brass-dragon-wyrmling",
@@ -4382,7 +4495,8 @@
           "name": "Breath Weapons (Recharge 5-6)",
           "description": "Uses Fire Breath or Sleep Breath. Fire Breath: 20-ft Line. DC 11 DEX, 14 (4d6) Fire (half on save). Sleep Breath: 15-ft Cone. DC 11 CON or Unconscious 1 min (save ends if damaged or action to wake)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-brown-bear",
@@ -4425,7 +4539,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 11 (2d6+4) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-copper-dragon-wyrmling",
@@ -4461,7 +4576,8 @@
           "name": "Breath Weapons (Recharge 5-6)",
           "description": "Uses Acid Breath or Slowing Breath. Acid Breath: 20-ft Line. DC 11 DEX, 18 (4d8) Acid (half on save). Slowing Breath: 15-ft Cone. DC 11 CON or speed halved, no reactions, can't make more than one attack per turn, 1 min (save ends)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-death-dog",
@@ -4500,17 +4616,18 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing. DC 12 CON or diseased. Until cured, max HP reduced by 5 (1d10) per 24 hours."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-dryad",
       "name": "Dryad",
       "size": "Medium",
       "creatureType": "Fey",
-      "ac": 16,
+      "ac": 11,
       "maxHp": 22,
       "hitDice": "5d8",
-      "speed": "30",
+      "speed": 30,
       "cr": "1",
       "xp": 200,
       "profBonus": 2,
@@ -4520,51 +4637,36 @@
       "int": 14,
       "wis": 15,
       "cha": 18,
-      "savingThrows": "",
       "skills": "Perception +4, Stealth +5",
-      "vulnerabilities": "",
-      "resistances": "",
-      "immunities": "",
       "senses": "Darkvision 60 ft., Passive Perception 14",
       "languages": "Elvish, Sylvan",
+      "isNpc": false,
       "traits": [
         {
-          "name": "Speak with Beasts and Plants",
-          "description": "The dryad can communicate with Beasts and Plants as if they shared a language."
+          "name": "Magic Resistance",
+          "description": "Advantage on saves against spells and magical effects."
         },
         {
-          "name": "Magic Resistance",
-          "description": "The dryad has Advantage on saving throws against spells and other magical effects."
+          "name": "Speak with Beasts and Plants",
+          "description": "Can communicate with beasts and plants."
+        },
+        {
+          "name": "Tree Stride",
+          "description": "Once per turn, can use 10 ft of movement to enter a living tree and emerge from another within 60 ft."
         }
       ],
       "actions": [
         {
-          "name": "Multiattack",
-          "description": "The dryad makes one Vine Lash or Thorn Burst attack, and it can use Spellcasting to cast Charm Monster."
+          "name": "Club",
+          "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 2 (1d4) Bludgeoning damage."
         },
         {
-          "name": "Vine Lash",
-          "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 8 (1d8 + 4) Slashing damage."
-        },
-        {
-          "name": "Thorn Burst",
-          "description": "Ranged Attack Roll: +6, range 60 ft. Hit: 7 (1d6 + 4) Piercing damage."
-        },
-        {
-          "name": "Spellcasting",
-          "description": "The dryad casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 14): At Will: Animal Friendship, Charm Monster (lasts 24 hours; ends early if the dryad casts the spell again), Druidcraft. 1/Day Each: Entangle, Pass without Trace"
+          "name": "Fey Charm",
+          "description": "One humanoid or beast within 30 ft: DC 14 WIS or Charmed. Charmed creature regards dryad as trusted friend, 24 hours or until dryad or ally harms it."
         }
       ],
-      "bonusActions": [
-        {
-          "name": "Tree Stride",
-          "description": "If within 5 feet of a Large or bigger tree, the dryad teleports to an unoccupied space within 5 feet of a second Large or bigger tree that is within 60 feet of the previous tree."
-        }
-      ],
-      "reactions": [],
-      "legendaryActions": [],
-      "notes": "Neutral alignment. Initiative +1 (11).",
-      "isNpc": false
+      "notes": "Innate Spellcasting (CHA, DC 14): At will: druidcraft. 3/day each: entangle, goodberry. 1/day each: barkskin, pass without trace, shillelagh.",
+      "source": "mm"
     },
     {
       "id": "mm-duergar",
@@ -4616,7 +4718,8 @@
           "description": "Magically Invisible until attacks, casts spell, uses Enlarge, or Concentration ends."
         }
       ],
-      "notes": "Scale Mail, Shield"
+      "notes": "Scale Mail, Shield",
+      "source": "mm"
     },
     {
       "id": "mm-faerie-dragon-older",
@@ -4660,7 +4763,8 @@
           "description": "5-ft Cone. DC 11 WIS or Incapacitated (can't take reactions) 1 min, laughing. Save ends."
         }
       ],
-      "notes": "Innate Spellcasting (CHA, DC 13): 1/day each: color spray, dancing lights, mage hand, minor illusion, mirror image, suggestion."
+      "notes": "Innate Spellcasting (CHA, DC 13): 1/day each: color spray, dancing lights, mage hand, minor illusion, mirror image, suggestion.",
+      "source": "mm"
     },
     {
       "id": "mm-fire-snake",
@@ -4705,7 +4809,8 @@
           "name": "Tail",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Bludgeoning plus 3 (1d6) Fire."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-eagle",
@@ -4748,7 +4853,8 @@
           "name": "Talons",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6+3) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-hyena",
@@ -4783,7 +4889,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6+3) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-octopus",
@@ -4830,7 +4937,8 @@
           "name": "Ink Cloud (Recharges after Short Rest)",
           "description": "If underwater, 20-ft radius heavily obscured area, 1 min. Octopus can Dash as Bonus Action."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-toad",
@@ -4872,7 +4980,8 @@
           "name": "Swallow",
           "description": "Melee Attack Roll: +4, reach 5 ft. One Medium or smaller creature toad is Grappling. Hit: 10 (3d6) Acid. Target Blinded, Restrained, total cover. If toad takes 10+ damage in one turn from swallowed creature, DC 10 CON or regurgitates. If toad dies, creature can escape prone using 5 ft movement."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-vulture",
@@ -4919,7 +5028,8 @@
           "name": "Talons",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 9 (2d6+2) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-goblin-boss",
@@ -4969,7 +5079,8 @@
           "description": "When missed by attack, if another goblin within 5 ft, attacker rerolls against that goblin."
         }
       ],
-      "notes": "Chain Shirt, Shield"
+      "notes": "Chain Shirt, Shield",
+      "source": "mm"
     },
     {
       "id": "mm-half-ogre",
@@ -5003,7 +5114,8 @@
           "description": "Melee or Ranged Attack Roll: +5, range 30/120 ft. Hit: 10 (2d6+3) Piercing damage."
         }
       ],
-      "notes": "Hide Armor"
+      "notes": "Hide Armor",
+      "source": "mm"
     },
     {
       "id": "mm-harpy",
@@ -5040,7 +5152,8 @@
           "name": "Luring Song",
           "description": "Each humanoid/giant within 300 ft hearing: DC 11 WIS or Charmed. Must move toward harpy by most direct route. Doesn't avoid opportunity attacks. Save if takes damage or at end of turn if can see harpy. Success/effect ends = immune 24 hours."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-hippogriff",
@@ -5083,7 +5196,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6+3) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-imp",
@@ -5129,7 +5243,8 @@
           "description": "Magically Invisible until attacks, or Concentration ends."
         }
       ],
-      "notes": "Shapechanger: Can polymorph into beast (rat, raven, spider) or back. Stats same except speed."
+      "notes": "Shapechanger: Can polymorph into beast (rat, raven, spider) or back. Stats same except speed.",
+      "source": "mm"
     },
     {
       "id": "mm-lion",
@@ -5180,7 +5295,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6+3) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-quasit",
@@ -5226,7 +5342,8 @@
           "description": "Magically Invisible until attacks, or Concentration ends."
         }
       ],
-      "notes": "Shapechanger: Can polymorph into beast (bat, centipede, toad) or back. Stats same except speed."
+      "notes": "Shapechanger: Can polymorph into beast (bat, centipede, toad) or back. Stats same except speed.",
+      "source": "mm"
     },
     {
       "id": "mm-scarecrow",
@@ -5271,7 +5388,8 @@
           "name": "Terrifying Glare",
           "description": "One creature within 30 ft that can see scarecrow: DC 11 WIS or Paralyzed until end of scarecrow's next turn."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-spy",
@@ -5318,7 +5436,8 @@
           "name": "Hand Crossbow",
           "description": "Ranged Attack Roll: +4, range 30/120 ft. Hit: 5 (1d6+2) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-swarm-of-quippers",
@@ -5362,7 +5481,8 @@
           "name": "Bites",
           "description": "Melee Attack Roll: +5, reach 0 ft. Hit: 14 (4d6) Piercing, or 7 (2d6) at half HP or fewer."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-thri-kreen",
@@ -5414,7 +5534,8 @@
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Piercing plus 5 (2d4) Poison."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-tiger",
@@ -5457,7 +5578,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8+3) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-yuan-ti-pureblood",
@@ -5502,7 +5624,8 @@
           "description": "Ranged Attack Roll: +3, range 80/320 ft. Hit: 4 (1d6+1) Piercing plus 7 (2d6) Poison."
         }
       ],
-      "notes": "Innate Spellcasting (CHA, DC 12): At will: animal friendship (snakes only), poison spray. 3/day: suggestion."
+      "notes": "Innate Spellcasting (CHA, DC 12): At will: animal friendship (snakes only), poison spray. 3/day: suggestion.",
+      "source": "mm"
     },
     {
       "id": "mm-sahuagin",
@@ -5558,7 +5681,8 @@
           "description": "Melee/Ranged Attack Roll: +3, range 20/60 ft. Hit: 4 (1d6+1) Piercing."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-satyr",
@@ -5602,7 +5726,8 @@
           "description": "Ranged Attack Roll: +5, range 80/320 ft. Hit: 6 (1d6+3) Piercing."
         }
       ],
-      "notes": "Leather Armor"
+      "notes": "Leather Armor",
+      "source": "mm"
     },
     {
       "id": "mm-scout",
@@ -5646,7 +5771,8 @@
           "description": "Ranged Attack Roll: +4, range 150/600 ft. Hit: 6 (1d8+2) Piercing."
         }
       ],
-      "notes": "Leather Armor"
+      "notes": "Leather Armor",
+      "source": "mm"
     },
     {
       "id": "mm-swarm-of-insects",
@@ -5682,7 +5808,8 @@
           "name": "Bites",
           "description": "Melee Attack Roll: +3, reach 0 ft. Hit: 10 (4d4) Piercing, or 5 (2d4) if half HP or less."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-thug",
@@ -5726,7 +5853,8 @@
           "description": "Ranged Attack Roll: +2, range 100/400 ft. Hit: 5 (1d10) Piercing."
         }
       ],
-      "notes": "Leather Armor"
+      "notes": "Leather Armor",
+      "source": "mm"
     },
     {
       "id": "mm-warhorse",
@@ -5760,7 +5888,8 @@
           "name": "Hooves",
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 11 (2d6+4) Bludgeoning."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-worg",
@@ -5795,7 +5924,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6+3) Piercing. DC 13 STR or Prone."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-bugbear",
@@ -5835,7 +5965,8 @@
           "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 30/120 ft. Hit: 9 (2d6+2) Piercing damage."
         }
       ],
-      "notes": "Hide Armor, Shield"
+      "notes": "Hide Armor, Shield",
+      "source": "mm"
     },
     {
       "id": "mm-ghoul",
@@ -5873,7 +6004,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4+2) Slashing. Non-elf/undead: DC 10 CON or Paralyzed 1 min (save ends)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-specter",
@@ -5913,7 +6045,8 @@
           "name": "Life Drain",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 10 (3d6) Necrotic. DC 10 CON or HP max reduced by damage taken (Long Rest to restore). Dies if max HP reduced to 0."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-dire-wolf",
@@ -5952,7 +6085,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6+3) Piercing. DC 13 STR save or Prone."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-spider",
@@ -5999,7 +6133,8 @@
           "name": "Web (Recharge 5-6)",
           "description": "Ranged Attack Roll: +5, range 30/60 ft. Hit: Restrained. DC 12 STR to escape. Web: AC 10, HP 5, vulnerable Fire, immune Bludgeoning/Poison/Psychic."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-faerie-dragon-youth",
@@ -6043,7 +6178,8 @@
           "description": "5-ft Cone. DC 11 WIS or Charmed 1 minute."
         }
       ],
-      "notes": "Innate Spellcasting (Cha, DC 13): 1/day each: Color Spray, Dancing Lights, Mage Hand, Minor Illusion."
+      "notes": "Innate Spellcasting (Cha, DC 13): 1/day each: Color Spray, Dancing Lights, Mage Hand, Minor Illusion.",
+      "source": "mm"
     },
     {
       "id": "mm-kuo-toa-whip",
@@ -6099,7 +6235,8 @@
           "description": "Melee Attack Roll: +4, reach 10 ft. Hit: 5 (1d6+2) Piercing. Large or smaller: Grappled (DC 14 to escape)."
         }
       ],
-      "notes": "Spellcasting (DC 12, +4): Cantrips: sacred flame, thaumaturgy. 1st (3 slots): bane, shield of faith."
+      "notes": "Spellcasting (DC 12, +4): Cantrips: sacred flame, thaumaturgy. 1st (3 slots): bane, shield of faith.",
+      "source": "mm"
     },
     {
       "id": "mm-lacedon",
@@ -6142,7 +6279,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4+2) Slashing. Non-elf/undead: DC 10 CON or Paralyzed 1 min (save ends)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-modron-quadrone",
@@ -6190,7 +6328,8 @@
           "description": "Ranged Attack Roll: +4, range 80/320 ft. Hit: 5 (1d6+2) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-myconid-spore-servant",
@@ -6220,7 +6359,8 @@
           "name": "Slam",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4+2) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-ogrillon",
@@ -6254,7 +6394,8 @@
           "name": "Claw",
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 9 (2d4+4) Slashing damage. If both claws hit same Medium or smaller creature, it's grappled (DC 14 escape)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-pirate",
@@ -6298,7 +6439,8 @@
           "description": "Ranged Attack Roll: +4, range 30/90 ft. Hit: 7 (1d10+2) Piercing damage."
         }
       ],
-      "notes": "Leather Armor"
+      "notes": "Leather Armor",
+      "source": "mm"
     },
     {
       "id": "mm-psychic-gray-ooze",
@@ -6347,7 +6489,8 @@
           "name": "Psychic Crush (Recharge 5-6)",
           "description": "Each creature within 60 ft: DC 10 INT save or 10 (3d6) Psychic damage (half on save)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-sphinx-of-wonder",
@@ -6387,7 +6530,8 @@
           "description": "One creature within 30 ft: DC 13 INT save or Stunned until end of sphinx's next turn. On success, creature is immune to this sphinx's Riddle for 24 hours."
         }
       ],
-      "notes": "Innate Spellcasting (Cha, DC 12): At will: Minor Illusion, Prestidigitation. 1/day each: Detect Magic, Identify."
+      "notes": "Innate Spellcasting (Cha, DC 12): At will: Minor Illusion, Prestidigitation. 1/day each: Detect Magic, Identify.",
+      "source": "mm"
     },
     {
       "id": "mm-swarm-of-larvae",
@@ -6423,7 +6567,8 @@
           "name": "Bites",
           "description": "Melee Attack Roll: +2, reach 0 ft. (creatures in swarm's space). Hit: 7 (2d6) Piercing, or 3 (1d6) Piercing if at half HP or less."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-ogre",
@@ -6456,7 +6601,8 @@
           "name": "Javelin",
           "description": "Melee or Ranged Attack Roll: +6, reach 5 ft. or range 30/120 ft. Hit: 11 (2d6+4) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-gelatinous-cube",
@@ -6499,7 +6645,8 @@
           "name": "Engulf",
           "description": "Moves into Large or smaller creatures' spaces. DC 12 DEX or take 10 (3d6) Acid and Engulfed: Restrained, can't breathe, 21 (6d6) Acid at start of each turn. DC 12 STR to escape."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-allosaurus",
@@ -6538,7 +6685,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 8 (1d8+4) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-ankheg",
@@ -6572,7 +6720,8 @@
           "description": "30-ft Line. DC 13 DEX, 10 (3d6) Acid (half on save)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-azer",
@@ -6621,7 +6770,8 @@
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8+3) Bludgeoning plus 3 (1d6) Fire."
         }
       ],
-      "notes": "Plate Armor, Shield"
+      "notes": "Plate Armor, Shield",
+      "source": "mm"
     },
     {
       "id": "mm-bandit-captain",
@@ -6645,7 +6795,7 @@
       "skills": "Athletics +4, Deception +4",
       "senses": "Passive Perception 10",
       "languages": "Any two",
-      "isNpc": false,
+      "isNpc": true,
       "traits": [],
       "actions": [
         {
@@ -6667,7 +6817,8 @@
           "description": "+2 AC against one melee attack that would hit."
         }
       ],
-      "notes": "Studded Leather"
+      "notes": "Studded Leather",
+      "source": "mm"
     },
     {
       "id": "mm-berserker",
@@ -6706,7 +6857,8 @@
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 9 (1d12+3) Slashing damage."
         }
       ],
-      "notes": "Hide Armor"
+      "notes": "Hide Armor",
+      "source": "mm"
     },
     {
       "id": "mm-black-dragon-wyrmling",
@@ -6747,7 +6899,8 @@
           "name": "Acid Breath (Recharge 5-6)",
           "description": "15-ft Line. DC 11 DEX, 22 (5d8) Acid (half on save)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-bronze-dragon-wyrmling",
@@ -6788,7 +6941,8 @@
           "name": "Breath Weapons (Recharge 5-6)",
           "description": "Lightning Breath: 40-ft Line. DC 12 DEX, 16 (3d10) Lightning (half on save). Repulsion Breath: 30-ft Cone. DC 12 STR or pushed 30 ft."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-carrion-crawler",
@@ -6835,7 +6989,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4+2) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-centaur",
@@ -6882,7 +7037,8 @@
           "name": "Longbow",
           "description": "Ranged Attack Roll: +4, range 150/600 ft. Hit: 6 (1d8+2) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-cult-fanatic",
@@ -6922,7 +7078,8 @@
           "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 20/60 ft. Hit: 4 (1d4+2) Piercing damage."
         }
       ],
-      "notes": "Leather Armor. Spellcasting (DC 11, +3): Cantrips: light, sacred flame, thaumaturgy. 1st (4 slots): command, inflict wounds, shield of faith. 2nd (3 slots): hold person, spiritual weapon."
+      "notes": "Leather Armor. Spellcasting (DC 11, +3): Cantrips: light, sacred flame, thaumaturgy. 1st (4 slots): command, inflict wounds, shield of faith. 2nd (3 slots): hold person, spiritual weapon.",
+      "source": "mm"
     },
     {
       "id": "mm-druid",
@@ -6953,7 +7110,8 @@
           "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 3 (1d6) Bludgeoning, or 4 (1d8) two-handed."
         }
       ],
-      "notes": "Spellcasting (DC 12, +4): Cantrips: druidcraft, produce flame, shillelagh. 1st (4 slots): entangle, longstrider, speak with animals, thunderwave. 2nd (3 slots): animal messenger, barkskin."
+      "notes": "Spellcasting (DC 12, +4): Cantrips: druidcraft, produce flame, shillelagh. 1st (4 slots): entangle, longstrider, speak with animals, thunderwave. 2nd (3 slots): animal messenger, barkskin.",
+      "source": "mm"
     },
     {
       "id": "mm-ettercap",
@@ -7009,7 +7167,8 @@
           "description": "Ranged Attack Roll: +4, range 30/60 ft. Large or smaller: Restrained. DC 11 STR to escape. AC 10, 5 HP, vulnerable to Fire, immune to Bludgeoning, Poison, Psychic."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-gargoyle",
@@ -7054,7 +7213,8 @@
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Slashing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-ghast",
@@ -7102,7 +7262,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6+3) Slashing. Non-undead: DC 10 CON or Paralyzed 1 min (save ends)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-gibbering-mouther",
@@ -7149,7 +7310,8 @@
           "name": "Blinding Spittle (Recharge 5-6)",
           "description": "One creature within 15 ft: DC 13 DEX or Blinded until end of mouther's next turn."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-green-dragon-wyrmling",
@@ -7190,7 +7352,8 @@
           "name": "Poison Breath (Recharge 5-6)",
           "description": "15-ft Cone. DC 11 CON, 21 (6d6) Poison (half on save)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-grick",
@@ -7234,7 +7397,8 @@
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-griffon",
@@ -7277,7 +7441,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 11 (2d6+4) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-guard-drake",
@@ -7316,7 +7481,8 @@
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6+3) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor. Color varies (resistance to associated damage type)."
+      "notes": "Natural Armor. Color varies (resistance to associated damage type).",
+      "source": "mm"
     },
     {
       "id": "mm-hunter-shark",
@@ -7355,7 +7521,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8+4) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-intellect-devourer",
@@ -7404,7 +7571,8 @@
           "name": "Body Thief",
           "description": "Action to enter Incapacitated humanoid within 5 ft through its orifices. Target's brain is devoured; intellect devourer controls body."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-lizardfolk-shaman",
@@ -7452,7 +7620,8 @@
           "description": "Magically polymorphs into crocodile (retains INT, WIS, CHA). Reverts when drops to 0 HP or as Bonus Action."
         }
       ],
-      "notes": "Natural Armor. Spellcasting (DC 12, +4): Cantrips: druidcraft, produce flame, thorn whip. 1st (4 slots): entangle, fog cloud. 2nd (3 slots): heat metal, spike growth."
+      "notes": "Natural Armor. Spellcasting (DC 12, +4): Cantrips: druidcraft, produce flame, thorn whip. 1st (4 slots): entangle, fog cloud. 2nd (3 slots): heat metal, spike growth.",
+      "source": "mm"
     },
     {
       "id": "mm-merrow",
@@ -7495,7 +7664,8 @@
           "description": "Melee or Ranged Attack Roll: +6, reach 5 ft. or range 20/60 ft. Hit: 11 (2d6+4) Piercing. Target Grappled (escape DC 14) if Large or smaller."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-mimic",
@@ -7551,7 +7721,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8+3) Piercing plus 4 (1d8) Acid."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-nothic",
@@ -7599,7 +7770,8 @@
           "description": "Targets one creature within 30 ft. Contested Insight vs Deception. Win: learns one fact or secret about target."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-ochre-jelly",
@@ -7645,7 +7817,8 @@
           "name": "Split",
           "description": "When Medium or larger and takes Lightning or Slashing damage, splits into two new jellies if has 10+ HP. Each has HP equal to half original, rounded down."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-ogre-zombie",
@@ -7681,7 +7854,8 @@
           "name": "Morningstar",
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8+4) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-orog",
@@ -7725,7 +7899,8 @@
           "description": "Melee or Ranged Attack Roll: +6, range 30/120 ft. Hit: 7 (1d6+4) Piercing damage."
         }
       ],
-      "notes": "Plate Armor"
+      "notes": "Plate Armor",
+      "source": "mm"
     },
     {
       "id": "mm-pegasus",
@@ -7756,7 +7931,8 @@
           "name": "Hooves",
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 11 (2d6+4) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-peryton",
@@ -7809,7 +7985,8 @@
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (2d4+3) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-plesiosaurus",
@@ -7845,7 +8022,8 @@
           "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 14 (3d6+4) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-polar-bear",
@@ -7889,7 +8067,8 @@
           "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 12 (2d6+5) Slashing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-priest",
@@ -7925,7 +8104,8 @@
           "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 3 (1d6) Bludgeoning damage."
         }
       ],
-      "notes": "Chain Shirt. Spellcasting (DC 13, +5): Cantrips: light, sacred flame, thaumaturgy. 1st (4 slots): cure wounds, guiding bolt, sanctuary. 2nd (3 slots): lesser restoration, spiritual weapon. 3rd (2 slots): dispel magic, spirit guardians."
+      "notes": "Chain Shirt. Spellcasting (DC 13, +5): Cantrips: light, sacred flame, thaumaturgy. 1st (4 slots): cure wounds, guiding bolt, sanctuary. 2nd (3 slots): lesser restoration, spiritual weapon. 3rd (2 slots): dispel magic, spirit guardians.",
+      "source": "mm"
     },
     {
       "id": "mm-quaggoth",
@@ -7966,7 +8146,8 @@
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6+3) Slashing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-rhinoceros",
@@ -8001,7 +8182,8 @@
           "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 14 (2d8+5) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-rug-of-smothering",
@@ -8044,7 +8226,8 @@
           "name": "Smother",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6+3) Bludgeoning. Medium or smaller: Grappled (escape DC 13), Blinded, Restrained, can't breathe. Rug moves into target's space."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-saber-toothed-tiger",
@@ -8087,7 +8270,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 12 (2d6+5) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-sahuagin-priestess",
@@ -8139,7 +8323,8 @@
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 3 (1d4+1) Slashing."
         }
       ],
-      "notes": "Natural Armor. Spellcasting (DC 12, +4): Cantrips: guidance, thaumaturgy. 1st (4 slots): bless, detect magic, guiding bolt. 2nd (3 slots): hold person, spiritual weapon (trident)."
+      "notes": "Natural Armor. Spellcasting (DC 12, +4): Cantrips: guidance, thaumaturgy. 1st (4 slots): bless, detect magic, guiding bolt. 2nd (3 slots): hold person, spiritual weapon (trident).",
+      "source": "mm"
     },
     {
       "id": "mm-sea-hag",
@@ -8186,7 +8371,8 @@
           "description": "Covers self and possessions with illusion to look like another creature of similar size. DC 16 Investigation to see through."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-silver-dragon-wyrmling",
@@ -8222,7 +8408,8 @@
           "name": "Breath Weapons (Recharge 5-6)",
           "description": "Cold Breath: 15-ft Cone. DC 13 CON, 18 (4d8) Cold (half on save). Paralyzing Breath: 15-ft Cone. DC 13 CON or Paralyzed 1 min (save ends)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-spined-devil",
@@ -8279,7 +8466,8 @@
           "description": "Ranged Attack Roll: +4, range 20/80 ft. Hit: 4 (1d4+2) Piercing plus 3 (1d6) Fire."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-swarm-of-poisonous-snakes",
@@ -8315,7 +8503,8 @@
           "name": "Bites",
           "description": "Melee Attack Roll: +6, reach 0 ft. Hit: 7 (2d6) Piercing plus 14 (4d6) Poison, or 3 (1d6) Piercing plus 7 (2d6) Poison at half HP or less."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-wererat",
@@ -8367,7 +8556,8 @@
           "name": "Hand Crossbow (Humanoid/Hybrid)",
           "description": "Ranged Attack Roll: +4, range 30/120 ft. Hit: 5 (1d6+2) Piercing."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-white-dragon-wyrmling",
@@ -8403,7 +8593,8 @@
           "name": "Cold Breath (Recharge 5-6)",
           "description": "15-ft Cone. DC 12 CON, 22 (5d8) Cold (half on save)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-will-o-wisp",
@@ -8455,7 +8646,8 @@
           "name": "Invisibility",
           "description": "Magically Invisible until attacks or uses Consume Life, or until Concentration ends."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-awakened-tree",
@@ -8491,7 +8683,8 @@
           "name": "Slam",
           "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 14 (3d6+4) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-faerie-dragon-adult",
@@ -8535,7 +8728,8 @@
           "description": "5-ft Cone. DC 11 WIS or Charmed for 1 minute. While Charmed, can't attack or target caster with harmful effects. Target can repeat save at end of each turn."
         }
       ],
-      "notes": "Innate Spellcasting (Cha, DC 13): 1/day each: Color Spray, Dancing Lights, Hallucinatory Terrain, Mage Hand, Minor Illusion, Mirror Image, Polymorph, Suggestion."
+      "notes": "Innate Spellcasting (Cha, DC 13): 1/day each: Color Spray, Dancing Lights, Hallucinatory Terrain, Mage Hand, Minor Illusion, Mirror Image, Polymorph, Suggestion.",
+      "source": "mm"
     },
     {
       "id": "mm-giant-boar",
@@ -8573,7 +8767,8 @@
           "name": "Tusk",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6+3) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-constrictor-snake",
@@ -8607,7 +8802,8 @@
           "name": "Constrict",
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8+4) Bludgeoning. Target is Grappled (escape DC 16). Until grapple ends, creature is Restrained, and snake can't Constrict another target."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-elk",
@@ -8646,7 +8842,8 @@
           "name": "Hooves",
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 22 (4d8+4) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-githzerai-monk",
@@ -8687,7 +8884,8 @@
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8+2) Bludgeoning plus 9 (2d8) Psychic."
         }
       ],
-      "notes": "Innate Spellcasting (Wis, DC 12): At will: Mage Hand (hand is invisible). 3/day each: Feather Fall, Jump, See Invisibility, Shield."
+      "notes": "Innate Spellcasting (Wis, DC 12): At will: Mage Hand (hand is invisible). 3/day each: Feather Fall, Jump, See Invisibility, Shield.",
+      "source": "mm"
     },
     {
       "id": "mm-gnoll-pack-lord",
@@ -8740,7 +8938,8 @@
           "description": "One gnoll within 30 ft can use its reaction to make a Bite attack."
         }
       ],
-      "notes": "Chain Shirt, Shield"
+      "notes": "Chain Shirt, Shield",
+      "source": "mm"
     },
     {
       "id": "mm-lizardfolk-geomancer",
@@ -8784,7 +8983,8 @@
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Bludgeoning damage, or 6 (1d8+2) if two-handed."
         }
       ],
-      "notes": "Natural Armor. Spellcasting (DC 12, +4): Cantrips: druidcraft, produce flame, thorn whip. 1st (4 slots): entangle, fog cloud. 2nd (2 slots): heat metal, spike growth."
+      "notes": "Natural Armor. Spellcasting (DC 12, +4): Cantrips: druidcraft, produce flame, thorn whip. 1st (4 slots): entangle, fog cloud. 2nd (2 slots): heat metal, spike growth.",
+      "source": "mm"
     },
     {
       "id": "mm-mage-apprentice",
@@ -8820,7 +9020,8 @@
           "description": "Ranged Spell Attack: +4, range 120 ft. Hit: 11 (2d10) Force damage."
         }
       ],
-      "notes": "Spellcasting (DC 12, +4): Cantrips: fire bolt, light, mage hand, prestidigitation. 1st (4 slots): detect magic, magic missile, shield. 2nd (2 slots): misty step, scorching ray."
+      "notes": "Spellcasting (DC 12, +4): Cantrips: fire bolt, light, mage hand, prestidigitation. 1st (4 slots): detect magic, magic missile, shield. 2nd (2 slots): misty step, scorching ray.",
+      "source": "mm"
     },
     {
       "id": "mm-minotaur-skeleton",
@@ -8861,7 +9062,8 @@
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8+4) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-modron-pentadrone",
@@ -8909,7 +9111,8 @@
           "description": "30-foot Cone. DC 11 CON or Paralyzed 1 minute (save ends)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-myconid-sovereign",
@@ -8968,7 +9171,8 @@
           "description": "20-foot radius. DC 12 CON or linked telepathically 1 hour."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-poltergeist",
@@ -9012,7 +9216,8 @@
           "name": "Telekinetic Thrust",
           "description": "Targets Medium or smaller creature within 30 ft. DC 12 STR or creature and objects moved up to 30 ft. If hits creature, wall, or ceiling, takes 7 (2d6) Bludgeoning and falls Prone."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-swarm-of-stirges",
@@ -9048,7 +9253,8 @@
           "name": "Blood Drain",
           "description": "Melee Attack Roll: +5, reach 0 ft. (creatures in swarm's space). Hit: 14 (4d6) Piercing, or 7 (2d6) Piercing if at half HP or fewer. Target max HP reduced by damage taken. Reduction lasts until long rest."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-centaur-trooper",
@@ -9092,7 +9298,8 @@
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 11 (2d6+4) Bludgeoning damage."
         }
       ],
-      "notes": "Scale Mail"
+      "notes": "Scale Mail",
+      "source": "mm"
     },
     {
       "id": "mm-azer-sentinel",
@@ -9141,7 +9348,8 @@
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8+3) Bludgeoning plus 3 (1d6) Fire."
         }
       ],
-      "notes": "Plate Armor, Shield"
+      "notes": "Plate Armor, Shield",
+      "source": "mm"
     },
     {
       "id": "mm-bulette-pup",
@@ -9177,7 +9385,8 @@
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 14 (2d10+3) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-owlbear",
@@ -9220,7 +9429,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 14 (2d8+5) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-hell-hound",
@@ -9264,7 +9474,8 @@
           "name": "Fire Breath (Recharge 5-6)",
           "description": "15-foot Cone. DC 12 DEX, 21 (6d6) Fire (half on save)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-werewolf",
@@ -9317,7 +9528,8 @@
           "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 20/60 ft. Hit: 5 (1d6+2) Piercing damage."
         }
       ],
-      "notes": "AC 12 in hybrid/wolf form"
+      "notes": "AC 12 in hybrid/wolf form",
+      "source": "mm"
     },
     {
       "id": "mm-minotaur",
@@ -9365,7 +9577,8 @@
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8+4) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-ankylosaurus",
@@ -9395,7 +9608,8 @@
           "description": "Melee Attack Roll: +7, reach 10 ft. Hit: 18 (4d6+4) Bludgeoning. DC 14 STR or Prone."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-basilisk",
@@ -9430,7 +9644,8 @@
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6+3) Piercing plus 7 (2d6) Poison."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-bearded-devil",
@@ -9484,7 +9699,8 @@
           "description": "Melee Attack Roll: +5, reach 10 ft. Hit: 8 (1d10+3) Slashing. If hit, target takes 5 (1d10) Slashing at start of each turn until uses action to staunch wound or receives healing."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-blue-dragon-wyrmling",
@@ -9520,7 +9736,8 @@
           "name": "Lightning Breath (Recharge 5-6)",
           "description": "30-ft Line. DC 12 DEX, 22 (4d10) Lightning (half on save)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-bugbear-chief",
@@ -9564,7 +9781,8 @@
           "description": "Melee or Ranged Attack Roll: +5, range 30/120 ft. Hit: 9 (2d6+2) Piercing damage."
         }
       ],
-      "notes": "Chain Shirt, Shield"
+      "notes": "Chain Shirt, Shield",
+      "source": "mm"
     },
     {
       "id": "mm-displacer-beast",
@@ -9606,7 +9824,8 @@
           "name": "Tentacle",
           "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 7 (1d6+4) Bludgeoning plus 3 (1d6) Piercing."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-doppelganger",
@@ -9658,7 +9877,8 @@
           "name": "Read Thoughts",
           "description": "One creature within 60 ft: DC 13 WIS or doppelganger reads surface thoughts. While reading, Advantage on Insight and Charisma checks vs target."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-scorpion",
@@ -9696,7 +9916,8 @@
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (1d10+2) Piercing. DC 12 CON or 22 (4d10) Poison (half on save)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-gold-dragon-wyrmling",
@@ -9737,7 +9958,8 @@
           "name": "Breath Weapons (Recharge 5-6)",
           "description": "Fire Breath: 15-ft Cone. DC 13 DEX, 22 (4d10) Fire (half on save). Weakening Breath: 15-ft Cone. DC 13 STR or Disadvantage on STR attacks, checks, saves, 1 min (save ends)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-green-hag",
@@ -9785,7 +10007,8 @@
           "description": "Magically Invisible until attacks, casts spell, or Concentration ends."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 12): At will: dancing lights, minor illusion, vicious mockery."
+      "notes": "Natural Armor. Innate Spellcasting (DC 12): At will: dancing lights, minor illusion, vicious mockery.",
+      "source": "mm"
     },
     {
       "id": "mm-grell",
@@ -9824,7 +10047,8 @@
           "name": "Beak",
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d4+2) Piercing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-hook-horror",
@@ -9868,7 +10092,8 @@
           "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 11 (2d6+4) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-killer-whale",
@@ -9912,7 +10137,8 @@
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 21 (5d6+4) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-knight",
@@ -9966,7 +10192,8 @@
           "description": "+2 AC against one melee attack."
         }
       ],
-      "notes": "Plate Armor"
+      "notes": "Plate Armor",
+      "source": "mm"
     },
     {
       "id": "mm-manticore",
@@ -10013,7 +10240,8 @@
           "description": "Ranged Attack Roll: +5, range 100/200 ft. Hit: 7 (1d8+3) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-mummy",
@@ -10054,7 +10282,8 @@
           "name": "Dreadful Glare",
           "description": "One creature within 60 ft: DC 11 WIS or Frightened until end of mummy's next turn. If fails by 5+, also Paralyzed same duration. Success = immune 24 hrs."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-nightmare",
@@ -10098,7 +10327,8 @@
           "description": "Self and up to 3 willing creatures within 5 ft magically enter Ethereal Plane from Material or vice versa."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-phase-spider",
@@ -10142,7 +10372,8 @@
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 7 (1d10+2) Piercing. DC 11 CON or 18 (4d8) Poison (half on save). If reduces to 0 HP, stable but Poisoned 1 hour and Paralyzed."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-spectator",
@@ -10184,7 +10415,8 @@
           "description": "If saves vs spell or spell misses, can redirect at caster using original attack roll or save DC."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-veteran",
@@ -10227,7 +10459,8 @@
           "description": "Ranged Attack Roll: +3, range 100/400 ft. Hit: 6 (1d10+1) Piercing damage."
         }
       ],
-      "notes": "Splint Armor"
+      "notes": "Splint Armor",
+      "source": "mm"
     },
     {
       "id": "mm-water-weird",
@@ -10268,7 +10501,8 @@
           "description": "Melee Attack Roll: +5, reach 10 ft. Hit: 13 (3d6+3) Bludgeoning. Large or smaller: Grappled (escape DC 13), pulled 5 ft toward weird, Restrained until grapple ends. While grappling, can't constrict another."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-wight",
@@ -10318,7 +10552,8 @@
           "description": "Ranged Attack Roll: +4, range 150/600 ft. Hit: 6 (1d8+2) Piercing damage."
         }
       ],
-      "notes": "Studded Leather"
+      "notes": "Studded Leather",
+      "source": "mm"
     },
     {
       "id": "mm-winter-wolf",
@@ -10367,7 +10602,8 @@
           "description": "15-ft Cone. DC 12 DEX, 18 (4d8) Cold (half on save)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-yuan-ti-malison",
@@ -10420,7 +10656,8 @@
           "description": "Ranged Attack Roll: +4, range 150/600 ft. Hit: 6 (1d8+2) Piercing plus 7 (2d6) Poison."
         }
       ],
-      "notes": "Innate Spellcasting (DC 13): At will: animal friendship (snakes only). 3/day: suggestion. Type determines additional attacks."
+      "notes": "Innate Spellcasting (DC 13): At will: animal friendship (snakes only). 3/day: suggestion. Type determines additional attacks.",
+      "source": "mm"
     },
     {
       "id": "mm-flaming-skeleton",
@@ -10468,7 +10705,8 @@
           "name": "Fire Bolt",
           "description": "Ranged Spell Attack: +5, range 120 ft. Hit: 11 (2d10) Fire damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-githyanki-warrior",
@@ -10503,7 +10741,8 @@
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 9 (2d6+2) Slashing plus 7 (2d6) Psychic damage."
         }
       ],
-      "notes": "Half Plate. Innate Spellcasting (DC 11): At will: mage hand (hand is invisible). 3/day each: jump, misty step, nondetection (self only)."
+      "notes": "Half Plate. Innate Spellcasting (DC 11): At will: mage hand (hand is invisible). 3/day each: jump, misty step, nondetection (self only).",
+      "source": "mm"
     },
     {
       "id": "mm-goblin-hexer",
@@ -10547,7 +10786,8 @@
           "description": "One creature within 60 ft: DC 13 WIS or Cursed for 1 minute. While Cursed, disadvantage on attacks and ability checks. Save ends."
         }
       ],
-      "notes": "Leather Armor. Spellcasting (DC 13, +5): Cantrips: minor illusion, poison spray. 1st (4 slots): charm person, hex. 2nd (2 slots): blindness/deafness, hold person."
+      "notes": "Leather Armor. Spellcasting (DC 13, +5): Cantrips: minor illusion, poison spray. 1st (4 slots): charm person, hex. 2nd (2 slots): blindness/deafness, hold person.",
+      "source": "mm"
     },
     {
       "id": "mm-hobgoblin-captain",
@@ -10591,7 +10831,8 @@
           "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 30/120 ft. Hit: 5 (1d6+2) Piercing damage."
         }
       ],
-      "notes": "Half Plate"
+      "notes": "Half Plate",
+      "source": "mm"
     },
     {
       "id": "mm-kuo-toa-monitor",
@@ -10647,7 +10888,8 @@
           "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Bludgeoning plus 3 (1d6) Lightning damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-quaggoth-thonot",
@@ -10688,7 +10930,8 @@
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6+3) Slashing damage."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 12): At will: feather fall, mage hand (hand is invisible). 1/day each: cure wounds, enlarge/reduce, heat metal, mirror image."
+      "notes": "Natural Armor. Innate Spellcasting (DC 12): At will: feather fall, mage hand (hand is invisible). 1/day each: cure wounds, enlarge/reduce, heat metal, mirror image.",
+      "source": "mm"
     },
     {
       "id": "mm-scout-captain",
@@ -10733,7 +10976,8 @@
           "description": "Ranged Attack Roll: +6, range 150/600 ft. Hit: 8 (1d8+4) Piercing damage."
         }
       ],
-      "notes": "Studded Leather"
+      "notes": "Studded Leather",
+      "source": "mm"
     },
     {
       "id": "mm-swarm-of-crawling-claws",
@@ -10773,7 +11017,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +4, reach 0 ft. (creatures in swarm's space). Hit: 14 (4d6) Slashing, or 7 (2d6) Slashing if at half HP or less."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-swarm-of-lemures",
@@ -10813,7 +11058,8 @@
           "name": "Fists",
           "description": "Melee Attack Roll: +4, reach 0 ft. (creatures in swarm's space). Hit: 14 (4d6) Bludgeoning, or 7 (2d6) Bludgeoning if at half HP or less."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-vampire-familiar",
@@ -10866,7 +11112,8 @@
           "name": "Bite",
           "description": "Melee Attack Roll: +5, reach 5 ft. One willing/grappled/incapacitated/restrained creature. Hit: 6 (1d6+3) Piercing plus 7 (2d6) Necrotic. Target HP max reduced by Necrotic damage taken."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-yeti",
@@ -10919,7 +11166,8 @@
           "description": "One creature within 30 ft that can see yeti: DC 13 CON or Paralyzed for 1 minute (save ends). Target immune for 1 hour after save."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-ettin",
@@ -10967,7 +11215,8 @@
           "description": "Ranged Attack Roll: +1, range 150/600 ft. Hit: 4 (1d8) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-ghost",
@@ -11019,7 +11268,8 @@
           "name": "Possession (Recharge 6)",
           "description": "Humanoid within 5 ft: DC 13 CHA or possessed. Ghost controls body, retains Int/Wis/Cha. Ends if body drops to 0 HP, ghost ends it, or turned/forced out."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-banshee",
@@ -11068,7 +11318,8 @@
           "name": "Wail (1/Day)",
           "description": "Non-undead within 30 ft that can hear: DC 13 CON or drop to 0 HP. Success = 10 (3d6) Psychic."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-black-pudding",
@@ -11117,7 +11368,8 @@
           "name": "Split",
           "description": "When Medium or larger and takes Lightning or Slashing damage, splits into two puddings if 10+ HP. Each has HP equal to half original."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-bone-naga",
@@ -11148,7 +11400,8 @@
           "description": "Melee Attack Roll: +5, reach 10 ft. Hit: 10 (2d6+3) Piercing plus 10 (3d6) Poison."
         }
       ],
-      "notes": "Natural Armor. Spellcasting (DC 12, +4): Cantrips: mage hand, minor illusion, ray of frost. 1st (4 slots): charm person, sleep. 2nd (3 slots): detect thoughts, hold person. 3rd (2 slots): lightning bolt."
+      "notes": "Natural Armor. Spellcasting (DC 12, +4): Cantrips: mage hand, minor illusion, ray of frost. 1st (4 slots): charm person, sleep. 2nd (3 slots): detect thoughts, hold person. 3rd (2 slots): lightning bolt.",
+      "source": "mm"
     },
     {
       "id": "mm-chuul",
@@ -11197,7 +11450,8 @@
           "description": "One grappled creature: DC 13 CON or Poisoned 1 min. While Poisoned, also Paralyzed (save ends)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-couatl",
@@ -11247,7 +11501,8 @@
           "description": "Polymorphs into humanoid or beast with CR equal to or less than its own, or back. Stats same except size. Reverts on death."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 14): At will: detect evil and good, detect magic, detect thoughts. 3/day each: bless, create food and water, cure wounds, lesser restoration, protection from poison, sanctuary, shield. 1/day each: dream, greater restoration, scrying."
+      "notes": "Natural Armor. Innate Spellcasting (DC 14): At will: detect evil and good, detect magic, detect thoughts. 3/day each: bless, create food and water, cure wounds, lesser restoration, protection from poison, sanctuary, shield. 1/day each: dream, greater restoration, scrying.",
+      "source": "mm"
     },
     {
       "id": "mm-elephant",
@@ -11286,7 +11541,8 @@
           "description": "Melee Attack Roll: +8, reach 5 ft. One Prone creature. Hit: 22 (3d10+6) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-flameskull",
@@ -11336,7 +11592,8 @@
           "description": "Ranged Attack Roll: +5, range 30 ft. Hit: 10 (3d6) Fire damage."
         }
       ],
-      "notes": "Spellcasting (DC 13, +5): Cantrips: mage hand. 1st (3 slots): magic missile, shield. 2nd (2 slots): blur, flaming sphere. 3rd (1 slot): fireball."
+      "notes": "Spellcasting (DC 13, +5): Cantrips: mage hand. 1st (3 slots): magic missile, shield. 2nd (2 slots): blur, flaming sphere. 3rd (1 slot): fireball.",
+      "source": "mm"
     },
     {
       "id": "mm-girallon",
@@ -11383,7 +11640,8 @@
           "name": "Claw",
           "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 7 (1d6+4) Slashing damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-gnoll-fang-of-yeenoghu",
@@ -11427,7 +11685,8 @@
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8+3) Slashing damage."
         }
       ],
-      "notes": "Hide Armor"
+      "notes": "Hide Armor",
+      "source": "mm"
     },
     {
       "id": "mm-helmed-horror",
@@ -11473,7 +11732,8 @@
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 8 (1d8+4) Slashing, or 9 (1d10+4) two-handed."
         }
       ],
-      "notes": "Plate Armor"
+      "notes": "Plate Armor",
+      "source": "mm"
     },
     {
       "id": "mm-incubus",
@@ -11526,7 +11786,8 @@
           "description": "Enters Ethereal Plane or returns to Material."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-succubus",
@@ -11579,7 +11840,8 @@
           "description": "Enters Ethereal Plane or returns to Material."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-lamia",
@@ -11622,7 +11884,8 @@
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: curse for 1 hour. DC 13 WIS each hour or Disadvantage on WIS saves and all checks."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 13): At will: disguise self, major image. 3/day each: charm person, mirror image, scrying, suggestion. 1/day: geas."
+      "notes": "Natural Armor. Innate Spellcasting (DC 13): At will: disguise self, major image. 3/day each: charm person, mirror image, scrying, suggestion. 1/day: geas.",
+      "source": "mm"
     },
     {
       "id": "mm-lizard-king",
@@ -11672,7 +11935,8 @@
           "description": "Melee or Ranged Attack Roll: +5, reach 5 ft. or range 20/60 ft. Hit: 6 (1d6+3) Piercing, or 7 (1d8+3) two-handed."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-orc-war-chief",
@@ -11725,7 +11989,8 @@
           "description": "Allies within 30 ft that can hear gain Advantage on attacks until start of war chief's next turn."
         }
       ],
-      "notes": "Chain Mail"
+      "notes": "Chain Mail",
+      "source": "mm"
     },
     {
       "id": "mm-red-cap",
@@ -11773,7 +12038,8 @@
           "description": "Moves up to speed toward creature it can see that damaged it."
         }
       ],
-      "notes": "Natural Armor. Must soak cap in blood every 3 days or dies."
+      "notes": "Natural Armor. Must soak cap in blood every 3 days or dies.",
+      "source": "mm"
     },
     {
       "id": "mm-shadow-demon",
@@ -11820,7 +12086,8 @@
           "name": "Claws",
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6+3) Psychic damage. If in dim light/darkness, also 7 (2d6) Cold."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-wereboar",
@@ -11873,7 +12140,8 @@
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6+3) Slashing. Humanoid target: DC 12 CON or cursed with lycanthropy."
         }
       ],
-      "notes": "AC 11 in boar form, AC 12 in hybrid form (natural armor)"
+      "notes": "AC 11 in boar form, AC 12 in hybrid form (natural armor)",
+      "source": "mm"
     },
     {
       "id": "mm-weretiger",
@@ -11933,7 +12201,8 @@
           "name": "Longbow (Humanoid/Hybrid)",
           "description": "Ranged Attack Roll: +4, range 150/600 ft. Hit: 6 (1d8+2) Piercing."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-yuan-ti-mind-whisperer",
@@ -11983,7 +12252,8 @@
           "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6+3) Slashing."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 13): At will: animal friendship (snakes only), message, minor illusion, suggestion. 1/day: detect thoughts."
+      "notes": "Natural Armor. Innate Spellcasting (DC 13): At will: animal friendship (snakes only), message, minor illusion, suggestion. 1/day: detect thoughts.",
+      "source": "mm"
     },
     {
       "id": "mm-aarakocra-aeromancer",
@@ -12027,7 +12297,8 @@
           "description": "60-ft Line. Each creature: DC 13 STR save or 14 (4d6) Bludgeoning and pushed up to 15 ft. Half damage on save, not pushed."
         }
       ],
-      "notes": "Spellcasting (DC 13, +5): Cantrips: gust, shocking grasp. 1st (4 slots): feather fall, fog cloud, thunderwave. 2nd (3 slots): gust of wind, warding wind."
+      "notes": "Spellcasting (DC 13, +5): Cantrips: gust, shocking grasp. 1st (4 slots): feather fall, fog cloud, thunderwave. 2nd (3 slots): gust of wind, warding wind.",
+      "source": "mm"
     },
     {
       "id": "mm-archelon",
@@ -12066,7 +12337,8 @@
           "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 12 (2d6+5) Bludgeoning. DC 15 STR or Prone."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-bullywug-bog-sage",
@@ -12123,7 +12395,8 @@
           "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6+1) Bludgeoning plus 9 (2d8) Poison damage."
         }
       ],
-      "notes": "Spellcasting (DC 13, +5): Cantrips: druidcraft, poison spray. 1st (4 slots): entangle, fog cloud. 2nd (3 slots): hold person, spike growth."
+      "notes": "Spellcasting (DC 13, +5): Cantrips: druidcraft, poison spray. 1st (4 slots): entangle, fog cloud. 2nd (3 slots): hold person, spike growth.",
+      "source": "mm"
     },
     {
       "id": "mm-guard-captain",
@@ -12174,7 +12447,8 @@
           "description": "+2 AC against one melee attack that would hit."
         }
       ],
-      "notes": "Plate Armor, Shield"
+      "notes": "Plate Armor, Shield",
+      "source": "mm"
     },
     {
       "id": "mm-hippopotamus",
@@ -12213,7 +12487,8 @@
           "description": "Melee Attack Roll: +7, reach 5 ft. One Prone creature. Hit: 18 (3d8+5) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-juvenile-shadow-dragon",
@@ -12264,7 +12539,8 @@
           "description": "15-ft Cone. DC 12 DEX, 22 (4d10) Necrotic damage (half on save). Creature reduced to 0 HP by this damage dies."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-swarm-of-dretches",
@@ -12304,7 +12580,8 @@
           "name": "Fetid Cloud (1/Day)",
           "description": "10-ft radius around swarm. Each creature in area: DC 11 CON or Poisoned until start of its next turn. While Poisoned, can take either action or Bonus Action, not both."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-red-dragon-wyrmling",
@@ -12341,7 +12618,8 @@
           "description": "15-ft Cone. DC 13 DEX, 24 (7d6) Fire damage (half on save)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-air-elemental",
@@ -12385,7 +12663,8 @@
           "name": "Whirlwind (Recharge 4-6)",
           "description": "Creatures in elemental's space: DC 13 STR or 15 (3d8+2) Bludgeoning, flung 20 ft random direction, Prone. Hitting object: +3 (1d6) per 10 ft thrown."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-earth-elemental",
@@ -12431,7 +12710,8 @@
           "description": "Melee Attack Roll: +8, reach 10 ft. Hit: 14 (2d8+5) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-fire-elemental",
@@ -12479,7 +12759,8 @@
           "name": "Touch",
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 10 (2d6+3) Fire. Creature/flammable object ignites."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-water-elemental",
@@ -12528,7 +12809,8 @@
           "description": "Creatures in elemental's space: DC 15 STR or 13 (2d8+4) Bludgeoning. Large or smaller: also Grappled (escape DC 14), Restrained, can't breathe. 13 (2d8+4) Bludgeoning at start of elemental's turns. Can grapple 1 Large or 2 Medium/smaller."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-troll",
@@ -12576,7 +12858,8 @@
           "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 11 (2d6+4) Slashing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-wraith",
@@ -12620,7 +12903,8 @@
           "name": "Create Specter",
           "description": "Humanoid dead within 10 ft for no more than 1 min that died violently rises as specter under wraith's control (max 7)."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-vampire-spawn",
@@ -12674,7 +12958,8 @@
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 6 (1d6+3) Piercing +7 (2d6) Necrotic. Target HP max reduced by Necrotic damage, vampire regains that HP. Long Rest to restore. Dies if max HP reduced to 0."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-barbed-devil",
@@ -12733,7 +13018,8 @@
           "description": "Ranged Attack Roll: +5, range 150 ft. Hit: 10 (3d6) Fire. Flammable object ignites."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-barlgura",
@@ -12784,7 +13070,8 @@
           "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 9 (1d10+4) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 12): 1/day each: entangle, phantasmal force. 2/day: disguise self, invisibility (self only)."
+      "notes": "Natural Armor. Innate Spellcasting (DC 12): 1/day each: entangle, phantasmal force. 2/day: disguise self, invisibility (self only).",
+      "source": "mm"
     },
     {
       "id": "mm-bulette",
@@ -12824,7 +13111,8 @@
           "description": "If jumps 15+ ft as part of movement, can land on Medium or smaller creature's space. DC 16 STR or DEX (target's choice) or 14 (3d6+4) Bludgeoning and 14 (3d6+4) Slashing, Prone. On success, pushed 5 ft out of bulette's space. If stays in space, Restrained. DC 16 STR to escape."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-cambion",
@@ -12874,7 +13162,8 @@
           "description": "One humanoid within 30 ft: DC 14 WIS or Charmed 1 day. Can repeat save if takes damage."
         }
       ],
-      "notes": "Scale Mail. Innate Spellcasting (DC 14): 3/day each: alter self, command, detect magic. 1/day: plane shift (self only)."
+      "notes": "Scale Mail. Innate Spellcasting (DC 14): 3/day each: alter self, command, detect magic. 1/day: plane shift (self only).",
+      "source": "mm"
     },
     {
       "id": "mm-flesh-golem",
@@ -12929,7 +13218,8 @@
           "name": "Slam",
           "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 13 (2d8+4) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-giant-crocodile",
@@ -12973,7 +13263,8 @@
           "description": "Melee Attack Roll: +8, reach 10 ft. Hit: 14 (2d8+5) Bludgeoning. DC 16 STR or Prone."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-giant-shark",
@@ -13013,7 +13304,8 @@
           "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 22 (3d10+6) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-gladiator",
@@ -13068,7 +13360,8 @@
           "description": "+3 AC against one melee attack."
         }
       ],
-      "notes": "Studded Leather, Shield"
+      "notes": "Studded Leather, Shield",
+      "source": "mm"
     },
     {
       "id": "mm-gorgon",
@@ -13113,7 +13406,8 @@
           "description": "30-ft Cone. DC 13 CON or Restrained (beginning to petrify). Restrained creature repeats save end of next turn: fail = Petrified, success = ends."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-half-red-dragon-veteran",
@@ -13161,7 +13455,8 @@
           "description": "15-ft Cone. DC 15 DEX, 24 (7d6) Fire (half on save)."
         }
       ],
-      "notes": "Plate Armor"
+      "notes": "Plate Armor",
+      "source": "mm"
     },
     {
       "id": "mm-hill-giant",
@@ -13200,7 +13495,8 @@
           "description": "Ranged Attack Roll: +8, range 60/240 ft. Hit: 21 (3d10+5) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-mezzoloth",
@@ -13250,7 +13546,8 @@
           "description": "Melee or Ranged Attack Roll: +7, reach 5 ft. or range 20/60 ft. Hit: 7 (1d6+4) Piercing, or 8 (1d8+4) two-handed."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 11): 2/day each: darkness, dispel magic. 1/day: cloudkill."
+      "notes": "Natural Armor. Innate Spellcasting (DC 11): 2/day each: darkness, dispel magic. 1/day: cloudkill.",
+      "source": "mm"
     },
     {
       "id": "mm-night-hag",
@@ -13300,7 +13597,8 @@
           "description": "While on Ethereal Plane, touches sleeping humanoid on Material. Target has nightmares and HP max reduced by 5 (1d10) on waking. Target dies if max HP reduced to 0. Only greater restoration or wish removes reduction."
         }
       ],
-      "notes": "Natural Armor. Has heartstone (plane shift and become ethereal) and soul bag."
+      "notes": "Natural Armor. Has heartstone (plane shift and become ethereal) and soul bag.",
+      "source": "mm"
     },
     {
       "id": "mm-otyugh",
@@ -13348,7 +13646,8 @@
           "description": "Slams creatures grappled by it into each other or solid surface. Each takes 10 (2d6+3) Bludgeoning. DC 14 STR or Stunned until end of otyugh's next turn."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-roper",
@@ -13404,7 +13703,8 @@
           "description": "Pulls each creature grappled by it up to 25 ft toward it."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-salamander",
@@ -13454,7 +13754,8 @@
           "description": "Melee Attack Roll: +7, reach 10 ft. Hit: 11 (2d6+4) Bludgeoning plus 7 (2d6) Fire. Target Grappled (escape DC 14), Restrained until grapple ends."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-shambling-mound",
@@ -13500,7 +13801,8 @@
           "description": "One Medium or smaller Grappled creature: Engulfed (Blinded, Restrained, can't breathe). 13 (2d8+4) Bludgeoning at start of each mound's turns. If mound moves, engulfed creature moves with it. Can have one creature engulfed at a time."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-triceratops",
@@ -13539,7 +13841,8 @@
           "description": "Melee Attack Roll: +9, reach 5 ft. One Prone creature. Hit: 22 (3d10+6) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-unicorn",
@@ -13613,7 +13916,8 @@
           "description": "Regains 11 (2d8+2) HP."
         }
       ],
-      "notes": "Innate Spellcasting (DC 14): At will: detect evil and good, druidcraft, pass without trace. 1/day each: calm emotions, dispel evil and good, entangle. 3 Legendary Actions/round."
+      "notes": "Innate Spellcasting (DC 14): At will: detect evil and good, druidcraft, pass without trace. 1/day each: calm emotions, dispel evil and good, entangle. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-xorn",
@@ -13666,7 +13970,8 @@
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (3d6+3) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-young-white-dragon",
@@ -13716,7 +14021,8 @@
           "description": "30-foot Cone. DC 15 CON, 45 (10d8) Cold (half on save)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-medusa",
@@ -13760,7 +14066,8 @@
           "description": "Ranged Attack Roll: +5, range 150/600 ft. Hit: 6 (1d8+2) Piercing +7 (2d6) Poison damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-chimera",
@@ -13807,7 +14114,8 @@
           "description": "15-ft Cone. DC 15 DEX, 31 (7d8) Fire (half on save)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-cyclops",
@@ -13850,7 +14158,8 @@
           "description": "Ranged Attack Roll: +9, range 30/120 ft. Hit: 28 (4d10+6) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-drider",
@@ -13910,7 +14219,8 @@
           "description": "Ranged Attack Roll: +6, range 150/600 ft. Hit: 7 (1d8+3) Piercing plus 4 (1d8) Poison."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 13): At will: dancing lights. 1/day each: darkness, faerie fire."
+      "notes": "Natural Armor. Innate Spellcasting (DC 13): At will: dancing lights. 1/day each: darkness, faerie fire.",
+      "source": "mm"
     },
     {
       "id": "mm-galeb-duhr",
@@ -13959,7 +14269,8 @@
           "description": "Animates up to two boulders within 60 ft. Boulders have same stats as galeb duhr except: no Animate Boulders, +0 INT/WIS/CHA, can't speak, under galeb duhr's control for 1 min."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-hobgoblin-warlord",
@@ -14013,7 +14324,8 @@
           "description": "+3 AC against one melee attack."
         }
       ],
-      "notes": "Plate Armor, Shield"
+      "notes": "Plate Armor, Shield",
+      "source": "mm"
     },
     {
       "id": "mm-invisible-stalker",
@@ -14058,7 +14370,8 @@
           "name": "Slam",
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 10 (2d6+3) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-kuo-toa-archpriest",
@@ -14110,7 +14423,8 @@
           "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 6 (1d6+3) Bludgeoning plus 14 (4d6) Lightning damage."
         }
       ],
-      "notes": "Natural Armor. Spellcasting (DC 14, +6): Cantrips: guidance, sacred flame, thaumaturgy. 1st (4 slots): detect magic, sanctuary, shield of faith. 2nd (3 slots): hold person, spiritual weapon. 3rd (3 slots): spirit guardians. 4th (1 slot): control water."
+      "notes": "Natural Armor. Spellcasting (DC 14, +6): Cantrips: guidance, sacred flame, thaumaturgy. 1st (4 slots): detect magic, sanctuary, shield of faith. 2nd (3 slots): hold person, spiritual weapon. 3rd (3 slots): spirit guardians. 4th (1 slot): control water.",
+      "source": "mm"
     },
     {
       "id": "mm-mage",
@@ -14142,7 +14456,8 @@
           "description": "Melee or Ranged Attack Roll: +5, reach 5 ft. or range 20/60 ft. Hit: 4 (1d4+2) Piercing damage."
         }
       ],
-      "notes": "AC 15 with mage armor. Spellcasting (DC 14, +6): Cantrips: fire bolt, light, mage hand, prestidigitation. 1st (4 slots): detect magic, mage armor, magic missile, shield. 2nd (3 slots): misty step, suggestion. 3rd (3 slots): counterspell, fireball, fly. 4th (3 slots): greater invisibility, ice storm. 5th (1 slot): cone of cold."
+      "notes": "AC 15 with mage armor. Spellcasting (DC 14, +6): Cantrips: fire bolt, light, mage hand, prestidigitation. 1st (4 slots): detect magic, mage armor, magic missile, shield. 2nd (3 slots): misty step, suggestion. 3rd (3 slots): counterspell, fireball, fly. 4th (3 slots): greater invisibility, ice storm. 5th (1 slot): cone of cold.",
+      "source": "mm"
     },
     {
       "id": "mm-mammoth",
@@ -14181,7 +14496,8 @@
           "description": "Melee Attack Roll: +10, reach 5 ft. One Prone creature. Hit: 29 (4d10+7) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-vrock",
@@ -14235,7 +14551,8 @@
           "description": "Creatures within 20 ft that can hear: DC 14 CON or Stunned until end of vrock's next turn."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-wyvern",
@@ -14278,7 +14595,8 @@
           "description": "Melee Attack Roll: +7, reach 10 ft. Hit: 11 (2d6+4) Piercing. DC 15 CON, 24 (7d6) Poison (half on save)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-young-brass-dragon",
@@ -14323,7 +14641,8 @@
           "description": "Fire Breath: 40-ft Line. DC 14 DEX, 42 (12d6) Fire (half on save). Sleep Breath: 30-ft Cone. DC 14 CON or unconscious 5 min. Ends if takes damage or creature uses action to wake."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-young-black-dragon",
@@ -14373,7 +14692,8 @@
           "description": "30-ft Line. DC 14 DEX, 49 (11d8) Acid (half on save)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-mind-flayer",
@@ -14418,7 +14738,8 @@
           "description": "60-foot Cone. DC 15 INT, 22 (4d8+4) Psychic and Stunned 1 min (save ends, half damage on success)."
         }
       ],
-      "notes": "Breastplate. Innate Spellcasting (Psionics) DC 15: At will: detect thoughts, levitate. 1/day each: dominate monster, plane shift (self only)."
+      "notes": "Breastplate. Innate Spellcasting (Psionics) DC 15: At will: detect thoughts, levitate. 1/day each: dominate monster, plane shift (self only).",
+      "source": "mm"
     },
     {
       "id": "mm-blue-slaad",
@@ -14467,7 +14788,8 @@
           "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 12 (2d6+5) Slashing. Humanoid target: DC 15 CON or infected with slaad tadpole disease."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-drow-mage",
@@ -14511,7 +14833,8 @@
           "description": "Summons a quasit or shadow demon. Demon appears in unoccupied space within 60 ft, acts as ally, remains for 1 min."
         }
       ],
-      "notes": "AC 15 with mage armor. Innate Spellcasting (DC 12): At will: dancing lights. 1/day each: darkness, faerie fire, levitate (self only). Spellcasting (DC 14, +6): Cantrips: mage hand, minor illusion, poison spray, ray of frost. 1st (4 slots): mage armor, magic missile, shield, witch bolt. 2nd (3 slots): alter self, misty step, web. 3rd (3 slots): fly, lightning bolt. 4th (3 slots): Evard's black tentacles, greater invisibility. 5th (1 slot): cloudkill."
+      "notes": "AC 15 with mage armor. Innate Spellcasting (DC 12): At will: dancing lights. 1/day each: darkness, faerie fire, levitate (self only). Spellcasting (DC 14, +6): Cantrips: mage hand, minor illusion, poison spray, ray of frost. 1st (4 slots): mage armor, magic missile, shield, witch bolt. 2nd (3 slots): alter self, misty step, web. 3rd (3 slots): fly, lightning bolt. 4th (3 slots): Evard's black tentacles, greater invisibility. 5th (1 slot): cloudkill.",
+      "source": "mm"
     },
     {
       "id": "mm-giant-ape",
@@ -14549,7 +14872,8 @@
           "name": "Rock",
           "description": "Ranged Attack Roll: +9, range 50/100 ft. Hit: 30 (7d6+6) Bludgeoning damage."
         }
-      ]
+      ],
+      "source": "mm"
     },
     {
       "id": "mm-grick-alpha",
@@ -14593,7 +14917,8 @@
           "description": "Melee Attack Roll: +7, reach 10 ft. Hit: 13 (2d8+4) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-oni",
@@ -14646,7 +14971,8 @@
           "description": "Polymorphs into Small or Medium humanoid, Large giant, or back. Stats same except size. Reverts on death."
         }
       ],
-      "notes": "Chain Mail. Innate Spellcasting (DC 13): At will: darkness, invisibility. 1/day each: charm person, cone of cold, gaseous form, sleep."
+      "notes": "Chain Mail. Innate Spellcasting (DC 13): At will: darkness, invisibility. 1/day each: charm person, cone of cold, gaseous form, sleep.",
+      "source": "mm"
     },
     {
       "id": "mm-shield-guardian",
@@ -14700,7 +15026,8 @@
           "description": "When creature within 5 ft of wearer is hit, guardian grants +2 AC to wearer or becomes target instead."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-stone-giant",
@@ -14751,7 +15078,8 @@
           "description": "If rock or similar object is hurled at giant, DC 10 DEX to catch it (no damage)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-young-bronze-dragon",
@@ -14801,7 +15129,8 @@
           "description": "Lightning Breath: 60-ft Line. DC 15 DEX, 55 (10d10) Lightning (half on save). Repulsion Breath: 30-ft Cone. DC 15 STR or pushed 30 ft."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-young-copper-dragon",
@@ -14846,7 +15175,8 @@
           "description": "Acid Breath: 40-ft Line. DC 14 DEX, 40 (9d8) Acid (half on save). Slowing Breath: 30-ft Cone. DC 14 CON or speed halved, can't take reactions, can't make more than one attack, 1 min (save ends)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-young-green-dragon",
@@ -14896,7 +15226,8 @@
           "description": "30-ft Cone. DC 14 CON, 42 (12d6) Poison (half on save)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-assassin",
@@ -14950,7 +15281,8 @@
           "description": "Ranged Attack Roll: +6, range 80/320 ft. Hit: 7 (1d8+3) Piercing plus 24 (7d6) Poison."
         }
       ],
-      "notes": "Studded Leather"
+      "notes": "Studded Leather",
+      "source": "mm"
     },
     {
       "id": "mm-chain-devil",
@@ -15006,7 +15338,8 @@
           "description": "When creature within 30 ft that can see the devil starts its turn: DC 14 WIS or Frightened until start of next turn."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-cloaker",
@@ -15066,7 +15399,8 @@
           "description": "Creates three illusory duplicates. DC 13 WIS to discern real cloaker. Duplicate AC 14, vanishes if hit, exists for 1 min."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-frost-giant",
@@ -15107,7 +15441,8 @@
           "description": "Ranged Attack Roll: +9, range 60/240 ft. Hit: 28 (4d10+6) Bludgeoning damage."
         }
       ],
-      "notes": "Patchwork Armor"
+      "notes": "Patchwork Armor",
+      "source": "mm"
     },
     {
       "id": "mm-green-slaad",
@@ -15164,7 +15499,8 @@
           "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 11 (2d6+4) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 12): At will: detect magic, detect thoughts, mage hand. 2/day each: fear, invisibility (self only). 1/day: fireball."
+      "notes": "Natural Armor. Innate Spellcasting (DC 12): At will: detect magic, detect thoughts, mage hand. 2/day each: fear, invisibility (self only). 1/day: fireball.",
+      "source": "mm"
     },
     {
       "id": "mm-hezrou",
@@ -15214,7 +15550,8 @@
           "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 11 (2d6+4) Slashing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-hydra",
@@ -15266,7 +15603,8 @@
           "description": "Melee Attack Roll: +8, reach 10 ft. Hit: 10 (1d10+5) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-spirit-naga",
@@ -15303,7 +15641,8 @@
           "description": "Melee Attack Roll: +7, reach 10 ft. Hit: 7 (1d6+4) Piercing. DC 13 CON, 31 (7d8) Poison (half on save)."
         }
       ],
-      "notes": "Natural Armor. Spellcasting (DC 14, +6): Cantrips: mage hand, minor illusion, ray of frost. 1st (4 slots): charm person, detect magic, sleep. 2nd (3 slots): detect thoughts, hold person. 3rd (3 slots): lightning bolt, water breathing. 4th (3 slots): blight, dimension door. 5th (2 slots): dominate person."
+      "notes": "Natural Armor. Spellcasting (DC 14, +6): Cantrips: mage hand, minor illusion, ray of frost. 1st (4 slots): charm person, detect magic, sleep. 2nd (3 slots): detect thoughts, hold person. 3rd (3 slots): lightning bolt, water breathing. 4th (3 slots): blight, dimension door. 5th (2 slots): dominate person.",
+      "source": "mm"
     },
     {
       "id": "mm-tyrannosaurus-rex",
@@ -15342,7 +15681,8 @@
           "description": "Melee Attack Roll: +10, reach 10 ft. Hit: 20 (3d8+7) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-young-blue-dragon",
@@ -15387,7 +15727,8 @@
           "description": "60-ft Line. DC 16 DEX, 55 (10d10) Lightning (half on save)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-abominable-yeti",
@@ -15444,7 +15785,8 @@
           "description": "30-ft Cone. DC 18 CON, 45 (10d8) Cold (half on save)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-bone-devil",
@@ -15495,7 +15837,8 @@
           "description": "Melee Attack Roll: +8, reach 10 ft. Hit: 13 (2d8+4) Piercing plus 17 (5d6) Poison. DC 14 CON or Poisoned 1 min (save ends)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-clay-golem",
@@ -15555,7 +15898,8 @@
           "description": "Until end of next turn, gains +2 AC, Advantage on DEX saves, can Slam as Bonus Action."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-cloud-giant",
@@ -15600,7 +15944,8 @@
           "description": "Ranged Attack Roll: +12, range 60/240 ft. Hit: 30 (4d10+8) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 16): At will: detect magic, fog cloud, light. 3/day each: feather fall, fly, misty step, telekinesis. 1/day each: control weather, gaseous form."
+      "notes": "Natural Armor. Innate Spellcasting (DC 16): At will: detect magic, fog cloud, light. 3/day each: feather fall, fly, misty step, telekinesis. 1/day each: control weather, gaseous form.",
+      "source": "mm"
     },
     {
       "id": "mm-fire-giant",
@@ -15641,7 +15986,8 @@
           "description": "Ranged Attack Roll: +11, range 60/240 ft. Hit: 29 (4d10+7) Bludgeoning damage."
         }
       ],
-      "notes": "Plate Armor"
+      "notes": "Plate Armor",
+      "source": "mm"
     },
     {
       "id": "mm-glabrezu",
@@ -15687,7 +16033,8 @@
           "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 7 (2d4+2) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 16): At will: darkness, detect magic, dispel magic. 1/day each: confusion, fly, power word stun."
+      "notes": "Natural Armor. Innate Spellcasting (DC 16): At will: darkness, detect magic, dispel magic. 1/day each: confusion, fly, power word stun.",
+      "source": "mm"
     },
     {
       "id": "mm-gray-slaad",
@@ -15748,7 +16095,8 @@
           "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 10 (2d6+3) Slashing damage."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 14): At will: detect magic, detect thoughts, invisibility (self only), mage hand, major image. 2/day each: fear, fly, fireball, tongues. 1/day: plane shift (self only)."
+      "notes": "Natural Armor. Innate Spellcasting (DC 14): At will: detect magic, detect thoughts, invisibility (self only), mage hand, major image. 2/day each: fear, fly, fireball, tongues. 1/day: plane shift (self only).",
+      "source": "mm"
     },
     {
       "id": "mm-nycaloth",
@@ -15806,7 +16154,8 @@
           "description": "Teleports up to 60 ft to unoccupied space."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 14): At will: darkness, detect magic, dispel magic, invisibility (self only), mirror image."
+      "notes": "Natural Armor. Innate Spellcasting (DC 14): At will: darkness, detect magic, dispel magic, invisibility (self only), mirror image.",
+      "source": "mm"
     },
     {
       "id": "mm-treant",
@@ -15859,7 +16208,8 @@
           "description": "Animates up to two trees within 60 ft. Trees have same stats as treant except can't speak, have INT/CHA of 1, can't Animate Trees, and take root if not given orders. Trees remain animated for 1 day or until destroyed."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-young-gold-dragon",
@@ -15909,7 +16259,8 @@
           "description": "Fire Breath: 30-ft Cone. DC 17 DEX, 55 (10d10) Fire (half on save). Weakening Breath: 30-ft Cone. DC 17 STR or Disadvantage on STR attacks, checks, saves, 1 min (save ends)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-young-red-dragon",
@@ -15954,7 +16305,8 @@
           "description": "30-ft Cone. DC 17 DEX, 56 (16d6) Fire (half on save)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-young-silver-dragon",
@@ -15999,7 +16351,8 @@
           "description": "Cold Breath: 30-ft Cone. DC 17 CON, 54 (12d8) Cold (half on save). Paralyzing Breath: 30-ft Cone. DC 17 CON or Paralyzed 1 min (save ends)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-aboleth",
@@ -16070,7 +16423,8 @@
           "description": "One Charmed target takes 10 (3d6) Psychic, aboleth regains HP equal to damage."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-death-slaad",
@@ -16131,7 +16485,8 @@
           "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6+5) Slashing plus 7 (2d6) Necrotic."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 15): At will: detect magic, detect thoughts, invisibility (self only), mage hand, major image. 2/day each: fear, fireball, fly, tongues. 1/day each: cloudkill, plane shift."
+      "notes": "Natural Armor. Innate Spellcasting (DC 15): At will: detect magic, detect thoughts, invisibility (self only), mage hand, major image. 2/day each: fear, fireball, fly, tongues. 1/day each: cloudkill, plane shift.",
+      "source": "mm"
     },
     {
       "id": "mm-deva",
@@ -16186,7 +16541,8 @@
           "description": "Polymorphs into humanoid or beast with CR equal to or less than its own, or back. Stats same except size. Reverts on death."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 17): At will: detect evil and good. 1/day each: commune, raise dead."
+      "notes": "Natural Armor. Innate Spellcasting (DC 17): At will: detect evil and good. 1/day each: commune, raise dead.",
+      "source": "mm"
     },
     {
       "id": "mm-guardian-naga",
@@ -16227,7 +16583,8 @@
           "description": "Ranged Attack Roll: +8, range 15/30 ft. Hit: DC 15 CON, 45 (10d8) Poison (half on save)."
         }
       ],
-      "notes": "Natural Armor. Spellcasting (DC 16, +8): Cantrips: mending, sacred flame, thaumaturgy. 1st (4 slots): command, cure wounds, shield of faith. 2nd (3 slots): calm emotions, hold person. 3rd (3 slots): bestow curse, clairvoyance. 4th (3 slots): banishment, freedom of movement. 5th (2 slots): flame strike, geas. 6th (1 slot): true seeing."
+      "notes": "Natural Armor. Spellcasting (DC 16, +8): Cantrips: mending, sacred flame, thaumaturgy. 1st (4 slots): command, cure wounds, shield of faith. 2nd (3 slots): calm emotions, hold person. 3rd (3 slots): bestow curse, clairvoyance. 4th (3 slots): banishment, freedom of movement. 5th (2 slots): flame strike, geas. 6th (1 slot): true seeing.",
+      "source": "mm"
     },
     {
       "id": "mm-stone-golem",
@@ -16279,7 +16636,8 @@
           "description": "Targets creatures within 10 ft. DC 17 WIS or Slowed: speed halved, -2 AC, -2 DEX saves, can't take reactions, can't make more than one attack, either action or Bonus Action (not both), 1 min (save ends)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-behir",
@@ -16327,7 +16685,8 @@
           "description": "One Medium or smaller Grappled creature. Target Blinded, Restrained, Total Cover. 21 (6d6) Acid at start of each behir's turns. If behir takes 30+ damage in a turn from inside, DC 14 CON or regurgitates all swallowed creatures (Prone within 10 ft). If behir dies, swallowed creature can exit using 15 ft movement (Prone)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-dao",
@@ -16380,7 +16739,8 @@
           "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 20 (4d6+6) Bludgeoning damage. DC 18 STR or Prone."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 14): At will: detect evil and good, detect magic, stone shape. 3/day each: passwall, move earth, tongues. 1/day each: conjure elemental (earth only), gaseous form, invisibility, phantasmal killer, plane shift, wall of stone."
+      "notes": "Natural Armor. Innate Spellcasting (DC 14): At will: detect evil and good, detect magic, stone shape. 3/day each: passwall, move earth, tongues. 1/day each: conjure elemental (earth only), gaseous form, invisibility, phantasmal killer, plane shift, wall of stone.",
+      "source": "mm"
     },
     {
       "id": "mm-djinni",
@@ -16425,7 +16785,8 @@
           "description": "Creates 5-ft-radius, 30-ft-tall whirlwind centered on itself. Lasts until djinni's Concentration ends. Creature entering or starting turn in whirlwind: DC 18 STR or Restrained. Djinni can move whirlwind up to 60 ft. Restrained creature moves with it. Whirlwind ends if djinni moves."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 17): At will: detect evil and good, detect magic, thunderwave. 3/day each: create food and water (can create wine instead), tongues, wind walk. 1/day each: conjure elemental (air only), creation, gaseous form, invisibility, major image, plane shift."
+      "notes": "Natural Armor. Innate Spellcasting (DC 17): At will: detect evil and good, detect magic, thunderwave. 3/day each: create food and water (can create wine instead), tongues, wind walk. 1/day each: conjure elemental (air only), creation, gaseous form, invisibility, major image, plane shift.",
+      "source": "mm"
     },
     {
       "id": "mm-efreeti",
@@ -16470,7 +16831,8 @@
           "description": "Ranged Attack Roll: +7, range 120 ft. Hit: 17 (5d6) Fire."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 15): At will: detect magic. 3/day each: enlarge/reduce, tongues. 1/day each: conjure elemental (fire only), gaseous form, invisibility, major image, plane shift, wall of fire."
+      "notes": "Natural Armor. Innate Spellcasting (DC 15): At will: detect magic. 3/day each: enlarge/reduce, tongues. 1/day each: conjure elemental (fire only), gaseous form, invisibility, major image, plane shift, wall of fire.",
+      "source": "mm"
     },
     {
       "id": "mm-gynosphinx",
@@ -16530,7 +16892,8 @@
           "description": "Casts a spell from its list."
         }
       ],
-      "notes": "Natural Armor. Spellcasting (DC 16, +8): Cantrips: mage hand, minor illusion, prestidigitation. 1st (4 slots): detect magic, identify, shield. 2nd (3 slots): darkness, locate object, suggestion. 3rd (3 slots): dispel magic, remove curse, tongues. 4th (3 slots): banishment, greater invisibility. 5th (1 slot): legend lore. 3 Legendary Actions/round."
+      "notes": "Natural Armor. Spellcasting (DC 16, +8): Cantrips: mage hand, minor illusion, prestidigitation. 1st (4 slots): detect magic, identify, shield. 2nd (3 slots): darkness, locate object, suggestion. 3rd (3 slots): dispel magic, remove curse, tongues. 4th (3 slots): banishment, greater invisibility. 5th (1 slot): legend lore. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-horned-devil",
@@ -16588,7 +16951,8 @@
           "description": "Ranged Attack Roll: +7, range 150 ft. Hit: 14 (4d6) Fire. Flammable object ignites."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-marid",
@@ -16637,7 +17001,8 @@
           "description": "Blasts water in 60-ft Line. DC 16 DEX or 21 (6d6) Bludgeoning and pushed 20 ft and Prone."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 16): At will: create or destroy water, detect evil and good, detect magic, fog cloud, purify food and drink. 3/day each: tongues, water breathing, water walk. 1/day each: conjure elemental (water only), control water, gaseous form, invisibility, plane shift."
+      "notes": "Natural Armor. Innate Spellcasting (DC 16): At will: create or destroy water, detect evil and good, detect magic, fog cloud, purify food and drink. 3/day each: tongues, water breathing, water walk. 1/day each: conjure elemental (water only), control water, gaseous form, invisibility, plane shift.",
+      "source": "mm"
     },
     {
       "id": "mm-remorhaz",
@@ -16677,7 +17042,8 @@
           "description": "One Medium or smaller Grappled creature. Target Blinded, Restrained, Total Cover. 21 (6d6) Acid plus 21 (6d6) Fire at start of each remorhaz's turns. If remorhaz takes 30+ damage in a turn from inside, DC 15 CON or regurgitates all swallowed creatures (Prone within 10 ft). If remorhaz dies, swallowed creature can exit using 15 ft movement (Prone)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-roc",
@@ -16722,7 +17088,8 @@
           "description": "Melee Attack Roll: +13, reach 5 ft. Hit: 23 (4d6+9) Slashing. Target Grappled (escape DC 19) if Huge or smaller, Restrained until grapple ends."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-arcanaloth",
@@ -16765,7 +17132,8 @@
           "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 8 (2d4+3) Slashing. DC 14 CON or 10 (3d6) Poison and Poisoned 1 min (save ends)."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 17): At will: alter self, darkness, heat metal, invisibility (self only), magic missile. Spellcasting (DC 17, +9): Cantrips: fire bolt, mage hand, minor illusion, prestidigitation. 1st (4 slots): detect magic, identify, shield, Tenser's floating disk. 2nd (3 slots): detect thoughts, mirror image, phantasmal force, suggestion. 3rd (3 slots): counterspell, fear, fireball. 4th (3 slots): banishment, dimension door. 5th (2 slots): contact other plane, hold monster. 6th (1 slot): chain lightning. 7th (1 slot): finger of death. 8th (1 slot): mind blank."
+      "notes": "Natural Armor. Innate Spellcasting (DC 17): At will: alter self, darkness, heat metal, invisibility (self only), magic missile. Spellcasting (DC 17, +9): Cantrips: fire bolt, mage hand, minor illusion, prestidigitation. 1st (4 slots): detect magic, identify, shield, Tenser's floating disk. 2nd (3 slots): detect thoughts, mirror image, phantasmal force, suggestion. 3rd (3 slots): counterspell, fear, fireball. 4th (3 slots): banishment, dimension door. 5th (2 slots): contact other plane, hold monster. 6th (1 slot): chain lightning. 7th (1 slot): finger of death. 8th (1 slot): mind blank.",
+      "source": "mm"
     },
     {
       "id": "mm-erinyes",
@@ -16821,7 +17189,8 @@
           "description": "+4 AC against one melee attack."
         }
       ],
-      "notes": "Plate Armor"
+      "notes": "Plate Armor",
+      "source": "mm"
     },
     {
       "id": "mm-gray-render",
@@ -16871,7 +17240,8 @@
           "description": "When hit by melee attack, can make one Bite attack against attacker."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-ki-rin",
@@ -16938,7 +17308,8 @@
           "description": "Moves up to half speed without provoking."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 17): At will: gaseous form, major image, mending. 3/day each: cure wounds, dispel magic, lesser restoration, sending. 1/day each: control weather, create food and water, greater restoration, revivify, wind walk. 3 Legendary Actions/round."
+      "notes": "Natural Armor. Innate Spellcasting (DC 17): At will: gaseous form, major image, mending. 3/day each: cure wounds, dispel magic, lesser restoration, sending. 1/day each: control weather, create food and water, greater restoration, revivify, wind walk. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-umber-hulk",
@@ -16985,7 +17356,8 @@
           "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 14 (2d8+5) Slashing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-beholder",
@@ -17033,7 +17405,8 @@
           "description": "Uses one random eye ray."
         }
       ],
-      "notes": "Eye Rays (d10): 1-Charm (DC 16 WIS, Charmed 1hr), 2-Paralyzing (DC 16 CON, Paralyzed 1min), 3-Fear (DC 16 WIS, Frightened 1min), 4-Slowing (DC 16 DEX, speed halved 1min), 5-Enervation (DC 16 CON, 36 (8d8) Necrotic), 6-Telekinetic (DC 16 STR, moved 30ft), 7-Sleep (DC 16 WIS, sleep 1min), 8-Petrification (DC 16 DEX, Restrained then Petrified), 9-Disintegration (DC 16 DEX, 45 (10d8) Force), 10-Death (DC 16 DEX, 55 (10d10) Necrotic). 3 Legendary Actions/round."
+      "notes": "Eye Rays (d10): 1-Charm (DC 16 WIS, Charmed 1hr), 2-Paralyzing (DC 16 CON, Paralyzed 1min), 3-Fear (DC 16 WIS, Frightened 1min), 4-Slowing (DC 16 DEX, speed halved 1min), 5-Enervation (DC 16 CON, 36 (8d8) Necrotic), 6-Telekinetic (DC 16 STR, moved 30ft), 7-Sleep (DC 16 WIS, sleep 1min), 8-Petrification (DC 16 DEX, Restrained then Petrified), 9-Disintegration (DC 16 DEX, 45 (10d8) Force), 10-Death (DC 16 DEX, 55 (10d10) Necrotic). 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-adult-white-dragon",
@@ -17109,7 +17482,8 @@
           "description": "DC 19 DEX or 13 (2d6+6) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-adult-brass-dragon",
@@ -17181,7 +17555,8 @@
           "description": "DC 19 DEX or 13 (2d6+6) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-nalfeshnee",
@@ -17235,7 +17610,8 @@
           "description": "Teleports up to 120 ft to unoccupied space."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-rakshasa",
@@ -17277,7 +17653,8 @@
           "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 9 (2d6+2) Slashing. Target cursed if hit by both attacks. While cursed, gains no benefit from short/long rests. Remove curse or similar magic ends."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 18): At will: detect thoughts, disguise self, mage hand, minor illusion. 3/day each: charm person, detect magic, invisibility, major image, suggestion. 1/day each: dominate person, fly, plane shift, true seeing."
+      "notes": "Natural Armor. Innate Spellcasting (DC 18): At will: detect thoughts, disguise self, mage hand, minor illusion. 3/day each: charm person, detect magic, invisibility, major image, suggestion. 1/day each: dominate person, fly, plane shift, true seeing.",
+      "source": "mm"
     },
     {
       "id": "mm-storm-giant",
@@ -17328,7 +17705,8 @@
           "description": "Bolt of lightning at a point within 500 ft. Creatures within 10 ft of point: DC 17 DEX, 54 (12d8) Lightning (half on save)."
         }
       ],
-      "notes": "Scale Mail. Innate Spellcasting (DC 17): At will: detect magic, feather fall, levitate, light. 3/day each: control weather, water breathing."
+      "notes": "Scale Mail. Innate Spellcasting (DC 17): At will: detect magic, feather fall, levitate, light. 3/day each: control weather, water breathing.",
+      "source": "mm"
     },
     {
       "id": "mm-ultroloth",
@@ -17378,7 +17756,8 @@
           "description": "One creature within 30 ft: DC 17 WIS or Charmed until end of ultroloth's next turn. While Charmed, Incapacitated and speed 0."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 17): At will: alter self, clairvoyance, darkness, detect magic, detect thoughts, dispel magic, invisibility (self only), suggestion. 3/day each: dimension door, fear, wall of fire. 1/day each: fire storm, mass suggestion."
+      "notes": "Natural Armor. Innate Spellcasting (DC 17): At will: alter self, clairvoyance, darkness, detect magic, detect thoughts, dispel magic, invisibility (self only), suggestion. 3/day each: dimension door, fear, wall of fire. 1/day each: fire storm, mass suggestion.",
+      "source": "mm"
     },
     {
       "id": "mm-vampire",
@@ -17466,7 +17845,8 @@
           "description": "Makes one Bite attack."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-adult-black-dragon",
@@ -17542,7 +17922,8 @@
           "description": "DC 19 DEX or 13 (2d6+6) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-adult-copper-dragon",
@@ -17614,7 +17995,8 @@
           "description": "DC 19 DEX or 13 (2d6+6) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-death-tyrant",
@@ -17662,7 +18044,8 @@
           "description": "Uses one random eye ray."
         }
       ],
-      "notes": "Natural Armor. Same eye rays as beholder. 3 Legendary Actions/round."
+      "notes": "Natural Armor. Same eye rays as beholder. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-ice-devil",
@@ -17720,7 +18103,8 @@
           "description": "Creates wall of ice as the spell (DC 17). If destroyed, creatures within 10 ft: DC 17 DEX, 35 (10d6) Cold (half on save)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-adult-bronze-dragon",
@@ -17800,7 +18184,8 @@
           "description": "DC 20 DEX or 14 (2d6+7) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-adult-green-dragon",
@@ -17876,7 +18261,8 @@
           "description": "DC 19 DEX or 13 (2d6+6) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-mummy-lord",
@@ -17949,7 +18335,8 @@
           "description": "Turns into sand and moves up to 60 ft. Then reforms. Can move through other creatures. DC 16 CON or 14 (4d6) Bludgeoning and Blinded 1 min (save ends)."
         }
       ],
-      "notes": "Natural Armor. Spellcasting (DC 17, +9): Cantrips: sacred flame, thaumaturgy. 1st (4 slots): command, guiding bolt, shield of faith. 2nd (3 slots): hold person, silence, spiritual weapon. 3rd (3 slots): animate dead, dispel magic. 4th (3 slots): divination, guardian of faith. 5th (2 slots): contagion, insect plague. 6th (1 slot): harm. 3 Legendary Actions/round."
+      "notes": "Natural Armor. Spellcasting (DC 17, +9): Cantrips: sacred flame, thaumaturgy. 1st (4 slots): command, guiding bolt, shield of faith. 2nd (3 slots): hold person, silence, spiritual weapon. 3rd (3 slots): animate dead, dispel magic. 4th (3 slots): divination, guardian of faith. 5th (2 slots): contagion, insect plague. 6th (1 slot): harm. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-purple-worm",
@@ -17993,7 +18380,8 @@
           "description": "Melee Attack Roll: +14, reach 10 ft. Hit: 19 (3d6+9) Piercing. DC 19 CON, 42 (12d6) Poison (half on save)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-vampire-spellcaster",
@@ -18077,7 +18465,8 @@
           "description": "Makes one Bite attack."
         }
       ],
-      "notes": "Natural Armor. Spellcasting (DC 17, +9): Cantrips: mage hand, prestidigitation, ray of frost. 1st (4 slots): comprehend languages, fog cloud, sleep. 2nd (3 slots): detect thoughts, gust of wind, mirror image. 3rd (3 slots): animate dead, bestow curse, nondetection. 4th (3 slots): blight, greater invisibility. 5th (2 slots): animate objects, scrying. 3 Legendary Actions/round."
+      "notes": "Natural Armor. Spellcasting (DC 17, +9): Cantrips: mage hand, prestidigitation, ray of frost. 1st (4 slots): comprehend languages, fog cloud, sleep. 2nd (3 slots): detect thoughts, gust of wind, mirror image. 3rd (3 slots): animate dead, bestow curse, nondetection. 4th (3 slots): blight, greater invisibility. 5th (2 slots): animate objects, scrying. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-adult-red-dragon",
@@ -18149,7 +18538,8 @@
           "description": "DC 22 DEX or 15 (2d6+8) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-adult-blue-dragon",
@@ -18221,7 +18611,8 @@
           "description": "DC 20 DEX or 14 (2d6+7) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-adult-silver-dragon",
@@ -18297,7 +18688,8 @@
           "description": "DC 21 DEX or 15 (2d6+8) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-githyanki-dracomancer",
@@ -18356,7 +18748,8 @@
           "description": "30-ft Cone. DC 18 DEX, 36 (8d8) Fire (half on save)."
         }
       ],
-      "notes": "Plate Armor. Innate Spellcasting (Psionics, DC 18): At will: mage hand, message, minor illusion. 3/day each: blur, jump, misty step, nondetection. 1/day each: plane shift, telekinesis. Spellcasting (DC 18, +10): Cantrips: fire bolt, mage hand, prestidigitation, shocking grasp. 1st (4 slots): magic missile, shield. 2nd (3 slots): detect thoughts, mirror image. 3rd (3 slots): counterspell, fireball, fly. 4th (3 slots): greater invisibility, wall of fire. 5th (2 slots): cone of cold, hold monster. 6th (1 slot): chain lightning. 7th (1 slot): finger of death. 8th (1 slot): dominate monster. 3 Legendary Actions/round."
+      "notes": "Plate Armor. Innate Spellcasting (Psionics, DC 18): At will: mage hand, message, minor illusion. 3/day each: blur, jump, misty step, nondetection. 1/day each: plane shift, telekinesis. Spellcasting (DC 18, +10): Cantrips: fire bolt, mage hand, prestidigitation, shocking grasp. 1st (4 slots): magic missile, shield. 2nd (3 slots): detect thoughts, mirror image. 3rd (3 slots): counterspell, fireball, fly. 4th (3 slots): greater invisibility, wall of fire. 5th (2 slots): cone of cold, hold monster. 6th (1 slot): chain lightning. 7th (1 slot): finger of death. 8th (1 slot): dominate monster. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-gulthias-blight",
@@ -18421,7 +18814,8 @@
           "description": "Summons 1d4 twig blights that appear within 30 ft. They act immediately after the Gulthias and remain for 1 hour."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-iron-golem",
@@ -18481,7 +18875,8 @@
           "description": "15-ft Cone. DC 19 CON, 45 (10d8) Poison (half on save)."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-marilith",
@@ -18545,7 +18940,8 @@
           "description": "+5 AC against one melee attack."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-planetar",
@@ -18600,7 +18996,8 @@
           "description": "Touches creature. Target regains 30 (6d8+3) HP and is cured of curses, diseases, poisons, blindness, deafness."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 20): At will: detect evil and good, invisibility (self only). 3/day each: blade barrier, dispel evil and good, flame strike, raise dead. 1/day each: commune, control weather, insect plague."
+      "notes": "Natural Armor. Innate Spellcasting (DC 20): At will: detect evil and good, invisibility (self only). 3/day each: blade barrier, dispel evil and good, flame strike, raise dead. 1/day each: commune, control weather, insect plague.",
+      "source": "mm"
     },
     {
       "id": "mm-adult-gold-dragon",
@@ -18680,7 +19077,8 @@
           "description": "DC 22 DEX or 15 (2d6+8) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-death-knight",
@@ -18735,7 +19133,8 @@
           "description": "+6 AC against one melee attack."
         }
       ],
-      "notes": "Plate Armor. Spellcasting (DC 18, +10): 1st (4 slots): command, compelled duel, searing smite. 2nd (3 slots): hold person, magic weapon. 3rd (3 slots): dispel magic, elemental weapon. 4th (3 slots): banishment, staggering smite. 5th (2 slots): destructive wave (Necrotic)."
+      "notes": "Plate Armor. Spellcasting (DC 18, +10): 1st (4 slots): command, compelled duel, searing smite. 2nd (3 slots): hold person, magic weapon. 3rd (3 slots): dispel magic, elemental weapon. 4th (3 slots): banishment, staggering smite. 5th (2 slots): destructive wave (Necrotic).",
+      "source": "mm"
     },
     {
       "id": "mm-dracolich",
@@ -18812,7 +19211,8 @@
           "description": "DC 21 DEX or 14 (2d6+7) Bludgeoning and Prone. Dracolich can fly half speed."
         }
       ],
-      "notes": "Natural Armor. Based on adult blue dragon. 3 Legendary Actions/round."
+      "notes": "Natural Armor. Based on adult blue dragon. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-dragon-turtle",
@@ -18865,7 +19265,8 @@
           "description": "60-ft Cone. DC 18 CON, 52 (15d6) Fire (half on save). Underwater: 30-ft Cone, extends to 60 ft on surface."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-goristro",
@@ -18924,7 +19325,8 @@
           "description": "Melee Attack Roll: +13, reach 10 ft. Hit: 45 (7d10+7) Piercing damage."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-sphinx-of-valor",
@@ -18993,7 +19395,8 @@
           "description": "Casts a spell from its list."
         }
       ],
-      "notes": "Natural Armor. Spellcasting (DC 18): Cantrips: mage hand, minor illusion, prestidigitation. 1st (4 slots): detect magic, identify, shield. 2nd (3 slots): darkness, locate object, suggestion. 3rd (3 slots): dispel magic, remove curse, tongues. 4th (3 slots): banishment, greater invisibility. 5th (3 slots): legend lore. 6th (1 slot): heroes' feast. 3 Legendary Actions/round."
+      "notes": "Natural Armor. Spellcasting (DC 18): Cantrips: mage hand, minor illusion, prestidigitation. 1st (4 slots): detect magic, identify, shield. 2nd (3 slots): darkness, locate object, suggestion. 3rd (3 slots): dispel magic, remove curse, tongues. 4th (3 slots): banishment, greater invisibility. 5th (3 slots): legend lore. 6th (1 slot): heroes' feast. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-demilich",
@@ -19061,7 +19464,8 @@
           "description": "One creature within 30 ft: DC 15 WIS or Cursed. While Cursed, Disadvantage on attacks and saves. Remove curse ends."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-balor",
@@ -19123,7 +19527,8 @@
           "description": "Teleports up to 120 ft to unoccupied space."
         }
       ],
-      "notes": "Natural Armor"
+      "notes": "Natural Armor",
+      "source": "mm"
     },
     {
       "id": "mm-ancient-brass-dragon",
@@ -19199,7 +19604,8 @@
           "description": "DC 22 DEX or 15 (2d6+8) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-ancient-white-dragon",
@@ -19275,7 +19681,8 @@
           "description": "DC 22 DEX or 15 (2d6+8) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-pit-fiend",
@@ -19337,7 +19744,8 @@
           "description": "Melee Attack Roll: +14, reach 10 ft. Hit: 24 (3d10+8) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 21): At will: detect magic, fireball. 3/day each: hold monster, wall of fire."
+      "notes": "Natural Armor. Innate Spellcasting (DC 21): At will: detect magic, fireball. 3/day each: hold monster, wall of fire.",
+      "source": "mm"
     },
     {
       "id": "mm-lich",
@@ -19406,7 +19814,8 @@
           "description": "Non-undead within 20 ft: DC 18 CON, 21 (6d6) Necrotic (half on save)."
         }
       ],
-      "notes": "Natural Armor. Has phylactery. 3 Legendary Actions/round."
+      "notes": "Natural Armor. Has phylactery. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-ancient-black-dragon",
@@ -19482,7 +19891,8 @@
           "description": "DC 23 DEX or 15 (2d6+8) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-ancient-copper-dragon",
@@ -19558,7 +19968,8 @@
           "description": "DC 23 DEX or 15 (2d6+8) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-arch-hag",
@@ -19627,7 +20038,8 @@
           "description": "Each Frightened creature within 60 ft: DC 20 WIS, 22 (4d10) Psychic (half on save)."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 20): At will: detect magic, disguise self, fog cloud, ray of sickness. 3/day each: bestow curse, counterspell, dispel magic, phantom steed. 1/day each: eyebite, feeblemind, plane shift. 3 Legendary Actions/round."
+      "notes": "Natural Armor. Innate Spellcasting (DC 20): At will: detect magic, disguise self, fog cloud, ray of sickness. 3/day each: bestow curse, counterspell, dispel magic, phantom steed. 1/day each: eyebite, feeblemind, plane shift. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-solar",
@@ -19704,7 +20116,8 @@
           "description": "One creature within 30 ft: DC 15 CON or Blinded until magic removes the condition."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 25): At will: detect evil and good, invisibility (self only). 3/day each: blade barrier, dispel evil and good, resurrection. 1/day each: commune, control weather. 3 Legendary Actions/round."
+      "notes": "Natural Armor. Innate Spellcasting (DC 25): At will: detect evil and good, invisibility (self only). 3/day each: blade barrier, dispel evil and good, resurrection. 1/day each: commune, control weather. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-ancient-bronze-dragon",
@@ -19784,7 +20197,8 @@
           "description": "DC 24 DEX or 16 (2d6+9) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-ancient-green-dragon",
@@ -19860,7 +20274,8 @@
           "description": "DC 23 DEX or 15 (2d6+8) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-elemental-cataclysm",
@@ -19928,7 +20343,8 @@
           "description": "Creatures within 30 ft: DC 23 STR or Prone and 21 (6d6) Bludgeoning."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-ancient-blue-dragon",
@@ -20000,7 +20416,8 @@
           "description": "DC 24 DEX or 16 (2d6+9) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-ancient-silver-dragon",
@@ -20076,7 +20493,8 @@
           "description": "DC 25 DEX or 17 (2d6+10) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-blob-of-annihilation",
@@ -20138,7 +20556,8 @@
           "description": "Makes one Pseudopod attack."
         }
       ],
-      "notes": "3 Legendary Actions/round."
+      "notes": "3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-empyrean",
@@ -20210,7 +20629,8 @@
           "description": "Uses Trembling Strike if available."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 23): At will: greater restoration, pass without trace, water breathing, water walk. 1/day each: commune, dispel evil and good, earthquake, fire storm, plane shift (self only). 3 Legendary Actions/round."
+      "notes": "Natural Armor. Innate Spellcasting (DC 23): At will: greater restoration, pass without trace, water breathing, water walk. 1/day each: commune, dispel evil and good, earthquake, fire storm, plane shift (self only). 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-kraken",
@@ -20285,7 +20705,8 @@
           "description": "While underwater, emits ink in 60-ft radius. Heavily Obscured 1 min. Kraken can Dash as part of this action."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-ancient-gold-dragon",
@@ -20365,7 +20786,8 @@
           "description": "DC 25 DEX or 17 (2d6+10) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-ancient-red-dragon",
@@ -20437,7 +20859,8 @@
           "description": "DC 25 DEX or 17 (2d6+10) Bludgeoning and Prone. Dragon can fly half speed."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-colossus",
@@ -20511,7 +20934,8 @@
           "description": "Uses Destructive Fist if available."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "mm-tarrasque",
@@ -20594,7 +21018,8 @@
           "description": "Makes one Bite attack or uses Swallow."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round."
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm"
     },
     {
       "id": "imported-1772046882646",
@@ -20650,7 +21075,8 @@
       "reactions": [],
       "legendaryActions": [],
       "notes": "Natural Armor. Challenge Rating 3. Initiative +3. 5 ft. tall. Plant construct type. Obeys commands and drives based on Obedience.",
-      "isNpc": false
+      "isNpc": false,
+      "source": "custom"
     },
     {
       "id": "imported-1772161232600",
@@ -20714,7 +21140,8 @@
       ],
       "legendaryActions": [],
       "notes": "Natural armor. Lizardfolk subtype, Any Alignment.",
-      "isNpc": false
+      "isNpc": false,
+      "source": "custom"
     }
   ]
 }

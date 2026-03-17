@@ -197,6 +197,10 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
   });
   const [filter, setFilter] = useState('all');
   const [expandedTemplates, setExpandedTemplates] = useState({});
+  const [sourceFilter, setSourceFilter] = useState('default'); // 'default', 'conflux', 'custom'
+  const [confluxTemplates, setConfluxTemplates] = useState([]);
+  const [confluxLoading, setConfluxLoading] = useState(false);
+  const [confluxLoaded, setConfluxLoaded] = useState(false);
   
   // New filter states
   const [searchQuery, setSearchQuery] = useState('');
@@ -204,27 +208,54 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedCreatureTypes, setSelectedCreatureTypes] = useState([]);
 
-  // Get available creature types from templates
+  // Load Conflux creatures on demand
+  const loadConflux = () => {
+    if (confluxLoaded) return;
+    setConfluxLoading(true);
+    fetch('/api/templates?source=conflux')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) setConfluxTemplates(data);
+        setConfluxLoaded(true);
+        setConfluxLoading(false);
+      })
+      .catch(() => setConfluxLoading(false));
+  };
+
+  // Switch source filter
+  const handleSourceChange = (src) => {
+    setSourceFilter(src);
+    if (src === 'conflux') loadConflux();
+  };
+
+  // Get the active template list based on source filter
+  const activeTemplates = sourceFilter === 'conflux' ? confluxTemplates : templates;
+
+  // Get available creature types from active templates
   const availableCreatureTypes = useMemo(() => {
     const types = new Set();
-    (templates || []).forEach(t => {
+    (activeTemplates || []).forEach(t => {
       if (t.creatureType) {
         const baseType = t.creatureType.split(' ')[0].replace(/[()]/g, '');
         types.add(baseType);
       }
     });
     return CREATURE_TYPE_OPTIONS.filter(ct => types.has(ct));
-  }, [templates]);
+  }, [activeTemplates]);
 
   const toggleFilter = (setter) => (value) => {
     setter(prev => prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]);
   };
 
   const filtered = useMemo(() => {
-    return templates.filter(t => {
+    return (activeTemplates || []).filter(t => {
       // Type filter (NPC vs Enemy)
       if (filter === 'enemies' && t.isNpc) return false;
       if (filter === 'npcs' && !t.isNpc) return false;
+      
+      // Source sub-filter for default view
+      if (sourceFilter === 'custom' && t.id?.startsWith('mm-')) return false;
+      if (sourceFilter === 'default' && t.source === 'custom') return false;
       
       // Search filter
       if (searchQuery && !t.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
@@ -246,7 +277,7 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
       
       return true;
     });
-  }, [templates, filter, searchQuery, selectedCRs, selectedSizes, selectedCreatureTypes]);
+  }, [activeTemplates, filter, sourceFilter, searchQuery, selectedCRs, selectedSizes, selectedCreatureTypes]);
 
   const clearAllFilters = () => {
     setSearchQuery('');
@@ -254,9 +285,10 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
     setSelectedSizes([]);
     setSelectedCreatureTypes([]);
     setFilter('all');
+    setSourceFilter('default');
   };
 
-  const hasFilters = searchQuery || selectedCRs.length > 0 || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || filter !== 'all';
+  const hasFilters = searchQuery || selectedCRs.length > 0 || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || filter !== 'all' || sourceFilter !== 'default';
 
   const parseNum = (val, fallback) => { const num = parseInt(val); return isNaN(num) ? fallback : num; };
   const getMod = (score) => { const mod = Math.floor((parseNum(score, 10) - 10) / 2); return mod >= 0 ? `+${mod}` : `${mod}`; };
@@ -401,6 +433,22 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
 
       {/* Filter Row */}
       <div className="flex flex-wrap items-center gap-2">
+        {/* Source Filter */}
+        <div className="flex gap-1">
+          {[
+            { key: 'default', label: 'Monster Manual' },
+            { key: 'conflux', label: 'Conflux' },
+            { key: 'custom', label: 'Custom' },
+          ].map(s => (
+            <button key={s.key} onClick={() => handleSourceChange(s.key)}
+              className={`px-3 py-1.5 rounded-lg text-sm ${sourceFilter === s.key ? 'bg-amber-700' : 'bg-stone-700 hover:bg-stone-600'}`}>
+              {s.label}{s.key === 'conflux' && confluxLoading ? '...' : ''}
+            </button>
+          ))}
+        </div>
+
+        <div className="w-px h-6 bg-stone-700" />
+
         {/* Type Filter */}
         <div className="flex gap-1">
           {['all', 'enemies', 'npcs'].map(f => (
