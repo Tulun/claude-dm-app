@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Navbar from '../components/Navbar';
-import { MAGIC_ITEMS, ITEM_CATEGORIES, RARITIES, CLASSES, RARITY_COLORS, RARITY_VALUES, searchItems, sortItems } from './magicItems';
+import { ITEM_CATEGORIES, RARITIES, CLASSES, RARITY_COLORS, RARITY_VALUES, searchItems, sortItems } from './magicItems';
 
 export default function MagicItemsPage() {
+  const [allItems, setAllItems] = useState([]);
   const [items, setItems] = useState([]);
-  const [customItems, setCustomItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [rarityFilter, setRarityFilter] = useState('All');
@@ -16,12 +17,15 @@ export default function MagicItemsPage() {
   const [editingItem, setEditingItem] = useState(null);
   const [expandedLetters, setExpandedLetters] = useState({});
 
-  // Load custom items from API
+  // Load all items from API
   useEffect(() => {
     fetch('/api/magic-items')
       .then(res => res.json())
-      .then(data => { if (Array.isArray(data)) setCustomItems(data); })
-      .catch(err => console.error('Failed to load custom magic items:', err));
+      .then(data => {
+        if (Array.isArray(data)) setAllItems(data);
+        setLoading(false);
+      })
+      .catch(err => { console.error('Failed to load magic items:', err); setLoading(false); });
   }, []);
 
   // Filter and sort items
@@ -31,22 +35,10 @@ export default function MagicItemsPage() {
       rarity: rarityFilter,
       classReq: classFilter,
       attunement: attunementFilter === 'yes' ? true : attunementFilter === 'no' ? false : undefined
-    });
-    if (customItems.length > 0) {
-      const customFiltered = customItems.filter(item => {
-        if (search && !item.name.toLowerCase().includes(search.toLowerCase()) && !item.description.toLowerCase().includes(search.toLowerCase())) return false;
-        if (categoryFilter !== 'All' && item.category !== categoryFilter) return false;
-        if (rarityFilter !== 'All' && item.rarity !== rarityFilter) return false;
-        if (classFilter !== 'All' && item.classes && !item.classes.includes(classFilter)) return false;
-        if (attunementFilter === 'yes' && !item.attunement) return false;
-        if (attunementFilter === 'no' && item.attunement) return false;
-        return true;
-      });
-      filtered = [...filtered.filter(i => !i.custom), ...customFiltered];
-    }
+    }, allItems);
     const sorted = sortItems(filtered, 'name', 'asc');
     setItems(sorted);
-  }, [search, categoryFilter, rarityFilter, classFilter, attunementFilter, customItems]);
+  }, [search, categoryFilter, rarityFilter, classFilter, attunementFilter, allItems]);
 
   // Group items by first letter
   const groupedItems = items.reduce((acc, item) => {
@@ -58,16 +50,20 @@ export default function MagicItemsPage() {
 
   const alphabet = Object.keys(groupedItems).sort();
 
-  const saveCustomItem = async (item) => {
+  const saveItem = async (item) => {
     try {
       const res = await fetch('/api/magic-items', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...item, custom: true }),
+        body: JSON.stringify(item),
       });
       if (res.ok) {
-        const updated = await res.json();
-        setCustomItems(updated);
+        const saved = await res.json();
+        setAllItems(prev => {
+          const idx = prev.findIndex(i => i.id === saved.id);
+          if (idx >= 0) return prev.map(i => i.id === saved.id ? saved : i);
+          return [...prev, saved];
+        });
       }
     } catch (err) {
       console.error('Failed to save magic item:', err);
@@ -76,17 +72,12 @@ export default function MagicItemsPage() {
     setEditingItem(null);
   };
 
-  const deleteCustomItem = async (id) => {
-    if (!confirm('Delete this custom item?')) return;
+  const deleteItem = async (id) => {
+    if (!confirm('Delete this item?')) return;
     try {
-      const res = await fetch('/api/magic-items', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id }),
-      });
+      const res = await fetch(`/api/magic-items?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
-        const updated = await res.json();
-        setCustomItems(updated);
+        setAllItems(prev => prev.filter(i => i.id !== id));
       }
     } catch (err) {
       console.error('Failed to delete magic item:', err);
@@ -230,17 +221,7 @@ export default function MagicItemsPage() {
                         key={item.id} 
                         item={item} 
                         onEdit={() => setEditingItem(item)}
-                        onDelete={() => deleteCustomItem(item.id)}
-                        onCopyAndEdit={(srcItem) => {
-                          const copy = {
-                            ...srcItem,
-                            id: `custom-${Date.now()}`,
-                            name: `${srcItem.name} (Custom)`,
-                            custom: true,
-                          };
-                          setEditingItem(copy);
-                          setShowAddModal(true);
-                        }}
+                        onDelete={() => deleteItem(item.id)}
                       />
                     ))}
                   </div>
@@ -255,7 +236,7 @@ export default function MagicItemsPage() {
       {(showAddModal || editingItem) && (
         <ItemModal
           item={editingItem}
-          onSave={saveCustomItem}
+          onSave={saveItem}
           onClose={() => { setShowAddModal(false); setEditingItem(null); }}
         />
       )}
@@ -263,7 +244,7 @@ export default function MagicItemsPage() {
   );
 }
 
-function ItemCard({ item, onEdit, onDelete, onCopyAndEdit }) {
+function ItemCard({ item, onEdit, onDelete }) {
   const colors = RARITY_COLORS[item.rarity] || RARITY_COLORS['Common'];
   
   let subtitle = item.category;
@@ -284,23 +265,14 @@ function ItemCard({ item, onEdit, onDelete, onCopyAndEdit }) {
           <p className="text-sm text-stone-400 italic">{subtitle}</p>
         </div>
         <div className="flex gap-2 flex-shrink-0">
-          {item.custom ? (
-            <>
-              <button onClick={onEdit} className="px-2 py-1 rounded text-xs bg-stone-700 hover:bg-stone-600">Edit</button>
-              <button onClick={onDelete} className="px-2 py-1 rounded text-xs bg-red-900/50 hover:bg-red-800/50 text-red-400">Delete</button>
-            </>
-          ) : (
-            <button onClick={() => onCopyAndEdit(item)} className="px-2 py-1 rounded text-xs bg-stone-700 hover:bg-stone-600" title="Create an editable copy of this item">
-              Copy & Edit
-            </button>
-          )}
+          <button onClick={onEdit} className="px-2 py-1 rounded text-xs bg-stone-700 hover:bg-stone-600">Edit</button>
+          <button onClick={onDelete} className="px-2 py-1 rounded text-xs bg-red-900/50 hover:bg-red-800/50 text-red-400">Delete</button>
         </div>
       </div>
       
-      {(item.custom || item.cursed) && (
+      {item.cursed && (
         <div className="flex gap-2 mt-1">
-          {item.custom && <span className="text-xs px-2 py-0.5 rounded bg-cyan-900/50 text-cyan-400">Custom</span>}
-          {item.cursed && <span className="text-xs px-2 py-0.5 rounded bg-red-900/50 text-red-400">⚠ Cursed</span>}
+          <span className="text-xs px-2 py-0.5 rounded bg-red-900/50 text-red-400">⚠ Cursed</span>
         </div>
       )}
       

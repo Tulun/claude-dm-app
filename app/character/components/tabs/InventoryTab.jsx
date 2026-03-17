@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Icons from '../../../components/Icons';
 import { Tooltip } from '../../../components/ui';
-import { MAGIC_ITEMS, RARITY_COLORS, ITEM_CATEGORIES, RARITIES } from '../../../magic-items/magicItems';
+import { RARITY_COLORS, ITEM_CATEGORIES, RARITIES } from '../../../magic-items/magicItems';
 
 const WEAPON_PROPERTIES = [
   { name: 'Ammunition', desc: 'Requires ammunition to fire. Drawing ammo is part of the attack.' },
@@ -86,13 +86,23 @@ function AddItemModal({ onAdd, onClose }) {
   const [categoryFilter, setCategoryFilter] = useState('');
   const [rarityFilter, setRarityFilter] = useState('');
   const [selectedItem, setSelectedItem] = useState(null);
+  const [magicItems, setMagicItems] = useState([]);
+  const [loadingItems, setLoadingItems] = useState(true);
 
   // Custom item fields
   const [customName, setCustomName] = useState('');
   const [customType, setCustomType] = useState('gear');
 
+  // Fetch magic items from API
+  useEffect(() => {
+    fetch('/api/magic-items')
+      .then(res => res.json())
+      .then(data => { if (Array.isArray(data)) setMagicItems(data); setLoadingItems(false); })
+      .catch(() => setLoadingItems(false));
+  }, []);
+
   const filteredItems = useMemo(() => {
-    return MAGIC_ITEMS
+    return magicItems
       .filter(item => {
         if (categoryFilter && item.category !== categoryFilter) return false;
         if (rarityFilter && item.rarity !== rarityFilter) return false;
@@ -100,7 +110,7 @@ function AddItemModal({ onAdd, onClose }) {
         return true;
       })
       .sort((a, b) => a.name.localeCompare(b.name));
-  }, [search, categoryFilter, rarityFilter]);
+  }, [search, categoryFilter, rarityFilter, magicItems]);
 
   const handleAddMagicItem = (magicItem) => {
     const itemType = magicItem.category === 'Weapon' ? 'weapon' : magicItem.category === 'Armor' ? 'armor' : 'gear';

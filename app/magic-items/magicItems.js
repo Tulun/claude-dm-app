@@ -15,7 +15,7 @@ export const RARITY_COLORS = {
   'Varies': { bg: 'bg-gradient-to-r from-green-900/50 via-blue-900/50 to-purple-900/50', text: 'text-cyan-400', border: 'border-cyan-700' }
 };
 
-export const MAGIC_ITEMS = [
+export const defaultMagicItems = [
   // ===== COMMON =====
   { id: 'potion-healing', name: 'Potion of Healing', category: 'Potion', rarity: 'Common', attunement: false, 
     description: 'When you drink this potion, you regain 2d4 + 2 Hit Points. The potion\'s red liquid glimmers when agitated.' },
@@ -393,10 +393,6 @@ export const MAGIC_ITEMS = [
     description: 'While holding this shield, you have a +2 bonus to AC. This bonus is in addition to the shield\'s normal bonus to AC.' },
   { id: 'shield-plus3', name: 'Shield, +3', category: 'Armor', rarity: 'Very Rare', attunement: false,
     description: 'While holding this shield, you have a +3 bonus to AC. This bonus is in addition to the shield\'s normal bonus to AC.' },
-  { id: 'mithral-armor', name: 'Mithral Armor', category: 'Armor', rarity: 'Uncommon', attunement: false,
-    description: 'Mithral is a light, flexible metal. A mithral Chain Shirt or Breastplate can be worn under normal clothes. If the armor normally imposes Disadvantage on Dexterity (Stealth) checks or has a Strength requirement, the mithral version of the armor doesn\'t.' },
-  { id: 'adamantine-armor', name: 'Adamantine Armor', category: 'Armor', rarity: 'Uncommon', attunement: false,
-    description: 'This suit of armor is reinforced with adamantine, one of the hardest substances in existence. While you\'re wearing it, any Critical Hit against you becomes a normal hit.' },
   { id: 'sword-life-stealing', name: 'Sword of Life Stealing', category: 'Weapon', rarity: 'Rare', attunement: true, weaponType: 'Any Sword',
     description: 'When you attack a creature with this magic weapon and roll a 20 on the attack roll, that target takes an extra 3d6 Necrotic damage, provided that the target isn\'t a Construct or an Undead. You gain Temporary Hit Points equal to the extra damage dealt.' },
   { id: 'sword-wounding', name: 'Sword of Wounding', category: 'Weapon', rarity: 'Rare', attunement: true, weaponType: 'Any Sword',
@@ -417,26 +413,10 @@ export const MAGIC_ITEMS = [
     description: 'This trident is a magic weapon. It has 3 charges. While you carry it, you can take a Magic action and expend 1 charge to cast Dominate Beast (save DC 15) from it on a Beast that has an innate Swimming Speed. The trident regains 1d3 expended charges daily at dawn.' },
   { id: 'berserker-axe', name: 'Berserker Axe', category: 'Weapon', rarity: 'Rare', attunement: true, weaponType: 'Any Axe',
     description: 'You gain a +1 bonus to attack and damage rolls made with this magic weapon. In addition, while you are attuned to this weapon, your Hit Point maximum increases by 1 for each level you have attained. Curse: This axe is cursed. Becoming attuned to it curses you. Whenever a hostile creature damages you while the axe is in your possession, you must succeed on a DC 15 Wisdom saving throw or go berserk, using your action each round to attack the creature nearest to you.' },
-  { id: 'dragon-slayer', name: 'Dragon Slayer', category: 'Weapon', rarity: 'Rare', attunement: false, weaponType: 'Any Sword',
-    description: 'You gain a +1 bonus to attack and damage rolls made with this magic weapon. When you hit a Dragon with this weapon, the Dragon takes an extra 3d6 damage of the weapon\'s type.' },
-  { id: 'giant-slayer', name: 'Giant Slayer', category: 'Weapon', rarity: 'Rare', attunement: false, weaponType: 'Any Axe or Sword',
-    description: 'You gain a +1 bonus to attack and damage rolls made with this magic weapon. When you hit a Giant with it, the Giant takes an extra 2d6 damage of the weapon\'s type and must succeed on a DC 15 Strength saving throw or fall Prone.' },
   { id: 'vicious-weapon', name: 'Vicious Weapon', category: 'Weapon', rarity: 'Rare', attunement: false, weaponType: 'Any',
     description: 'When you roll a 20 on your attack roll with this magic weapon, your critical hit deals an extra 2d6 damage of the weapon\'s type.' },
   { id: 'arrow-slaying', name: 'Arrow of Slaying', category: 'Weapon', rarity: 'Very Rare', attunement: false, weaponType: 'Arrow',
     description: 'An arrow of slaying is a magic weapon meant to slay a particular kind of creature. If a creature belonging to the type, race, or group associated with an arrow of slaying takes damage from the arrow, the creature must make a DC 17 Constitution saving throw, taking an extra 6d10 Piercing damage on a failed save, or half as much extra damage on a successful one. Once the arrow deals its extra damage, it becomes a nonmagical arrow.' },
-  { id: 'potion-greater-healing', name: 'Potion of Greater Healing', category: 'Potion', rarity: 'Uncommon', attunement: false,
-    description: 'When you drink this potion, you regain 4d4 + 4 Hit Points. The potion\'s red liquid glimmers when agitated.' },
-  { id: 'potion-superior-healing', name: 'Potion of Superior Healing', category: 'Potion', rarity: 'Rare', attunement: false,
-    description: 'When you drink this potion, you regain 8d4 + 8 Hit Points. The potion\'s red liquid glimmers when agitated.' },
-  { id: 'potion-supreme-healing', name: 'Potion of Supreme Healing', category: 'Potion', rarity: 'Very Rare', attunement: false,
-    description: 'When you drink this potion, you regain 10d4 + 20 Hit Points. The potion\'s red liquid glimmers when agitated.' },
-  { id: 'potion-invisibility', name: 'Potion of Invisibility', category: 'Potion', rarity: 'Very Rare', attunement: false,
-    description: 'This potion\'s container looks empty but feels as though it holds liquid. When you drink it, you become Invisible for 1 hour. Anything you wear or carry is Invisible with you. The effect ends early if you attack, deal damage, or cast a spell.' },
-  { id: 'potion-speed', name: 'Potion of Speed', category: 'Potion', rarity: 'Very Rare', attunement: false,
-    description: 'When you drink this potion, you gain the effect of the Haste spell for 1 minute (no Concentration required). The potion\'s yellow fluid is streaked with black and swirls on its own.' },
-  { id: 'potion-flying', name: 'Potion of Flying', category: 'Potion', rarity: 'Very Rare', attunement: false,
-    description: 'When you drink this potion, you gain a Flying Speed equal to your Walking Speed for 1 hour and can hover. If you\'re in the air when the potion wears off, you fall unless you have some other means of staying aloft. The potion\'s clear liquid floats at the top of its container and has cloudy white impurities drifting in it.' },
   { id: 'scroll-1st', name: 'Spell Scroll (1st Level)', category: 'Scroll', rarity: 'Common', attunement: false,
     description: 'A spell scroll bears the words of a single spell, written in a mystical cipher. If the spell is on your class\'s spell list, you can read the scroll and cast its spell without providing material components. Otherwise, the scroll is unintelligible. Save DC 13, attack bonus +5. Once the spell is cast, the words on the scroll fade, and it crumbles to dust.' },
   { id: 'scroll-3rd', name: 'Spell Scroll (3rd Level)', category: 'Scroll', rarity: 'Uncommon', attunement: false,
@@ -445,14 +425,14 @@ export const MAGIC_ITEMS = [
     description: 'A spell scroll bears the words of a single 5th-level spell. If the spell is on your class\'s spell list, you can read the scroll and cast its spell. Save DC 17, attack bonus +9. Once cast, the scroll crumbles to dust.' },
 ];
 
-// Helper functions
-export function getItemsByCategory(cat) { return MAGIC_ITEMS.filter(i => i.category === cat); }
-export function getItemsByRarity(rar) { return MAGIC_ITEMS.filter(i => i.rarity === rar); }
-export function getItemsByClass(cls) { return MAGIC_ITEMS.filter(i => !i.classes || i.classes.includes(cls)); }
-export function getItem(id) { return MAGIC_ITEMS.find(i => i.id === id); }
+// Legacy helpers
+export function getItemsByCategory(cat) { return defaultMagicItems.filter(i => i.category === cat); }
+export function getItemsByRarity(rar) { return defaultMagicItems.filter(i => i.rarity === rar); }
+export function getItemsByClass(cls) { return defaultMagicItems.filter(i => !i.classes || i.classes.includes(cls)); }
+export function getItem(id) { return defaultMagicItems.find(i => i.id === id); }
 
-export function searchItems(q, filters = {}) {
-  let r = [...MAGIC_ITEMS];
+export function searchItems(q, filters = {}, items = []) {
+  let r = [...items];
   if (q) { 
     const lq = q.toLowerCase(); 
     r = r.filter(i => i.name.toLowerCase().includes(lq) || i.description.toLowerCase().includes(lq)); 
