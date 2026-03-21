@@ -4,39 +4,20 @@ import { useState, useMemo } from 'react';
 import Icons from '../../components/Icons';
 import ImportMonsterModal from './ImportMonsterModal';
 
-// CR values for filtering
-const CR_OPTIONS = [
-  { value: '0', label: '0' },
-  { value: '1/8', label: '⅛' },
-  { value: '1/4', label: '¼' },
-  { value: '1/2', label: '½' },
-  { value: '1', label: '1' },
-  { value: '2', label: '2' },
-  { value: '3', label: '3' },
-  { value: '4', label: '4' },
-  { value: '5', label: '5' },
-  { value: '6', label: '6' },
-  { value: '7', label: '7' },
-  { value: '8', label: '8' },
-  { value: '9', label: '9' },
-  { value: '10', label: '10' },
-  { value: '11', label: '11' },
-  { value: '12', label: '12' },
-  { value: '13', label: '13' },
-  { value: '14', label: '14' },
-  { value: '15', label: '15' },
-  { value: '16', label: '16' },
-  { value: '17', label: '17' },
-  { value: '18', label: '18' },
-  { value: '19', label: '19' },
-  { value: '20', label: '20' },
-  { value: '21', label: '21' },
-  { value: '22', label: '22' },
-  { value: '23', label: '23' },
-  { value: '24', label: '24' },
-  { value: '25', label: '25' },
-  { value: '30', label: '30' },
-];
+// CR ordered list for range filter
+const CR_LIST = ['0', '1/8', '1/4', '1/2', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+  '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '30'];
+
+const CR_LABELS = { '0': '0', '1/8': '⅛', '1/4': '¼', '1/2': '½' };
+
+const crToNumber = (cr) => {
+  if (cr === '1/8') return 0.125;
+  if (cr === '1/4') return 0.25;
+  if (cr === '1/2') return 0.5;
+  return parseFloat(cr) || 0;
+};
+
+const crLabel = (cr) => CR_LABELS[cr] || cr;
 
 const SIZE_OPTIONS = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
 
@@ -100,6 +81,116 @@ const FilterDropdown = ({ label, options, selected, onToggle, onClear, colorClas
               >
                 Done
               </button>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+// CR Range Filter component
+const CRRangeFilter = ({ minCR, maxCR, onChange, onClear }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const minIdx = minCR !== null ? CR_LIST.indexOf(minCR) : 0;
+  const maxIdx = maxCR !== null ? CR_LIST.indexOf(maxCR) : CR_LIST.length - 1;
+  const isActive = minCR !== null || maxCR !== null;
+  
+  const handleMin = (idx) => {
+    const newMin = CR_LIST[idx];
+    const effectiveMax = maxCR || CR_LIST[CR_LIST.length - 1];
+    if (crToNumber(newMin) > crToNumber(effectiveMax)) {
+      onChange(newMin, newMin);
+    } else {
+      onChange(newMin, maxCR);
+    }
+  };
+  
+  const handleMax = (idx) => {
+    const newMax = CR_LIST[idx];
+    const effectiveMin = minCR || CR_LIST[0];
+    if (crToNumber(newMax) < crToNumber(effectiveMin)) {
+      onChange(newMax, newMax);
+    } else {
+      onChange(minCR, newMax);
+    }
+  };
+
+  const displayLabel = isActive
+    ? `CR ${crLabel(minCR || '0')}–${crLabel(maxCR || '30')}`
+    : 'CR';
+
+  return (
+    <div className="relative" onClick={(e) => e.stopPropagation()}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={`px-3 py-2 rounded-lg text-sm flex items-center gap-2 ${isActive ? 'bg-purple-700' : 'bg-stone-800 hover:bg-stone-700'}`}
+      >
+        <span>{displayLabel}</span>
+        {isActive && (
+          <button onClick={(e) => { e.stopPropagation(); onClear(); }} className="text-xs hover:text-white">×</button>
+        )}
+      </button>
+      
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
+          <div className="absolute top-full left-0 mt-1 bg-stone-800 border border-stone-600 rounded-lg shadow-xl z-20 p-3 w-[280px]">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-stone-400">CR Range</span>
+              {isActive && (
+                <button onClick={() => { onClear(); }} className="text-xs text-red-400 hover:text-red-300">Clear</button>
+              )}
+            </div>
+            
+            <div className="flex items-center gap-3 mb-3">
+              <div className="flex-1">
+                <label className="text-[10px] text-stone-500 uppercase mb-1 block">Min</label>
+                <select
+                  value={minIdx}
+                  onChange={(e) => handleMin(parseInt(e.target.value))}
+                  className="w-full bg-stone-900 border border-stone-700 rounded px-2 py-1.5 text-sm focus:outline-none focus:border-purple-600"
+                >
+                  {CR_LIST.map((cr, i) => (
+                    <option key={cr} value={i}>{crLabel(cr)}</option>
+                  ))}
+                </select>
+              </div>
+              <span className="text-stone-500 pt-4">–</span>
+              <div className="flex-1">
+                <label className="text-[10px] text-stone-500 uppercase mb-1 block">Max</label>
+                <select
+                  value={maxIdx}
+                  onChange={(e) => handleMax(parseInt(e.target.value))}
+                  className="w-full bg-stone-900 border border-stone-700 rounded px-2 py-1.5 text-sm focus:outline-none focus:border-purple-600"
+                >
+                  {CR_LIST.map((cr, i) => (
+                    <option key={cr} value={i}>{crLabel(cr)}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Quick presets */}
+            <div className="flex flex-wrap gap-1">
+              {[
+                { label: 'Low (0–4)', min: '0', max: '4' },
+                { label: 'Mid (5–10)', min: '5', max: '10' },
+                { label: 'High (11–16)', min: '11', max: '16' },
+                { label: 'Epic (17–30)', min: '17', max: '30' },
+              ].map(p => (
+                <button
+                  key={p.label}
+                  onClick={() => onChange(p.min, p.max)}
+                  className="px-2 py-1 rounded text-xs bg-stone-700 hover:bg-stone-600"
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+            
+            <div className="mt-2 pt-2 border-t border-stone-700">
+              <button onClick={() => setIsOpen(false)} className="w-full text-xs text-stone-400 hover:text-stone-200 py-1">Done</button>
             </div>
           </div>
         </>
@@ -204,7 +295,8 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
   
   // New filter states
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCRs, setSelectedCRs] = useState([]);
+  const [crMin, setCrMin] = useState(null);
+  const [crMax, setCrMax] = useState(null);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedCreatureTypes, setSelectedCreatureTypes] = useState([]);
 
@@ -260,8 +352,12 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
       // Search filter
       if (searchQuery && !t.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
       
-      // CR filter
-      if (selectedCRs.length > 0 && !selectedCRs.includes(String(t.cr))) return false;
+      // CR range filter
+      if (crMin !== null || crMax !== null) {
+        const crNum = crToNumber(String(t.cr));
+        if (crMin !== null && crNum < crToNumber(crMin)) return false;
+        if (crMax !== null && crNum > crToNumber(crMax)) return false;
+      }
       
       // Size filter
       if (selectedSizes.length > 0 && !selectedSizes.includes(t.size)) return false;
@@ -277,18 +373,19 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
       
       return true;
     });
-  }, [activeTemplates, filter, sourceFilter, searchQuery, selectedCRs, selectedSizes, selectedCreatureTypes]);
+  }, [activeTemplates, filter, sourceFilter, searchQuery, crMin, crMax, selectedSizes, selectedCreatureTypes]);
 
   const clearAllFilters = () => {
     setSearchQuery('');
-    setSelectedCRs([]);
+    setCrMin(null);
+    setCrMax(null);
     setSelectedSizes([]);
     setSelectedCreatureTypes([]);
     setFilter('all');
     setSourceFilter('default');
   };
 
-  const hasFilters = searchQuery || selectedCRs.length > 0 || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || filter !== 'all' || sourceFilter !== 'default';
+  const hasFilters = searchQuery || crMin !== null || crMax !== null || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || filter !== 'all' || sourceFilter !== 'default';
 
   const parseNum = (val, fallback) => { const num = parseInt(val); return isNaN(num) ? fallback : num; };
   const getMod = (score) => { const mod = Math.floor((parseNum(score, 10) - 10) / 2); return mod >= 0 ? `+${mod}` : `${mod}`; };
@@ -458,14 +555,12 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
 
         <div className="w-px h-6 bg-stone-700" />
 
-        {/* CR Filter */}
-        <FilterDropdown
-          label="CR"
-          options={CR_OPTIONS}
-          selected={selectedCRs}
-          onToggle={toggleFilter(setSelectedCRs)}
-          onClear={() => setSelectedCRs([])}
-          colorClass="purple"
+        {/* CR Range Filter */}
+        <CRRangeFilter
+          minCR={crMin}
+          maxCR={crMax}
+          onChange={(min, max) => { setCrMin(min); setCrMax(max); }}
+          onClear={() => { setCrMin(null); setCrMax(null); }}
         />
 
         {/* Size Filter */}
@@ -513,12 +608,12 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
       {/* Active Filter Tags */}
       {hasFilters && (
         <div className="flex flex-wrap gap-1 items-center">
-          {selectedCRs.map(cr => (
-            <span key={`cr-${cr}`} className="px-2 py-0.5 bg-purple-900/50 text-purple-300 rounded text-xs flex items-center gap-1">
-              CR {cr}
-              <button onClick={() => toggleFilter(setSelectedCRs)(cr)} className="hover:text-white">×</button>
+          {(crMin !== null || crMax !== null) && (
+            <span className="px-2 py-0.5 bg-purple-900/50 text-purple-300 rounded text-xs flex items-center gap-1">
+              CR {crLabel(crMin || '0')}–{crLabel(crMax || '30')}
+              <button onClick={() => { setCrMin(null); setCrMax(null); }} className="hover:text-white">×</button>
             </span>
-          ))}
+          )}
           {selectedSizes.map(size => (
             <span key={`size-${size}`} className="px-2 py-0.5 bg-blue-900/50 text-blue-300 rounded text-xs flex items-center gap-1">
               {size}
@@ -536,7 +631,7 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
 
       <div className="text-xs text-stone-500">
         {filtered.length} template{filtered.length !== 1 ? 's' : ''}
-        {hasFilters && ` (filtered from ${templates.length})`}
+        {filtered.length !== activeTemplates.length && ` (filtered from ${activeTemplates.length})`}
       </div>
 
       <div className="space-y-2">
