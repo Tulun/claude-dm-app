@@ -1,4 +1,52 @@
 {
-  "enemies": [],
+  "enemies": [
+    {
+      "id": "enemy-1773856497350-hbsujxpb6",
+      "name": "Goblin Hexer",
+      "size": "Small",
+      "creatureType": "Humanoid",
+      "ac": 13,
+      "maxHp": 21,
+      "hitDice": "6d6",
+      "speed": 30,
+      "cr": "3",
+      "xp": 700,
+      "profBonus": 2,
+      "str": 8,
+      "dex": 14,
+      "con": 10,
+      "int": 13,
+      "wis": 12,
+      "cha": 16,
+      "skills": "Arcana +3, Stealth +6",
+      "senses": "Darkvision 60 ft., Passive Perception 11",
+      "languages": "Common, Goblin",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Nimble Escape",
+          "description": "Can Disengage or Hide as Bonus Action."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Dagger",
+          "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 20/60 ft. Hit: 4 (1d4+2) Piercing damage."
+        },
+        {
+          "name": "Hex Bolt",
+          "description": "Ranged Spell Attack: +5, range 90 ft. Hit: 10 (2d6+3) Necrotic damage."
+        },
+        {
+          "name": "Vexing Hex (Recharge 5-6)",
+          "description": "One creature within 60 ft: DC 13 WIS or Cursed for 1 minute. While Cursed, disadvantage on attacks and ability checks. Save ends."
+        }
+      ],
+      "notes": "Leather Armor. Spellcasting (DC 13, +5): Cantrips: minor illusion, poison spray. 1st (4 slots): charm person, hex. 2nd (2 slots): blindness/deafness, hold person.",
+      "source": "mm",
+      "currentHp": 21,
+      "initiative": 16
+    }
+  ],
   "lairAction": null
 }

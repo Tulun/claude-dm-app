@@ -2,235 +2,166 @@
 
 import { useState } from 'react';
 import Icons from '../../../components/Icons';
-import { FEATS, FEAT_CATEGORIES, getFeat, ABILITY_LABELS } from '../feats';
 
-function FeatPickerModal({ isOpen, onClose, onSelect, existingFeats, character }) {
-  const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('All');
-  const [selectedFeat, setSelectedFeat] = useState(null);
-  const [selectedAbility, setSelectedAbility] = useState('');
-  const [selectedAbility2, setSelectedAbility2] = useState('');
-  const [asiMode, setAsiMode] = useState('single');
-  
-  if (!isOpen) return null;
-  
-  const existingFeatNames = existingFeats.map(f => f.name);
-  
-  const filteredFeats = FEATS.filter(feat => {
-    const matchesSearch = !search || feat.name.toLowerCase().includes(search.toLowerCase()) || feat.description.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = categoryFilter === 'All' || feat.category === categoryFilter;
-    const notTaken = feat.repeatable || !existingFeatNames.includes(feat.name);
-    return matchesSearch && matchesCategory && notTaken;
-  });
-
-  const handleSelectFeat = (feat) => {
-    setSelectedFeat(feat);
-    setSelectedAbility('');
-    setSelectedAbility2('');
-    setAsiMode('single');
-  };
-
-  const handleConfirm = () => {
-    if (!selectedFeat) return;
-    const featData = { ...selectedFeat, chosenAbility: selectedAbility, chosenAbility2: asiMode === 'split' ? selectedAbility2 : null, asiMode: selectedFeat.abilityBoost?.special === 'asi' ? asiMode : null };
-    onSelect(featData);
-    setSelectedFeat(null);
-    setSelectedAbility('');
-    setSelectedAbility2('');
-    onClose();
-  };
-
-  const canConfirm = () => {
-    if (!selectedFeat) return false;
-    if (!selectedFeat.abilityBoost) return true;
-    if (selectedFeat.abilityBoost.special === 'asi') {
-      if (asiMode === 'single') return !!selectedAbility;
-      return !!selectedAbility && !!selectedAbility2 && selectedAbility !== selectedAbility2;
-    }
-    return !!selectedAbility;
-  };
-  
-  return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-stone-900 border border-emerald-700 rounded-xl w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
-        <div className="p-4 border-b border-stone-700">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-bold text-emerald-400">{selectedFeat ? 'Configure Feat' : 'Add Feat'}</h2>
-            <button onClick={() => { setSelectedFeat(null); onClose(); }} className="text-stone-400 hover:text-white"><Icons.X /></button>
-          </div>
-          {!selectedFeat && (
-            <>
-              <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search feats..." className="w-full bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 mb-3 focus:outline-none focus:border-emerald-600" autoFocus />
-              <div className="flex gap-2 flex-wrap">
-                <button onClick={() => setCategoryFilter('All')} className={`px-3 py-1 rounded text-xs transition-colors ${categoryFilter === 'All' ? 'bg-emerald-700 text-white' : 'bg-stone-700 text-stone-300 hover:bg-stone-600'}`}>All</button>
-                {FEAT_CATEGORIES.map(cat => (<button key={cat} onClick={() => setCategoryFilter(cat)} className={`px-3 py-1 rounded text-xs transition-colors ${categoryFilter === cat ? 'bg-emerald-700 text-white' : 'bg-stone-700 text-stone-300 hover:bg-stone-600'}`}>{cat}</button>))}
-              </div>
-            </>
-          )}
-        </div>
-        
-        <div className="flex-1 overflow-y-auto p-4">
-          {selectedFeat ? (
-            <div className="space-y-4">
-              <div className={`p-4 rounded-lg border ${selectedFeat.category === 'Origin' ? 'bg-blue-900/20 border-blue-800/50' : selectedFeat.category === 'General' ? 'bg-amber-900/20 border-amber-800/50' : selectedFeat.category === 'Fighting Style' ? 'bg-red-900/20 border-red-800/50' : selectedFeat.category === 'Epic Boon' ? 'bg-purple-900/20 border-purple-800/50' : 'bg-stone-800 border-stone-700'}`}>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="font-bold text-lg">{selectedFeat.name}</span>
-                  <span className={`text-xs px-2 py-0.5 rounded ${selectedFeat.category === 'Origin' ? 'bg-blue-900/50 text-blue-400' : selectedFeat.category === 'General' ? 'bg-amber-900/50 text-amber-400' : selectedFeat.category === 'Fighting Style' ? 'bg-red-900/50 text-red-400' : selectedFeat.category === 'Epic Boon' ? 'bg-purple-900/50 text-purple-400' : 'bg-stone-700 text-stone-400'}`}>{selectedFeat.category}</span>
-                </div>
-                {selectedFeat.prerequisite && <p className="text-sm text-orange-400 mb-2">Prerequisite: {selectedFeat.prerequisite}</p>}
-                <p className="text-sm text-stone-300">{selectedFeat.description}</p>
-              </div>
-
-              {selectedFeat.abilityBoost && (
-                <div className="bg-lime-900/30 border border-lime-700/50 rounded-lg p-4">
-                  <h3 className="text-sm font-bold text-lime-400 mb-3">Ability Score Increase</h3>
-                  {selectedFeat.abilityBoost.special === 'asi' ? (
-                    <div className="space-y-3">
-                      <div className="flex gap-2">
-                        <button onClick={() => setAsiMode('single')} className={`px-3 py-1.5 rounded text-sm ${asiMode === 'single' ? 'bg-lime-700 text-white' : 'bg-stone-700 text-stone-300'}`}>+2 to one ability</button>
-                        <button onClick={() => setAsiMode('split')} className={`px-3 py-1.5 rounded text-sm ${asiMode === 'split' ? 'bg-lime-700 text-white' : 'bg-stone-700 text-stone-300'}`}>+1 to two abilities</button>
-                      </div>
-                      {asiMode === 'single' ? (
-                        <div>
-                          <label className="text-xs text-stone-400 mb-1 block">Choose ability (+2):</label>
-                          <div className="flex flex-wrap gap-2">
-                            {selectedFeat.abilityBoost.options.map(stat => (<button key={stat} onClick={() => setSelectedAbility(stat)} className={`px-3 py-2 rounded text-sm font-medium transition-colors ${selectedAbility === stat ? 'bg-lime-600 text-white' : 'bg-stone-700 text-stone-300 hover:bg-stone-600'}`}>{ABILITY_LABELS[stat]} {character[stat] && `(${character[stat]}→${character[stat] + 2})`}</button>))}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="space-y-3">
-                          <div><label className="text-xs text-stone-400 mb-1 block">First ability (+1):</label><div className="flex flex-wrap gap-2">{selectedFeat.abilityBoost.options.map(stat => (<button key={stat} onClick={() => setSelectedAbility(stat)} disabled={selectedAbility2 === stat} className={`px-3 py-2 rounded text-sm font-medium transition-colors ${selectedAbility === stat ? 'bg-lime-600 text-white' : selectedAbility2 === stat ? 'bg-stone-800 text-stone-500 cursor-not-allowed' : 'bg-stone-700 text-stone-300 hover:bg-stone-600'}`}>{ABILITY_LABELS[stat]}</button>))}</div></div>
-                          <div><label className="text-xs text-stone-400 mb-1 block">Second ability (+1):</label><div className="flex flex-wrap gap-2">{selectedFeat.abilityBoost.options.map(stat => (<button key={stat} onClick={() => setSelectedAbility2(stat)} disabled={selectedAbility === stat} className={`px-3 py-2 rounded text-sm font-medium transition-colors ${selectedAbility2 === stat ? 'bg-lime-600 text-white' : selectedAbility === stat ? 'bg-stone-800 text-stone-500 cursor-not-allowed' : 'bg-stone-700 text-stone-300 hover:bg-stone-600'}`}>{ABILITY_LABELS[stat]}</button>))}</div></div>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div>
-                      <label className="text-xs text-stone-400 mb-2 block">Choose ability (+{selectedFeat.abilityBoost.amount}, max {selectedFeat.abilityBoost.max || 20}):</label>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedFeat.abilityBoost.options.map(stat => (<button key={stat} onClick={() => setSelectedAbility(stat)} className={`px-3 py-2 rounded text-sm font-medium transition-colors ${selectedAbility === stat ? 'bg-lime-600 text-white' : 'bg-stone-700 text-stone-300 hover:bg-stone-600'}`}>{ABILITY_LABELS[stat]} {character[stat] && `(${character[stat]}→${Math.min(character[stat] + selectedFeat.abilityBoost.amount, selectedFeat.abilityBoost.max || 20)})`}</button>))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-              <div className="flex gap-3">
-                <button onClick={() => setSelectedFeat(null)} className="flex-1 py-2 rounded-lg bg-stone-700 hover:bg-stone-600 text-sm">← Back</button>
-                <button onClick={handleConfirm} disabled={!canConfirm()} className={`flex-1 py-2 rounded-lg text-sm font-medium ${canConfirm() ? 'bg-emerald-700 hover:bg-emerald-600 text-white' : 'bg-stone-800 text-stone-500 cursor-not-allowed'}`}>Add Feat</button>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {filteredFeats.length === 0 ? (<p className="text-center text-stone-500 py-8">No matching feats found.</p>) : (
-                filteredFeats.map(feat => (
-                  <button key={feat.name + (feat.repeatable ? Math.random() : '')} onClick={() => handleSelectFeat(feat)} className="w-full text-left p-3 rounded-lg border border-stone-700 bg-stone-800/50 hover:border-emerald-600 hover:bg-stone-800 transition-colors">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className={`font-medium ${feat.category === 'Origin' ? 'text-blue-300' : feat.category === 'General' ? 'text-amber-300' : feat.category === 'Fighting Style' ? 'text-red-300' : feat.category === 'Epic Boon' ? 'text-purple-300' : 'text-stone-200'}`}>{feat.name}</span>
-                      <div className="flex items-center gap-2">
-                        {feat.abilityBoost && <span className="text-xs px-1.5 py-0.5 rounded bg-lime-900/50 text-lime-400">+{feat.abilityBoost.special === 'asi' ? '2/+1+1' : feat.abilityBoost.amount} {feat.abilityBoost.options?.slice(0, 3).map(s => s.toUpperCase()).join('/')}{feat.abilityBoost.options?.length > 3 && '...'}</span>}
-                        <span className={`text-xs px-2 py-0.5 rounded ${feat.category === 'Origin' ? 'bg-blue-900/50 text-blue-400' : feat.category === 'General' ? 'bg-amber-900/50 text-amber-400' : feat.category === 'Fighting Style' ? 'bg-red-900/50 text-red-400' : feat.category === 'Epic Boon' ? 'bg-purple-900/50 text-purple-400' : 'bg-stone-700 text-stone-400'}`}>{feat.category}</span>
-                      </div>
-                    </div>
-                    {feat.prerequisite && <p className="text-xs text-orange-400 mb-1">Prerequisite: {feat.prerequisite}</p>}
-                    <p className="text-sm text-stone-400 line-clamp-2">{feat.description}</p>
-                  </button>
-                ))
-              )}
-            </div>
-          )}
-        </div>
-        {!selectedFeat && (<div className="p-4 border-t border-stone-700"><button onClick={() => { onSelect({ name: '', description: '', custom: true }); onClose(); }} className="w-full py-2 rounded-lg bg-stone-700 hover:bg-stone-600 text-sm text-stone-300">+ Add Custom Feature</button></div>)}
-      </div>
-    </div>
-  );
-}
+const COMMON_FEATS = [
+  { name: 'Alert', description: 'You gain a +5 bonus to Initiative. You can\'t be Surprised while you are conscious. Other creatures don\'t gain Advantage on attack rolls against you as a result of being hidden from you.' },
+  { name: 'Crossbow Expert', description: 'You ignore the Loading property of crossbows. Being within 5 ft of a hostile creature doesn\'t impose Disadvantage on your ranged attack rolls. When you use the Attack action and attack with a one-handed weapon, you can use a Bonus Action to attack with a hand crossbow you are holding.' },
+  { name: 'Defensive Duelist', description: 'When you are wielding a Finesse weapon and another creature hits you with a melee attack, you can use your Reaction to add your Proficiency Bonus to your AC for that attack, potentially causing it to miss you.' },
+  { name: 'Dual Wielder', description: 'You gain a +1 bonus to AC while you are wielding a separate melee weapon in each hand. You can use Two-Weapon Fighting even when the melee weapons you are wielding aren\'t Light. You can draw or stow two one-handed weapons when you would normally be able to draw or stow only one.' },
+  { name: 'Eldritch Adept', description: 'You learn one Eldritch Invocation option of your choice from the Warlock class. If the invocation has a prerequisite, you can choose that invocation only if you\'re a Warlock.' },
+  { name: 'Fey Touched', description: 'You learn Misty Step and one 1st-level Divination or Enchantment spell. You can cast each once per Long Rest without a spell slot. Your spellcasting ability is the one increased by this feat.' },
+  { name: 'Great Weapon Master', description: 'When you score a Critical Hit with a melee weapon or reduce a creature to 0 HP with one, you can make one melee weapon attack as a Bonus Action. Before you make a melee attack with a Heavy weapon, you can choose to take a -5 penalty to the attack roll. If the attack hits, you add +10 to the attack\'s damage.' },
+  { name: 'Lucky', description: 'You have 3 Luck Points. Whenever you make an attack roll, ability check, or saving throw, you can spend 1 Luck Point to roll an additional d20 and choose which d20 to use. You regain expended Luck Points when you finish a Long Rest.' },
+  { name: 'Magic Initiate', description: 'You learn two cantrips and one 1st-level spell from a class spell list of your choice. You can cast the 1st-level spell once per Long Rest without a spell slot.' },
+  { name: 'Mobile', description: 'Your speed increases by 10 ft. When you use Dash, difficult terrain doesn\'t cost extra movement. When you make a melee attack against a creature, you don\'t provoke Opportunity Attacks from that creature for the rest of the turn.' },
+  { name: 'Observant', description: 'You have a +5 bonus to your passive Wisdom (Perception) and passive Intelligence (Investigation) scores. You can read lips if you can see the creature\'s mouth and it is speaking a language you know.' },
+  { name: 'Polearm Master', description: 'When you take the Attack action and attack with only a Glaive, Halberd, Quarterstaff, or Spear, you can use a Bonus Action to make a melee attack with the opposite end (1d4 Bludgeoning). When a creature enters your reach, you can use your Reaction to make an Opportunity Attack with that weapon.' },
+  { name: 'Resilient', description: 'Choose one ability score. You gain proficiency in saving throws using that ability.' },
+  { name: 'Sentinel', description: 'When you hit a creature with an Opportunity Attack, the creature\'s speed becomes 0 for the rest of the turn. Creatures provoke Opportunity Attacks from you even if they take the Disengage action. When a creature within 5 ft makes an attack against a target other than you, you can use your Reaction to make a melee attack against the attacking creature.' },
+  { name: 'Shadow Touched', description: 'You learn Invisibility and one 1st-level Illusion or Necromancy spell. You can cast each once per Long Rest without a spell slot. Your spellcasting ability is the one increased by this feat.' },
+  { name: 'Sharpshooter', description: 'Attacking at long range doesn\'t impose Disadvantage on your ranged weapon attack rolls. Your ranged weapon attacks ignore Half and Three-Quarters Cover. Before you make an attack with a ranged weapon, you can choose to take a -5 penalty to the attack roll. If the attack hits, you add +10 to the attack\'s damage.' },
+  { name: 'Shield Master', description: 'If you take the Attack action, you can use a Bonus Action to try to Shove a creature within 5 ft with your Shield. If you aren\'t Incapacitated, you can add your Shield\'s AC bonus to Dexterity saves against effects that target only you. If you succeed on the save, you can use your Reaction to take no damage (instead of half).' },
+  { name: 'Skilled', description: 'You gain proficiency in any combination of three skills or tools of your choice.' },
+  { name: 'Tavern Brawler', description: 'You are proficient with improvised weapons. Your unarmed strike uses a d4 for damage. When you hit with an unarmed strike or improvised weapon on your turn, you can use a Bonus Action to attempt to Grapple the target.' },
+  { name: 'Tough', description: 'Your HP maximum increases by an amount equal to twice your level when you gain this feat. Whenever you gain a level thereafter, your HP maximum increases by an additional 2 HP.' },
+  { name: 'War Caster', description: 'You have Advantage on Constitution saves to maintain Concentration on a spell. You can perform somatic components with weapons or a Shield in hand. When a creature provokes an Opportunity Attack from you, you can cast a spell at the creature instead of making an Opportunity Attack. The spell must have a casting time of 1 action and target only that creature.' },
+];
 
 export default function FeatsTab({ character, onUpdate }) {
-  const [showFeatPicker, setShowFeatPicker] = useState(false);
-  const [expandedFeature, setExpandedFeature] = useState(null);
+  const feats = character.feats || [];
+  const [showAdd, setShowAdd] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [customName, setCustomName] = useState('');
+  const [customDesc, setCustomDesc] = useState('');
 
-  const addFeature = (feat) => {
-    const newFeature = { id: Date.now(), name: feat.name || '', description: feat.description || '', source: feat.source || feat.category || '', category: feat.category, prerequisite: feat.prerequisite, abilityBoost: feat.abilityBoost, chosenAbility: feat.chosenAbility, chosenAbility2: feat.chosenAbility2, asiMode: feat.asiMode, custom: feat.custom || false };
-    if (feat.chosenAbility && !feat.custom) {
-      const boost = feat.abilityBoost?.special === 'asi' ? (feat.asiMode === 'single' ? 2 : 1) : (feat.abilityBoost?.amount || 1);
-      const max = feat.abilityBoost?.max || 20;
-      const currentVal = character[feat.chosenAbility] || 10;
-      onUpdate(feat.chosenAbility, Math.min(currentVal + boost, max));
-      if (feat.chosenAbility2) { const currentVal2 = character[feat.chosenAbility2] || 10; onUpdate(feat.chosenAbility2, Math.min(currentVal2 + 1, max)); }
-    }
-    onUpdate('features', [...(character.features || []), newFeature]);
+  const addFeat = (feat) => {
+    onUpdate('feats', [...feats, { id: Date.now(), ...feat }]);
   };
 
-  const updateFeature = (id, field, value) => { onUpdate('features', character.features.map(f => f.id === id ? { ...f, [field]: value } : f)); };
-  
-  const removeFeature = (id) => {
-    const feature = character.features.find(f => f.id === id);
-    if (feature && feature.chosenAbility && !feature.custom) {
-      // Reverse the stat boost
-      const boost = feature.abilityBoost?.special === 'asi' ? (feature.asiMode === 'single' ? 2 : 1) : (feature.abilityBoost?.amount || 1);
-      const currentVal = character[feature.chosenAbility] || 10;
-      onUpdate(feature.chosenAbility, Math.max(currentVal - boost, 1));
-      if (feature.chosenAbility2) {
-        const currentVal2 = character[feature.chosenAbility2] || 10;
-        onUpdate(feature.chosenAbility2, Math.max(currentVal2 - 1, 1));
-      }
-    }
-    onUpdate('features', character.features.filter(f => f.id !== id));
+  const removeFeat = (id) => {
+    onUpdate('feats', feats.filter(f => f.id !== id));
   };
-  
-  const features = character.features || [];
+
+  const updateFeat = (id, field, value) => {
+    onUpdate('feats', feats.map(f => f.id === id ? { ...f, [field]: value } : f));
+  };
+
+  const filteredFeats = COMMON_FEATS.filter(f => {
+    if (!searchQuery) return true;
+    return f.name.toLowerCase().includes(searchQuery.toLowerCase());
+  }).filter(f => !feats.some(existing => existing.name === f.name));
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-bold text-amber-400">Feats & Additional Features</h3>
-        <button onClick={() => setShowFeatPicker(true)} className="px-4 py-2 rounded-lg bg-emerald-800 hover:bg-emerald-700 text-sm flex items-center gap-2"><Icons.Plus /> Add Feat</button>
+    <div>
+      <div className="flex justify-between items-center mb-3">
+        <h3 className="text-sm font-medium text-stone-400">{feats.length} Feat{feats.length !== 1 ? 's' : ''}</h3>
+        <button onClick={() => setShowAdd(true)} className="px-3 py-1 rounded bg-amber-800 hover:bg-amber-700 text-xs flex items-center gap-1">
+          <Icons.Plus /> Add Feat
+        </button>
       </div>
 
-      {features.length === 0 ? (
-        <div className="text-center text-stone-500 py-12 bg-stone-800/50 rounded-lg">
-          <Icons.Star className="w-12 h-12 mx-auto mb-3 opacity-30" />
-          <p>No feats or additional features yet.</p>
-          <button onClick={() => setShowFeatPicker(true)} className="mt-3 text-emerald-400 hover:text-emerald-300 text-sm">+ Add your first feat</button>
-        </div>
-      ) : (
-        <div className="space-y-2">
-          {features.map(feature => {
-            const isExpanded = expandedFeature === feature.id;
-            const isCustom = feature.custom || (!feature.category && !getFeat(feature.name));
-            return (
-              <div key={feature.id} className={`rounded-lg border transition-colors ${feature.category === 'Origin' ? 'bg-blue-900/20 border-blue-800/50' : feature.category === 'General' ? 'bg-amber-900/20 border-amber-800/50' : feature.category === 'Fighting Style' ? 'bg-red-900/20 border-red-800/50' : feature.category === 'Epic Boon' ? 'bg-purple-900/20 border-purple-800/50' : 'bg-stone-800 border-stone-700'}`}>
-                {isCustom ? (
-                  <div className="p-3">
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <input type="text" value={feature.name} onChange={(e) => updateFeature(feature.id, 'name', e.target.value)} className="bg-transparent font-bold focus:outline-none flex-1 text-stone-200" placeholder="Feature name" />
-                      <input type="text" value={feature.source || ''} onChange={(e) => updateFeature(feature.id, 'source', e.target.value)} className="bg-stone-700 rounded px-2 py-0.5 text-xs text-stone-400 w-32 focus:outline-none" placeholder="Source" />
-                      <button onClick={() => removeFeature(feature.id)} className="text-red-500 hover:text-red-400 text-xl">×</button>
-                    </div>
-                    <textarea value={feature.description || ''} onChange={(e) => updateFeature(feature.id, 'description', e.target.value)} className="w-full bg-stone-700/50 rounded p-2 text-sm text-stone-300 focus:outline-none resize-none" rows={3} placeholder="Description..." />
-                  </div>
-                ) : (
-                  <>
-                    <div onClick={() => setExpandedFeature(isExpanded ? null : feature.id)} className="w-full p-3 flex items-center justify-between text-left hover:bg-white/5 transition-colors cursor-pointer">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className={`font-medium ${feature.category === 'Origin' ? 'text-blue-300' : feature.category === 'General' ? 'text-amber-300' : feature.category === 'Fighting Style' ? 'text-red-300' : feature.category === 'Epic Boon' ? 'text-purple-300' : 'text-stone-200'}`}>{feature.name}</span>
-                        <span className={`text-xs px-2 py-0.5 rounded ${feature.category === 'Origin' ? 'bg-blue-900/50 text-blue-400' : feature.category === 'General' ? 'bg-amber-900/50 text-amber-400' : feature.category === 'Fighting Style' ? 'bg-red-900/50 text-red-400' : feature.category === 'Epic Boon' ? 'bg-purple-900/50 text-purple-400' : 'bg-stone-700 text-stone-400'}`}>{feature.category || feature.source}</span>
-                        {feature.chosenAbility && <span className="text-xs px-2 py-0.5 rounded bg-lime-900/50 text-lime-400">+{feature.asiMode === 'single' ? '2' : '1'} {ABILITY_LABELS[feature.chosenAbility]?.slice(0,3).toUpperCase()}{feature.chosenAbility2 && `, +1 ${ABILITY_LABELS[feature.chosenAbility2]?.slice(0,3).toUpperCase()}`}</span>}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <button onClick={(e) => { e.stopPropagation(); removeFeature(feature.id); }} className="text-red-500 hover:text-red-400 p-1"><Icons.Trash /></button>
-                        <Icons.ChevronDown className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-                      </div>
-                    </div>
-                    {isExpanded && (<div className="px-3 pb-3 border-t border-stone-700/50">{feature.prerequisite && <p className="text-xs text-orange-400 mt-2">Prerequisite: {feature.prerequisite}</p>}<p className="text-sm text-stone-300 mt-2">{feature.description}</p></div>)}
-                  </>
-                )}
+      {/* Current Feats */}
+      {feats.length === 0 && !showAdd && (
+        <div className="text-center text-stone-500 py-8">No feats yet. Click "Add Feat" to get started.</div>
+      )}
+
+      <div className="space-y-2">
+        {feats.map(feat => (
+          <div key={feat.id} className="bg-stone-800 rounded-lg p-3">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex-1">
+                <h4 className="font-medium text-amber-300">{feat.name}</h4>
+                <p className="text-xs text-stone-400 mt-1 leading-relaxed">{feat.description}</p>
+                {feat.notes && <p className="text-xs text-stone-500 mt-1 italic">{feat.notes}</p>}
               </div>
-            );
-          })}
+              <button onClick={() => removeFeat(feat.id)} className="text-red-500/50 hover:text-red-400 text-sm shrink-0">×</button>
+            </div>
+            <div className="mt-2">
+              <input 
+                type="text" 
+                value={feat.notes || ''} 
+                onChange={(e) => updateFeat(feat.id, 'notes', e.target.value)}
+                placeholder="Notes (e.g. chose WIS for Resilient)..."
+                className="w-full bg-stone-900/50 border border-stone-700/50 rounded px-2 py-1 text-xs text-stone-400 focus:outline-none focus:border-amber-700/50"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Add Feat Modal */}
+      {showAdd && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowAdd(false)}>
+          <div className="bg-stone-900 border border-stone-700 rounded-xl p-4 w-full max-w-lg max-h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="font-bold text-lg">Add Feat</h3>
+              <button onClick={() => setShowAdd(false)} className="text-stone-400 hover:text-stone-200">×</button>
+            </div>
+
+            {/* Search */}
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search feats..."
+              className="w-full bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-sm mb-3 focus:outline-none focus:border-amber-600"
+              autoFocus
+            />
+
+            {/* Feat List */}
+            <div className="flex-1 overflow-y-auto space-y-1 mb-3 min-h-0">
+              {filteredFeats.map(feat => (
+                <button
+                  key={feat.name}
+                  onClick={() => { addFeat(feat); setShowAdd(false); setSearchQuery(''); }}
+                  className="w-full text-left p-2 rounded-lg hover:bg-stone-800 transition-colors"
+                >
+                  <div className="font-medium text-sm text-amber-300">{feat.name}</div>
+                  <div className="text-xs text-stone-500 line-clamp-2">{feat.description}</div>
+                </button>
+              ))}
+              {filteredFeats.length === 0 && searchQuery && (
+                <div className="text-center text-stone-500 py-4 text-sm">No matching feats</div>
+              )}
+            </div>
+
+            {/* Custom Feat */}
+            <div className="border-t border-stone-700 pt-3">
+              <div className="text-xs text-stone-500 mb-2">Or add a custom feat:</div>
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  value={customName}
+                  onChange={(e) => setCustomName(e.target.value)}
+                  placeholder="Feat name"
+                  className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-1.5 text-sm focus:outline-none focus:border-amber-600"
+                />
+                <textarea
+                  value={customDesc}
+                  onChange={(e) => setCustomDesc(e.target.value)}
+                  placeholder="Description..."
+                  rows={2}
+                  className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-1.5 text-sm focus:outline-none focus:border-amber-600 resize-none"
+                />
+                <button
+                  onClick={() => {
+                    if (customName.trim()) {
+                      addFeat({ name: customName, description: customDesc });
+                      setCustomName('');
+                      setCustomDesc('');
+                      setShowAdd(false);
+                    }
+                  }}
+                  disabled={!customName.trim()}
+                  className={`w-full py-1.5 rounded text-sm font-medium ${customName.trim() ? 'bg-amber-700 hover:bg-amber-600' : 'bg-stone-700 text-stone-500 cursor-not-allowed'}`}
+                >
+                  Add Custom Feat
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
-      <FeatPickerModal isOpen={showFeatPicker} onClose={() => setShowFeatPicker(false)} onSelect={addFeature} existingFeats={features} character={character} />
     </div>
   );
 }

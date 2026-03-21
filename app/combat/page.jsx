@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Icons from '../components/Icons';
@@ -56,7 +56,19 @@ const getCalculatedAC = (character) => {
   return baseAC + dexBonus + shieldBonus + itemBonuses + tempBonus;
 };
 
-export default function DMAdminTool() {
+export default function CombatPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-stone-100 flex items-center justify-center">
+        <div className="text-stone-400 animate-pulse">Loading...</div>
+      </div>
+    }>
+      <DMAdminTool />
+    </Suspense>
+  );
+}
+
+function DMAdminTool() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const tabFromUrl = searchParams.get('tab');
@@ -352,7 +364,7 @@ export default function DMAdminTool() {
             {!party ? (
               <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg animate-pulse">Loading party...</div>
             ) : party.length > 0 ? (
-              party.map(m => <CharacterCard key={m.id} character={m} isEnemy={false} onUpdate={(u) => setParty(prev => prev.map(p => p.id === u.id ? u : p))} onRemove={(id) => setParty(prev => prev.filter(p => p.id !== id))} expanded={expandedCards[m.id]} onToggleExpand={() => setExpandedCards(prev => ({ ...prev, [m.id]: !prev[m.id] }))} showResources />)
+              party.map(m => <CharacterCard key={m.id} character={m} isEnemy={false} onUpdate={(u) => setParty(prev => prev.map(p => p.id === u.id ? u : p))} onRemove={(id) => setParty(prev => prev.filter(p => p.id !== id))} expanded={expandedCards[m.id]} onToggleExpand={() => setExpandedCards(prev => ({ ...prev, [m.id]: !prev[m.id] }))} showResources templates={templates || []} />)
             ) : (
               <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No party members yet.</div>
             )}

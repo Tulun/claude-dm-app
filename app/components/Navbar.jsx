@@ -1,11 +1,21 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Icons from './Icons';
 
-export default function Navbar({ onTabChange, activeTab, saveStatus }) {
+export default function Navbar(props) {
+  return (
+    <Suspense fallback={
+      <nav className="border-b border-amber-900/30 bg-stone-900/80 sticky top-0 z-50 h-[68px]" />
+    }>
+      <NavbarContent {...props} />
+    </Suspense>
+  );
+}
+
+function NavbarContent({ onTabChange, activeTab, saveStatus }) {
   const [showGlossary, setShowGlossary] = useState(false);
   const glossaryRef = useRef(null);
   const pathname = usePathname();

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Icons from '../components/Icons';
 import {
@@ -24,6 +24,18 @@ import {
 } from './components';
 
 export default function CharacterPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100 flex items-center justify-center">
+        <div className="text-stone-400 animate-pulse">Loading character...</div>
+      </div>
+    }>
+      <CharacterPageContent />
+    </Suspense>
+  );
+}
+
+function CharacterPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = searchParams.get('id');
@@ -34,7 +46,7 @@ export default function CharacterPage() {
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState('');
   const [hasChanges, setHasChanges] = useState(false);
-  const [activeTab, setActiveTab] = useState('spells');
+  const [activeTab, setActiveTab] = useState('resources');
   const [showProfModal, setShowProfModal] = useState(false);
   const [showSavesModal, setShowSavesModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -52,7 +64,8 @@ export default function CharacterPage() {
         
         if (charRes.ok) {
           const data = await charRes.json();
-          const found = data.find(c => c.id === id);
+          const arr = Array.isArray(data) ? data : [];
+          const found = arr.find(c => c.id === id);
           if (found) {
             // Initialize missing fields
             if (!found.skillProficiencies) found.skillProficiencies = {};
@@ -149,9 +162,9 @@ export default function CharacterPage() {
     return character?.class?.toLowerCase() === 'druid' && parseInt(character?.level) >= 2;
   };
   
-  // New tab order: spells, resources, wild shape (druid), inventory, class, feats, companions, notes
-  const baseTabs = ['spells', 'resources', 'inventory', 'class', 'feats', 'companions', 'notes'];
-  const tabs = isDruid() ? ['spells', 'resources', 'wild shape', 'inventory', 'class', 'feats', 'companions', 'notes'] : baseTabs;
+  // New tab order: spells, resources, wild shape (druid), inventory, features, feats, companions, notes
+  const baseTabs = ['spells', 'resources', 'inventory', 'features', 'feats', 'companions', 'notes'];
+  const tabs = isDruid() ? ['spells', 'resources', 'wild shape', 'inventory', 'features', 'feats', 'companions', 'notes'] : baseTabs;
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100">
@@ -304,7 +317,7 @@ export default function CharacterPage() {
               {activeTab === 'wild shape' && <WildShapeTab character={character} onUpdate={updateField} templates={templates} />}
               {activeTab === 'companions' && <CompanionsTab character={character} onUpdate={updateField} />}
               {activeTab === 'spells' && <SpellsTab character={character} onUpdate={updateField} />}
-              {activeTab === 'class' && <FeaturesTab character={character} onUpdate={updateField} />}
+              {activeTab === 'features' && <FeaturesTab character={character} onUpdate={updateField} />}
               {activeTab === 'feats' && <FeatsTab character={character} onUpdate={updateField} />}
               {activeTab === 'background' && <BackgroundTab character={character} onUpdate={updateField} />}
               {activeTab === 'notes' && <NotesTab character={character} onUpdate={updateField} />}

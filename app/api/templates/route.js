@@ -2,11 +2,25 @@ import { NextResponse } from 'next/server';
 import fs from 'node:fs';
 import path from 'node:path';
 import { defaultEnemyTemplates } from '../../components/defaultData';
-import { confluxCreatures } from '../../data/confluxCreatures.js';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const TEMPLATES_FILE = path.join(DATA_DIR, 'templates.json');
+const CONFLUX_FILE = path.join(process.cwd(), 'public', 'data', 'conflux-creatures.json');
 const TEMPLATES_VERSION = 12; // Added Conflux source support
+
+// Cache conflux data in memory after first load
+let confluxCache = null;
+function loadConflux() {
+  if (confluxCache) return confluxCache;
+  try {
+    const raw = fs.readFileSync(CONFLUX_FILE, 'utf8');
+    confluxCache = JSON.parse(raw);
+    return confluxCache;
+  } catch (e) {
+    console.error('Failed to load conflux creatures:', e.message);
+    return [];
+  }
+}
 
 function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) {
@@ -58,7 +72,7 @@ export async function GET(request) {
       return NextResponse.json(mmTemplates.filter(t => t.source === 'custom'));
     }
     if (source === 'conflux') {
-      return NextResponse.json(confluxCreatures);
+      return NextResponse.json(loadConflux());
     }
 
     // Default: return MM + custom (not Conflux, to avoid overwhelming the default view)
