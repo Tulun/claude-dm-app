@@ -128,7 +128,7 @@ const CRRangeFilter = ({ minCR, maxCR, onChange, onClear }) => {
       >
         <span>{displayLabel}</span>
         {isActive && (
-          <button onClick={(e) => { e.stopPropagation(); onClear(); }} className="text-xs hover:text-white">×</button>
+          <span role="button" onClick={(e) => { e.stopPropagation(); onClear(); }} className="text-xs hover:text-white cursor-pointer">×</span>
         )}
       </button>
       
