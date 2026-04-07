@@ -1,30 +1,30 @@
 [
   {
-    "id": "encounter-1773446868248",
-    "name": "Bandit Ambush",
+    "id": "encounter-1775265715179",
+    "name": "Gnoll Ambush",
     "monsters": [
       {
-        "id": "mm-bandit-1773446948303-4buaq",
-        "templateId": "mm-bandit",
-        "name": "Bandit",
-        "customName": "",
-        "quantity": 5
-      },
-      {
-        "id": "mm-bandit-captain-1773447059894-6vq1b",
-        "templateId": "mm-bandit-captain",
-        "name": "Bandit Captain",
+        "id": "mm-gnoll-pack-lord-1775265739997-vuo01",
+        "templateId": "mm-gnoll-pack-lord",
+        "name": "Gnoll Pack Lord",
         "customName": "",
         "quantity": 1
       },
       {
-        "id": "mm-riding-horse-1773447081411-kk5rm",
-        "templateId": "mm-riding-horse",
-        "name": "Riding Horse",
+        "id": "mm-gnoll-1775265739997-emdmk",
+        "templateId": "mm-gnoll",
+        "name": "Gnoll",
         "customName": "",
         "quantity": 6
+      },
+      {
+        "id": "mm-gnoll-fang-of-yeenoghu-1775265739997-la0ri",
+        "templateId": "mm-gnoll-fang-of-yeenoghu",
+        "name": "Gnoll Fang of Yeenoghu",
+        "customName": "",
+        "quantity": 1
       }
     ],
-    "createdAt": "2026-03-14T00:07:48.248Z"
+    "createdAt": "2026-04-04T01:21:55.179Z"
   }
 ]
