@@ -57,8 +57,9 @@ function CharacterPageContent() {
       if (!id || !type) { setLoading(false); return; }
       try {
         // Load both character and templates
+        const charEndpoint = type === 'party' ? '/api/party' : type === 'dm-npc' ? '/api/dm-npcs' : '/api/templates';
         const [charRes, templatesRes] = await Promise.all([
-          fetch(type === 'party' ? '/api/party' : '/api/templates'),
+          fetch(charEndpoint),
           fetch('/api/templates'),
         ]);
         
@@ -96,14 +97,17 @@ function CharacterPageContent() {
   };
 
   // Save character to API
+  const getEndpoint = () => type === 'party' ? '/api/party' : type === 'dm-npc' ? '/api/dm-npcs' : '/api/templates';
+  
   const saveCharacter = async () => {
     if (!character) return;
     try {
-      const endpoint = type === 'party' ? '/api/party' : '/api/templates';
+      const endpoint = getEndpoint();
       const res = await fetch(endpoint);
       if (res.ok) {
         const data = await res.json();
-        const updated = data.map(c => c.id === character.id ? character : c);
+        const arr = Array.isArray(data) ? data : [];
+        const updated = arr.map(c => c.id === character.id ? character : c);
         await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updated) });
         setSaveStatus('Saved!');
         setHasChanges(false);
@@ -116,7 +120,7 @@ function CharacterPageContent() {
   const deleteCharacter = async () => {
     if (!character) return;
     try {
-      const endpoint = type === 'party' ? '/api/party' : '/api/templates';
+      const endpoint = getEndpoint();
       const res = await fetch(endpoint);
       if (res.ok) {
         const data = await res.json();
@@ -151,7 +155,8 @@ function CharacterPageContent() {
     );
   }
 
-  const isParty = type === 'party';
+  const isParty = type === 'party' || type === 'dm-npc';
+  const isDmNpc = type === 'dm-npc';
   
   // Check if character is a druid level 2+
   const isDruid = () => {
@@ -208,8 +213,8 @@ function CharacterPageContent() {
                 <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
               </svg>
             </button>
-            <div className={`p-1.5 rounded ${isParty ? 'bg-emerald-900/50' : 'bg-red-900/50'}`}>
-              {isParty ? <Icons.Shield /> : <Icons.Skull />}
+            <div className={`p-1.5 rounded ${isDmNpc ? 'bg-amber-900/50' : isParty ? 'bg-emerald-900/50' : 'bg-red-900/50'}`}>
+              {isDmNpc ? <Icons.Crown /> : isParty ? <Icons.Shield /> : <Icons.Skull />}
             </div>
             <div className="flex items-center gap-3">
               <input 

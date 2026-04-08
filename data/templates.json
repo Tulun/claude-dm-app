@@ -21193,7 +21193,8 @@
       ],
       "legendaryActions": [],
       "notes": "Typically Chaotic Evil alignment, hide armor",
-      "isNpc": false
+      "isNpc": false,
+      "source": "custom"
     },
     {
       "id": "imported-1775265979842",
@@ -21262,7 +21263,8 @@
       ],
       "legendaryActions": [],
       "notes": "Typically Chaotic Evil. Hide armor.",
-      "isNpc": false
+      "isNpc": false,
+      "source": "custom"
     },
     {
       "id": "imported-1775266021158",
@@ -21322,7 +21324,8 @@
       ],
       "legendaryActions": [],
       "notes": "Typically Chaotic Evil. Hide armor.",
-      "isNpc": false
+      "isNpc": false,
+      "source": "custom"
     },
     {
       "id": "imported-1775266103571",
@@ -21386,7 +21389,8 @@
       ],
       "legendaryActions": [],
       "notes": "Gnoll subtype, typically chaotic evil, hide armor",
-      "isNpc": false
+      "isNpc": false,
+      "source": "custom"
     },
     {
       "id": "imported-1775266128686",
@@ -21438,7 +21442,8 @@
       ],
       "legendaryActions": [],
       "notes": "Typically Chaotic Evil. Hide armor.",
-      "isNpc": false
+      "isNpc": false,
+      "source": "custom"
     },
     {
       "id": "imported-1775266210860",
@@ -21485,7 +21490,8 @@
       "reactions": [],
       "legendaryActions": [],
       "notes": "Typically Chaotic Evil alignment. Minion creature with special damage rules.",
-      "isNpc": false
+      "isNpc": false,
+      "source": "custom"
     }
   ]
 }

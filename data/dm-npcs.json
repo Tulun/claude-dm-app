@@ -1,0 +1,28 @@
+[
+  {
+    "id": "dm-npc-1775612806598",
+    "name": "Vesna Alraed",
+    "class": "Ranger",
+    "level": 3,
+    "ac": 10,
+    "maxHp": 31,
+    "currentHp": 31,
+    "initiative": 0,
+    "speed": 30,
+    "str": 12,
+    "dex": 16,
+    "con": 16,
+    "int": 10,
+    "wis": 12,
+    "cha": 8,
+    "notes": "",
+    "isDmNpc": true,
+    "resources": [],
+    "inventory": [],
+    "spells": [],
+    "features": [],
+    "feats": [],
+    "skillProficiencies": {},
+    "saveProficiencies": {}
+  }
+]
