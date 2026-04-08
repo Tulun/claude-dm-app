@@ -112,6 +112,45 @@ function AddItemModal({ onAdd, onClose }) {
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [search, categoryFilter, rarityFilter, magicItems]);
 
+  // Base AC lookup for mundane armor
+  const ARMOR_BASE_AC = {
+    'padded': { baseAC: 11, armorType: 'Light' },
+    'leather': { baseAC: 11, armorType: 'Light' },
+    'studded leather': { baseAC: 12, armorType: 'Light' },
+    'hide': { baseAC: 12, armorType: 'Medium' },
+    'chain shirt': { baseAC: 13, armorType: 'Medium' },
+    'scale mail': { baseAC: 14, armorType: 'Medium' },
+    'breastplate': { baseAC: 14, armorType: 'Medium' },
+    'half plate': { baseAC: 15, armorType: 'Medium' },
+    'ring mail': { baseAC: 14, armorType: 'Heavy' },
+    'chain mail': { baseAC: 16, armorType: 'Heavy' },
+    'splint': { baseAC: 17, armorType: 'Heavy' },
+    'plate': { baseAC: 18, armorType: 'Heavy' },
+    'shield': { baseAC: 2, armorType: 'Shield' },
+  };
+
+  const getArmorData = (magicItem) => {
+    const name = (magicItem.name || '').toLowerCase();
+    // Sort keys longest-first so "studded leather" matches before "leather", "chain mail" before "chain", etc.
+    const sortedKeys = Object.keys(ARMOR_BASE_AC).sort((a, b) => b.length - a.length);
+    for (const key of sortedKeys) {
+      if (name.includes(key)) return ARMOR_BASE_AC[key];
+    }
+    // Try armorType field
+    const aType = (magicItem.armorType || '').toLowerCase();
+    if (aType === 'shield') return ARMOR_BASE_AC['shield'];
+    for (const key of sortedKeys) {
+      if (aType.includes(key)) return ARMOR_BASE_AC[key];
+    }
+    // Parse AC from description (e.g. "AC 12 + DEX modifier")
+    const acMatch = (magicItem.description || '').match(/AC (\d+)/);
+    if (acMatch) {
+      const ac = parseInt(acMatch[1]);
+      return { baseAC: ac, armorType: magicItem.armorType || (ac <= 12 ? 'Light' : ac <= 15 ? 'Medium' : 'Heavy') };
+    }
+    return null;
+  };
+
   const handleAddMagicItem = (magicItem) => {
     const itemType = magicItem.category === 'Weapon' ? 'weapon' : magicItem.category === 'Armor' ? 'armor' : 'gear';
     const newItem = {
@@ -125,6 +164,23 @@ function AddItemModal({ onAdd, onClose }) {
       rarity: magicItem.rarity,
       attunement: magicItem.attunement,
     };
+
+    // Populate armor fields
+    if (itemType === 'armor') {
+      const armorData = getArmorData(magicItem);
+      if (armorData) {
+        newItem.baseAC = armorData.baseAC;
+        newItem.armorType = armorData.armorType;
+      } else {
+        newItem.armorType = magicItem.armorType || '';
+      }
+    }
+
+    // Populate weapon fields
+    if (itemType === 'weapon') {
+      newItem.weaponType = magicItem.weaponType || '';
+    }
+
     onAdd(newItem);
     onClose();
   };

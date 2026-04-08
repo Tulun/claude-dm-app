@@ -20,18 +20,6 @@
     "resources": [],
     "inventory": [
       {
-        "id": 1775613214809,
-        "name": "Studded Leather Armor",
-        "quantity": 1,
-        "weight": "",
-        "description": "AC 12 + DEX modifier. Cost: 45 GP. Weight: 13 lb.",
-        "itemType": "armor",
-        "magicItemId": "mundane-studded-leather",
-        "rarity": "Mundane",
-        "attunement": false,
-        "equipped": true
-      },
-      {
         "id": 1775613232667,
         "name": "Heavy Crossbow",
         "quantity": 1,
@@ -52,6 +40,20 @@
         "magicItemId": "mundane-scimitar",
         "rarity": "Mundane",
         "attunement": false
+      },
+      {
+        "id": 1775614145280,
+        "name": "Studded Leather Armor",
+        "quantity": 1,
+        "weight": "",
+        "description": "AC 12 + DEX modifier. Cost: 45 GP. Weight: 13 lb.",
+        "itemType": "armor",
+        "magicItemId": "mundane-studded-leather",
+        "rarity": "Mundane",
+        "attunement": false,
+        "baseAC": 12,
+        "armorType": "Light",
+        "equipped": true
       }
     ],
     "spells": [],

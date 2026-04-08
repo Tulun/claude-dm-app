@@ -12,6 +12,27 @@ import { AddEnemyModal, AddPartyModal } from './components/Modals';
 import TemplateEditor from './components/TemplateEditor';
 
 // Calculate AC from equipped items
+const ARMOR_AC_TABLE = {
+  'padded': 11, 'leather': 11, 'studded leather': 12, 'studded': 12,
+  'hide': 12, 'chain shirt': 13, 'scale mail': 14, 'scale': 14,
+  'breastplate': 14, 'half plate': 15, 'ring mail': 14,
+  'chain mail': 16, 'chain': 16, 'splint': 17, 'plate': 18,
+};
+
+const getArmorBaseAC = (item) => {
+  if (item.baseAC) return parseInt(item.baseAC);
+  const name = (item.name || '').toLowerCase();
+  // Sort keys longest-first so "studded leather" matches before "leather"
+  const sortedKeys = Object.keys(ARMOR_AC_TABLE).sort((a, b) => b.length - a.length);
+  for (const key of sortedKeys) {
+    if (name.includes(key)) return ARMOR_AC_TABLE[key];
+  }
+  // Try parsing from description
+  const match = (item.description || '').match(/AC (\d+)/);
+  if (match) return parseInt(match[1]);
+  return 10;
+};
+
 const getCalculatedAC = (character) => {
   const getModNum = (score) => Math.floor(((parseInt(score) || 10) - 10) / 2);
   const dexMod = getModNum(character.dex);
@@ -42,9 +63,21 @@ const getCalculatedAC = (character) => {
     const chaMod = getModNum(character.cha);
     baseAC = 10 + chaMod;
   } else if (equippedArmor) {
-    baseAC = parseInt(equippedArmor.baseAC) || 10;
-    if (equippedArmor.armorType === 'Medium') dexBonus = Math.min(2, dexMod);
-    else if (equippedArmor.armorType === 'Heavy') dexBonus = 0;
+    baseAC = getArmorBaseAC(equippedArmor);
+    // Determine armor type - use item field or infer from name/baseAC
+    let aType = equippedArmor.armorType || '';
+    if (!aType) {
+      const name = (equippedArmor.name || '').toLowerCase();
+      // Check most specific names first
+      if (name.includes('studded leather') || name.includes('leather') || name.includes('padded')) aType = 'Light';
+      else if (name.includes('half plate') || name.includes('chain shirt') || name.includes('scale') || name.includes('breastplate') || name.includes('hide')) aType = 'Medium';
+      else if (name.includes('ring mail') || name.includes('chain mail') || name.includes('splint') || name.includes('plate')) aType = 'Heavy';
+      else if (baseAC <= 12) aType = 'Light';
+      else if (baseAC <= 15) aType = 'Medium';
+      else aType = 'Heavy';
+    }
+    if (aType === 'Medium') dexBonus = Math.min(2, dexMod);
+    else if (aType === 'Heavy') dexBonus = 0;
   } else if (inventory.length === 0 && !character.acEffect) {
     // No inventory and no effect, fall back to manual AC field
     return character.ac || 10;
