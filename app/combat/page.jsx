@@ -504,23 +504,40 @@ function DMAdminTool() {
             ) : party.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {party.map(member => (
-                  <Link 
-                    key={member.id} 
-                    href={`/character?id=${member.id}&type=party`}
-                    className="block p-4 rounded-lg border border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60 hover:border-emerald-600/50 transition-colors"
+                  <div 
+                    key={member.id}
+                    className={`p-4 rounded-lg border ${member.sourceNpcId || member.isDmNpc ? 'border-amber-800/30 bg-gradient-to-br from-amber-950/20 to-stone-900/60' : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60'}`}
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-emerald-900/50"><Icons.Shield /></div>
+                    <Link href={`/character?id=${member.id}&type=party`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                      <div className={`p-2 rounded-lg ${member.sourceNpcId || member.isDmNpc ? 'bg-amber-900/50' : 'bg-emerald-900/50'}`}>
+                        {member.sourceNpcId || member.isDmNpc ? <Icons.Crown /> : <Icons.Shield />}
+                      </div>
                       <div className="flex-1">
                         <h3 className="font-bold">{member.name}</h3>
-                        <p className="text-xs text-stone-400">{member.class} {member.level}</p>
+                        <p className="text-xs text-stone-400">{member.class || member.role || ''} {member.level || ''}</p>
                       </div>
                       <div className="text-right text-sm">
                         <div className={`flex items-center gap-1 ${member.acEffect ? 'text-cyan-400' : 'text-stone-400'}`}><Icons.Shield /> {getCalculatedAC(member)}</div>
                         <div className="flex items-center gap-1 text-stone-400"><Icons.Heart /> {member.currentHp}/{member.maxHp}</div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                    {(member.sourceNpcId || member.isDmNpc) && (
+                      <div className="mt-2 pt-2 border-t border-stone-700/30">
+                        <button
+                          onClick={() => {
+                            if (confirm(`Remove ${member.name} from party?`)) {
+                              const updated = party.filter(p => p.id !== member.id);
+                              setParty(updated);
+                              fetch('/api/party', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updated) });
+                            }
+                          }}
+                          className="flex items-center gap-1 px-2 py-1 rounded text-xs bg-red-900/30 hover:bg-red-800/30 text-red-400"
+                        >
+                          Remove from Party
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 ))}
               </div>
             ) : (
