@@ -18,11 +18,50 @@
     "notes": "",
     "isDmNpc": true,
     "resources": [],
-    "inventory": [],
+    "inventory": [
+      {
+        "id": 1775613214809,
+        "name": "Studded Leather Armor",
+        "quantity": 1,
+        "weight": "",
+        "description": "AC 12 + DEX modifier. Cost: 45 GP. Weight: 13 lb.",
+        "itemType": "armor",
+        "magicItemId": "mundane-studded-leather",
+        "rarity": "Mundane",
+        "attunement": false,
+        "equipped": true
+      },
+      {
+        "id": 1775613232667,
+        "name": "Heavy Crossbow",
+        "quantity": 1,
+        "weight": "",
+        "description": "1d10 Piercing. Ammunition (100/400), Heavy, Loading, Two-Handed. Cost: 50 GP. Weight: 18 lb.",
+        "itemType": "weapon",
+        "magicItemId": "mundane-heavy-crossbow",
+        "rarity": "Mundane",
+        "attunement": false
+      },
+      {
+        "id": 1775613240442,
+        "name": "Scimitar",
+        "quantity": 1,
+        "weight": "",
+        "description": "1d6 Slashing. Finesse, Light. Cost: 25 GP. Weight: 3 lb.",
+        "itemType": "weapon",
+        "magicItemId": "mundane-scimitar",
+        "rarity": "Mundane",
+        "attunement": false
+      }
+    ],
     "spells": [],
     "features": [],
     "feats": [],
     "skillProficiencies": {},
-    "saveProficiencies": {}
+    "saveProficiencies": {},
+    "advantages": [],
+    "classFeatures": {
+      "Ranger:Fighting Style": "Dueling"
+    }
   }
 ]

@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "items": [
     {
       "id": "potion-healing",
@@ -2625,6 +2625,633 @@
       "rarity": "Legendary",
       "attunement": false,
       "description": "This fine black cloth, soft as silk, is folded up to the dimensions of a handkerchief. It unfolds into a circular sheet 6 feet in diameter. You can take a Magic action to unfold and place the well on a solid surface, whereupon it creates a two-way portal to another world or plane of existence. Each time the item opens a portal, the DM decides where it leads. You can take a Magic action to close an open portal by taking hold of the edges of the cloth and folding it up. The well can't be used again for 1d8 hours."
+    },
+    {
+      "id": "mundane-padded",
+      "name": "Padded Armor",
+      "category": "Armor",
+      "rarity": "Mundane",
+      "attunement": false,
+      "armorType": "Light",
+      "description": "AC 11 + DEX modifier. Stealth Disadvantage. Cost: 5 GP. Weight: 8 lb."
+    },
+    {
+      "id": "mundane-leather",
+      "name": "Leather Armor",
+      "category": "Armor",
+      "rarity": "Mundane",
+      "attunement": false,
+      "armorType": "Light",
+      "description": "AC 11 + DEX modifier. Cost: 10 GP. Weight: 10 lb."
+    },
+    {
+      "id": "mundane-studded-leather",
+      "name": "Studded Leather Armor",
+      "category": "Armor",
+      "rarity": "Mundane",
+      "attunement": false,
+      "armorType": "Light",
+      "description": "AC 12 + DEX modifier. Cost: 45 GP. Weight: 13 lb."
+    },
+    {
+      "id": "mundane-hide",
+      "name": "Hide Armor",
+      "category": "Armor",
+      "rarity": "Mundane",
+      "attunement": false,
+      "armorType": "Medium",
+      "description": "AC 12 + DEX modifier (max 2). Cost: 10 GP. Weight: 12 lb."
+    },
+    {
+      "id": "mundane-chain-shirt",
+      "name": "Chain Shirt",
+      "category": "Armor",
+      "rarity": "Mundane",
+      "attunement": false,
+      "armorType": "Medium",
+      "description": "AC 13 + DEX modifier (max 2). Cost: 50 GP. Weight: 20 lb."
+    },
+    {
+      "id": "mundane-scale-mail",
+      "name": "Scale Mail",
+      "category": "Armor",
+      "rarity": "Mundane",
+      "attunement": false,
+      "armorType": "Medium",
+      "description": "AC 14 + DEX modifier (max 2). Stealth Disadvantage. Cost: 50 GP. Weight: 45 lb."
+    },
+    {
+      "id": "mundane-breastplate",
+      "name": "Breastplate",
+      "category": "Armor",
+      "rarity": "Mundane",
+      "attunement": false,
+      "armorType": "Medium",
+      "description": "AC 14 + DEX modifier (max 2). Cost: 400 GP. Weight: 20 lb."
+    },
+    {
+      "id": "mundane-half-plate",
+      "name": "Half Plate Armor",
+      "category": "Armor",
+      "rarity": "Mundane",
+      "attunement": false,
+      "armorType": "Medium",
+      "description": "AC 15 + DEX modifier (max 2). Stealth Disadvantage. Cost: 750 GP. Weight: 40 lb."
+    },
+    {
+      "id": "mundane-ring-mail",
+      "name": "Ring Mail",
+      "category": "Armor",
+      "rarity": "Mundane",
+      "attunement": false,
+      "armorType": "Heavy",
+      "description": "AC 14. Stealth Disadvantage. Cost: 30 GP. Weight: 40 lb."
+    },
+    {
+      "id": "mundane-chain-mail",
+      "name": "Chain Mail",
+      "category": "Armor",
+      "rarity": "Mundane",
+      "attunement": false,
+      "armorType": "Heavy",
+      "description": "AC 16. STR 13 required. Stealth Disadvantage. Cost: 75 GP. Weight: 55 lb."
+    },
+    {
+      "id": "mundane-splint",
+      "name": "Splint Armor",
+      "category": "Armor",
+      "rarity": "Mundane",
+      "attunement": false,
+      "armorType": "Heavy",
+      "description": "AC 17. STR 15 required. Stealth Disadvantage. Cost: 200 GP. Weight: 60 lb."
+    },
+    {
+      "id": "mundane-plate",
+      "name": "Plate Armor",
+      "category": "Armor",
+      "rarity": "Mundane",
+      "attunement": false,
+      "armorType": "Heavy",
+      "description": "AC 18. STR 15 required. Stealth Disadvantage. Cost: 1,500 GP. Weight: 65 lb."
+    },
+    {
+      "id": "mundane-shield",
+      "name": "Shield",
+      "category": "Armor",
+      "rarity": "Mundane",
+      "attunement": false,
+      "armorType": "Shield",
+      "description": "+2 AC. Cost: 10 GP. Weight: 6 lb."
+    },
+    {
+      "id": "mundane-club",
+      "name": "Club",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Simple Melee",
+      "description": "1d4 Bludgeoning. Light. Cost: 1 SP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-dagger",
+      "name": "Dagger",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Simple Melee",
+      "description": "1d4 Piercing. Finesse, Light, Thrown (20/60). Cost: 2 GP. Weight: 1 lb."
+    },
+    {
+      "id": "mundane-greatclub",
+      "name": "Greatclub",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Simple Melee",
+      "description": "1d8 Bludgeoning. Two-Handed. Cost: 2 SP. Weight: 10 lb."
+    },
+    {
+      "id": "mundane-handaxe",
+      "name": "Handaxe",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Simple Melee",
+      "description": "1d6 Slashing. Light, Thrown (20/60). Cost: 5 GP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-javelin",
+      "name": "Javelin",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Simple Melee",
+      "description": "1d6 Piercing. Thrown (30/120). Cost: 5 SP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-light-hammer",
+      "name": "Light Hammer",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Simple Melee",
+      "description": "1d4 Bludgeoning. Light, Thrown (20/60). Cost: 2 GP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-mace",
+      "name": "Mace",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Simple Melee",
+      "description": "1d6 Bludgeoning. Cost: 5 GP. Weight: 4 lb."
+    },
+    {
+      "id": "mundane-quarterstaff",
+      "name": "Quarterstaff",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Simple Melee",
+      "description": "1d6 Bludgeoning. Versatile (1d8). Cost: 2 SP. Weight: 4 lb."
+    },
+    {
+      "id": "mundane-sickle",
+      "name": "Sickle",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Simple Melee",
+      "description": "1d4 Slashing. Light. Cost: 1 GP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-spear",
+      "name": "Spear",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Simple Melee",
+      "description": "1d6 Piercing. Thrown (20/60), Versatile (1d8). Cost: 1 GP. Weight: 3 lb."
+    },
+    {
+      "id": "mundane-light-crossbow",
+      "name": "Light Crossbow",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Simple Ranged",
+      "description": "1d8 Piercing. Ammunition (80/320), Loading, Two-Handed. Cost: 25 GP. Weight: 5 lb."
+    },
+    {
+      "id": "mundane-dart",
+      "name": "Dart",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Simple Ranged",
+      "description": "1d4 Piercing. Finesse, Thrown (20/60). Cost: 5 CP. Weight: 1/4 lb."
+    },
+    {
+      "id": "mundane-shortbow",
+      "name": "Shortbow",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Simple Ranged",
+      "description": "1d6 Piercing. Ammunition (80/320), Two-Handed. Cost: 25 GP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-sling",
+      "name": "Sling",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Simple Ranged",
+      "description": "1d4 Bludgeoning. Ammunition (30/120). Cost: 1 SP. Weight: —."
+    },
+    {
+      "id": "mundane-battleaxe",
+      "name": "Battleaxe",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d8 Slashing. Versatile (1d10). Cost: 10 GP. Weight: 4 lb."
+    },
+    {
+      "id": "mundane-flail",
+      "name": "Flail",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d8 Bludgeoning. Cost: 10 GP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-glaive",
+      "name": "Glaive",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d10 Slashing. Heavy, Reach, Two-Handed. Cost: 20 GP. Weight: 6 lb."
+    },
+    {
+      "id": "mundane-greataxe",
+      "name": "Greataxe",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d12 Slashing. Heavy, Two-Handed. Cost: 30 GP. Weight: 7 lb."
+    },
+    {
+      "id": "mundane-greatsword",
+      "name": "Greatsword",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "2d6 Slashing. Heavy, Two-Handed. Cost: 50 GP. Weight: 6 lb."
+    },
+    {
+      "id": "mundane-halberd",
+      "name": "Halberd",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d10 Slashing. Heavy, Reach, Two-Handed. Cost: 20 GP. Weight: 6 lb."
+    },
+    {
+      "id": "mundane-lance",
+      "name": "Lance",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d10 Piercing. Heavy, Reach. Disadvantage within 5 ft. Requires two hands when not mounted. Cost: 10 GP. Weight: 6 lb."
+    },
+    {
+      "id": "mundane-longsword",
+      "name": "Longsword",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d8 Slashing. Versatile (1d10). Cost: 15 GP. Weight: 3 lb."
+    },
+    {
+      "id": "mundane-maul",
+      "name": "Maul",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "2d6 Bludgeoning. Heavy, Two-Handed. Cost: 10 GP. Weight: 10 lb."
+    },
+    {
+      "id": "mundane-morningstar",
+      "name": "Morningstar",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d8 Piercing. Cost: 15 GP. Weight: 4 lb."
+    },
+    {
+      "id": "mundane-pike",
+      "name": "Pike",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d10 Piercing. Heavy, Reach, Two-Handed. Cost: 5 GP. Weight: 18 lb."
+    },
+    {
+      "id": "mundane-rapier",
+      "name": "Rapier",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d8 Piercing. Finesse. Cost: 25 GP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-scimitar",
+      "name": "Scimitar",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d6 Slashing. Finesse, Light. Cost: 25 GP. Weight: 3 lb."
+    },
+    {
+      "id": "mundane-shortsword",
+      "name": "Shortsword",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d6 Piercing. Finesse, Light. Cost: 10 GP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-trident",
+      "name": "Trident",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d8 Piercing. Thrown (20/60), Versatile (1d10). Cost: 5 GP. Weight: 4 lb."
+    },
+    {
+      "id": "mundane-war-pick",
+      "name": "War Pick",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d8 Piercing. Versatile (1d10). Cost: 5 GP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-warhammer",
+      "name": "Warhammer",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d8 Bludgeoning. Versatile (1d10). Cost: 15 GP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-whip",
+      "name": "Whip",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Melee",
+      "description": "1d4 Slashing. Finesse, Reach. Cost: 2 GP. Weight: 3 lb."
+    },
+    {
+      "id": "mundane-blowgun",
+      "name": "Blowgun",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Ranged",
+      "description": "1 Piercing. Ammunition (25/100), Loading. Cost: 10 GP. Weight: 1 lb."
+    },
+    {
+      "id": "mundane-hand-crossbow",
+      "name": "Hand Crossbow",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Ranged",
+      "description": "1d6 Piercing. Ammunition (30/120), Light, Loading. Cost: 75 GP. Weight: 3 lb."
+    },
+    {
+      "id": "mundane-heavy-crossbow",
+      "name": "Heavy Crossbow",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Ranged",
+      "description": "1d10 Piercing. Ammunition (100/400), Heavy, Loading, Two-Handed. Cost: 50 GP. Weight: 18 lb."
+    },
+    {
+      "id": "mundane-longbow",
+      "name": "Longbow",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Martial Ranged",
+      "description": "1d8 Piercing. Ammunition (150/600), Heavy, Two-Handed. Cost: 50 GP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-backpack",
+      "name": "Backpack",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "Holds up to 30 pounds of gear. Cost: 2 GP. Weight: 5 lb."
+    },
+    {
+      "id": "mundane-bedroll",
+      "name": "Bedroll",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "Sleeping gear for traveling. Cost: 1 GP. Weight: 7 lb."
+    },
+    {
+      "id": "mundane-rope-hempen",
+      "name": "Rope, Hempen (50 ft)",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "Has 2 HP. Can be burst with a DC 17 Strength check. Cost: 1 GP. Weight: 10 lb."
+    },
+    {
+      "id": "mundane-rope-silk",
+      "name": "Rope, Silk (50 ft)",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "Has 2 HP. Can be burst with a DC 17 Strength check. Cost: 10 GP. Weight: 5 lb."
+    },
+    {
+      "id": "mundane-torch",
+      "name": "Torch",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "Bright light in 20 ft, dim light for additional 20 ft. Burns for 1 hour. Can be used as improvised weapon (1 Fire damage). Cost: 1 CP. Weight: 1 lb."
+    },
+    {
+      "id": "mundane-lantern-hooded",
+      "name": "Lantern, Hooded",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "Bright light in 30 ft, dim light for additional 30 ft. Burns for 6 hours on a flask of oil. You can lower the hood to reduce to dim light 5 ft. Cost: 5 GP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-lantern-bullseye",
+      "name": "Lantern, Bullseye",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "Bright light in a 60-ft cone, dim light for additional 60 ft. Burns for 6 hours on a flask of oil. Cost: 10 GP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-thieves-tools",
+      "name": "Thieves' Tools",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "Includes a small file, lock picks, a small mirror, narrow scissors, and pliers. Proficiency lets you add proficiency bonus to checks to disarm traps or open locks. Cost: 25 GP. Weight: 1 lb."
+    },
+    {
+      "id": "mundane-healers-kit",
+      "name": "Healer's Kit",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "10 uses. As a Magic action, you can expend one use to stabilize a creature that has 0 HP without needing to make a Wisdom (Medicine) check. Cost: 5 GP. Weight: 3 lb."
+    },
+    {
+      "id": "mundane-component-pouch",
+      "name": "Component Pouch",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "A small, watertight belt pouch that has compartments to hold all the material components and other special items needed to cast your spells, except components that have a specified cost. Cost: 25 GP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-arcane-focus",
+      "name": "Arcane Focus",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "A crystal, orb, rod, staff, or wand used as a spellcasting focus for arcane spells, replacing material components that don't have a cost. Cost: 5-20 GP. Weight: varies."
+    },
+    {
+      "id": "mundane-holy-symbol",
+      "name": "Holy Symbol",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "An amulet, emblem, or reliquary used as a spellcasting focus for divine spells, replacing material components that don't have a cost. Cost: 5 GP. Weight: 1 lb."
+    },
+    {
+      "id": "mundane-druidic-focus",
+      "name": "Druidic Focus",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "A sprig of mistletoe, totem, wooden staff, or yew wand used as a spellcasting focus for druid spells. Cost: 1-10 GP. Weight: varies."
+    },
+    {
+      "id": "mundane-arrows-20",
+      "name": "Arrows (20)",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Ammunition",
+      "description": "A quiver of 20 arrows for use with longbows and shortbows. Cost: 1 GP. Weight: 1 lb."
+    },
+    {
+      "id": "mundane-bolts-20",
+      "name": "Crossbow Bolts (20)",
+      "category": "Weapon",
+      "rarity": "Mundane",
+      "attunement": false,
+      "weaponType": "Ammunition",
+      "description": "A case of 20 bolts for use with crossbows. Cost: 1 GP. Weight: 1.5 lb."
+    },
+    {
+      "id": "mundane-rations",
+      "name": "Rations (1 day)",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "Dry foods suitable for extended travel, including jerky, dried fruit, hardtack, and nuts. Cost: 5 SP. Weight: 2 lb."
+    },
+    {
+      "id": "mundane-waterskin",
+      "name": "Waterskin",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "Holds 4 pints of liquid. Cost: 2 SP. Weight: 5 lb (full)."
+    },
+    {
+      "id": "mundane-grappling-hook",
+      "name": "Grappling Hook",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "When tied to the end of a rope, can be thrown to hook onto ledges, window sills, etc. Cost: 2 GP. Weight: 4 lb."
+    },
+    {
+      "id": "mundane-crowbar",
+      "name": "Crowbar",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "Using a crowbar grants Advantage to Strength checks where leverage can be applied. Cost: 2 GP. Weight: 5 lb."
+    },
+    {
+      "id": "mundane-tent",
+      "name": "Tent (Two-Person)",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "A simple, portable canvas shelter. Cost: 2 GP. Weight: 20 lb."
+    },
+    {
+      "id": "mundane-manacles",
+      "name": "Manacles",
+      "category": "Wondrous",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "Metal restraints that can bind a Small or Medium creature. DC 20 Dexterity check to escape, DC 25 Strength check to break. Cost: 2 GP. Weight: 6 lb."
+    },
+    {
+      "id": "mundane-potion-healing",
+      "name": "Potion of Healing (Basic)",
+      "category": "Potion",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "Regain 2d4 + 2 Hit Points when you drink this potion. Cost: 50 GP. Weight: 1/2 lb."
+    },
+    {
+      "id": "mundane-antitoxin",
+      "name": "Antitoxin",
+      "category": "Potion",
+      "rarity": "Mundane",
+      "attunement": false,
+      "description": "A creature that drinks this vial of liquid gains Advantage on saving throws against poison for 1 hour. Cost: 50 GP. Weight: —."
     }
   ]
 }
