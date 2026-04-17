@@ -1,25 +1,14 @@
 'use client';
 
-import { useState, useRef, useEffect, Suspense } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Icons from './Icons';
 
-export default function Navbar(props) {
-  return (
-    <Suspense fallback={
-      <nav className="border-b border-amber-900/30 bg-stone-900/80 sticky top-0 z-50 h-[68px]" />
-    }>
-      <NavbarContent {...props} />
-    </Suspense>
-  );
-}
-
-function NavbarContent({ onTabChange, activeTab, saveStatus }) {
+export default function Navbar({ saveStatus }) {
   const [showGlossary, setShowGlossary] = useState(false);
   const glossaryRef = useRef(null);
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   
   // Close glossary on outside click
   useEffect(() => {
@@ -34,23 +23,17 @@ function NavbarContent({ onTabChange, activeTab, saveStatus }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showGlossary]);
 
-  // Determine active page from pathname or activeTab prop
+  // Determine active page from pathname
   const getActivePage = () => {
-    if (pathname === '/combat') {
-      if (activeTab) return activeTab;
-      const tab = searchParams.get('tab');
-      if (tab === 'characters') return 'characters';
-      if (tab === 'templates') return 'templates';
-      return 'combat';
-    }
+    if (pathname === '/combat') return 'combat';
+    if (pathname === '/characters') return 'characters';
+    if (pathname === '/character') return 'characters';
     if (pathname === '/encounters') return 'encounters';
+    if (pathname === '/templates') return 'templates';
     if (pathname === '/spellbook') return 'spellbook';
     if (pathname === '/magic-items') return 'magic-items';
-    if (pathname === '/npc-generator') return 'npc-generator';
     if (pathname === '/dm') return 'dm';
     if (pathname === '/classes') return 'classes';
-    if (pathname === '/character') return 'characters';
-    
     return 'combat';
   };
   
@@ -59,9 +42,9 @@ function NavbarContent({ onTabChange, activeTab, saveStatus }) {
   // Primary nav items — the core DM workflow
   const navItems = [
     { key: 'combat', label: 'Combat', href: '/combat', icon: Icons.Sword },
-    { key: 'characters', label: 'Characters', href: '/combat?tab=characters', icon: Icons.Shield },
+    { key: 'characters', label: 'Characters', href: '/characters', icon: Icons.Shield },
     { key: 'encounters', label: 'Encounters', href: '/encounters', icon: Icons.Scroll },
-    { key: 'templates', label: 'Templates', href: '/combat?tab=templates', icon: Icons.Book },
+    { key: 'templates', label: 'Templates', href: '/templates', icon: Icons.Book },
     { key: 'dm', label: 'DM', href: '/dm', icon: Icons.Crown },
   ];
 
@@ -74,20 +57,6 @@ function NavbarContent({ onTabChange, activeTab, saveStatus }) {
 
   const isGlossaryActive = glossaryItems.some(item => item.key === active);
 
-  const handleClick = (item, e) => {
-    if (onTabChange && pathname === '/combat' && (item.key === 'combat' || item.key === 'characters' || item.key === 'templates')) {
-      e.preventDefault();
-      onTabChange(item.key);
-    }
-  };
-
-  const handleLogoClick = (e) => {
-    if (onTabChange && pathname === '/combat') {
-      e.preventDefault();
-      onTabChange('combat');
-    }
-  };
-
   return (
     <nav className="border-b border-amber-900/30 bg-stone-900/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3">
@@ -95,7 +64,6 @@ function NavbarContent({ onTabChange, activeTab, saveStatus }) {
           {/* Logo */}
           <Link 
             href="/combat" 
-            onClick={handleLogoClick}
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
             <div className="p-2 rounded-lg bg-gradient-to-br from-amber-600 to-amber-800">
@@ -121,7 +89,6 @@ function NavbarContent({ onTabChange, activeTab, saveStatus }) {
                   <Link
                     key={item.key}
                     href={item.href}
-                    onClick={(e) => handleClick(item, e)}
                     className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors ${
                       isActive 
                         ? 'bg-amber-700 text-amber-100' 

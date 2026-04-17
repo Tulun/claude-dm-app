@@ -1,120 +1,24 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Icons from '../components/Icons';
 import Navbar from '../components/Navbar';
 import { defaultPartyData, defaultEnemyTemplates } from '../components/defaultData';
 import CharacterCard from './components/CharacterCard';
 import InitiativeItem from './components/InitiativeItem';
-import { AddEnemyModal, AddPartyModal } from './components/Modals';
-import TemplateEditor from './components/TemplateEditor';
-
-// Calculate AC from equipped items
-const ARMOR_AC_TABLE = {
-  'padded': 11, 'leather': 11, 'studded leather': 12, 'studded': 12,
-  'hide': 12, 'chain shirt': 13, 'scale mail': 14, 'scale': 14,
-  'breastplate': 14, 'half plate': 15, 'ring mail': 14,
-  'chain mail': 16, 'chain': 16, 'splint': 17, 'plate': 18,
-};
-
-const getArmorBaseAC = (item) => {
-  if (item.baseAC) return parseInt(item.baseAC);
-  const name = (item.name || '').toLowerCase();
-  // Sort keys longest-first so "studded leather" matches before "leather"
-  const sortedKeys = Object.keys(ARMOR_AC_TABLE).sort((a, b) => b.length - a.length);
-  for (const key of sortedKeys) {
-    if (name.includes(key)) return ARMOR_AC_TABLE[key];
-  }
-  // Try parsing from description
-  const match = (item.description || '').match(/AC (\d+)/);
-  if (match) return parseInt(match[1]);
-  return 10;
-};
-
-const getCalculatedAC = (character) => {
-  const getModNum = (score) => Math.floor(((parseInt(score) || 10) - 10) / 2);
-  const dexMod = getModNum(character.dex);
-  const inventory = character.inventory || [];
-  
-  const equippedArmor = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType !== 'Shield');
-  const equippedShield = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType === 'Shield');
-  const acBonusItems = inventory.filter(i => i.equipped && i.acBonus && i.itemType !== 'armor');
-  
-  let baseAC = 10;
-  let dexBonus = dexMod;
-  let shieldBonus = 0;
-  let itemBonuses = 0;
-  let tempBonus = parseInt(character.tempAC) || 0;
-  
-  if (character.acEffect === 'mageArmor') {
-    baseAC = 13;
-  } else if (character.acEffect === 'barkskin') {
-    if (10 + dexMod < 16) { baseAC = 16; dexBonus = 0; }
-  } else if (character.acEffect === 'unarmoredDefense') {
-    const conMod = getModNum(character.con);
-    const wisMod = getModNum(character.wis);
-    const classes = character.classes?.map(c => c.name.toLowerCase()) || [character.class?.toLowerCase()];
-    if (classes.includes('barbarian')) baseAC = 10 + conMod;
-    else if (classes.includes('monk')) baseAC = 10 + wisMod;
-  } else if (character.acEffect === 'draconicResilience') {
-    // Draconic Sorcerer: 10 + DEX + CHA
-    const chaMod = getModNum(character.cha);
-    baseAC = 10 + chaMod;
-  } else if (equippedArmor) {
-    baseAC = getArmorBaseAC(equippedArmor);
-    // Determine armor type - use item field or infer from name/baseAC
-    let aType = equippedArmor.armorType || '';
-    if (!aType) {
-      const name = (equippedArmor.name || '').toLowerCase();
-      // Check most specific names first
-      if (name.includes('studded leather') || name.includes('leather') || name.includes('padded')) aType = 'Light';
-      else if (name.includes('half plate') || name.includes('chain shirt') || name.includes('scale') || name.includes('breastplate') || name.includes('hide')) aType = 'Medium';
-      else if (name.includes('ring mail') || name.includes('chain mail') || name.includes('splint') || name.includes('plate')) aType = 'Heavy';
-      else if (baseAC <= 12) aType = 'Light';
-      else if (baseAC <= 15) aType = 'Medium';
-      else aType = 'Heavy';
-    }
-    if (aType === 'Medium') dexBonus = Math.min(2, dexMod);
-    else if (aType === 'Heavy') dexBonus = 0;
-  } else if (inventory.length === 0 && !character.acEffect) {
-    // No inventory and no effect, fall back to manual AC field
-    return character.ac || 10;
-  }
-  
-  if (equippedShield) shieldBonus = parseInt(equippedShield.baseAC) || 2;
-  acBonusItems.forEach(item => { itemBonuses += parseInt(item.acBonus) || 0; });
-  
-  return baseAC + dexBonus + shieldBonus + itemBonuses + tempBonus;
-};
+import { AddEnemyModal } from './components/Modals';
+import { getCalculatedAC } from '../utils/acCalculation';
 
 export default function CombatPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-stone-100 flex items-center justify-center">
-        <div className="text-stone-400 animate-pulse">Loading...</div>
-      </div>
-    }>
-      <DMAdminTool />
-    </Suspense>
-  );
-}
-
-function DMAdminTool() {
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const tabFromUrl = searchParams.get('tab');
-  const [activeTab, setActiveTab] = useState(tabFromUrl || 'combat');
   const [party, setParty] = useState(null); // Start with null to detect loading
   const [enemies, setEnemies] = useState([]);
   const [lairAction, setLairAction] = useState(null); // { initiative: 20, notes: '' }
   const [templates, setTemplates] = useState(null); // Start with null to detect loading
   const [expandedCards, setExpandedCards] = useState({});
   const [showAddEnemy, setShowAddEnemy] = useState(false);
-  const [showAddParty, setShowAddParty] = useState(false);
-  const [dmNpcs, setDmNpcs] = useState([]);
-  const [showAddNpc, setShowAddNpc] = useState(false);
   const [dragIndex, setDragIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
   const [saveStatus, setSaveStatus] = useState('');
@@ -125,32 +29,15 @@ function DMAdminTool() {
   const [encounterToLoad, setEncounterToLoad] = useState(null);
   const encounterSaveEnabled = React.useRef(false);
 
-  // Update tab when URL changes and reload data (in case edited on character page)
-  useEffect(() => {
-    if (tabFromUrl && ['combat', 'characters', 'templates'].includes(tabFromUrl)) {
-      setActiveTab(tabFromUrl);
-      // Reload data when returning from another page
-      if (isLoaded) {
-        fetch('/api/party').then(res => res.ok && res.json()).then(data => {
-          if (data && Array.isArray(data)) setParty(data.length > 0 ? data : defaultPartyData);
-        }).catch(console.error);
-        fetch('/api/dm-npcs').then(res => res.ok && res.json()).then(data => {
-          if (data && Array.isArray(data)) setDmNpcs(data);
-        }).catch(console.error);
-      }
-    }
-  }, [tabFromUrl]);
-
   // Load data on mount
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [partyRes, templatesRes, encounterRes, encountersRes, npcsRes] = await Promise.all([
+        const [partyRes, templatesRes, encounterRes, encountersRes] = await Promise.all([
           fetch('/api/party'),
           fetch('/api/templates'),
           fetch('/api/encounter'),
           fetch('/api/encounters'),
-          fetch('/api/dm-npcs'),
         ]);
         
         if (partyRes.ok) {
@@ -185,10 +72,6 @@ function DMAdminTool() {
           }
         }
 
-        if (npcsRes.ok) {
-          const npcsData = await npcsRes.json();
-          if (Array.isArray(npcsData)) setDmNpcs(npcsData);
-        }
         setEncounterLoaded(true);
         // Enable saving after a delay to ensure state has settled
         setTimeout(() => { encounterSaveEnabled.current = true; }, 500);
@@ -220,19 +103,6 @@ function DMAdminTool() {
     }, 1000);
     return () => clearTimeout(timeout);
   }, [party, isLoaded]);
-
-  // Auto-save DM NPCs
-  useEffect(() => {
-    if (!isLoaded || dmNpcs.length === 0) return;
-    const timeout = setTimeout(() => {
-      fetch('/api/dm-npcs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dmNpcs),
-      }).catch(console.error);
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, [dmNpcs, isLoaded]);
 
   // Auto-save templates when they change (debounced, only after initial load)
   useEffect(() => {
@@ -318,23 +188,7 @@ function DMAdminTool() {
     setTimeout(() => setSaveStatus(''), 2000);
   };
 
-  const reloadTemplates = async () => {
-    try {
-      const res = await fetch('/api/templates');
-      if (res.ok) {
-        const data = await res.json();
-        if (data && Array.isArray(data) && data.length > 0) {
-          setTemplates(data);
-        } else {
-          setTemplates(defaultEnemyTemplates);
-        }
-        setSaveStatus('Templates reloaded');
-        setTimeout(() => setSaveStatus(''), 2000);
-      }
-    } catch (err) {
-      console.error('Error reloading templates:', err);
-    }
-  };
+
 
   // Manual initiative order - stores IDs in display order
   const [initiativeOrder, setInitiativeOrder] = useState([]);
@@ -398,17 +252,9 @@ function DMAdminTool() {
     <div className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100">
       <div className="fixed inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
 
-      <Navbar 
-        activeTab={activeTab} 
-        onTabChange={(tab) => {
-          setActiveTab(tab);
-          router.push(tab === 'combat' ? '/combat' : `/combat?tab=${tab}`);
-        }}
-        saveStatus={saveStatus}
-      />
+      <Navbar saveStatus={saveStatus} />
 
-      {activeTab === 'combat' ? (
-        <main className="relative max-w-7xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <main className="relative max-w-7xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-emerald-400 flex items-center gap-2"><Icons.Shield />Party & Allies</h2>
@@ -488,244 +334,8 @@ function DMAdminTool() {
             {!enemies.length && !lairAction && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No enemies yet. <Link href="/encounters" className="text-amber-500 hover:text-amber-400">Create encounters</Link> to quickly add groups.</div>}
           </div>
         </main>
-      ) : activeTab === 'characters' ? (
-        <main className="relative max-w-4xl mx-auto p-4">
-          <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-emerald-400 flex items-center gap-2"><Icons.Shield /> Party Members</h2>
-              <div className="flex gap-2">
-                <button onClick={reloadParty} className="flex items-center gap-1 px-3 py-2 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-sm"><Icons.Refresh />Reload</button>
-                <button onClick={() => setShowAddParty(true)} className="flex items-center gap-1 px-3 py-2 rounded-lg bg-emerald-800/50 hover:bg-emerald-700/50 text-emerald-300 text-sm"><Icons.Plus />Add</button>
-              </div>
-            </div>
-            <p className="text-stone-400 text-sm mb-6">Click on a character to view and edit their full details.</p>
-            {!party ? (
-              <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg animate-pulse">Loading party...</div>
-            ) : party.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {party.map(member => (
-                  <div 
-                    key={member.id}
-                    className={`p-4 rounded-lg border ${member.sourceNpcId || member.isDmNpc ? 'border-amber-800/30 bg-gradient-to-br from-amber-950/20 to-stone-900/60' : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60'}`}
-                  >
-                    <Link href={`/character?id=${member.id}&type=party`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                      <div className={`p-2 rounded-lg ${member.sourceNpcId || member.isDmNpc ? 'bg-amber-900/50' : 'bg-emerald-900/50'}`}>
-                        {member.sourceNpcId || member.isDmNpc ? <Icons.Crown /> : <Icons.Shield />}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-bold">{member.name}</h3>
-                        <p className="text-xs text-stone-400">{member.class || member.role || ''} {member.level || ''}</p>
-                      </div>
-                      <div className="text-right text-sm">
-                        <div className={`flex items-center gap-1 ${member.acEffect ? 'text-cyan-400' : 'text-stone-400'}`}><Icons.Shield /> {getCalculatedAC(member)}</div>
-                        <div className="flex items-center gap-1 text-stone-400"><Icons.Heart /> {member.currentHp}/{member.maxHp}</div>
-                      </div>
-                    </Link>
-                    {(member.sourceNpcId || member.isDmNpc) && (
-                      <div className="mt-2 pt-2 border-t border-stone-700/30">
-                        <button
-                          onClick={() => {
-                            if (confirm(`Remove ${member.name} from party?`)) {
-                              const updated = party.filter(p => p.id !== member.id);
-                              setParty(updated);
-                              fetch('/api/party', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updated) });
-                            }
-                          }}
-                          className="flex items-center gap-1 px-2 py-1 rounded text-xs bg-red-900/30 hover:bg-red-800/30 text-red-400"
-                        >
-                          Remove from Party
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No party members yet.</div>
-            )}
-          </div>
-
-          {/* DM NPCs Section */}
-          <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6 mt-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2"><Icons.Crown /> DM NPCs</h2>
-              <button onClick={() => setShowAddNpc(true)} className="flex items-center gap-1 px-3 py-2 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.Plus />New NPC</button>
-            </div>
-            <p className="text-stone-400 text-sm mb-6">Character-like NPCs separate from the party. Click to edit, or add them to initiative when needed.</p>
-            {dmNpcs.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {dmNpcs.map(npc => (
-                  <div key={npc.id} className="p-4 rounded-lg border border-amber-800/30 bg-gradient-to-br from-amber-950/20 to-stone-900/60">
-                    <Link href={`/character?id=${npc.id}&type=dm-npc`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                      <div className="p-2 rounded-lg bg-amber-900/50"><Icons.Crown /></div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-bold truncate">{npc.name}</h3>
-                        <p className="text-xs text-stone-400">{npc.class || npc.role || 'NPC'} {npc.level || ''}</p>
-                      </div>
-                      <div className="text-right text-sm shrink-0">
-                        <div className="flex items-center gap-1 text-stone-400"><Icons.Shield /> {getCalculatedAC(npc)}</div>
-                        <div className="flex items-center gap-1 text-stone-400"><Icons.Heart /> {npc.currentHp || npc.maxHp || '?'}/{npc.maxHp || '?'}</div>
-                      </div>
-                    </Link>
-                    <div className="flex gap-2 mt-3 pt-2 border-t border-stone-700/30">
-                      <button
-                        onClick={() => {
-                          const copy = { ...npc, id: `npc-init-${Date.now()}`, initiative: 0, currentHp: npc.currentHp || npc.maxHp, sourceNpcId: npc.id };
-                          setParty(prev => [...prev, copy]);
-                          setSaveStatus('NPC added to party');
-                          setTimeout(() => setSaveStatus(''), 2000);
-                        }}
-                        className="flex items-center gap-1 px-2 py-1 rounded text-xs bg-emerald-800/50 hover:bg-emerald-700/50 text-emerald-300"
-                      >
-                        <Icons.Plus /> Add to Party
-                      </button>
-                      <button
-                        onClick={() => {
-                          if (confirm(`Delete ${npc.name}?`)) {
-                            const updated = dmNpcs.filter(n => n.id !== npc.id);
-                            setDmNpcs(updated);
-                            fetch('/api/dm-npcs', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updated) });
-                          }
-                        }}
-                        className="flex items-center gap-1 px-2 py-1 rounded text-xs bg-red-900/30 hover:bg-red-800/30 text-red-400"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No DM NPCs yet.</div>
-            )}
-          </div>
-        </main>
-      ) : (
-        <main className="relative max-w-4xl mx-auto p-4">
-          <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2"><Icons.Book />Enemy & NPC Templates</h2>
-              <button onClick={reloadTemplates} className="flex items-center gap-1 px-3 py-2 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-sm"><Icons.Refresh />Reload</button>
-            </div>
-            <p className="text-stone-400 text-sm mb-6">Create and manage reusable templates. Changes auto-save to <code className="bg-stone-800 px-1 rounded">data/templates.json</code></p>
-            {!templates ? (
-              <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg animate-pulse">Loading templates...</div>
-            ) : (
-              <TemplateEditor templates={templates} onUpdate={(u) => setTemplates(prev => prev.map(t => t.id === u.id ? u : t))} onDelete={(id) => setTemplates(prev => prev.filter(t => t.id !== id))} onCreate={(t) => setTemplates(prev => [...prev, t])} onImport={(t) => setTemplates(prev => [...prev, t])} />
-            )}
-          </div>
-        </main>
-      )}
 
       <AddEnemyModal isOpen={showAddEnemy} onClose={() => setShowAddEnemy(false)} onAdd={(e) => setEnemies(prev => [...prev, e])} templates={templates || []} />
-      <AddPartyModal 
-        isOpen={showAddParty} 
-        onClose={() => setShowAddParty(false)} 
-        onSave={(newMember) => {
-          const newParty = [...(party || []), newMember];
-          setParty(newParty);
-          // Immediately save to file
-          fetch('/api/party', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newParty),
-          }).then(() => {
-            setSaveStatus('Party saved');
-            setTimeout(() => setSaveStatus(''), 2000);
-          }).catch(console.error);
-        }} 
-      />
-
-      {/* Add DM NPC Modal */}
-      {showAddNpc && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setShowAddNpc(false)}>
-          <div className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-md p-6" onClick={e => e.stopPropagation()}>
-            <h2 className="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2"><Icons.Crown /> New DM NPC</h2>
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              const form = e.target;
-              const npc = {
-                id: `dm-npc-${Date.now()}`,
-                name: form.npcName.value,
-                class: form.npcClass.value,
-                level: parseInt(form.npcLevel.value) || 1,
-                ac: parseInt(form.npcAC.value) || 10,
-                maxHp: parseInt(form.npcHP.value) || 10,
-                currentHp: parseInt(form.npcHP.value) || 10,
-                initiative: 0,
-                speed: parseInt(form.npcSpeed.value) || 30,
-                str: parseInt(form.npcStr.value) || 10,
-                dex: parseInt(form.npcDex.value) || 10,
-                con: parseInt(form.npcCon.value) || 10,
-                int: parseInt(form.npcInt.value) || 10,
-                wis: parseInt(form.npcWis.value) || 10,
-                cha: parseInt(form.npcCha.value) || 10,
-                notes: form.npcNotes.value,
-                isDmNpc: true,
-                resources: [],
-                inventory: [],
-                spells: [],
-                features: [],
-                feats: [],
-                skillProficiencies: {},
-                saveProficiencies: {},
-              };
-              const updated = [...dmNpcs, npc];
-              setDmNpcs(updated);
-              fetch('/api/dm-npcs', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updated) });
-              setShowAddNpc(false);
-            }} className="space-y-3">
-              <div>
-                <label className="text-xs text-stone-400">Name *</label>
-                <input name="npcName" required className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" autoFocus />
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <label className="text-xs text-stone-400">Class / Role</label>
-                  <input name="npcClass" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" placeholder="Fighter" />
-                </div>
-                <div>
-                  <label className="text-xs text-stone-400">Level</label>
-                  <input name="npcLevel" type="number" defaultValue="1" min="1" max="20" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" />
-                </div>
-                <div>
-                  <label className="text-xs text-stone-400">Speed</label>
-                  <input name="npcSpeed" type="number" defaultValue="30" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs text-stone-400">AC</label>
-                  <input name="npcAC" type="number" defaultValue="10" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" />
-                </div>
-                <div>
-                  <label className="text-xs text-stone-400">Max HP</label>
-                  <input name="npcHP" type="number" defaultValue="10" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" />
-                </div>
-              </div>
-              <div>
-                <label className="text-xs text-stone-400">Ability Scores</label>
-                <div className="grid grid-cols-6 gap-2 mt-1">
-                  {['Str','Dex','Con','Int','Wis','Cha'].map(s => (
-                    <div key={s} className="text-center">
-                      <div className="text-[10px] text-stone-500 uppercase">{s}</div>
-                      <input name={`npc${s}`} type="number" defaultValue="10" min="1" max="30" className="w-full bg-stone-800 border border-stone-700 rounded px-1 py-1 text-sm text-center focus:outline-none focus:border-amber-600" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label className="text-xs text-stone-400">Notes</label>
-                <textarea name="npcNotes" rows={2} className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600 resize-none" placeholder="Personality, role, connections..." />
-              </div>
-              <div className="flex gap-2 pt-2">
-                <button type="submit" className="flex-1 py-2 rounded bg-amber-700 hover:bg-amber-600 text-sm font-medium">Create NPC</button>
-                <button type="button" onClick={() => setShowAddNpc(false)} className="px-4 py-2 rounded bg-stone-700 hover:bg-stone-600 text-sm">Cancel</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* Load Encounter Modal */}
       {showLoadEncounter && (

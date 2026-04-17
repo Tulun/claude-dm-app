@@ -1,335 +1,163 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Icons from '../components/Icons';
-import {
-  StatsBar,
-  SavingThrows,
-  SavingThrowsModal,
-  Senses,
-  SkillsList,
-  ProficiencyModal,
-  ClassEditor,
-  ResourcesTab,
-  InventoryTab,
-  SpellsTab,
-  FeaturesTab,
-  FeatsTab,
-  BackgroundTab,
-  NotesTab,
-  CompanionsTab,
-  WildShapeTab,
-  formatClasses,
-} from './components';
+import Navbar from '../components/Navbar';
+import { defaultPartyData } from '../components/defaultData';
+import { AddPartyModal } from '../combat/components/Modals';
+import { getCalculatedAC } from '../utils/acCalculation';
 
-export default function CharacterPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100 flex items-center justify-center">
-        <div className="text-stone-400 animate-pulse">Loading character...</div>
-      </div>
-    }>
-      <CharacterPageContent />
-    </Suspense>
-  );
-}
-
-function CharacterPageContent() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const id = searchParams.get('id');
-  const type = searchParams.get('type');
-  
-  const [character, setCharacter] = useState(null);
-  const [templates, setTemplates] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function CharactersPage() {
+  const [party, setParty] = useState(null);
+  const [dmNpcs, setDmNpcs] = useState([]);
+  const [showAddParty, setShowAddParty] = useState(false);
+  const [showAddNpc, setShowAddNpc] = useState(false);
   const [saveStatus, setSaveStatus] = useState('');
-  const [hasChanges, setHasChanges] = useState(false);
-  const [activeTab, setActiveTab] = useState('resources');
-  const [showProfModal, setShowProfModal] = useState(false);
-  const [showSavesModal, setShowSavesModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  // Load character on mount
   useEffect(() => {
-    const loadCharacter = async () => {
-      if (!id || !type) { setLoading(false); return; }
-      try {
-        // Load both character and templates
-        const charEndpoint = type === 'party' ? '/api/party' : type === 'dm-npc' ? '/api/dm-npcs' : '/api/templates';
-        const [charRes, templatesRes] = await Promise.all([
-          fetch(charEndpoint),
-          fetch('/api/templates'),
-        ]);
-        
-        if (charRes.ok) {
-          const data = await charRes.json();
-          const arr = Array.isArray(data) ? data : [];
-          const found = arr.find(c => c.id === id);
-          if (found) {
-            // Initialize missing fields
-            if (!found.skillProficiencies) found.skillProficiencies = {};
-            if (!found.saveProficiencies) found.saveProficiencies = {};
-            if (!found.features) found.features = [];
-            if (!found.spells) found.spells = [];
-            if (!found.inventory) found.inventory = [];
-            if (!found.resources) found.resources = [];
-            if (!found.advantages) found.advantages = [];
-            setCharacter(found);
-          }
-        }
-        
-        if (templatesRes.ok) {
-          const templatesData = await templatesRes.json();
-          setTemplates(templatesData || []);
-        }
-      } catch (err) { console.error('Error loading character:', err); }
-      setLoading(false);
-    };
-    loadCharacter();
-  }, [id, type]);
+    Promise.all([
+      fetch('/api/party').then(r => r.ok ? r.json() : null),
+      fetch('/api/dm-npcs').then(r => r.ok ? r.json() : []),
+    ]).then(([partyData, npcsData]) => {
+      setParty(partyData && Array.isArray(partyData) && partyData.length > 0 ? partyData : defaultPartyData);
+      if (Array.isArray(npcsData)) setDmNpcs(npcsData);
+    }).catch(console.error);
+  }, []);
 
-  // Update a single field
-  const updateField = (field, value) => {
-    setCharacter(prev => ({ ...prev, [field]: value }));
-    setHasChanges(true);
-  };
-
-  // Save character to API
-  const getEndpoint = () => type === 'party' ? '/api/party' : type === 'dm-npc' ? '/api/dm-npcs' : '/api/templates';
-  
-  const saveCharacter = async () => {
-    if (!character) return;
-    try {
-      const endpoint = getEndpoint();
-      const res = await fetch(endpoint);
-      if (res.ok) {
-        const data = await res.json();
-        const arr = Array.isArray(data) ? data : [];
-        const updated = arr.map(c => c.id === character.id ? character : c);
-        await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updated) });
-        setSaveStatus('Saved!');
-        setHasChanges(false);
-        setTimeout(() => setSaveStatus(''), 2000);
-      }
-    } catch (err) { console.error('Error saving:', err); setSaveStatus('Error'); }
-  };
-
-  // Delete character
-  const deleteCharacter = async () => {
-    if (!character) return;
-    try {
-      const endpoint = getEndpoint();
-      const res = await fetch(endpoint);
-      if (res.ok) {
-        const data = await res.json();
-        const updated = data.filter(c => c.id !== character.id);
-        await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updated) });
-        router.push('/');
-      }
-    } catch (err) { console.error('Error deleting:', err); }
-  };
-
-  // Auto-save with debounce
   useEffect(() => {
-    if (!hasChanges || !character) return;
-    const timeout = setTimeout(saveCharacter, 1500);
+    if (!party) return;
+    const timeout = setTimeout(() => {
+      fetch('/api/party', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(party) }).catch(console.error);
+    }, 1000);
     return () => clearTimeout(timeout);
-  }, [character, hasChanges]);
+  }, [party]);
 
-  // Loading state
-  if (loading) {
-    return <div className="min-h-screen bg-stone-950 text-stone-100 flex items-center justify-center">Loading...</div>;
-  }
-
-  // Not found state
-  if (!character) {
-    return (
-      <div className="min-h-screen bg-stone-950 text-stone-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-stone-400 mb-4">Character not found</div>
-          <button onClick={() => router.back()} className="px-4 py-2 bg-amber-700 rounded-lg">Back</button>
-        </div>
-      </div>
-    );
-  }
-
-  const isParty = type === 'party' || type === 'dm-npc';
-  const isDmNpc = type === 'dm-npc';
-  
-  // Check if character is a druid level 2+
-  const isDruid = () => {
-    if (character?.classes) {
-      const druid = character.classes.find(c => c.name?.toLowerCase() === 'druid');
-      return druid && parseInt(druid.level) >= 2;
-    }
-    return character?.class?.toLowerCase() === 'druid' && parseInt(character?.level) >= 2;
-  };
-  
-  // New tab order: spells, resources, wild shape (druid), inventory, features, feats, companions, notes
-  const baseTabs = ['spells', 'resources', 'inventory', 'features', 'feats', 'companions', 'notes'];
-  const tabs = isDruid() ? ['spells', 'resources', 'wild shape', 'inventory', 'features', 'feats', 'companions', 'notes'] : baseTabs;
+  useEffect(() => {
+    if (dmNpcs.length === 0) return;
+    const timeout = setTimeout(() => {
+      fetch('/api/dm-npcs', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dmNpcs) }).catch(console.error);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [dmNpcs]);
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100">
-      {/* Proficiency Modal (Skills only) */}
-      {showProfModal && (
-        <ProficiencyModal 
-          character={character} 
-          onUpdate={updateField} 
-          onClose={() => setShowProfModal(false)} 
-        />
-      )}
-
-      {/* Saving Throws Modal */}
-      {showSavesModal && (
-        <SavingThrowsModal 
-          character={character} 
-          onUpdate={updateField} 
-          onClose={() => setShowSavesModal(false)} 
-        />
-      )}
-
-      {/* Header */}
-      <header className="border-b border-stone-800 bg-stone-900 sticky top-0 z-10">
-        <div className="max-w-[1800px] mx-auto px-4 py-2 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {/* Logo - click to go back to combat */}
-            <button 
-              onClick={() => router.push('/combat')} 
-              className="flex items-center gap-2 hover:opacity-80 transition-opacity mr-2"
-            >
-              <div className="p-1.5 rounded-lg bg-gradient-to-br from-amber-600 to-amber-800">
-                <Icons.Dice className="w-4 h-4" />
-              </div>
-              <span className="text-amber-400 font-bold hidden sm:inline">DM's Toolkit</span>
-            </button>
-            
-            <div className="h-6 w-px bg-stone-700"></div>
-            
-            <button onClick={() => router.back()} className="p-1.5 rounded bg-stone-800 hover:bg-stone-700" title="Go back">
-              <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-              </svg>
-            </button>
-            <div className={`p-1.5 rounded ${isDmNpc ? 'bg-amber-900/50' : isParty ? 'bg-emerald-900/50' : 'bg-red-900/50'}`}>
-              {isDmNpc ? <Icons.Crown /> : isParty ? <Icons.Shield /> : <Icons.Skull />}
-            </div>
-            <div className="flex items-center gap-3">
-              <input 
-                type="text" 
-                value={character.name || ''} 
-                onChange={(e) => updateField('name', e.target.value)}
-                className="bg-transparent text-lg font-bold focus:outline-none border-b border-transparent hover:border-stone-600 focus:border-amber-500" 
-              />
-              <ClassEditor character={character} onUpdate={updateField} />
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100">
+      <Navbar />
+      <main className="relative max-w-4xl mx-auto p-4 space-y-6">
+        {/* Party Members */}
+        <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-emerald-400 flex items-center gap-2"><Icons.Shield /> Party Members</h2>
+            <button onClick={() => setShowAddParty(true)} className="flex items-center gap-1 px-3 py-2 rounded-lg bg-emerald-800/50 hover:bg-emerald-700/50 text-emerald-300 text-sm"><Icons.Plus />Add</button>
           </div>
-          <div className="flex items-center gap-2">
-            {saveStatus && <span className="text-xs text-amber-400">{saveStatus}</span>}
-            <button onClick={saveCharacter} className="px-3 py-1 bg-amber-700 hover:bg-amber-600 rounded text-sm">Save</button>
-            <button onClick={() => setShowDeleteModal(true)} className="px-3 py-1 bg-red-900 hover:bg-red-800 rounded text-sm text-red-200">
-              <Icons.Trash />
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Delete Confirmation Modal */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={() => setShowDeleteModal(false)}>
-          <div className="bg-stone-900 border border-red-800 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-3 bg-red-900/50 rounded-full">
-                <Icons.Trash />
-              </div>
-              <h2 className="text-xl font-bold text-red-400">Delete Character</h2>
-            </div>
-            <p className="text-stone-300 mb-2">
-              Are you sure you want to delete <span className="font-bold text-white">{character.name}</span>?
-            </p>
-            <p className="text-stone-500 text-sm mb-6">
-              This action cannot be undone. All character data will be permanently removed.
-            </p>
-            <div className="flex gap-3 justify-end">
-              <button 
-                onClick={() => setShowDeleteModal(false)} 
-                className="px-4 py-2 bg-stone-700 hover:bg-stone-600 rounded-lg text-sm"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={deleteCharacter} 
-                className="px-4 py-2 bg-red-700 hover:bg-red-600 rounded-lg text-sm text-white font-medium"
-              >
-                Delete Forever
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="max-w-[1800px] mx-auto p-4 space-y-4">
-        {/* Top Stats Bar */}
-        <StatsBar character={character} isParty={isParty} onUpdate={updateField} />
-
-        <div className="grid grid-cols-12 gap-4">
-          {/* Left Column - Saves & Senses */}
-          <div className="col-span-2 space-y-3">
-            <SavingThrows character={character} onEditClick={() => setShowSavesModal(true)} />
-            <Senses character={character} />
-            
-            {/* Advantages (if any) */}
-            {(character.advantages || []).length > 0 && (
-              <div className="bg-stone-900 rounded-lg overflow-hidden">
-                <div className="p-2 border-b border-stone-700 text-center">
-                  <span className="text-xs text-stone-500 uppercase tracking-wide">Advantages</span>
+          <p className="text-stone-400 text-sm mb-6">Click on a character to view and edit their full details.</p>
+          {!party ? (
+            <div className="text-center py-8 text-stone-500 animate-pulse">Loading party...</div>
+          ) : party.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {party.map(member => (
+                <div key={member.id} className={`p-4 rounded-lg border ${member.sourceNpcId || member.isDmNpc ? 'border-amber-800/30 bg-gradient-to-br from-amber-950/20 to-stone-900/60' : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60'}`}>
+                  <Link href={`/character?id=${member.id}&type=party`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                    <div className={`p-2 rounded-lg ${member.sourceNpcId || member.isDmNpc ? 'bg-amber-900/50' : 'bg-emerald-900/50'}`}>
+                      {member.sourceNpcId || member.isDmNpc ? <Icons.Crown /> : <Icons.Shield />}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold">{member.name}</h3>
+                      <p className="text-xs text-stone-400">{member.class || member.role || ''} {member.level || ''}</p>
+                    </div>
+                    <div className="text-right text-sm">
+                      <div className="flex items-center gap-1 text-stone-400"><Icons.Shield /> {getCalculatedAC(member)}</div>
+                      <div className="flex items-center gap-1 text-stone-400"><Icons.Heart /> {member.currentHp}/{member.maxHp}</div>
+                    </div>
+                  </Link>
+                  {(member.sourceNpcId || member.isDmNpc) && (
+                    <div className="mt-2 pt-2 border-t border-stone-700/30">
+                      <button onClick={() => { if (confirm(`Remove ${member.name} from party?`)) setParty(prev => prev.filter(p => p.id !== member.id)); }}
+                        className="flex items-center gap-1 px-2 py-1 rounded text-xs bg-red-900/30 hover:bg-red-800/30 text-red-400">Remove from Party</button>
+                    </div>
+                  )}
                 </div>
-                <div className="p-2 flex flex-wrap gap-1">
-                  {character.advantages.map((adv, i) => (
-                    <span key={i} className="bg-blue-900/40 text-blue-300 rounded px-2 py-0.5 text-xs">{adv}</span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Skills Column */}
-          <div className="col-span-2">
-            <SkillsList character={character} onEditClick={() => setShowProfModal(true)} />
-          </div>
-
-          {/* Main Content Area */}
-          <div className="col-span-8">
-            {/* Tab Navigation */}
-            <div className="flex gap-1 mb-3 border-b border-stone-800 pb-2">
-              {tabs.map(tab => (
-                <button 
-                  key={tab} 
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-2 rounded-t text-sm font-medium capitalize ${activeTab === tab ? 'bg-stone-800 text-amber-400' : 'text-stone-400 hover:text-stone-200'}`}
-                >
-                  {tab}
-                </button>
               ))}
             </div>
+          ) : (
+            <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No party members yet.</div>
+          )}
+        </div>
 
-            {/* Tab Content */}
-            <div className="bg-stone-900 rounded-lg p-4 min-h-[500px]">
-              {activeTab === 'resources' && <ResourcesTab character={character} onUpdate={updateField} />}
-              {activeTab === 'inventory' && <InventoryTab character={character} onUpdate={updateField} />}
-              {activeTab === 'wild shape' && <WildShapeTab character={character} onUpdate={updateField} templates={templates} />}
-              {activeTab === 'companions' && <CompanionsTab character={character} onUpdate={updateField} />}
-              {activeTab === 'spells' && <SpellsTab character={character} onUpdate={updateField} />}
-              {activeTab === 'features' && <FeaturesTab character={character} onUpdate={updateField} />}
-              {activeTab === 'feats' && <FeatsTab character={character} onUpdate={updateField} />}
-              {activeTab === 'background' && <BackgroundTab character={character} onUpdate={updateField} />}
-              {activeTab === 'notes' && <NotesTab character={character} onUpdate={updateField} />}
+        {/* DM NPCs */}
+        <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2"><Icons.Crown /> DM NPCs</h2>
+            <button onClick={() => setShowAddNpc(true)} className="flex items-center gap-1 px-3 py-2 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.Plus />New NPC</button>
+          </div>
+          <p className="text-stone-400 text-sm mb-6">Character-like NPCs separate from the party. Click to edit, or add them to initiative.</p>
+          {dmNpcs.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {dmNpcs.map(npc => (
+                <div key={npc.id} className="p-4 rounded-lg border border-amber-800/30 bg-gradient-to-br from-amber-950/20 to-stone-900/60">
+                  <Link href={`/character?id=${npc.id}&type=dm-npc`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                    <div className="p-2 rounded-lg bg-amber-900/50"><Icons.Crown /></div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold truncate">{npc.name}</h3>
+                      <p className="text-xs text-stone-400">{npc.class || npc.role || 'NPC'} {npc.level || ''}</p>
+                    </div>
+                    <div className="text-right text-sm shrink-0">
+                      <div className="flex items-center gap-1 text-stone-400"><Icons.Shield /> {getCalculatedAC(npc)}</div>
+                      <div className="flex items-center gap-1 text-stone-400"><Icons.Heart /> {npc.currentHp || npc.maxHp || '?'}/{npc.maxHp || '?'}</div>
+                    </div>
+                  </Link>
+                  <div className="flex gap-2 mt-3 pt-2 border-t border-stone-700/30">
+                    <button onClick={() => { const copy = { ...npc, id: `npc-init-${Date.now()}`, initiative: 0, currentHp: npc.currentHp || npc.maxHp, sourceNpcId: npc.id }; setParty(prev => [...(prev || []), copy]); setSaveStatus('NPC added to party'); setTimeout(() => setSaveStatus(''), 2000); }}
+                      className="flex items-center gap-1 px-2 py-1 rounded text-xs bg-emerald-800/50 hover:bg-emerald-700/50 text-emerald-300"><Icons.Plus /> Add to Party</button>
+                    <button onClick={() => { if (confirm(`Delete ${npc.name}?`)) setDmNpcs(prev => prev.filter(n => n.id !== npc.id)); }}
+                      className="flex items-center gap-1 px-2 py-1 rounded text-xs bg-red-900/30 hover:bg-red-800/30 text-red-400">Delete</button>
+                  </div>
+                </div>
+              ))}
             </div>
+          ) : (
+            <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No DM NPCs yet.</div>
+          )}
+        </div>
+
+        {saveStatus && <div className="fixed bottom-4 right-4 bg-emerald-900/90 text-emerald-200 px-4 py-2 rounded-lg text-sm animate-pulse">{saveStatus}</div>}
+      </main>
+
+      <AddPartyModal isOpen={showAddParty} onClose={() => setShowAddParty(false)} onSave={(m) => { setParty(prev => [...(prev || []), m]); }} />
+
+      {showAddNpc && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setShowAddNpc(false)}>
+          <div className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-md p-6" onClick={e => e.stopPropagation()}>
+            <h2 className="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2"><Icons.Crown /> New DM NPC</h2>
+            <form onSubmit={(e) => { e.preventDefault(); const f = e.target;
+              const npc = { id: `dm-npc-${Date.now()}`, name: f.npcName.value, class: f.npcClass.value, level: parseInt(f.npcLevel.value) || 1, ac: parseInt(f.npcAC.value) || 10, maxHp: parseInt(f.npcHP.value) || 10, currentHp: parseInt(f.npcHP.value) || 10, initiative: 0, speed: parseInt(f.npcSpeed.value) || 30, str: parseInt(f.npcStr.value) || 10, dex: parseInt(f.npcDex.value) || 10, con: parseInt(f.npcCon.value) || 10, int: parseInt(f.npcInt.value) || 10, wis: parseInt(f.npcWis.value) || 10, cha: parseInt(f.npcCha.value) || 10, notes: f.npcNotes.value, isDmNpc: true, resources: [], inventory: [], spells: [], features: [], feats: [], skillProficiencies: {}, saveProficiencies: {} };
+              setDmNpcs(prev => [...prev, npc]); setShowAddNpc(false);
+            }} className="space-y-3">
+              <div><label className="text-xs text-stone-400">Name *</label><input name="npcName" required className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" autoFocus /></div>
+              <div className="grid grid-cols-3 gap-3">
+                <div><label className="text-xs text-stone-400">Class / Role</label><input name="npcClass" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" placeholder="Fighter" /></div>
+                <div><label className="text-xs text-stone-400">Level</label><input name="npcLevel" type="number" defaultValue="1" min="1" max="20" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" /></div>
+                <div><label className="text-xs text-stone-400">Speed</label><input name="npcSpeed" type="number" defaultValue="30" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" /></div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className="text-xs text-stone-400">AC</label><input name="npcAC" type="number" defaultValue="10" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" /></div>
+                <div><label className="text-xs text-stone-400">Max HP</label><input name="npcHP" type="number" defaultValue="10" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" /></div>
+              </div>
+              <div><label className="text-xs text-stone-400">Ability Scores</label>
+                <div className="grid grid-cols-6 gap-2 mt-1">
+                  {['Str','Dex','Con','Int','Wis','Cha'].map(s => (<div key={s} className="text-center"><div className="text-[10px] text-stone-500 uppercase">{s}</div><input name={`npc${s}`} type="number" defaultValue="10" min="1" max="30" className="w-full bg-stone-800 border border-stone-700 rounded px-1 py-1 text-sm text-center focus:outline-none focus:border-amber-600" /></div>))}
+                </div>
+              </div>
+              <div><label className="text-xs text-stone-400">Notes</label><textarea name="npcNotes" rows={2} className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600 resize-none" placeholder="Personality, role, connections..." /></div>
+              <div className="flex gap-2 pt-2">
+                <button type="submit" className="flex-1 py-2 rounded bg-amber-700 hover:bg-amber-600 text-sm font-medium">Create NPC</button>
+                <button type="button" onClick={() => setShowAddNpc(false)} className="px-4 py-2 rounded bg-stone-700 hover:bg-stone-600 text-sm">Cancel</button>
+              </div>
+            </form>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
