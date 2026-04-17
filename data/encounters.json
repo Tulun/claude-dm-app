@@ -1,30 +1,51 @@
 [
   {
-    "id": "encounter-1775265715179",
-    "name": "Gnoll Ambush",
+    "id": "encounter-1775943976295",
+    "name": "Whistling Stag ambush",
     "monsters": [
       {
-        "id": "mm-gnoll-pack-lord-1775265739997-vuo01",
-        "templateId": "mm-gnoll-pack-lord",
-        "name": "Gnoll Pack Lord",
+        "id": "mm-wight-1775943980945-15cf6",
+        "templateId": "mm-wight",
+        "name": "Wight",
         "customName": "",
         "quantity": 1
       },
       {
-        "id": "mm-gnoll-1775265739997-emdmk",
-        "templateId": "mm-gnoll",
-        "name": "Gnoll",
+        "id": "mm-shadow-1775944066848-l5yqv",
+        "templateId": "mm-shadow",
+        "name": "Shadow",
         "customName": "",
-        "quantity": 6
+        "quantity": 4
       },
       {
-        "id": "mm-gnoll-fang-of-yeenoghu-1775265739997-la0ri",
-        "templateId": "mm-gnoll-fang-of-yeenoghu",
-        "name": "Gnoll Fang of Yeenoghu",
+        "id": "mm-skeleton-1775944203194-xtwik",
+        "templateId": "mm-skeleton",
+        "name": "Skeleton",
+        "customName": "",
+        "quantity": 4
+      },
+      {
+        "id": "mm-minotaur-skeleton-1775944203194-s495j",
+        "templateId": "mm-minotaur-skeleton",
+        "name": "Minotaur Skeleton",
         "customName": "",
         "quantity": 1
       }
     ],
-    "createdAt": "2026-04-04T01:21:55.179Z"
+    "createdAt": "2026-04-11T21:46:16.295Z"
+  },
+  {
+    "id": "encounter-1775944339611",
+    "name": "Shambling Mound",
+    "monsters": [
+      {
+        "id": "mm-shambling-mound-1775944344090-4jij9",
+        "templateId": "mm-shambling-mound",
+        "name": "Shambling Mound",
+        "customName": "",
+        "quantity": 1
+      }
+    ],
+    "createdAt": "2026-04-11T21:52:19.611Z"
   }
 ]

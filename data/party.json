@@ -11,25 +11,25 @@
       {
         "id": 1770233816410,
         "name": "Wild Shape",
-        "current": 0,
+        "current": 2,
         "max": 2
       },
       {
         "id": 1770233861678,
         "name": "1st Level Spell Slot",
-        "current": 1,
+        "current": 4,
         "max": 4
       },
       {
         "id": 1770233883990,
         "name": "2nd Level Spell Slot",
-        "current": 0,
+        "current": 3,
         "max": 3
       },
       {
         "id": 1772499568807,
         "name": "Spirit Totem",
-        "current": 0,
+        "current": 1,
         "max": 1,
         "options": [
           {
@@ -45,7 +45,7 @@
             "description": "The unicorn spirit lends its protection to those nearby. You and your allies gain advantage on all ability checks made to detect creatures in the spirit’s aura. In addition, if you cast a spell using a spell slot that restores hit points to any creature inside or outside the aura, each creature of your choice in the aura also regains hit points equal to your druid level."
           }
         ],
-        "lastUsed": "Bear Spirit"
+        "lastUsed": null
       }
     ],
     "str": 10,
@@ -57,7 +57,7 @@
     "spellStat": "wis",
     "id": "party-1770062695464",
     "currentHp": 35,
-    "initiative": 14,
+    "initiative": 9,
     "skillProficiencies": {
       "Animal Handling": 1,
       "Medicine": 1,
@@ -113,7 +113,8 @@
         "description": "A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier.",
         "higherLevels": "The healing increases by 2d8 for each slot level above 1.",
         "concentration": false,
-        "ritual": false
+        "ritual": false,
+        "prepared": true
       },
       {
         "id": 1772246091871.506,
@@ -131,7 +132,7 @@
         "ritual": false,
         "castingTime": "Action",
         "alwaysPrepared": false,
-        "prepared": false
+        "prepared": true
       },
       {
         "id": 1772300385326.8984,
@@ -231,7 +232,7 @@
         "higherLevels": "The healing increases by 2d4 for each slot level above 1.",
         "concentration": false,
         "ritual": false,
-        "prepared": false
+        "prepared": true
       },
       {
         "id": 1772499460201.9822,
@@ -263,7 +264,7 @@
         "higherLevels": null,
         "concentration": true,
         "ritual": false,
-        "prepared": false
+        "prepared": true
       },
       {
         "id": 1772499460201.371,
@@ -311,7 +312,7 @@
         "higherLevels": "The damage increases by 1d8 for each slot level above 1.",
         "concentration": false,
         "ritual": false,
-        "prepared": false
+        "prepared": true
       },
       {
         "id": 1772499530644.4521,
@@ -375,7 +376,7 @@
         "higherLevels": "The damage increases by 1d8 for each slot level above 2.",
         "concentration": true,
         "ritual": false,
-        "prepared": false
+        "prepared": true
       },
       {
         "id": 1772499530644.3486,
@@ -407,7 +408,7 @@
         "higherLevels": null,
         "concentration": true,
         "ritual": false,
-        "prepared": false
+        "prepared": true
       },
       {
         "id": 1772499530644.3604,
@@ -522,7 +523,7 @@
         "notes": "",
         "active": true,
         "inCombat": true,
-        "initiative": 15
+        "initiative": 1
       }
     ],
     "tempHp": 6,
@@ -740,19 +741,19 @@
       {
         "id": 1770429647251,
         "name": "Bardic Inspiration",
-        "current": 1,
+        "current": 2,
         "max": 2
       },
       {
         "id": 1770429662062,
         "name": "1st Level Spell Slots",
-        "current": 1,
+        "current": 4,
         "max": 4
       },
       {
         "id": 1770429677549,
         "name": "2nd Level Spell Slots",
-        "current": 0,
+        "current": 3,
         "max": 3
       }
     ],
@@ -765,7 +766,7 @@
     "spellStat": "cha",
     "id": "party-1770417737904",
     "currentHp": 43,
-    "initiative": 7,
+    "initiative": 10,
     "skillProficiencies": {
       "History": 1,
       "Insight": 1,
@@ -1078,7 +1079,7 @@
       }
     ],
     "tempAC": 0,
-    "tempHp": 6
+    "tempHp": 0
   },
   {
     "name": "Marshuh",
@@ -1092,25 +1093,25 @@
       {
         "id": 1770433645271,
         "name": "Sorcery Points",
-        "current": 1,
+        "current": 4,
         "max": 4
       },
       {
         "id": 1770433792223,
         "name": "Innate Sorcery",
-        "current": 1,
+        "current": 2,
         "max": 2
       },
       {
         "id": 1770433656573,
         "name": "1st Level Spell Slots",
-        "current": 1,
+        "current": 4,
         "max": 4
       },
       {
         "id": 1770433735059,
         "name": "2nd Level Spell Slots",
-        "current": 0,
+        "current": 3,
         "max": 3
       }
     ],
@@ -1123,7 +1124,7 @@
     "spellStat": "cha",
     "id": "party-1770431961400",
     "currentHp": 30,
-    "initiative": 8,
+    "initiative": 12,
     "skillProficiencies": {
       "Deception": 1,
       "History": 1,
@@ -1471,7 +1472,76 @@
       "Sorcerer:Metamagic": "Quickened Spell,Twinned Spell"
     },
     "acEffect": "draconicResilience",
-    "innateSorcery": true,
-    "tempHp": 6
+    "innateSorcery": false,
+    "tempHp": 0
+  },
+  {
+    "id": "npc-init-1775957421593",
+    "name": "Vesna Alraed",
+    "class": "Ranger",
+    "level": 3,
+    "ac": 10,
+    "maxHp": 31,
+    "currentHp": 31,
+    "initiative": 7,
+    "speed": 30,
+    "str": 12,
+    "dex": 16,
+    "con": 16,
+    "int": 10,
+    "wis": 12,
+    "cha": 8,
+    "notes": "",
+    "isDmNpc": true,
+    "resources": [],
+    "inventory": [
+      {
+        "id": 1775613232667,
+        "name": "Heavy Crossbow",
+        "quantity": 1,
+        "weight": "",
+        "description": "1d10 Piercing. Ammunition (100/400), Heavy, Loading, Two-Handed. Cost: 50 GP. Weight: 18 lb.",
+        "itemType": "weapon",
+        "magicItemId": "mundane-heavy-crossbow",
+        "rarity": "Mundane",
+        "attunement": false
+      },
+      {
+        "id": 1775613240442,
+        "name": "Scimitar",
+        "quantity": 1,
+        "weight": "",
+        "description": "1d6 Slashing. Finesse, Light. Cost: 25 GP. Weight: 3 lb.",
+        "itemType": "weapon",
+        "magicItemId": "mundane-scimitar",
+        "rarity": "Mundane",
+        "attunement": false
+      },
+      {
+        "id": 1775614145280,
+        "name": "Studded Leather Armor",
+        "quantity": 1,
+        "weight": "",
+        "description": "AC 12 + DEX modifier. Cost: 45 GP. Weight: 13 lb.",
+        "itemType": "armor",
+        "magicItemId": "mundane-studded-leather",
+        "rarity": "Mundane",
+        "attunement": false,
+        "baseAC": 12,
+        "armorType": "Light",
+        "equipped": true
+      }
+    ],
+    "spells": [],
+    "features": [],
+    "feats": [],
+    "skillProficiencies": {},
+    "saveProficiencies": {},
+    "advantages": [],
+    "classFeatures": {
+      "Ranger:Fighting Style": "Dueling"
+    },
+    "sourceNpcId": "dm-npc-1775612806598",
+    "tempHp": 0
   }
 ]
