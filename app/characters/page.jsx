@@ -57,7 +57,11 @@ export default function CharactersPage() {
           ) : party.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {party.map(member => (
-                <div key={member.id} className={`p-4 rounded-lg border ${member.sourceNpcId || member.isDmNpc ? 'border-amber-800/30 bg-gradient-to-br from-amber-950/20 to-stone-900/60' : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60'}`}>
+                <div key={member.id} className={`p-4 rounded-lg border relative ${member.sourceNpcId || member.isDmNpc ? 'border-amber-800/30 bg-gradient-to-br from-amber-950/20 to-stone-900/60' : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60'}`}>
+                  {(member.sourceNpcId || member.isDmNpc) && (
+                    <button onClick={() => { if (confirm(`Remove ${member.name} from party?`)) setParty(prev => prev.filter(p => p.id !== member.id)); }}
+                      className="absolute top-2 right-2 w-5 h-5 flex items-center justify-center rounded-full text-xs text-red-400/50 hover:text-red-400 hover:bg-red-900/30" title="Remove from party">×</button>
+                  )}
                   <Link href={`/character?id=${member.id}&type=party`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                     <div className={`p-2 rounded-lg ${member.sourceNpcId || member.isDmNpc ? 'bg-amber-900/50' : 'bg-emerald-900/50'}`}>
                       {member.sourceNpcId || member.isDmNpc ? <Icons.Crown /> : <Icons.Shield />}
@@ -71,12 +75,6 @@ export default function CharactersPage() {
                       <div className="flex items-center gap-1 text-stone-400"><Icons.Heart /> {member.currentHp}/{member.maxHp}</div>
                     </div>
                   </Link>
-                  {(member.sourceNpcId || member.isDmNpc) && (
-                    <div className="mt-2 pt-2 border-t border-stone-700/30">
-                      <button onClick={() => { if (confirm(`Remove ${member.name} from party?`)) setParty(prev => prev.filter(p => p.id !== member.id)); }}
-                        className="flex items-center gap-1 px-2 py-1 rounded text-xs bg-red-900/30 hover:bg-red-800/30 text-red-400">Remove from Party</button>
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
