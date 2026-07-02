@@ -57,7 +57,8 @@ const parseSpellText = (desc, spellcasting) => {
     spellcasting.perDay[count] = [...(spellcasting.perDay[count] || []), ...spells];
   }
 
-  const slotMatches = desc.matchAll(/(\d+)(?:st|nd|rd|th)\s*\((\d+)\s*slots?\)[^:]*:\s*([^.]+?)(?:\.|$|\d+(?:st|nd|rd|th))/gi);
+  // Accepts both "1st (4 slots):" and the Monster Manual's "1st level (4 slots):"
+  const slotMatches = desc.matchAll(/(\d+)(?:st|nd|rd|th)\s*(?:level\s*)?\((\d+)\s*slots?\)[^:]*:\s*([^.]+?)(?:\.|$|\d+(?:st|nd|rd|th))/gi);
   for (const match of slotMatches) {
     const level = match[1] + (match[1] === '1' ? 'st' : match[1] === '2' ? 'nd' : match[1] === '3' ? 'rd' : 'th');
     spellcasting.slots[level] = { slots: parseInt(match[2]), spells: match[3].split(/,\s*/).map(s => s.trim()).filter(Boolean) };

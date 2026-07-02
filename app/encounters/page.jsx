@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { defaultEnemyTemplates } from '../components/defaultData';
 import Navbar from '../components/Navbar';
 import EncounterPlanner from './EncounterPlanner';
@@ -11,7 +11,9 @@ export default function EncountersPage() {
   const [encounters, setEncounters] = useState([]);
   const [templates, setTemplates] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [encountersLoaded, setEncountersLoaded] = useState(false);
+  // Saving stays disabled until the initial load settles, so loading data
+  // never echoes an unchanged copy back to the API.
+  const saveEnabled = useRef(false);
   const [editingEncounter, setEditingEncounter] = useState(null);
   
   // Daily tracker state - initialize from localStorage
@@ -74,14 +76,14 @@ export default function EncountersPage() {
         setTemplates(defaultEnemyTemplates);
       }
       setIsLoaded(true);
-      setTimeout(() => setEncountersLoaded(true), 0);
+      setTimeout(() => { saveEnabled.current = true; }, 0);
     };
     loadData();
   }, []);
 
   // Auto-save encounters
   useEffect(() => {
-    if (!encountersLoaded) return;
+    if (!saveEnabled.current) return;
     const timeout = setTimeout(() => {
       fetch('/api/encounters', {
         method: 'POST',
@@ -90,7 +92,7 @@ export default function EncountersPage() {
       }).catch(console.error);
     }, 1000);
     return () => clearTimeout(timeout);
-  }, [encounters, encountersLoaded]);
+  }, [encounters]);
 
   // Calculate encounter stats
   const calculateEncounterStats = (encounter) => {

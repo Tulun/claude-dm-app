@@ -116,16 +116,24 @@ describe('CombatPage — loading and layout', () => {
     }
   });
 
-  it('auto-saves party and templates (but not the untouched encounter) after load', async () => {
+  it('does not echo loaded data back to the API after load', async () => {
     const fetchMock = mockFetch();
     render(<CombatPage />);
     await settle();
 
-    expect(postCalls(fetchMock, '/api/party')).toHaveLength(1);
-    expect(JSON.parse(postCalls(fetchMock, '/api/party')[0][1].body)).toEqual(party);
-    expect(postCalls(fetchMock, '/api/templates')).toHaveLength(1);
-    // enemies were loaded, not changed — no re-save of the encounter
+    expect(postCalls(fetchMock, '/api/party')).toHaveLength(0);
+    expect(postCalls(fetchMock, '/api/templates')).toHaveLength(0);
     expect(postCalls(fetchMock, '/api/encounter')).toHaveLength(0);
+  });
+
+  it('the party Add button opens the Add Party Member modal', async () => {
+    mockFetch();
+    render(<CombatPage />);
+    await settle();
+
+    const { partyCol } = getColumns();
+    fireEvent.click(within(partyCol).getByText('Add'));
+    expect(screen.getByText('Add Party Member')).toBeInTheDocument();
   });
 });
 

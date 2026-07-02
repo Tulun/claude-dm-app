@@ -72,16 +72,13 @@ describe('CharactersPage — loading', () => {
     }
   });
 
-  it('auto-saves the loaded party after the debounce (current behavior)', async () => {
-    // Characterization: the save effect fires as soon as party state is first
-    // populated, so a load immediately writes the same data back.
+  it('does not echo loaded data back to the API after load', async () => {
     const fetchMock = mockFetch();
     render(<CharactersPage />);
     await settle();
 
-    const saves = postCalls(fetchMock, '/api/party');
-    expect(saves).toHaveLength(1);
-    expect(JSON.parse(saves[0][1].body)).toEqual(party);
+    expect(postCalls(fetchMock, '/api/party')).toHaveLength(0);
+    expect(postCalls(fetchMock, '/api/dm-npcs')).toHaveLength(0);
   });
 });
 
@@ -162,10 +159,7 @@ describe('CharactersPage — DM NPC management', () => {
     expect(screen.getByText('Bartender Olm')).toBeInTheDocument();
   });
 
-  it('does NOT persist deleting the last NPC (known data quirk)', async () => {
-    // Characterization: the dm-npcs save effect early-returns when the list is
-    // empty, so deleting the final NPC never reaches the API — the NPC
-    // reappears on reload. Documented so a refactor can fix it deliberately.
+  it('persists deleting the last NPC (empty list is saved)', async () => {
     const fetchMock = mockFetch();
     vi.spyOn(window, 'confirm').mockReturnValue(true);
     render(<CharactersPage />);
@@ -176,6 +170,8 @@ describe('CharactersPage — DM NPC management', () => {
     await act(async () => { vi.advanceTimersByTime(1100); });
     await flush();
 
-    expect(postCalls(fetchMock, '/api/dm-npcs')).toHaveLength(0);
+    const saves = postCalls(fetchMock, '/api/dm-npcs');
+    expect(saves).toHaveLength(1);
+    expect(JSON.parse(saves[0][1].body)).toEqual([]);
   });
 });

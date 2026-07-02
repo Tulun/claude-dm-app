@@ -309,7 +309,7 @@ describe('EncountersPage', () => {
   });
 
   describe('auto-save debounce', () => {
-    it('POSTs the loaded encounters once, 1s after load (quirk: saves even with no user change)', async () => {
+    it('does not echo the loaded encounters back to the API; only user edits save', async () => {
       vi.useFakeTimers();
       const fetchMock = stubFetch({ encounters: [goblinAmbush] });
       render(<EncountersPage />);
@@ -322,13 +322,19 @@ describe('EncountersPage', () => {
       });
       expect(screen.getByText('Saved Encounters')).toBeInTheDocument();
 
-      // Fire the setTimeout(0) that flips encountersLoaded
+      // Fire the setTimeout(0) that enables saving, then wait well past the
+      // debounce: loading alone must not write anything back.
       act(() => {
         vi.advanceTimersByTime(0);
       });
+      act(() => {
+        vi.advanceTimersByTime(2000);
+      });
+      await act(async () => {});
       expect(postCalls(fetchMock)).toHaveLength(0);
 
-      // Just before the 1s debounce: still nothing
+      // A real user edit still saves after the 1s debounce
+      fireEvent.click(screen.getByTitle('Duplicate'));
       act(() => {
         vi.advanceTimersByTime(999);
       });
@@ -342,7 +348,10 @@ describe('EncountersPage', () => {
       expect(posts).toHaveLength(1);
       expect(posts[0][0]).toBe('/api/encounters');
       expect(posts[0][1].headers).toEqual({ 'Content-Type': 'application/json' });
-      expect(JSON.parse(posts[0][1].body)).toEqual([goblinAmbush]);
+      const body = JSON.parse(posts[0][1].body);
+      expect(body).toHaveLength(2);
+      expect(body[0]).toEqual(goblinAmbush);
+      expect(body[1].name).toBe('Goblin Ambush (Copy)');
     });
 
     it('resets the debounce on further edits and saves the latest state', async () => {

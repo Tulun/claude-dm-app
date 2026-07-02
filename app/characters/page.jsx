@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Icons from '../components/Icons';
 import Navbar from '../components/Navbar';
@@ -14,6 +14,9 @@ export default function CharactersPage() {
   const [showAddParty, setShowAddParty] = useState(false);
   const [showAddNpc, setShowAddNpc] = useState(false);
   const [saveStatus, setSaveStatus] = useState('');
+  // Saving stays disabled until the initial load settles, so loading data
+  // never echoes an unchanged copy back to the API.
+  const saveEnabled = useRef(false);
 
   useEffect(() => {
     Promise.all([
@@ -22,11 +25,13 @@ export default function CharactersPage() {
     ]).then(([partyData, npcsData]) => {
       setParty(partyData && Array.isArray(partyData) && partyData.length > 0 ? partyData : defaultPartyData);
       if (Array.isArray(npcsData)) setDmNpcs(npcsData);
-    }).catch(console.error);
+    }).catch(console.error).finally(() => {
+      setTimeout(() => { saveEnabled.current = true; }, 500);
+    });
   }, []);
 
   useEffect(() => {
-    if (!party) return;
+    if (!saveEnabled.current || !party) return;
     const timeout = setTimeout(() => {
       fetch('/api/party', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(party) }).catch(console.error);
     }, 1000);
@@ -34,7 +39,8 @@ export default function CharactersPage() {
   }, [party]);
 
   useEffect(() => {
-    if (dmNpcs.length === 0) return;
+    // Saves even when the list is empty — deleting the last NPC must persist
+    if (!saveEnabled.current) return;
     const timeout = setTimeout(() => {
       fetch('/api/dm-npcs', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dmNpcs) }).catch(console.error);
     }, 1000);

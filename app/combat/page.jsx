@@ -8,7 +8,7 @@ import Navbar from '../components/Navbar';
 import { defaultPartyData, defaultEnemyTemplates } from '../components/defaultData';
 import CharacterCard from './components/CharacterCard';
 import InitiativeItem from './components/InitiativeItem';
-import { AddEnemyModal } from './components/Modals';
+import { AddEnemyModal, AddPartyModal } from './components/Modals';
 import { getCalculatedAC } from '../utils/acCalculation';
 
 export default function CombatPage() {
@@ -19,15 +19,16 @@ export default function CombatPage() {
   const [templates, setTemplates] = useState(null); // Start with null to detect loading
   const [expandedCards, setExpandedCards] = useState({});
   const [showAddEnemy, setShowAddEnemy] = useState(false);
+  const [showAddParty, setShowAddParty] = useState(false);
   const [dragIndex, setDragIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
   const [saveStatus, setSaveStatus] = useState('');
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [encounterLoaded, setEncounterLoaded] = useState(false);
   const [savedEncounters, setSavedEncounters] = useState([]);
   const [showLoadEncounter, setShowLoadEncounter] = useState(false);
   const [encounterToLoad, setEncounterToLoad] = useState(null);
-  const encounterSaveEnabled = React.useRef(false);
+  // Saving stays disabled until the initial load settles, so loading data
+  // never echoes an unchanged copy back to the API.
+  const saveEnabled = React.useRef(false);
 
   // Load data on mount
   useEffect(() => {
@@ -72,25 +73,22 @@ export default function CombatPage() {
           }
         }
 
-        setEncounterLoaded(true);
         // Enable saving after a delay to ensure state has settled
-        setTimeout(() => { encounterSaveEnabled.current = true; }, 500);
+        setTimeout(() => { saveEnabled.current = true; }, 500);
       } catch (err) {
         console.error('Error loading data:', err);
         // Fall back to defaults on error
         setParty(defaultPartyData);
         setTemplates(defaultEnemyTemplates);
-        setEncounterLoaded(true);
-        setTimeout(() => { encounterSaveEnabled.current = true; }, 500);
+        setTimeout(() => { saveEnabled.current = true; }, 500);
       }
-      setIsLoaded(true);
     };
     loadData();
   }, []);
 
   // Auto-save party when it changes (debounced, only after initial load)
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!saveEnabled.current) return;
     const timeout = setTimeout(() => {
       fetch('/api/party', {
         method: 'POST',
@@ -102,11 +100,11 @@ export default function CombatPage() {
       }).catch(console.error);
     }, 1000);
     return () => clearTimeout(timeout);
-  }, [party, isLoaded]);
+  }, [party]);
 
   // Auto-save templates when they change (debounced, only after initial load)
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!saveEnabled.current) return;
     const timeout = setTimeout(() => {
       fetch('/api/templates', {
         method: 'POST',
@@ -118,12 +116,12 @@ export default function CombatPage() {
       }).catch(console.error);
     }, 1000);
     return () => clearTimeout(timeout);
-  }, [templates, isLoaded]);
+  }, [templates]);
 
   // Auto-save encounter (enemies + lairAction) when it changes (debounced, only after initial load)
   useEffect(() => {
     // Only save if loading is complete and save is enabled
-    if (!encounterSaveEnabled.current) return;
+    if (!saveEnabled.current) return;
     
     const timeout = setTimeout(() => {
       fetch('/api/encounter', {
@@ -336,6 +334,7 @@ export default function CombatPage() {
         </main>
 
       <AddEnemyModal isOpen={showAddEnemy} onClose={() => setShowAddEnemy(false)} onAdd={(e) => setEnemies(prev => [...prev, e])} templates={templates || []} />
+      <AddPartyModal isOpen={showAddParty} onClose={() => setShowAddParty(false)} onSave={(m) => setParty(prev => [...(prev || []), m])} />
 
       {/* Load Encounter Modal */}
       {showLoadEncounter && (

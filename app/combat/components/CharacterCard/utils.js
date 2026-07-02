@@ -7,8 +7,10 @@ import { getEquipmentAC } from '../../../utils/acCalculation';
 
 export { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus } from '../../../utils/rules';
 
-// Combat-card AC: equipment-derived only, no temp AC, no armor-name parsing;
-// null means "no equipment info — show the stored AC instead".
+// Combat-card AC: equipment-derived only, no armor-name parsing, and NO temp
+// AC — the card adds character.tempAC separately at display time, so including
+// it here would double-count. null means "no equipment info — show the stored
+// AC instead".
 export const getCalculatedAC = (character) =>
   getEquipmentAC(character, { includeTempAC: false, parseArmorNames: false });
 

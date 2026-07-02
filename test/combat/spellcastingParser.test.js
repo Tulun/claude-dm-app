@@ -102,16 +102,15 @@ describe('parseSpellcasting', () => {
     expect(result.slots['2nd']).toEqual({ slots: 3, spells: ['misty step'] });
   });
 
-  it('does NOT parse the Monster Manual "1st level (4 slots):" format (known gap)', () => {
-    // The slot regex requires the "(n slots)" to immediately follow the ordinal,
-    // so the standard MM wording with the word "level" in between is missed.
+  it('parses the Monster Manual "1st level (4 slots):" format', () => {
     const result = parseSpellcasting({
       traits: [{
         name: 'Spellcasting',
-        description: '1st level (4 slots): detect magic, shield.',
+        description: '1st level (4 slots): detect magic, shield. 3rd level (2 slots): fireball.',
       }],
     });
-    expect(result.slots).toEqual({});
+    expect(result.slots['1st']).toEqual({ slots: 4, spells: ['detect magic', 'shield'] });
+    expect(result.slots['3rd']).toEqual({ slots: 2, spells: ['fireball'] });
   });
 
   it('parses a combined (DC X, +Y) header', () => {
