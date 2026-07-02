@@ -41,12 +41,21 @@ export async function GET(request) {
       const data = fs.readFileSync(TEMPLATES_FILE, 'utf8');
       const parsed = JSON.parse(data);
       const existingTemplates = parsed.templates || parsed;
-      const needsUpgrade = !parsed._version || parsed._version < TEMPLATES_VERSION ||
-        (existingTemplates.length > 0 && !existingTemplates[0].size);
+      const needsUpgrade = !parsed._version || parsed._version < TEMPLATES_VERSION;
 
       if (needsUpgrade) {
-        const customTemplates = existingTemplates.filter(t => !t.id?.startsWith('mm-'));
-        const mergedTemplates = [...defaultEnemyTemplates, ...customTemplates];
+        // Refresh defaults while layering the user's saved edits on top, so a
+        // customized mm-* template keeps its changes (same merge strategy as
+        // the spells and magic-items migrations). Anything not in the default
+        // set (custom creations, stray ids) is carried over untouched.
+        const existingById = new Map(existingTemplates.map(t => [t.id, t]));
+        const defaultIds = new Set(defaultEnemyTemplates.map(t => t.id));
+        const mergedDefaults = defaultEnemyTemplates.map(def => {
+          const saved = existingById.get(def.id);
+          return saved ? { ...def, ...saved } : def;
+        });
+        const nonDefault = existingTemplates.filter(t => !defaultIds.has(t.id));
+        const mergedTemplates = [...mergedDefaults, ...nonDefault];
         const dataWithVersion = { _version: TEMPLATES_VERSION, templates: mergedTemplates };
         fs.writeFileSync(TEMPLATES_FILE, JSON.stringify(dataWithVersion, null, 2), 'utf8');
         mmTemplates = mergedTemplates;

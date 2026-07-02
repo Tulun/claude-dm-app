@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { backupCorruptFile } from '../../../lib/jsonStore.js';
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'dm.json');
 const DATA_DIR = path.join(process.cwd(), 'data');
@@ -37,27 +38,32 @@ function ensureDataDir() {
 
 function loadDMData() {
   ensureDataDir();
-  try {
-    if (fs.existsSync(DATA_FILE)) {
-      const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-      
-      // Version migration if needed
-      if (!data.version || data.version < DM_VERSION) {
-        const merged = {
-          ...DEFAULT_DM_DATA,
-          ...data,
-          version: DM_VERSION
-        };
-        saveDMData(merged);
-        return merged;
-      }
-      
-      return data;
+  if (fs.existsSync(DATA_FILE)) {
+    let data;
+    try {
+      data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+    } catch (error) {
+      // Corrupt file: preserve it for manual recovery and surface an error
+      // instead of silently reseeding over the user's notes and world data.
+      const backup = backupCorruptFile(DATA_FILE);
+      console.error(`Corrupt dm.json backed up to ${backup}:`, error);
+      throw new Error(`dm.json is corrupt and was backed up to ${path.basename(backup)}`);
     }
-  } catch (error) {
-    console.error('Error loading DM data:', error);
+
+    // Version migration if needed
+    if (!data.version || data.version < DM_VERSION) {
+      const merged = {
+        ...DEFAULT_DM_DATA,
+        ...data,
+        version: DM_VERSION
+      };
+      saveDMData(merged);
+      return merged;
+    }
+
+    return data;
   }
-  
+
   // First time - save defaults
   saveDMData(DEFAULT_DM_DATA);
   return { ...DEFAULT_DM_DATA };
@@ -70,8 +76,13 @@ function saveDMData(data) {
 
 // GET - retrieve all DM data
 export async function GET() {
-  const data = loadDMData();
-  return NextResponse.json(data);
+  try {
+    const data = loadDMData();
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('GET /api/dm error:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
 
 // POST - update DM data (partial or full)

@@ -89,7 +89,7 @@ describe('GET /api/templates', () => {
     expect(templates).toEqual([{ ...customTemplate, source: 'custom' }]);
   });
 
-  it('migrates an old-version file: custom templates kept, but QUIRK — user edits to mm- templates are discarded and replaced by defaults', async () => {
+  it('migrates an old-version file: custom templates kept and user edits to mm- templates preserved', async () => {
     const editedMm = { ...defaultEnemyTemplates[0], name: 'USER RENAMED', maxHp: 999 };
     fs.writeFileSync(TEMPLATES_FILE(), JSON.stringify({
       _version: 3,
@@ -99,10 +99,11 @@ describe('GET /api/templates', () => {
     const templates = await (await route.GET(getRequest())).json();
     expect(templates).toHaveLength(defaultEnemyTemplates.length + 1);
 
-    // The edited mm- template was replaced by the pristine default
+    // The edited mm- template keeps the user's changes (same merge strategy
+    // as the spells/magic-items migrations)
     const migrated = templates.find(t => t.id === defaultEnemyTemplates[0].id);
-    expect(migrated.name).toBe(defaultEnemyTemplates[0].name);
-    expect(migrated.maxHp).toBe(defaultEnemyTemplates[0].maxHp);
+    expect(migrated.name).toBe('USER RENAMED');
+    expect(migrated.maxHp).toBe(999);
 
     // The custom template survived
     expect(templates.find(t => t.id === 'custom-test-ogre')).toMatchObject(customTemplate);
@@ -119,14 +120,14 @@ describe('GET /api/templates', () => {
     expect(onDisk._version).toBe(12);
   });
 
-  it('QUIRK: a current-version file whose first template lacks a size field is force-migrated (defaults merged back in)', async () => {
+  it('a current-version file is left alone even when templates lack a size field', async () => {
     const sizeless = { id: 'custom-no-size', name: 'No Size', ac: 10, maxHp: 5 };
     fs.writeFileSync(TEMPLATES_FILE(), JSON.stringify({
       _version: 12,
       templates: [sizeless],
     }));
     const templates = await (await route.GET(getRequest())).json();
-    expect(templates).toHaveLength(defaultEnemyTemplates.length + 1);
+    expect(templates).toEqual([{ ...sizeless, source: 'custom' }]);
   });
 
   it('filters by source=mm and source=custom', async () => {
@@ -217,10 +218,10 @@ describe('POST /api/templates', () => {
     expect(templates).toEqual([{ ...customTemplate, source: 'custom' }]);
   });
 
-  it('QUIRK: POSTing a list whose first template lacks size triggers the upgrade heuristic — the next GET merges the defaults back in', async () => {
+  it('a POSTed list without size fields round-trips unchanged (no forced default merge)', async () => {
     await route.POST(postRequest([{ id: 'custom-no-size', name: 'No Size', ac: 10 }]));
     const templates = await (await route.GET(getRequest())).json();
-    expect(templates).toHaveLength(defaultEnemyTemplates.length + 1);
+    expect(templates).toEqual([{ id: 'custom-no-size', name: 'No Size', ac: 10, source: 'custom' }]);
   });
 
   it('returns 500 on a malformed body', async () => {

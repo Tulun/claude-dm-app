@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { defaultSpells } from '../../data/defaultSpells.js';
+import { backupCorruptFile } from '../../../lib/jsonStore.js';
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'spells.json');
 const DATA_DIR = path.join(process.cwd(), 'data');
@@ -19,49 +20,54 @@ function ensureDataDir() {
 // Load spells from file or return defaults
 function loadSpells() {
   ensureDataDir();
-  try {
-    if (fs.existsSync(DATA_FILE)) {
-      const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-      
-      // Check version and merge new defaults if needed
-      if (!data.version || data.version < SPELLS_VERSION) {
-        // Create a map of default spells by ID for quick lookup
-        const defaultSpellMap = new Map(defaultSpells.map(s => [s.id, s]));
-        
-        // Update existing spells with new fields from defaults (but preserve user edits)
-        const updatedSpells = (data.spells || []).map(spell => {
-          const defaultSpell = defaultSpellMap.get(spell.id);
-          if (defaultSpell) {
-            // Merge: add new fields from default that don't exist in saved spell
-            // This preserves user edits while adding new fields like source, sourceShort, sourceUrl
-            return {
-              ...defaultSpell,  // Start with all default fields
-              ...spell,         // Override with user's saved values
-              // Explicitly add new fields if they don't exist in user's spell
-              source: spell.source || defaultSpell.source,
-              sourceShort: spell.sourceShort || defaultSpell.sourceShort,
-              sourceUrl: spell.sourceUrl || defaultSpell.sourceUrl,
-            };
-          }
-          return spell; // Custom spell, keep as-is
-        });
-        
-        // Add any completely new default spells that don't exist
-        const existingIds = new Set(updatedSpells.map(s => s.id));
-        const newDefaults = defaultSpells.filter(s => !existingIds.has(s.id));
-        const mergedSpells = [...updatedSpells, ...newDefaults];
-        
-        saveSpells(mergedSpells);
-        console.log(`Migrated spells to version ${SPELLS_VERSION}: updated ${updatedSpells.length} spells, added ${newDefaults.length} new spells`);
-        return mergedSpells;
-      }
-      
-      return data.spells || [];
+  if (fs.existsSync(DATA_FILE)) {
+    let data;
+    try {
+      data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+    } catch (error) {
+      // Corrupt file: preserve it for manual recovery and surface an error
+      // instead of silently reseeding over the user's spells.
+      const backup = backupCorruptFile(DATA_FILE);
+      console.error(`Corrupt spells.json backed up to ${backup}:`, error);
+      throw new Error(`spells.json is corrupt and was backed up to ${path.basename(backup)}`);
     }
-  } catch (error) {
-    console.error('Error loading spells:', error);
+
+    // Check version and merge new defaults if needed
+    if (!data.version || data.version < SPELLS_VERSION) {
+      // Create a map of default spells by ID for quick lookup
+      const defaultSpellMap = new Map(defaultSpells.map(s => [s.id, s]));
+
+      // Update existing spells with new fields from defaults (but preserve user edits)
+      const updatedSpells = (data.spells || []).map(spell => {
+        const defaultSpell = defaultSpellMap.get(spell.id);
+        if (defaultSpell) {
+          // Merge: add new fields from default that don't exist in saved spell
+          // This preserves user edits while adding new fields like source, sourceShort, sourceUrl
+          return {
+            ...defaultSpell,  // Start with all default fields
+            ...spell,         // Override with user's saved values
+            // Explicitly add new fields if they don't exist in user's spell
+            source: spell.source || defaultSpell.source,
+            sourceShort: spell.sourceShort || defaultSpell.sourceShort,
+            sourceUrl: spell.sourceUrl || defaultSpell.sourceUrl,
+          };
+        }
+        return spell; // Custom spell, keep as-is
+      });
+
+      // Add any completely new default spells that don't exist
+      const existingIds = new Set(updatedSpells.map(s => s.id));
+      const newDefaults = defaultSpells.filter(s => !existingIds.has(s.id));
+      const mergedSpells = [...updatedSpells, ...newDefaults];
+
+      saveSpells(mergedSpells);
+      console.log(`Migrated spells to version ${SPELLS_VERSION}: updated ${updatedSpells.length} spells, added ${newDefaults.length} new spells`);
+      return mergedSpells;
+    }
+
+    return data.spells || [];
   }
-  
+
   // First time only - save defaults
   saveSpells(defaultSpells);
   return [...defaultSpells];
@@ -79,13 +85,18 @@ function saveSpells(spells) {
 
 // GET - retrieve all spells
 export async function GET() {
-  const spells = loadSpells();
-  // Sort by level then name
-  spells.sort((a, b) => {
-    if (a.level !== b.level) return a.level - b.level;
-    return a.name.localeCompare(b.name);
-  });
-  return NextResponse.json(spells);
+  try {
+    const spells = loadSpells();
+    // Sort by level then name
+    spells.sort((a, b) => {
+      if (a.level !== b.level) return a.level - b.level;
+      return a.name.localeCompare(b.name);
+    });
+    return NextResponse.json(spells);
+  } catch (error) {
+    console.error('GET /api/spells error:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
 
 // POST - add or update a spell
@@ -137,14 +148,17 @@ function syncSpellToCharacters(updatedSpell) {
         // Match by sourceId (spellbook reference) or by spell id
         if (charSpell.sourceId === updatedSpell.id || charSpell.id === updatedSpell.id) {
           changed = true;
+          // Character spell instances use castTime (spellbook spells use
+          // castingTime) — drop any legacy castingTime key so the instance
+          // converges on a single field.
+          const { castingTime: _legacyCastingTime, ...rest } = charSpell;
           // Preserve the character's unique spell instance id, update everything else
           return {
-            ...charSpell,
+            ...rest,
             name: updatedSpell.name,
             level: updatedSpell.level,
             school: updatedSpell.school,
             castTime: updatedSpell.castingTime,
-            castingTime: updatedSpell.castingTime,
             range: updatedSpell.range,
             components: updatedSpell.components,
             duration: updatedSpell.duration,

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { defaultMagicItems } from '../../magic-items/magicItems.js';
+import { backupCorruptFile } from '../../../lib/jsonStore.js';
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'magic-items.json');
 const DATA_DIR = path.join(process.cwd(), 'data');
@@ -17,36 +18,41 @@ function ensureDataDir() {
 
 function loadItems() {
   ensureDataDir();
-  try {
-    if (fs.existsSync(DATA_FILE)) {
-      const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-
-      if (!data.version || data.version < ITEMS_VERSION) {
-        const defaultMap = new Map(defaultMagicItems.map(i => [i.id, i]));
-
-        // Update existing items with new fields from defaults, preserve user edits
-        const updated = (data.items || []).map(item => {
-          const def = defaultMap.get(item.id);
-          if (def) {
-            return { ...def, ...item };
-          }
-          return item;
-        });
-
-        // Add completely new default items
-        const existingIds = new Set(updated.map(i => i.id));
-        const newDefaults = defaultMagicItems.filter(i => !existingIds.has(i.id));
-        const merged = [...updated, ...newDefaults];
-
-        saveItems(merged);
-        console.log(`Migrated magic items to v${ITEMS_VERSION}: updated ${updated.length}, added ${newDefaults.length} new`);
-        return merged;
-      }
-
-      return data.items || [];
+  if (fs.existsSync(DATA_FILE)) {
+    let data;
+    try {
+      data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+    } catch (error) {
+      // Corrupt file: preserve it for manual recovery and surface an error
+      // instead of silently reseeding over the user's items.
+      const backup = backupCorruptFile(DATA_FILE);
+      console.error(`Corrupt magic-items.json backed up to ${backup}:`, error);
+      throw new Error(`magic-items.json is corrupt and was backed up to ${path.basename(backup)}`);
     }
-  } catch (error) {
-    console.error('Error loading magic items:', error);
+
+    if (!data.version || data.version < ITEMS_VERSION) {
+      const defaultMap = new Map(defaultMagicItems.map(i => [i.id, i]));
+
+      // Update existing items with new fields from defaults, preserve user edits
+      const updated = (data.items || []).map(item => {
+        const def = defaultMap.get(item.id);
+        if (def) {
+          return { ...def, ...item };
+        }
+        return item;
+      });
+
+      // Add completely new default items
+      const existingIds = new Set(updated.map(i => i.id));
+      const newDefaults = defaultMagicItems.filter(i => !existingIds.has(i.id));
+      const merged = [...updated, ...newDefaults];
+
+      saveItems(merged);
+      console.log(`Migrated magic items to v${ITEMS_VERSION}: updated ${updated.length}, added ${newDefaults.length} new`);
+      return merged;
+    }
+
+    return data.items || [];
   }
 
   // First time — seed with defaults
@@ -67,7 +73,7 @@ export async function GET() {
     return NextResponse.json(items);
   } catch (error) {
     console.error('GET /api/magic-items error:', error);
-    return NextResponse.json([], { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 

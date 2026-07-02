@@ -97,13 +97,21 @@ describe('GET /api/magic-items', () => {
     expect(items).toHaveLength(defaultMagicItems.length + 1);
   });
 
-  it('QUIRK: a corrupt magic-items.json is silently overwritten with the defaults (user data lost)', async () => {
+  it('a corrupt magic-items.json returns 500 and is preserved as a .bak file (never overwritten)', async () => {
     fs.writeFileSync(ITEMS_FILE(), 'garbage[[');
     const res = await route.GET();
-    expect(res.status).toBe(200);
-    expect(await res.json()).toHaveLength(defaultMagicItems.length);
-    const onDisk = JSON.parse(fs.readFileSync(ITEMS_FILE(), 'utf8'));
-    expect(onDisk.version).toBe(3);
+    expect(res.status).toBe(500);
+    expect((await res.json()).error).toMatch(/backed up/i);
+
+    expect(fs.existsSync(ITEMS_FILE())).toBe(false);
+    const bak = fs.readdirSync(dataDir).find(f => f.startsWith('magic-items.json.corrupt-') && f.endsWith('.bak'));
+    expect(bak).toBeTruthy();
+    expect(fs.readFileSync(path.join(dataDir, bak), 'utf8')).toBe('garbage[[');
+
+    // The route recovers on the next request by reseeding defaults
+    const res2 = await route.GET();
+    expect(res2.status).toBe(200);
+    expect(await res2.json()).toHaveLength(defaultMagicItems.length);
   });
 });
 

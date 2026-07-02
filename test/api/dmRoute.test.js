@@ -91,12 +91,21 @@ describe('GET /api/dm', () => {
     expect(data.world.factions).toBeUndefined();
   });
 
-  it('QUIRK: a corrupt dm.json is silently overwritten with the defaults (user data lost)', async () => {
+  it('a corrupt dm.json returns 500 and is preserved as a .bak file (never overwritten)', async () => {
     fs.writeFileSync(DM_FILE(), 'not json at all');
     const res = await route.GET();
-    expect(res.status).toBe(200);
-    expect(await res.json()).toEqual(EMPTY_DM_DATA);
-    expect(JSON.parse(fs.readFileSync(DM_FILE(), 'utf8'))).toEqual(EMPTY_DM_DATA);
+    expect(res.status).toBe(500);
+    expect((await res.json()).error).toMatch(/backed up/i);
+
+    expect(fs.existsSync(DM_FILE())).toBe(false);
+    const bak = fs.readdirSync(dataDir).find(f => f.startsWith('dm.json.corrupt-') && f.endsWith('.bak'));
+    expect(bak).toBeTruthy();
+    expect(fs.readFileSync(path.join(dataDir, bak), 'utf8')).toBe('not json at all');
+
+    // The route recovers on the next request by reseeding defaults
+    const res2 = await route.GET();
+    expect(res2.status).toBe(200);
+    expect(await res2.json()).toEqual(EMPTY_DM_DATA);
   });
 });
 

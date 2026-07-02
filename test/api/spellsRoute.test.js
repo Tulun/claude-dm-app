@@ -112,15 +112,22 @@ describe('GET /api/spells', () => {
     expect(spells).toHaveLength(defaultSpells.length + 1);
   });
 
-  it('QUIRK: a corrupt spells.json is silently overwritten with the defaults (user data lost)', async () => {
+  it('a corrupt spells.json returns 500 and is preserved as a .bak file (never overwritten)', async () => {
     fs.writeFileSync(SPELLS_FILE(), '{not valid json');
     const res = await route.GET();
-    expect(res.status).toBe(200);
-    const spells = await res.json();
-    expect(spells).toHaveLength(defaultSpells.length);
-    // The corrupt file has been replaced with a fresh default file
-    const onDisk = JSON.parse(fs.readFileSync(SPELLS_FILE(), 'utf8'));
-    expect(onDisk.version).toBe(4);
+    expect(res.status).toBe(500);
+    expect((await res.json()).error).toMatch(/backed up/i);
+
+    // Original content was renamed aside, not destroyed
+    expect(fs.existsSync(SPELLS_FILE())).toBe(false);
+    const bak = fs.readdirSync(dataDir).find(f => f.startsWith('spells.json.corrupt-') && f.endsWith('.bak'));
+    expect(bak).toBeTruthy();
+    expect(fs.readFileSync(path.join(dataDir, bak), 'utf8')).toBe('{not valid json');
+
+    // The route recovers on the next request by reseeding defaults
+    const res2 = await route.GET();
+    expect(res2.status).toBe(200);
+    expect(await res2.json()).toHaveLength(defaultSpells.length);
   });
 });
 
@@ -172,8 +179,9 @@ describe('POST /api/spells — syncSpellToCharacters side effect', () => {
       {
         id: 'p1', name: 'Mira',
         spells: [
-          // matched by sourceId (spellbook reference)
-          { id: 'char-spell-1', sourceId: 'spell-zap', name: 'Zap', level: 1, description: 'old desc' },
+          // matched by sourceId (spellbook reference); carries a legacy
+          // castingTime key that the sync must strip
+          { id: 'char-spell-1', sourceId: 'spell-zap', name: 'Zap', level: 1, description: 'old desc', castingTime: 'Action' },
           // unrelated spell must be untouched
           { id: 'char-spell-2', sourceId: 'spell-other', name: 'Other', level: 2, description: 'other' },
         ],
@@ -201,9 +209,10 @@ describe('POST /api/spells — syncSpellToCharacters side effect', () => {
     expect(synced.level).toBe(2);
     expect(synced.description).toBe('new desc');
     expect(synced.concentration).toBe(true);
-    // Sync writes the casting time under both keys
+    // Character spell instances use castTime only (spellbook spells use
+    // castingTime); the sync must not write the duplicate legacy key
     expect(synced.castTime).toBe('Bonus Action');
-    expect(synced.castingTime).toBe('Bonus Action');
+    expect(synced).not.toHaveProperty('castingTime');
 
     // Unrelated spell untouched
     expect(party[0].spells[1]).toEqual(
