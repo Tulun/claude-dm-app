@@ -1,24 +1,12 @@
 import { NextResponse } from 'next/server';
-import fs from 'node:fs';
-import path from 'node:path';
+import { dataPath, readJsonFile, writeJsonFile } from '../../../lib/jsonStore.js';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const NPCS_FILE = path.join(DATA_DIR, 'dm-npcs.json');
-
-function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-}
+const NPCS_FILE = dataPath('dm-npcs.json');
 
 export async function GET() {
-  ensureDataDir();
   try {
-    if (fs.existsSync(NPCS_FILE)) {
-      const data = fs.readFileSync(NPCS_FILE, 'utf8');
-      return NextResponse.json(JSON.parse(data));
-    }
-    return NextResponse.json([]);
+    const data = readJsonFile(NPCS_FILE);
+    return NextResponse.json(data === undefined ? [] : data);
   } catch (error) {
     console.error('GET /api/dm-npcs error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -26,10 +14,9 @@ export async function GET() {
 }
 
 export async function POST(request) {
-  ensureDataDir();
   try {
     const body = await request.json();
-    fs.writeFileSync(NPCS_FILE, JSON.stringify(body, null, 2), 'utf8');
+    writeJsonFile(NPCS_FILE, body);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('POST /api/dm-npcs error:', error);

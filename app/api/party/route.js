@@ -1,24 +1,12 @@
 import { NextResponse } from 'next/server';
-import fs from 'node:fs';
-import path from 'node:path';
+import { dataPath, readJsonFile, writeJsonFile } from '../../../lib/jsonStore.js';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const PARTY_FILE = path.join(DATA_DIR, 'party.json');
-
-function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-}
+const PARTY_FILE = dataPath('party.json');
 
 export async function GET() {
-  ensureDataDir();
   try {
-    if (fs.existsSync(PARTY_FILE)) {
-      const data = fs.readFileSync(PARTY_FILE, 'utf8');
-      return NextResponse.json(JSON.parse(data));
-    }
-    return NextResponse.json(null);
+    const data = readJsonFile(PARTY_FILE);
+    return NextResponse.json(data === undefined ? null : data);
   } catch (error) {
     console.error('GET /api/party error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -26,11 +14,9 @@ export async function GET() {
 }
 
 export async function POST(request) {
-  ensureDataDir();
   try {
     const body = await request.json();
-    fs.writeFileSync(PARTY_FILE, JSON.stringify(body, null, 2), 'utf8');
-    console.log('Saved party data to:', PARTY_FILE);
+    writeJsonFile(PARTY_FILE, body);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('POST /api/party error:', error);

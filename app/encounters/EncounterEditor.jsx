@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Icons from '../components/Icons';
 import { crToNumber } from './constants';
+import { getMod } from '../utils/rules';
 
 // CR values for filtering
 const CR_OPTIONS = [
@@ -285,10 +286,6 @@ const EncounterEditor = ({
               {encounter.monsters.map(monster => {
                 const template = templates.find(t => t.id === monster.templateId);
                 const isExpanded = expandedMonsters[monster.id];
-                const getMod = (score) => {
-                  const mod = Math.floor(((parseInt(score) || 10) - 10) / 2);
-                  return mod >= 0 ? `+${mod}` : `${mod}`;
-                };
                 return (
                   <div key={monster.id} className="bg-stone-800/50 border border-stone-700/50 rounded-lg overflow-hidden">
                     {/* Header row */}

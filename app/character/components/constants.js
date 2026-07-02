@@ -1,5 +1,7 @@
+import { getModNum, formatMod as formatModifier, getTotalLevel as totalLevel, getProfBonus as profBonus } from '../../utils/rules';
+
 export const SKILLS = [
-  { name: 'Acrobatics', stat: 'dex' }, 
+  { name: 'Acrobatics', stat: 'dex' },
   { name: 'Animal Handling', stat: 'wis' }, 
   { name: 'Arcana', stat: 'int' },
   { name: 'Athletics', stat: 'str' }, 
@@ -1352,16 +1354,12 @@ export const ADVANTAGE_OPTIONS = [
 ];
 
 // Utility functions
-export const getMod = (score) => Math.floor(((parseInt(score) || 10) - 10) / 2);
-export const formatMod = (mod) => mod >= 0 ? `+${mod}` : `${mod}`;
-
-// Get total level from classes array or legacy level field
-export const getTotalLevel = (character) => {
-  if (character?.classes?.length > 0) {
-    return character.classes.reduce((sum, c) => sum + (parseInt(c.level) || 0), 0);
-  }
-  return parseInt(character?.level) || 0;
-};
+// Rules math shared via app/utils/rules.js. NOTE: this module's getMod returns
+// a NUMBER (it is rules.getModNum); the combat-card getMod returns a formatted
+// string like "+2".
+export const getMod = getModNum;
+export const formatMod = formatModifier;
+export const getTotalLevel = totalLevel;
 
 // Format class string for display (e.g., "Fighter 5 / Wizard 3")
 export const formatClasses = (character) => {
@@ -1378,17 +1376,7 @@ export const formatClasses = (character) => {
   return character?.cr ? `CR ${character.cr}` : '';
 };
 
-export const getProfBonus = (character) => {
-  const totalLevel = getTotalLevel(character);
-  if (totalLevel > 0) return Math.floor((totalLevel - 1) / 4) + 2;
-  if (character?.cr) {
-    const cr = character.cr;
-    if (['0', '1/8', '1/4', '1/2'].includes(cr)) return 2;
-    const crNum = parseInt(cr) || 1;
-    return crNum <= 4 ? 2 : crNum <= 8 ? 3 : crNum <= 12 ? 4 : crNum <= 16 ? 5 : crNum <= 20 ? 6 : 7;
-  }
-  return 2;
-};
+export const getProfBonus = profBonus;
 
 // Get skill proficiency level: 0 = none, 1 = proficient, 2 = expertise
 // Considers: manual skillProficiencies, background skills, Skilled feat

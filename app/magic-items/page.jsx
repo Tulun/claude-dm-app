@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Navbar from '../components/Navbar';
-import { ITEM_CATEGORIES, RARITIES, CLASSES, RARITY_COLORS, RARITY_VALUES, searchItems, sortItems } from './magicItems';
+import { ITEM_CATEGORIES, RARITIES, CLASSES, RARITY_COLORS, RARITY_VALUES } from './constants';
+import { searchItems, sortItems } from './itemUtils';
 
 export default function MagicItemsPage() {
   const [allItems, setAllItems] = useState([]);

@@ -1,93 +1,16 @@
 // Helper functions for CharacterCard
+//
+// Rules math lives in app/utils/rules.js — re-exported here so existing
+// imports keep working.
 
-export const getMod = (score) => {
-  const num = parseInt(score) || 10;
-  const mod = Math.floor((num - 10) / 2);
-  return mod >= 0 ? `+${mod}` : `${mod}`;
-};
+import { getEquipmentAC } from '../../../utils/acCalculation';
 
-export const getModNum = (score) => {
-  const num = parseInt(score) || 10;
-  return Math.floor((num - 10) / 2);
-};
+export { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus } from '../../../utils/rules';
 
-export const getProfBonus = (character) => {
-  if (character.level) {
-    const lvl = parseInt(character.level) || 1;
-    return Math.floor((lvl - 1) / 4) + 2;
-  }
-  if (character.cr) {
-    const cr = character.cr;
-    if (cr === '0' || cr === '1/8' || cr === '1/4' || cr === '1/2') return 2;
-    const crNum = parseInt(cr) || 1;
-    if (crNum <= 4) return 2;
-    if (crNum <= 8) return 3;
-    if (crNum <= 12) return 4;
-    if (crNum <= 16) return 5;
-    if (crNum <= 20) return 6;
-    if (crNum <= 24) return 7;
-    if (crNum <= 28) return 8;
-    return 9;
-  }
-  return 2;
-};
-
-export const getSpellSaveDC = (character) => {
-  if (!character.spellStat) return null;
-  const statMap = { str: character.str, dex: character.dex, con: character.con, int: character.int, wis: character.wis, cha: character.cha };
-  const mod = getModNum(statMap[character.spellStat]);
-  let dc = 8 + getProfBonus(character) + mod;
-  // Add +1 for Innate Sorcery if active (Sorcerer feature)
-  if (character.innateSorcery) dc += 1;
-  return dc;
-};
-
-export const getSpellAttackBonus = (character) => {
-  if (!character.spellStat) return null;
-  const statMap = { str: character.str, dex: character.dex, con: character.con, int: character.int, wis: character.wis, cha: character.cha };
-  const mod = getModNum(statMap[character.spellStat]);
-  const bonus = getProfBonus(character) + mod;
-  return bonus >= 0 ? `+${bonus}` : `${bonus}`;
-};
-
-export const getCalculatedAC = (character) => {
-  const dexMod = getModNum(character.dex);
-  const inventory = character.inventory || [];
-  
-  if (inventory.length === 0 && !character.acEffect) return null;
-  
-  const equippedArmor = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType !== 'Shield');
-  const equippedShield = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType === 'Shield');
-  const acBonusItems = inventory.filter(i => i.equipped && i.acBonus && i.itemType !== 'armor');
-  
-  let baseAC = 10;
-  let dexBonus = dexMod;
-  let shieldBonus = 0;
-  let itemBonuses = 0;
-  
-  if (character.acEffect === 'mageArmor') {
-    baseAC = 13;
-  } else if (character.acEffect === 'barkskin') {
-    if (10 + dexMod < 16) { baseAC = 16; dexBonus = 0; }
-  } else if (character.acEffect === 'unarmoredDefense') {
-    const conMod = getModNum(character.con);
-    const wisMod = getModNum(character.wis);
-    const classes = character.classes?.map(c => c.name.toLowerCase()) || [character.class?.toLowerCase()];
-    if (classes.includes('barbarian')) baseAC = 10 + conMod;
-    else if (classes.includes('monk')) baseAC = 10 + wisMod;
-  } else if (character.acEffect === 'draconicResilience') {
-    baseAC = 10 + getModNum(character.cha);
-  } else if (equippedArmor) {
-    baseAC = parseInt(equippedArmor.baseAC) || 10;
-    if (equippedArmor.armorType === 'Medium') dexBonus = Math.min(2, dexMod);
-    else if (equippedArmor.armorType === 'Heavy') dexBonus = 0;
-  }
-  
-  if (equippedShield) shieldBonus = parseInt(equippedShield.baseAC) || 2;
-  acBonusItems.forEach(item => { itemBonuses += parseInt(item.acBonus) || 0; });
-  
-  return baseAC + dexBonus + shieldBonus + itemBonuses;
-};
+// Combat-card AC: equipment-derived only, no temp AC, no armor-name parsing;
+// null means "no equipment info — show the stored AC instead".
+export const getCalculatedAC = (character) =>
+  getEquipmentAC(character, { includeTempAC: false, parseArmorNames: false });
 
 export const MASTERY_DESC = {
   'Cleave': 'Hit another creature within 5 ft (weapon dice only)',

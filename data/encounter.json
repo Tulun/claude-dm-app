@@ -1,4 +1,113 @@
 {
-  "enemies": [],
+  "enemies": [
+    {
+      "id": "enemy-1783005663015-js8ua6mq0",
+      "name": "Shambling Mound",
+      "size": "Large",
+      "creatureType": "Plant",
+      "ac": 15,
+      "maxHp": 136,
+      "hitDice": "16d10+48",
+      "speed": "20, swim 20",
+      "cr": "5",
+      "xp": 1800,
+      "profBonus": 3,
+      "str": 18,
+      "dex": 8,
+      "con": 16,
+      "int": 5,
+      "wis": 10,
+      "cha": 5,
+      "skills": "Stealth +2",
+      "resistances": "Cold, Fire",
+      "immunities": "Lightning; Blinded, Deafened, Exhaustion",
+      "senses": "Blindsight 60 ft. (blind beyond), Passive Perception 10",
+      "languages": "—",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Lightning Absorption",
+          "description": "No damage from Lightning; regains HP equal to Lightning damage dealt."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Two Slam attacks. If both hit Medium or smaller creature, target Grappled (escape DC 14), and can use Engulf."
+        },
+        {
+          "name": "Slam",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 13 (2d8+4) Bludgeoning damage."
+        },
+        {
+          "name": "Engulf",
+          "description": "One Medium or smaller Grappled creature: Engulfed (Blinded, Restrained, can't breathe). 13 (2d8+4) Bludgeoning at start of each mound's turns. If mound moves, engulfed creature moves with it. Can have one creature engulfed at a time."
+        }
+      ],
+      "notes": "Natural Armor",
+      "source": "mm",
+      "currentHp": 136,
+      "initiative": 0
+    },
+    {
+      "id": "enemy-1783005663016-fv78oaazc",
+      "name": "Topiary Golem Ornamental",
+      "size": "Medium",
+      "creatureType": "Construct",
+      "ac": 14,
+      "maxHp": 117,
+      "hitDice": "18d8+36",
+      "speed": "40 ft.",
+      "cr": "3",
+      "xp": 700,
+      "profBonus": 2,
+      "str": 17,
+      "dex": 16,
+      "con": 14,
+      "int": 3,
+      "wis": 11,
+      "cha": 1,
+      "savingThrows": "Str +3, Dex +3, Con +2, Int -4, Wis +0, Cha -5",
+      "skills": "",
+      "vulnerabilities": "Fire, Slashing",
+      "resistances": "",
+      "immunities": "Psychic; Charmed, Exhaustion, Frightened, Paralyzed, Petrified, Poisoned",
+      "senses": "Passive Perception 10",
+      "languages": "Understands the languages of its creator but can't speak",
+      "traits": [
+        {
+          "name": "Hedgeblend",
+          "description": "The golem can move through hedges or other dense foliage without impediment, and can occupy their space."
+        },
+        {
+          "name": "Golemcraft Ward (1/Day)",
+          "description": "When the golem fails a saving throw that would alter its form or incapacitate it, it can choose to succeed instead. The golem adds +3 to its saving throws against spells and magical effects for each use of this ability it has remaining."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The golem makes two attacks with its Manicured Slash."
+        },
+        {
+          "name": "Manicured Slash",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 13 (3d6 + 3) Slashing damage. If the golem is Bloodied, this attack deals an additional 3 (1d6) Slashing damage on a hit."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Extend Roots",
+          "description": "The golem drives its roots into the ground, becoming utterly immobile and gaining Tremorsense to a range of 90 feet until it ends this effect as a Bonus Action. While in this state, the golem is indistinguishable from an ordinary topiary."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Natural Armor. Challenge Rating 3. Initiative +3. 5 ft. tall. Plant construct type. Obeys commands and drives based on Obedience.",
+      "isNpc": false,
+      "source": "custom",
+      "currentHp": 117,
+      "initiative": 0
+    }
+  ],
   "lairAction": null
 }

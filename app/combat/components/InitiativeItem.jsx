@@ -2,65 +2,11 @@
 
 import { useState, useRef } from 'react';
 import Icons from '../../components/Icons';
+import { getEquipmentAC } from '../../utils/acCalculation';
 
-// Calculate AC from equipped items (same logic as CharacterCard)
-const getCalculatedAC = (character) => {
-  const getModNum = (score) => Math.floor(((parseInt(score) || 10) - 10) / 2);
-  const dexMod = getModNum(character.dex);
-  const inventory = character.inventory || [];
-  
-  const equippedArmor = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType !== 'Shield');
-  const equippedShield = inventory.find(i => i.itemType === 'armor' && i.equipped && i.armorType === 'Shield');
-  const acBonusItems = inventory.filter(i => i.equipped && i.acBonus && i.itemType !== 'armor');
-  
-  let baseAC = 10;
-  let dexBonus = dexMod;
-  let shieldBonus = 0;
-  let itemBonuses = 0;
-  let tempBonus = parseInt(character.tempAC) || 0;
-  
-  // Check temp effects
-  if (character.acEffect === 'mageArmor') {
-    baseAC = 13;
-  } else if (character.acEffect === 'barkskin') {
-    const naturalCalc = 10 + dexMod;
-    if (naturalCalc < 16) {
-      baseAC = 16;
-      dexBonus = 0;
-    }
-  } else if (character.acEffect === 'unarmoredDefense') {
-    const conMod = getModNum(character.con);
-    const wisMod = getModNum(character.wis);
-    const classes = character.classes?.map(c => c.name.toLowerCase()) || [character.class?.toLowerCase()];
-    if (classes.includes('barbarian')) {
-      baseAC = 10 + conMod;
-    } else if (classes.includes('monk')) {
-      baseAC = 10 + wisMod;
-    }
-  } else if (character.acEffect === 'draconicResilience') {
-    const chaMod = getModNum(character.cha);
-    baseAC = 10 + chaMod;
-  } else if (equippedArmor) {
-    baseAC = parseInt(equippedArmor.baseAC) || 10;
-    if (equippedArmor.armorType === 'Medium') {
-      dexBonus = Math.min(2, dexMod);
-    } else if (equippedArmor.armorType === 'Heavy') {
-      dexBonus = 0;
-    }
-  } else if (inventory.length === 0 && !character.acEffect) {
-    return null;
-  }
-  
-  if (equippedShield) {
-    shieldBonus = parseInt(equippedShield.baseAC) || 2;
-  }
-  
-  acBonusItems.forEach(item => {
-    itemBonuses += parseInt(item.acBonus) || 0;
-  });
-  
-  return baseAC + dexBonus + shieldBonus + itemBonuses + tempBonus;
-};
+// Initiative view AC: temp AC included, but no armor-name parsing;
+// null means "no equipment info — show the stored AC instead".
+const getCalculatedAC = (character) => getEquipmentAC(character, { parseArmorNames: false });
 
 const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, onDragStart, onDragOver, onDrop, onDragEnd, isDragging, dragOverIndex, onUpdateInitiative, onUpdateHp, onUpdateLairNotes, onRemoveLairAction }) => {
   const isDead = !isLairAction && character.currentHp <= 0;

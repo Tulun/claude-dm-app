@@ -1,20 +1,12 @@
 // Magic Items Database - 2024 DMG
 // Accurate descriptions and class requirements
+//
+// Constants live in ./constants.js and search/sort helpers in ./itemUtils.js so
+// client components can use them without bundling this full item database.
+// Re-exported here for backwards compatibility.
 
-export const ITEM_CATEGORIES = ['Armor', 'Potion', 'Ring', 'Rod', 'Scroll', 'Staff', 'Wand', 'Weapon', 'Wondrous'];
-export const RARITIES = ['Mundane', 'Common', 'Uncommon', 'Rare', 'Very Rare', 'Legendary', 'Artifact', 'Varies'];
-export const CLASSES = ['Barbarian', 'Bard', 'Cleric', 'Druid', 'Fighter', 'Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Warlock', 'Wizard'];
-export const RARITY_VALUES = { 'Common': 100, 'Uncommon': 400, 'Rare': 4000, 'Very Rare': 40000, 'Legendary': 200000, 'Artifact': null, 'Varies': null };
-export const RARITY_COLORS = {
-  'Mundane': { bg: 'bg-stone-800', text: 'text-stone-400', border: 'border-stone-600' },
-  'Common': { bg: 'bg-stone-700', text: 'text-stone-300', border: 'border-stone-600' },
-  'Uncommon': { bg: 'bg-green-900/50', text: 'text-green-400', border: 'border-green-700' },
-  'Rare': { bg: 'bg-blue-900/50', text: 'text-blue-400', border: 'border-blue-700' },
-  'Very Rare': { bg: 'bg-purple-900/50', text: 'text-purple-400', border: 'border-purple-700' },
-  'Legendary': { bg: 'bg-amber-900/50', text: 'text-amber-400', border: 'border-amber-700' },
-  'Artifact': { bg: 'bg-red-900/50', text: 'text-red-400', border: 'border-red-700' },
-  'Varies': { bg: 'bg-gradient-to-r from-green-900/50 via-blue-900/50 to-purple-900/50', text: 'text-cyan-400', border: 'border-cyan-700' }
-};
+export { ITEM_CATEGORIES, RARITIES, CLASSES, RARITY_VALUES, RARITY_COLORS } from './constants.js';
+export { searchItems, sortItems } from './itemUtils.js';
 
 export const defaultMagicItems = [
   // ===== COMMON =====
@@ -648,31 +640,3 @@ export function getItemsByRarity(rar) { return defaultMagicItems.filter(i => i.r
 export function getItemsByClass(cls) { return defaultMagicItems.filter(i => !i.classes || i.classes.includes(cls)); }
 export function getItem(id) { return defaultMagicItems.find(i => i.id === id); }
 
-export function searchItems(q, filters = {}, items = []) {
-  let r = [...items];
-  if (q) { 
-    const lq = q.toLowerCase(); 
-    r = r.filter(i => i.name.toLowerCase().includes(lq) || i.description.toLowerCase().includes(lq)); 
-  }
-  if (filters.category && filters.category !== 'All') r = r.filter(i => i.category === filters.category);
-  if (filters.rarity && filters.rarity !== 'All') r = r.filter(i => i.rarity === filters.rarity);
-  if (filters.classReq && filters.classReq !== 'All') r = r.filter(i => !i.classes || i.classes.includes(filters.classReq));
-  if (filters.attunement === true) r = r.filter(i => i.attunement);
-  else if (filters.attunement === false) r = r.filter(i => !i.attunement);
-  return r;
-}
-
-export function sortItems(items, by = 'name', dir = 'asc') {
-  const sorted = [...items];
-  sorted.sort((a, b) => {
-    let c = 0;
-    if (by === 'name') c = a.name.localeCompare(b.name);
-    else if (by === 'rarity') { 
-      const o = { Common: 0, Uncommon: 1, Rare: 2, 'Very Rare': 3, Legendary: 4, Artifact: 5 }; 
-      c = o[a.rarity] - o[b.rarity]; 
-    }
-    else if (by === 'category') c = a.category.localeCompare(b.category);
-    return dir === 'desc' ? -c : c;
-  });
-  return sorted;
-}

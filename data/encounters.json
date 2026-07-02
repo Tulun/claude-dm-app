@@ -44,6 +44,13 @@
         "name": "Shambling Mound",
         "customName": "",
         "quantity": 1
+      },
+      {
+        "id": "imported-1772046882646-1783005641549-uotzb",
+        "templateId": "imported-1772046882646",
+        "name": "Topiary Golem Ornamental",
+        "customName": "",
+        "quantity": 1
       }
     ],
     "createdAt": "2026-04-11T21:52:19.611Z"

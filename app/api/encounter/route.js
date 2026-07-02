@@ -1,33 +1,24 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { dataPath, readJsonFile, writeJsonFile, deleteJsonFile } from '../../../lib/jsonStore.js';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const ENCOUNTER_FILE = path.join(DATA_DIR, 'encounter.json');
-
-// Ensure data directory exists
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-}
+const ENCOUNTER_FILE = dataPath('encounter.json');
+const EMPTY_ENCOUNTER = { enemies: [], round: 1, turnIndex: 0 };
 
 export async function GET() {
   try {
-    if (fs.existsSync(ENCOUNTER_FILE)) {
-      const data = JSON.parse(fs.readFileSync(ENCOUNTER_FILE, 'utf-8'));
-      return NextResponse.json(data);
-    }
-    // Return empty encounter state if no file exists
-    return NextResponse.json({ enemies: [], round: 1, turnIndex: 0 });
+    const data = readJsonFile(ENCOUNTER_FILE);
+    return NextResponse.json(data === undefined ? EMPTY_ENCOUNTER : data);
   } catch (error) {
+    // A corrupt file falls back to an empty encounter rather than erroring
     console.error('Error reading encounter:', error);
-    return NextResponse.json({ enemies: [], round: 1, turnIndex: 0 });
+    return NextResponse.json(EMPTY_ENCOUNTER);
   }
 }
 
 export async function POST(request) {
   try {
     const data = await request.json();
-    fs.writeFileSync(ENCOUNTER_FILE, JSON.stringify(data, null, 2));
+    writeJsonFile(ENCOUNTER_FILE, data);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error saving encounter:', error);
@@ -37,9 +28,7 @@ export async function POST(request) {
 
 export async function DELETE() {
   try {
-    if (fs.existsSync(ENCOUNTER_FILE)) {
-      fs.unlinkSync(ENCOUNTER_FILE);
-    }
+    deleteJsonFile(ENCOUNTER_FILE);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error clearing encounter:', error);

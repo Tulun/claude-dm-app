@@ -1,6 +1,7 @@
 'use client';
 
 import Icons from '../../../components/Icons';
+import { getModNum, formatMod as formatModifier } from '../../../utils/rules';
 
 const SKILLS = [
   { name: 'Acrobatics', stat: 'dex' },
@@ -28,8 +29,8 @@ const SAVES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 const CharacterSheetModal = ({ isOpen, character, onClose }) => {
   if (!isOpen) return null;
 
-  const getMod = (score) => Math.floor(((parseInt(score) || 10) - 10) / 2);
-  const formatMod = (mod) => mod >= 0 ? `+${mod}` : `${mod}`;
+  const getMod = getModNum;
+  const formatMod = formatModifier;
   
   const profBonus = character.profBonus || Math.ceil(1 + (character.level || 1) / 4);
   

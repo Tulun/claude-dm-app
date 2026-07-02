@@ -1,14 +1,10 @@
 'use client';
 
 import Icons from '../../../components/Icons';
+import { getMod } from '../../../utils/rules';
 
 const StatBlockModal = ({ isOpen, onClose, character }) => {
   if (!isOpen || !character) return null;
-
-  const getMod = (score) => {
-    const mod = Math.floor((parseInt(score || 10) - 10) / 2);
-    return mod >= 0 ? `+${mod}` : `${mod}`;
-  };
 
   const stats = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
   const statLabels = { str: 'STR', dex: 'DEX', con: 'CON', int: 'INT', wis: 'WIS', cha: 'CHA' };

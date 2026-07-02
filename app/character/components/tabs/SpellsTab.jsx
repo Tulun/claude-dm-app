@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Icons from '../../../components/Icons';
 import SpellPickerModal from '../SpellPickerModal';
+import { getMod as getModNum } from '../constants';
 
 // Classes that prepare spells (vs known spells)
 const PREPARED_CASTER_CLASSES = ['Cleric', 'Druid', 'Paladin', 'Wizard'];
@@ -29,7 +30,7 @@ function getPreparedCasterInfo(character) {
 function calculateMaxPrepared(character, casterInfo) {
   if (!casterInfo) return null;
   
-  const getMod = (score) => Math.floor(((parseInt(score) || 10) - 10) / 2);
+  const getMod = getModNum;
   const level = parseInt(casterInfo.level) || 1;
   
   let maxPrepared = 0;
@@ -495,7 +496,7 @@ function extractSaveType(description) {
 function calculateSpellDC(character) {
   if (!character.spellStat) return null;
   
-  const getMod = (score) => Math.floor(((parseInt(score) || 10) - 10) / 2);
+  const getMod = getModNum;
   const profBonus = Math.ceil(1 + (parseInt(character.level) || 1) / 4);
   
   const statMap = { int: 'int', wis: 'wis', cha: 'cha' };

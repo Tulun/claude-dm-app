@@ -3,7 +3,8 @@
 import { useState, useMemo, useEffect } from 'react';
 import Icons from '../../../components/Icons';
 import { Tooltip } from '../../../components/ui';
-import { RARITY_COLORS, ITEM_CATEGORIES, RARITIES } from '../../../magic-items/magicItems';
+import { RARITY_COLORS, ITEM_CATEGORIES, RARITIES } from '../../../magic-items/constants';
+import { getMod as getModNum } from '../constants';
 
 const WEAPON_PROPERTIES = [
   { name: 'Ammunition', desc: 'Requires ammunition to fire. Drawing ammo is part of the attack.' },
@@ -438,7 +439,7 @@ export default function InventoryTab({ character, onUpdate }) {
   const getWeaponStats = (item) => {
     if (item.itemType !== 'weapon') return null;
     
-    const getMod = (score) => Math.floor(((parseInt(score) || 10) - 10) / 2);
+    const getMod = getModNum;
     const strMod = getMod(character.str);
     const dexMod = getMod(character.dex);
     
