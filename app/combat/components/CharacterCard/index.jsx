@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useState } from 'react';
 import Link from 'next/link';
 import Icons from '../../../components/Icons';
@@ -239,7 +240,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               onToggleExpand && (
                 <Tooltip text={expanded ? "Collapse" : "Expand"}>
                   <button 
-                    onClick={onToggleExpand} 
+                    onClick={() => onToggleExpand(character.id)} 
                     className="p-2 rounded-lg transition-colors hover:bg-red-900/30"
                   >
                     {expanded ? (
@@ -660,4 +661,4 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   );
 };
 
-export default CharacterCard;
+export default React.memo(CharacterCard);

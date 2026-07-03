@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import Icons from '../components/Icons';
 import Navbar from '../components/Navbar';
+import { formatSpellText } from './formatSpellText';
 
 const SCHOOLS = ['Abjuration', 'Conjuration', 'Divination', 'Enchantment', 'Evocation', 'Illusion', 'Necromancy', 'Transmutation'];
 const CLASSES = ['Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger', 'Sorcerer', 'Warlock', 'Wizard'];
@@ -1053,10 +1054,4 @@ function getSchoolColor(school) {
   return colors[school] || { bg: 'bg-stone-700', text: 'text-stone-400' };
 }
 
-function formatSpellText(text) {
-  return text
-    .replace(/\b(Sphere|Cube|Cone|Line|Cylinder|Emanation)\b/g, '<span class="text-purple-400 font-semibold">$1</span>')
-    .replace(/\b(\d+d\d+)\b/g, '<span class="font-mono text-amber-300">$1</span>')
-    .replace(/\b(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\b/g, '<span class="font-semibold">$1</span>')
-    .replace(/\b(saving throw|attack roll)\b/gi, '<span class="font-semibold">$1</span>');
-}
+

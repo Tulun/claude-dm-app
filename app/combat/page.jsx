@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Icons from '../components/Icons';
@@ -10,6 +10,8 @@ import CharacterCard from './components/CharacterCard';
 import InitiativeItem from './components/InitiativeItem';
 import { AddEnemyModal, AddPartyModal } from './components/Modals';
 import { getCalculatedAC } from '../utils/acCalculation';
+
+const EMPTY_TEMPLATES = [];
 
 export default function CombatPage() {
   const router = useRouter();
@@ -192,7 +194,7 @@ export default function CombatPage() {
   const [initiativeOrder, setInitiativeOrder] = useState([]);
   
   // Extract active companions from party members that are marked for combat
-  const partyCompanions = (party || []).flatMap(member => 
+  const partyCompanions = useMemo(() => (party || []).flatMap(member =>
     (member.companions || [])
       .filter(c => c.active && c.inCombat)
       .map(c => ({
@@ -206,25 +208,32 @@ export default function CombatPage() {
         currentHp: c.currentHp || c.maxHp || 1,
         maxHp: c.maxHp || 1,
       }))
-  );
-  
+  ), [party]);
+
   // Build the initiative list based on manual order or default to all combatants
-  const lairActionEntry = lairAction ? { 
-    id: 'lair-action', 
-    name: 'Lair Action', 
-    initiative: lairAction.initiative, 
-    isLairAction: true,
-    notes: lairAction.notes 
-  } : null;
-  const allCombatants = [...(party || []), ...partyCompanions, ...enemies, ...(lairActionEntry ? [lairActionEntry] : [])];
-  
+  const allCombatants = useMemo(() => {
+    const lairActionEntry = lairAction ? {
+      id: 'lair-action',
+      name: 'Lair Action',
+      initiative: lairAction.initiative,
+      isLairAction: true,
+      notes: lairAction.notes
+    } : null;
+    return [...(party || []), ...partyCompanions, ...enemies, ...(lairActionEntry ? [lairActionEntry] : [])];
+  }, [party, partyCompanions, enemies, lairAction]);
+
   // If we have a manual order, use it (filtering out any removed combatants)
   // Then append any new combatants not yet in the order
-  const orderedIds = initiativeOrder.filter(id => allCombatants.some(c => c.id === id) || id === 'lair-action');
-  const newCombatantIds = allCombatants.filter(c => !orderedIds.includes(c.id)).map(c => c.id);
-  const fullOrderIds = [...orderedIds, ...newCombatantIds];
-  
-  const fullInitiativeList = fullOrderIds.map(id => allCombatants.find(c => c.id === id)).filter(Boolean);
+  const fullOrderIds = useMemo(() => {
+    const orderedIds = initiativeOrder.filter(id => allCombatants.some(c => c.id === id) || id === 'lair-action');
+    const newCombatantIds = allCombatants.filter(c => !orderedIds.includes(c.id)).map(c => c.id);
+    return [...orderedIds, ...newCombatantIds];
+  }, [initiativeOrder, allCombatants]);
+
+  const fullInitiativeList = useMemo(() => {
+    const byId = new Map(allCombatants.map(c => [c.id, c]));
+    return fullOrderIds.map(id => byId.get(id)).filter(Boolean);
+  }, [fullOrderIds, allCombatants]);
 
   // Sort by initiative values (including lair action)
   const sortByInitiative = () => {
@@ -232,19 +241,70 @@ export default function CombatPage() {
     setInitiativeOrder(sorted.map(c => c.id));
   };
 
-  const handleDrop = (e, dropIndex) => {
+  const handleDrop = useCallback((e, dropIndex) => {
     e.preventDefault();
     if (dragIndex === null || dragIndex === dropIndex) return;
-    
+
     // Reorder without changing initiative values
     const currentOrder = fullOrderIds.length > 0 ? [...fullOrderIds] : allCombatants.map(c => c.id);
     const [draggedId] = currentOrder.splice(dragIndex, 1);
     currentOrder.splice(dropIndex, 0, draggedId);
     setInitiativeOrder(currentOrder);
-    
+
     setDragIndex(null);
     setDragOverIndex(null);
-  };
+  }, [dragIndex, fullOrderIds, allCombatants]);
+
+  // Stable handlers so React.memo on CharacterCard / InitiativeItem can skip
+  // re-renders. All use functional setState; list setters bail out (return
+  // prev) when nothing matched so no-op updates don't trigger saves.
+  const updatePartyMember = useCallback((u) => setParty(prev => prev ? prev.map(p => p.id === u.id ? u : p) : prev), []);
+  const removePartyMember = useCallback((id) => setParty(prev => prev ? prev.filter(p => p.id !== id) : prev), []);
+  const updateEnemy = useCallback((u) => setEnemies(prev => prev.map(x => x.id === u.id ? u : x)), []);
+  const removeEnemy = useCallback((id) => setEnemies(prev => prev.filter(x => x.id !== id)), []);
+  const toggleExpand = useCallback((id) => setExpandedCards(prev => ({ ...prev, [id]: !prev[id] })), []);
+  const addEnemy = useCallback((e) => setEnemies(prev => [...prev, e]), []);
+  const addPartyMember = useCallback((m) => setParty(prev => [...(prev || []), m]), []);
+
+  const updateCompanion = useCallback((companionId, changes) => {
+    setParty(prev => {
+      if (!prev) return prev;
+      const next = prev.map(p => {
+        const companions = p.companions || [];
+        const updated = companions.map(comp => `companion-${p.id}-${comp.id}` === companionId ? { ...comp, ...changes } : comp);
+        return updated.some((c, i) => c !== companions[i]) ? { ...p, companions: updated } : p;
+      });
+      return next.some((p, i) => p !== prev[i]) ? next : prev;
+    });
+  }, []);
+
+  const updateInitiative = useCallback((id, newInit) => {
+    if (id === 'lair-action') {
+      setLairAction(prev => ({ ...prev, initiative: newInit }));
+      return;
+    }
+    if (id.startsWith('companion-')) {
+      updateCompanion(id, { initiative: newInit });
+      return;
+    }
+    // Update whichever list holds the id; the other setter bails out untouched
+    setParty(prev => {
+      if (!prev) return prev;
+      const next = prev.map(p => p.id === id ? { ...p, initiative: newInit } : p);
+      return next.some((p, i) => p !== prev[i]) ? next : prev;
+    });
+    setEnemies(prev => {
+      const next = prev.map(x => x.id === id ? { ...x, initiative: newInit } : x);
+      return next.some((x, i) => x !== prev[i]) ? next : prev;
+    });
+  }, [updateCompanion]);
+
+  const updateCompanionHp = useCallback((id, hp) => updateCompanion(id, { currentHp: hp }), [updateCompanion]);
+  const updateLairNotes = useCallback((notes) => setLairAction(prev => ({ ...prev, notes })), []);
+  const removeLairAction = useCallback(() => setLairAction(null), []);
+  const handleDragStart = useCallback((e, idx) => { setDragIndex(idx); e.dataTransfer.effectAllowed = 'move'; }, []);
+  const handleDragOver = useCallback((e, idx) => { e.preventDefault(); setDragOverIndex(idx); }, []);
+  const handleDragEnd = useCallback(() => { setDragIndex(null); setDragOverIndex(null); }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100">
@@ -265,7 +325,7 @@ export default function CombatPage() {
             {!party ? (
               <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg animate-pulse">Loading party...</div>
             ) : party.length > 0 ? (
-              party.map(m => <CharacterCard key={m.id} character={m} isEnemy={false} onUpdate={(u) => setParty(prev => prev.map(p => p.id === u.id ? u : p))} onRemove={(id) => setParty(prev => prev.filter(p => p.id !== id))} expanded={expandedCards[m.id]} onToggleExpand={() => setExpandedCards(prev => ({ ...prev, [m.id]: !prev[m.id] }))} showResources templates={templates || []} />)
+              party.map(m => <CharacterCard key={m.id} character={m} isEnemy={false} onUpdate={updatePartyMember} onRemove={removePartyMember} expanded={expandedCards[m.id]} onToggleExpand={toggleExpand} showResources templates={templates || EMPTY_TEMPLATES} />)
             ) : (
               <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No party members yet.</div>
             )}
@@ -277,32 +337,7 @@ export default function CombatPage() {
               <button onClick={sortByInitiative} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.Refresh />Sort by Init</button>
             </div>
             <div className="space-y-2">
-              {fullInitiativeList.map((c, i) => <InitiativeItem key={c.id} character={c} isEnemy={enemies.some(e => e.id === c.id)} isCompanion={c.isCompanion} isLairAction={c.isLairAction} index={i} onDragStart={(e, idx) => { setDragIndex(idx); e.dataTransfer.effectAllowed = 'move'; }} onDragOver={(e, idx) => { e.preventDefault(); setDragOverIndex(idx); }} onDrop={handleDrop} onDragEnd={() => { setDragIndex(null); setDragOverIndex(null); }} isDragging={dragIndex === i} dragOverIndex={dragOverIndex} onUpdateInitiative={(id, newInit) => { 
-                if (id === 'lair-action') {
-                  setLairAction(prev => ({ ...prev, initiative: newInit }));
-                } else if (id.startsWith('companion-')) {
-                  // Update companion initiative - use ownerId and originalId from the character object
-                  const companion = fullInitiativeList.find(x => x.id === id);
-                  if (companion?.ownerId && companion?.originalId !== undefined) {
-                    setParty(prev => prev.map(p => p.id === companion.ownerId ? { 
-                      ...p, 
-                      companions: (p.companions || []).map(comp => comp.id === companion.originalId ? { ...comp, initiative: newInit } : comp)
-                    } : p));
-                  }
-                } else if ((party || []).some(p => p.id === id)) {
-                  setParty(prev => prev.map(p => p.id === id ? { ...p, initiative: newInit } : p));
-                } else {
-                  setEnemies(prev => prev.map(e => e.id === id ? { ...e, initiative: newInit } : e));
-                }
-              }} onUpdateHp={c.isCompanion ? (id, hp) => {
-                const companion = fullInitiativeList.find(x => x.id === id);
-                if (companion?.ownerId && companion?.originalId !== undefined) {
-                  setParty(prev => prev.map(p => p.id === companion.ownerId ? {
-                    ...p,
-                    companions: (p.companions || []).map(comp => comp.id === companion.originalId ? { ...comp, currentHp: hp } : comp)
-                  } : p));
-                }
-              } : undefined} onUpdateLairNotes={c.isLairAction ? (notes) => setLairAction(prev => ({ ...prev, notes })) : undefined} onRemoveLairAction={c.isLairAction ? () => setLairAction(null) : undefined} />)}
+              {fullInitiativeList.map((c, i) => <InitiativeItem key={c.id} character={c} isEnemy={enemies.some(e => e.id === c.id)} isCompanion={c.isCompanion} isLairAction={c.isLairAction} index={i} onDragStart={handleDragStart} onDragOver={handleDragOver} onDrop={handleDrop} onDragEnd={handleDragEnd} isDragging={dragIndex === i} dragOverIndex={dragOverIndex} onUpdateInitiative={updateInitiative} onUpdateHp={c.isCompanion ? updateCompanionHp : undefined} onUpdateLairNotes={c.isLairAction ? updateLairNotes : undefined} onRemoveLairAction={c.isLairAction ? removeLairAction : undefined} />)}
               {!fullInitiativeList.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">Add combatants to begin!</div>}
             </div>
           </div>
@@ -328,13 +363,13 @@ export default function CombatPage() {
                 </>}
               </div>
             </div>
-            {enemies.map(e => <CharacterCard key={e.id} character={e} isEnemy={true} onUpdate={(u) => setEnemies(prev => prev.map(x => x.id === u.id ? u : x))} onRemove={(id) => setEnemies(prev => prev.filter(x => x.id !== id))} />)}
+            {enemies.map(e => <CharacterCard key={e.id} character={e} isEnemy={true} onUpdate={updateEnemy} onRemove={removeEnemy} />)}
             {!enemies.length && !lairAction && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No enemies yet. <Link href="/encounters" className="text-amber-500 hover:text-amber-400">Create encounters</Link> to quickly add groups.</div>}
           </div>
         </main>
 
-      <AddEnemyModal isOpen={showAddEnemy} onClose={() => setShowAddEnemy(false)} onAdd={(e) => setEnemies(prev => [...prev, e])} templates={templates || []} />
-      <AddPartyModal isOpen={showAddParty} onClose={() => setShowAddParty(false)} onSave={(m) => setParty(prev => [...(prev || []), m])} />
+      <AddEnemyModal isOpen={showAddEnemy} onClose={() => setShowAddEnemy(false)} onAdd={addEnemy} templates={templates || EMPTY_TEMPLATES} />
+      <AddPartyModal isOpen={showAddParty} onClose={() => setShowAddParty(false)} onSave={addPartyMember} />
 
       {/* Load Encounter Modal */}
       {showLoadEncounter && (

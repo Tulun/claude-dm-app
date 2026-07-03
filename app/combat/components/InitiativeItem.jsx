@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { memo, useState, useRef } from 'react';
 import Icons from '../../components/Icons';
 import { getEquipmentAC } from '../../utils/acCalculation';
 
@@ -209,4 +209,4 @@ const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, 
   );
 };
 
-export default InitiativeItem;
+export default memo(InitiativeItem);

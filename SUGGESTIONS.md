@@ -9,6 +9,38 @@ Convention: `[ ]` open · `[x]` done (move to the log at the bottom when complet
 
 ---
 
+## 0. Security (from July 2026 audit; threat model = local single-user tool)
+
+- [ ] **Origin check on API routes** — a malicious website in the same browser can fire
+  cross-origin "simple" POSTs (text/plain) at `http://localhost:3000/api/*`;
+  `request.json()` still parses them, so campaign data could be overwritten by a
+  drive-by page. Also, `next dev` listens on LAN interfaces ("Network:" URL). Cheap
+  mitigations: reject non-localhost Origin headers in the write routes, and/or run
+  `next dev -H 127.0.0.1` on untrusted networks.
+- [ ] **Schema/size validation on POST bodies** — every write route persists
+  `await request.json()` verbatim; `POST null` wipes the file, and there's no body
+  size cap. (App Router has no bodyParser config — check `content-length` in the
+  handler or add lightweight shape checks: party/npcs/encounters must be arrays, etc.)
+  Pairs with the atomic-writes item below.
+- [ ] **If this ever gets deployed** (LAN party use, hosting): add auth, rate limiting,
+  and CSRF tokens before anything else — the API is intentionally wide open today.
+
+## 0.5 Paused: skill-library validation tail (resume when token budget allows)
+
+- [ ] **Finish the .claude/skills validation workflow** — the library (6 skills) is
+  authored and live; 5/6 are adversarially machine-verified (api-route-conventions,
+  rules-math, testing-and-validation, frontend-patterns, debugging-playbook pass).
+  Remaining tail: (1) formal re-verify of `dm-app-map` after its fix pass (it was
+  human-reviewed and looks accurate), (2) a whole-library critic pass (gaps /
+  overlaps / trigger collisions), (3) three "first-day junior" simulation sessions
+  (tasks: new /api/conditions route + tests; combat HP-edit flicker bug; atomic-writes
+  backlog item) that grade the library. To resume IN THE ORIGINAL SESSION: rerun the
+  Workflow tool with scriptPath
+  `~/.claude/projects/-Users-jasonkiraly-Desktop-projects-claude-dm-app/7bc353df-5f13-4e17-bf4a-bc3e9bf13c5d/workflows/scripts/author-skill-library-wf_98e63a80-8dd.js`
+  and resumeFromRunId `wf_98e63a80-8dd` (completed agents are cached). From any OTHER
+  session: just run the three parts as plain subagent prompts — the prompts live in
+  that script file (verifyPrompt for dm-app-map, the Critic block, the SIM_TASKS block).
+
 ## 1. Data safety / API quirks
 
 - [ ] **Atomic writes in `lib/jsonStore.js`** — write to a temp file and rename over the
@@ -50,16 +82,49 @@ Convention: `[ ]` open · `[x]` done (move to the log at the bottom when complet
 - [ ] **Spellcasting parser: cantrip lines also populate `atWill`** — a header like
   "Cantrips (at will):" writes the same list into both `cantrips` and `atWill`, so
   UIs that render both show duplicates. (test: "parses cantrips lists" documents it)
+- [ ] **Duplicated spell formatters** — `abbreviateCastTime` ×3 (SpellsModal.jsx:304,
+  SpellPickerModal.jsx:11, SpellsTab.jsx:468) and `getLevelLabel` ×3 (same files).
+  Extract to `app/utils/spellFormat.js`.
+- [ ] **Delete three 0-byte files** — `app/character/components/tabs/DruidFeaturesModal.jsx`,
+  `app/character/components/tabs/SorcererFeaturesModal.jsx`,
+  `app/components/QuickResourcesModal.jsx` — all empty and imported nowhere (verified).
+- [ ] **Remove unused legacy helpers in magicItems.js** — `getItemsByCategory`,
+  `getItemsByRarity`, `getItemsByClass`, `getItem` are exported but never imported.
+- [ ] **Dual class-shape ternaries (~20 sites)** — components branch on
+  `character.classes` array vs legacy `class`/`level` everywhere (CardHeader,
+  QuickResourcesModal, Druid/SorcererFeaturesModal, …). `formatClasses`/`getTotalLevel`
+  already exist in shared modules — reuse them, and add `isDruid(char)`-style helpers
+  (or normalize the shape on load).
+- [ ] **Bare `Date.now()` ids** — ~15 sites create ids with no random suffix
+  (TabContent, tabs/*, dm/components/*); collisions possible when creating items in a
+  loop. Extract a `generateId(prefix)` helper (the combat page already uses the safe
+  `Date.now() + random` pattern).
+- [ ] **Shared `<Modal>` wrapper** — 33 hand-rolled `fixed inset-0 bg-black/…` overlay
+  divs with inconsistent opacity (50–80), z-index (50/60/100), and padding.
+- [ ] **Toast/save-status helper** — the `setSaveStatus(msg); setTimeout(clear, 2000)`
+  pair is copied ~10× across pages; extract a `useToast` hook. Same for the magic
+  debounce numbers (500/1000/1500/2000ms) → named constants.
+- [ ] **Housekeeping batch** — standardize `'fs'` → `'node:fs'` imports (3 routes);
+  add ESLint + Prettier; rewrite the stock create-next-app README; decide whether
+  `data/*.json` (campaign data) should stay tracked in git — it works as a crude
+  backup for a local tool, but any push publishes your campaign and `.bak` recovery
+  files will accumulate.
+- [ ] **Component design (larger)** — `InitiativeItem` takes 15 props (drag state
+  belongs in a hook/context); `CharacterCard` juggles 11+ `showX` modal booleans
+  (collapse to one `activeModal` string); `TabContent.jsx` is 1,501 lines and predates
+  the tabs/ split — finish migrating and delete the mega-component.
 
 ## 3. Performance / bundle
 
 - [ ] **Split `app/spellbook/page.jsx`** — 1,062-line single component (search,
   filters, list, editor modal all inline). Extract SpellCard / FilterBar / EditModal;
   add `useMemo` on the filtered list.
-- [ ] **Memoization pass on the combat page** — `CharacterCard` and `InitiativeItem`
-  re-render on every keystroke/HP tick because the page passes fresh closures each
-  render. Needs `React.memo` + `useCallback` done together (memo alone does nothing).
-  The combat page tests cover the flows this could break.
+- [ ] **`useMemo` on `groupedItems` in magic-items/page.jsx:44** — leftover micro-win
+  from the combat memoization pass (done July 2026).
+- [ ] **HTTP caching for the big GETs** — `/api/templates` ships ~630KB and `/api/spells`
+  ~440KB on every page mount with no Cache-Control/ETag; tab-switching re-downloads
+  everything. If adding caching, invalidate on POST (ETag + 304 is the safe shape) —
+  do NOT blanket-cache mutable data like `/api/party`.
 - [ ] **Slim the fetch-failure fallback** — `defaultData.js` (508 lines) ships in the
   combat/characters/encounters/templates bundles purely as an offline fallback.
   Consider a minimal fallback (empty party + a handful of templates) if bundle size
@@ -98,6 +163,10 @@ Convention: `[ ]` open · `[x]` done (move to the log at the bottom when complet
 ---
 
 ## Completed log
+
+- [x] Escaped HTML in `formatSpellText` (app/spellbook/formatSpellText.js) — closed the app's only XSS sink; 7 new tests — July 2026
+- [x] Upgraded Next.js 16.1.4 → 16.2.10 — cleared all high-severity npm audit advisories (2 non-actionable moderates remain in Next's vendored postcss) — July 2026
+- [x] Combat page memoization — React.memo on CharacterCard + InitiativeItem, useCallback handlers, useMemo initiative pipeline (Map lookup replaced O(n²) find) — July 2026
 
 - [x] Vitest infrastructure + 262 tests (pure logic, 3 user-data pages, all 8 fs-backed API routes) — July 2026
 - [x] Deleted dead `confluxCreatures.js` (148k lines) — July 2026
