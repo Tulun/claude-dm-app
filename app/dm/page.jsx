@@ -7,11 +7,12 @@ import CharactersTab from './components/CharactersTab';
 import WorldTab from './components/WorldTab';
 import SessionTab from './components/SessionTab';
 import NPCGeneratorTab from './components/NPCGeneratorTab';
+import VaultTab from './components/VaultTab';
 
 export default function DMPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('session');
+  const [activeTab, setActiveTab] = useState('vault');
   const [saveStatus, setSaveStatus] = useState('');
 
   // Load DM data
@@ -79,6 +80,17 @@ export default function DMPage() {
         {/* Tab Navigation */}
         <div className="flex gap-2 mb-6 border-b border-stone-700 pb-2">
           <button
+            onClick={() => setActiveTab('vault')}
+            className={`px-4 py-2 rounded-t-lg flex items-center gap-2 transition-colors ${
+              activeTab === 'vault'
+                ? 'bg-stone-800 text-amber-400 border-b-2 border-amber-500'
+                : 'text-stone-400 hover:text-stone-200'
+            }`}
+          >
+            <Icons.BookOpen className="w-4 h-4" />
+            Campaign
+          </button>
+          <button
             onClick={() => setActiveTab('characters')}
             className={`px-4 py-2 rounded-t-lg flex items-center gap-2 transition-colors ${
               activeTab === 'characters' 
@@ -125,6 +137,7 @@ export default function DMPage() {
         </div>
 
         {/* Tab Content */}
+        {activeTab === 'vault' && <VaultTab />}
         {activeTab === 'characters' && (
           <CharactersTab data={data} onSave={saveData} />
         )}
