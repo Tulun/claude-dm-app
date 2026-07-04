@@ -159,11 +159,25 @@ Convention: `[ ]` open · `[x]` done (move to the log at the bottom when complet
 - [ ] **Monster Manual slot-format coverage** — the spellcasting parser now handles
   "1st level (4 slots):"; stat blocks with unusual formats (e.g. "Spellcasting (Psionics)")
   may still parse partially. Collect real failing examples before extending.
+- [ ] **Obsidian vault follow-ups** (the read-only Campaign dashboard shipped July 2026;
+  `lib/vaultStore.js`, `/api/vault`, `app/dm/components/VaultTab.jsx`):
+  - Link vault notes to app entities (a dm-npc or saved encounter referencing the
+    note that describes it) — user picked this as a "maybe later" in the scoping pass.
+  - "Send to Obsidian" append-only export (new files only, never modify existing).
+  - Vault cleanup: the vault has sync-duplicate folders ("PCs" + "PCs 2", etc.) with
+    real content split across both; the dashboard merges them for display and shows a
+    hint. Actual file moves should happen in Obsidian, by the user.
+  - Embedded images (`![[map.png]]`) render as placeholders; could serve them via the
+    vault route with the same traversal guard.
 
 ---
 
 ## Completed log
 
+- [x] Obsidian vault Campaign dashboard on /dm — read-only `/api/vault` route
+  (OBSIDIAN_VAULT_PATH in .env.local, traversal-guarded, GET-only by design),
+  folder-merged dashboard with Current Session / Recently edited / search, safe
+  markdown reader (no new dangerouslySetInnerHTML), 38 new tests — July 2026
 - [x] Escaped HTML in `formatSpellText` (app/spellbook/formatSpellText.js) — closed the app's only XSS sink; 7 new tests — July 2026
 - [x] Upgraded Next.js 16.1.4 → 16.2.10 — cleared all high-severity npm audit advisories (2 non-actionable moderates remain in Next's vendored postcss) — July 2026
 - [x] Combat page memoization — React.memo on CharacterCard + InitiativeItem, useCallback handlers, useMemo initiative pipeline (Map lookup replaced O(n²) find) — July 2026
