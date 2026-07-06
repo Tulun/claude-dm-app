@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import Icons from '../../components/Icons';
+import { generateId } from '../../utils/generateId';
 
 // ─── Random Tables ───────────────────────────────────────────────
 
@@ -218,7 +219,7 @@ function generateNPC(options = {}) {
   const name = lastName ? `${firstName} ${lastName}` : firstName;
 
   return {
-    id: `npc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    id: generateId('npc'),
     name,
     race: RACE_LABELS[race],
     gender: gender.charAt(0).toUpperCase() + gender.slice(1),
@@ -275,7 +276,7 @@ export default function NPCGeneratorTab({ data, onSave }) {
   const saveToDM = () => {
     const characters = data?.characters || [];
     const newChar = {
-      id: `char-${Date.now()}`,
+      id: generateId('char'),
       name: npc.name,
       type: 'npc',
       role: npc.occupation,

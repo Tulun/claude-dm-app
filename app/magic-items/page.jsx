@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Navbar from '../components/Navbar';
+import Modal from '../components/Modal';
 import { ITEM_CATEGORIES, RARITIES, CLASSES, RARITY_COLORS, RARITY_VALUES } from './constants';
 import { searchItems, sortItems } from './itemUtils';
 
@@ -307,8 +308,8 @@ function ItemModal({ item, onSave, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-stone-900 border border-amber-700 rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+    <Modal onClose={onClose}>
+      <div className="bg-stone-900 border border-amber-700 rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           <h2 className="text-lg font-bold text-amber-400">{item ? 'Edit Item' : 'Add Custom Item'}</h2>
           
@@ -386,6 +387,6 @@ function ItemModal({ item, onSave, onClose }) {
           </div>
         </form>
       </div>
-    </div>
+    </Modal>
   );
 }

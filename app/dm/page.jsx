@@ -8,12 +8,14 @@ import WorldTab from './components/WorldTab';
 import SessionTab from './components/SessionTab';
 import NPCGeneratorTab from './components/NPCGeneratorTab';
 import VaultTab from './components/VaultTab';
+import { useToast } from '../hooks/useToast';
+import { TOAST_ERROR_DURATION_MS } from '../utils/timings';
 
 export default function DMPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('vault');
-  const [saveStatus, setSaveStatus] = useState('');
+  const [saveStatus, showToast] = useToast();
 
   // Load DM data
   useEffect(() => {
@@ -39,12 +41,10 @@ export default function DMPage() {
       if (!res.ok) throw new Error('Failed to save');
       const saved = await res.json();
       setData(saved);
-      setSaveStatus('Saved!');
-      setTimeout(() => setSaveStatus(''), 2000);
+      showToast('Saved!');
     } catch (err) {
       console.error('Failed to save:', err);
-      setSaveStatus('Failed to save');
-      setTimeout(() => setSaveStatus(''), 3000);
+      showToast('Failed to save', TOAST_ERROR_DURATION_MS);
     }
   };
 

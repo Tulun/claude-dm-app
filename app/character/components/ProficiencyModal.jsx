@@ -1,6 +1,7 @@
 'use client';
 
 import { SKILLS, formatMod, getSkillBonus, getSkillProficiency, getSkillProficiencySource, getProfBonus, BACKGROUNDS } from './constants';
+import Modal from '../../components/Modal';
 
 export default function ProficiencyModal({ character, onUpdate, onClose }) {
   const profBonus = getProfBonus(character);
@@ -36,8 +37,8 @@ export default function ProficiencyModal({ character, onUpdate, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={onClose}>
-      <div className="bg-stone-900 border border-stone-700 rounded-xl max-w-2xl w-full max-h-[85vh] overflow-auto m-4" onClick={e => e.stopPropagation()}>
+    <Modal onClose={onClose}>
+      <div className="bg-stone-900 border border-stone-700 rounded-xl max-w-2xl w-full max-h-[85vh] overflow-auto m-4">
         <div className="p-4 border-b border-stone-700 flex items-center justify-between sticky top-0 bg-stone-900 z-10">
           <h2 className="text-lg font-bold text-amber-400">Skill Proficiencies</h2>
           <button onClick={onClose} className="text-stone-400 hover:text-white text-xl">×</button>
@@ -115,6 +116,6 @@ export default function ProficiencyModal({ character, onUpdate, onClose }) {
           </div>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }

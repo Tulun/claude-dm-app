@@ -3,7 +3,10 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import Icons from '../components/Icons';
 import Navbar from '../components/Navbar';
+import Modal from '../components/Modal';
 import { formatSpellText } from './formatSpellText';
+import { useToast } from '../hooks/useToast';
+import { TOAST_ERROR_DURATION_MS } from '../utils/timings';
 
 const SCHOOLS = ['Abjuration', 'Conjuration', 'Divination', 'Enchantment', 'Evocation', 'Illusion', 'Necromancy', 'Transmutation'];
 const CLASSES = ['Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger', 'Sorcerer', 'Warlock', 'Wizard'];
@@ -37,7 +40,7 @@ export default function SpellbookPage() {
   const [expandedSpell, setExpandedSpell] = useState(null);
   const [editingSpell, setEditingSpell] = useState(null);
   const [showFilters, setShowFilters] = useState(true);
-  const [saveStatus, setSaveStatus] = useState('');
+  const [saveStatus, showToast] = useToast();
   
   // New spell creation
   const [showNewSpellForm, setShowNewSpellForm] = useState(false);
@@ -91,21 +94,18 @@ export default function SpellbookPage() {
       });
       
       setEditingSpell(null);
-      setSaveStatus('Saved!');
-      setTimeout(() => setSaveStatus(''), 2000);
+      showToast('Saved!');
       return savedSpell;
     } catch (err) {
       console.error('Failed to save spell:', err);
-      setSaveStatus('Failed to save');
-      setTimeout(() => setSaveStatus(''), 3000);
+      showToast('Failed to save', TOAST_ERROR_DURATION_MS);
       return null;
     }
   };
 
   const createNewSpell = async () => {
     if (!newSpell.name.trim()) {
-      setSaveStatus('Name required');
-      setTimeout(() => setSaveStatus(''), 2000);
+      showToast('Name required');
       return;
     }
     
@@ -723,10 +723,9 @@ function ImportSpellModal({ isOpen, onClose, onImport, existingSpells }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={handleClose}>
-      <div 
+    <Modal onClose={handleClose}>
+      <div
         className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-4xl max-h-[90vh] flex flex-col"
-        onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div className="p-4 border-b border-stone-700 flex items-center justify-between">
@@ -903,7 +902,7 @@ function ImportSpellModal({ isOpen, onClose, onImport, existingSpells }) {
           </div>
         )}
       </div>
-    </div>
+    </Modal>
   );
 }
 

@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import EncounterPlanner from './EncounterPlanner';
 import EncounterEditor from './EncounterEditor';
 import EncounterList from './EncounterList';
+import { generateId } from '../utils/generateId';
 
 export default function EncountersPage() {
   const [encounters, setEncounters] = useState([]);
@@ -111,7 +112,7 @@ export default function EncountersPage() {
   // Encounter CRUD
   const createNewEncounter = (name = 'New Encounter') => {
     const newEncounter = {
-      id: `encounter-${Date.now()}`,
+      id: generateId('encounter'),
       name: name,
       monsters: [],
       createdAt: new Date().toISOString(),
@@ -132,7 +133,7 @@ export default function EncountersPage() {
   const duplicateEncounter = (encounter) => {
     const newEncounter = {
       ...encounter,
-      id: `encounter-${Date.now()}`,
+      id: generateId('encounter'),
       name: `${encounter.name} (Copy)`,
       createdAt: new Date().toISOString(),
     };

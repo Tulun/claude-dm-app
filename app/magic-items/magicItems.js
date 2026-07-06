@@ -634,9 +634,3 @@ export const defaultMagicItems = [
   { id: 'mundane-antitoxin', name: 'Antitoxin', category: 'Potion', rarity: 'Mundane', attunement: false, description: 'A creature that drinks this vial of liquid gains Advantage on saving throws against poison for 1 hour. Cost: 50 GP. Weight: —.' },
 ];
 
-// Legacy helpers
-export function getItemsByCategory(cat) { return defaultMagicItems.filter(i => i.category === cat); }
-export function getItemsByRarity(rar) { return defaultMagicItems.filter(i => i.rarity === rar); }
-export function getItemsByClass(cls) { return defaultMagicItems.filter(i => !i.classes || i.classes.includes(cls)); }
-export function getItem(id) { return defaultMagicItems.find(i => i.id === id); }
-

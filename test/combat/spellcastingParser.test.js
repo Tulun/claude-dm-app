@@ -66,8 +66,21 @@ describe('parseSpellcasting', () => {
       }],
     });
     expect(result.cantrips).toEqual(['fire bolt', 'light', 'mage hand', 'prestidigitation']);
-    // Quirk: the "(at will)" in the cantrip header also populates atWill.
-    expect(result.atWill).toEqual(['fire bolt', 'light', 'mage hand', 'prestidigitation']);
+    // Deliberately flipped (July 2026): the "(at will)" inside a cantrips
+    // header used to also populate atWill, so UIs rendering both lists showed
+    // duplicates. Cantrip headers now only populate cantrips.
+    expect(result.atWill).toEqual([]);
+  });
+
+  it('still parses a real at-will line alongside a cantrips header', () => {
+    const result = parseSpellcasting({
+      traits: [{
+        name: 'Spellcasting',
+        description: 'Cantrips (at will): light, mage hand. At will: detect magic, misty step.',
+      }],
+    });
+    expect(result.cantrips).toEqual(['light', 'mage hand']);
+    expect(result.atWill).toEqual(['detect magic', 'misty step']);
   });
 
   it('parses at-will spell lists', () => {

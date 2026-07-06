@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { CLASS_FEATURES, SUBCLASS_FEATURES } from '../constants';
+import { getAllClasses } from '../../../utils/rules';
 
 // Multi-select component with tooltip support
 function MultiSelectWithTooltips({ 
@@ -78,9 +79,7 @@ function MultiSelectWithTooltips({
 
 export default function FeaturesTab({ character, onUpdate }) {
   const [expandedMultiSelects, setExpandedMultiSelects] = useState({});
-  const characterClasses = character.classes?.length > 0 
-    ? character.classes 
-    : character.class ? [{ name: character.class, level: character.level || 1, subclass: character.subclass }] : [];
+  const characterClasses = getAllClasses(character);
 
   const updateClassFeature = (featureName, value) => {
     onUpdate('classFeatures', { ...(character.classFeatures || {}), [featureName]: value });

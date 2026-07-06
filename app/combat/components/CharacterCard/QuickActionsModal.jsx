@@ -1,13 +1,14 @@
 'use client';
 
 import Icons from '../../../components/Icons';
+import Modal from '../../../components/Modal';
 
 const QuickActionsModal = ({ isOpen, character, onUpdate, onClose, displayAC, spellcastingInfo }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-stone-900 border border-red-800/50 rounded-xl w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+    <Modal onClose={onClose}>
+      <div className="bg-stone-900 border border-red-800/50 rounded-xl w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-4 border-b border-stone-700 bg-gradient-to-r from-red-950/50 to-stone-900">
           <div className="flex items-center justify-between">
@@ -61,7 +62,7 @@ const QuickActionsModal = ({ isOpen, character, onUpdate, onClose, displayAC, sp
           <button onClick={onClose} className="px-4 py-2 rounded-lg bg-stone-700 hover:bg-stone-600">Close</button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

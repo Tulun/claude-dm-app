@@ -1,13 +1,14 @@
 'use client';
 
 import Icons from '../../../components/Icons';
+import Modal from '../../../components/Modal';
 
 const DeleteConfirmModal = ({ isOpen, onClose, character, isEnemy, onRemove }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={onClose}>
-      <div className="bg-stone-900 border border-stone-700 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl" onClick={e => e.stopPropagation()}>
+    <Modal onClose={onClose}>
+      <div className="bg-stone-900 border border-stone-700 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
         <div className="flex items-center gap-3 mb-4">
           <div className={`p-3 rounded-full ${isEnemy ? 'bg-red-900/50' : 'bg-emerald-900/50'}`}>
             {isEnemy ? <Icons.Skull /> : <Icons.Shield />}
@@ -26,7 +27,7 @@ const DeleteConfirmModal = ({ isOpen, onClose, character, isEnemy, onRemove }) =
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

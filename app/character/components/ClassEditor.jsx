@@ -2,19 +2,14 @@
 
 import { useState } from 'react';
 import Icons from '../../components/Icons';
+import Modal from '../../components/Modal';
 import { CLASSES, SUBCLASSES, getTotalLevel, formatClasses } from './constants';
+import { getAllClasses } from '../../utils/rules';
 
 export default function ClassEditor({ character, onUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
-  
-  // Initialize classes array from legacy or existing data
-  const getClasses = () => {
-    if (character.classes?.length > 0) return character.classes;
-    if (character.class) return [{ name: character.class, level: character.level || 1, subclass: character.subclass || '' }];
-    return [];
-  };
 
-  const classes = getClasses();
+  const classes = getAllClasses(character);
   const totalLevel = getTotalLevel(character);
 
   const addClass = () => {
@@ -69,8 +64,8 @@ export default function ClassEditor({ character, onUpdate }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={() => setIsEditing(false)}>
-      <div className="bg-stone-900 border border-stone-700 rounded-xl max-w-lg w-full m-4" onClick={e => e.stopPropagation()}>
+    <Modal onClose={() => setIsEditing(false)}>
+      <div className="bg-stone-900 border border-stone-700 rounded-xl max-w-lg w-full m-4">
         <div className="p-4 border-b border-stone-700 flex items-center justify-between">
           <h2 className="text-lg font-bold text-amber-400">Classes & Subclasses</h2>
           <button onClick={() => setIsEditing(false)} className="text-stone-400 hover:text-white text-xl">×</button>
@@ -171,6 +166,6 @@ export default function ClassEditor({ character, onUpdate }) {
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }

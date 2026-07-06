@@ -2,6 +2,8 @@
 
 import { useState, useRef, useMemo } from 'react';
 import Icons from '../../components/Icons';
+import Modal from '../../components/Modal';
+import { getMod } from '../../utils/rules';
 
 const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [] }) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -11,19 +13,15 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
   const [parsedMonster, setParsedMonster] = useState(null);
   const [error, setError] = useState(null);
   const [editMode, setEditMode] = useState(false);
-  const [existingMatch, setExistingMatch] = useState(null);
   const fileInputRef = useRef(null);
 
-  // Check for existing monster with same name when parsedMonster changes
-  useMemo(() => {
-    if (parsedMonster && templates.length > 0) {
-      const match = templates.find(t => 
-        t.name.toLowerCase().trim() === parsedMonster.name.toLowerCase().trim()
-      );
-      setExistingMatch(match || null);
-    } else {
-      setExistingMatch(null);
-    }
+  // Existing monster with the same name, if any (derived — this used to be
+  // state written from inside a useMemo)
+  const existingMatch = useMemo(() => {
+    if (!parsedMonster || templates.length === 0) return null;
+    return templates.find(t =>
+      t.name.toLowerCase().trim() === parsedMonster.name.toLowerCase().trim()
+    ) || null;
   }, [parsedMonster, templates]);
 
   const handleDragOver = (e) => {
@@ -116,7 +114,6 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
     setError(null);
     setEditMode(false);
     setIsParsing(false);
-    setExistingMatch(null);
     onClose();
   };
 
@@ -124,19 +121,11 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
     setParsedMonster(prev => ({ ...prev, [field]: value }));
   };
 
-  const getMod = (score) => {
-    const mod = Math.floor((parseInt(score) - 10) / 2);
-    return mod >= 0 ? `+${mod}` : `${mod}`;
-  };
-
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={handleClose}>
-      <div 
-        className="bg-stone-900 border border-amber-800/50 rounded-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col" 
-        onClick={e => e.stopPropagation()}
-      >
+    <Modal onClose={handleClose}>
+      <div className="bg-stone-900 border border-amber-800/50 rounded-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-4 border-b border-stone-700 flex items-center justify-between">
           <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2">
@@ -484,7 +473,7 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
           </div>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

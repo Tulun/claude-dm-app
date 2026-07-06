@@ -8,7 +8,10 @@ import { getEquipmentAC } from '../../utils/acCalculation';
 // null means "no equipment info — show the stored AC instead".
 const getCalculatedAC = (character) => getEquipmentAC(character, { parseArmorNames: false });
 
-const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, onDragStart, onDragOver, onDrop, onDragEnd, isDragging, dragOverIndex, onUpdateInitiative, onUpdateHp, onUpdateLairNotes, onRemoveLairAction }) => {
+// `drag` is the stable handlers bundle from useDragReorder ({ onDragStart,
+// onDragOver, onDrop, onDragEnd }); isDragging/isDragOver are per-row booleans
+// so only the affected rows re-render during a drag.
+const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, drag, isDragging, isDragOver, onUpdateInitiative, onUpdateHp, onUpdateLairNotes, onRemoveLairAction }) => {
   const isDead = !isLairAction && character.currentHp <= 0;
   const [editing, setEditing] = useState(false);
   const [editingHp, setEditingHp] = useState(false);
@@ -73,13 +76,13 @@ const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, 
     return (
       <div
         draggable={!editing && !editingNotes}
-        onDragStart={(e) => !editing && !editingNotes && onDragStart(e, index)}
-        onDragOver={(e) => onDragOver(e, index)}
-        onDrop={(e) => onDrop(e, index)}
-        onDragEnd={onDragEnd}
-        className={`flex items-center gap-3 p-3 rounded-lg transition-all ${!editing && !editingNotes ? 'cursor-grab active:cursor-grabbing' : ''} 
+        onDragStart={(e) => !editing && !editingNotes && drag.onDragStart(e, index)}
+        onDragOver={(e) => drag.onDragOver(e, index)}
+        onDrop={(e) => drag.onDrop(e, index)}
+        onDragEnd={drag.onDragEnd}
+        className={`flex items-center gap-3 p-3 rounded-lg transition-all ${!editing && !editingNotes ? 'cursor-grab active:cursor-grabbing' : ''}
           bg-purple-950/40 border border-purple-700/50 hover:border-purple-500/50
-          ${isDragging ? 'opacity-50' : ''} ${dragOverIndex === index ? 'border-amber-400 border-2' : ''}`}
+          ${isDragging ? 'opacity-50' : ''} ${isDragOver ? 'border-amber-400 border-2' : ''}`}
       >
         <Icons.Grip />
         <div 
@@ -140,16 +143,16 @@ const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, 
   return (
     <div
       draggable={!editing && !editingHp}
-      onDragStart={(e) => !editing && !editingHp && onDragStart(e, index)}
-      onDragOver={(e) => onDragOver(e, index)}
-      onDrop={(e) => onDrop(e, index)}
-      onDragEnd={onDragEnd}
+      onDragStart={(e) => !editing && !editingHp && drag.onDragStart(e, index)}
+      onDragOver={(e) => drag.onDragOver(e, index)}
+      onDrop={(e) => drag.onDrop(e, index)}
+      onDragEnd={drag.onDragEnd}
       className={`flex items-center gap-3 p-3 rounded-lg transition-all ${!editing && !editingHp ? 'cursor-grab active:cursor-grabbing' : ''} ${
         isDead ? 'bg-stone-900/30 border border-stone-700/30 opacity-50' : 
         isCompanion ? 'bg-purple-950/30 border border-purple-900/30 hover:border-purple-700/50' :
         isEnemy ? 'bg-red-950/30 border border-red-900/30 hover:border-red-700/50' : 
         'bg-emerald-950/30 border border-emerald-900/30 hover:border-emerald-700/50'
-      } ${isDragging ? 'opacity-50' : ''} ${dragOverIndex === index ? 'border-amber-400 border-2' : ''}`}
+      } ${isDragging ? 'opacity-50' : ''} ${isDragOver ? 'border-amber-400 border-2' : ''}`}
     >
       <Icons.Grip />
       <div 

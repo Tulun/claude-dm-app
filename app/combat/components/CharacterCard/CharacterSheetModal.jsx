@@ -1,7 +1,8 @@
 'use client';
 
 import Icons from '../../../components/Icons';
-import { getModNum, formatMod as formatModifier } from '../../../utils/rules';
+import Modal from '../../../components/Modal';
+import { getModNum, formatMod as formatModifier, getProfBonus, formatClassList } from '../../../utils/rules';
 
 const SKILLS = [
   { name: 'Acrobatics', stat: 'dex' },
@@ -32,7 +33,7 @@ const CharacterSheetModal = ({ isOpen, character, onClose }) => {
   const getMod = getModNum;
   const formatMod = formatModifier;
   
-  const profBonus = character.profBonus || Math.ceil(1 + (character.level || 1) / 4);
+  const profBonus = character.profBonus || getProfBonus(character);
   
   // skillProficiencies is an object like { "Perception": 1, "Stealth": 2 } where 1=proficient, 2=expertise
   const getSkillBonus = (skill) => {
@@ -67,8 +68,8 @@ const CharacterSheetModal = ({ isOpen, character, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-stone-900 border border-emerald-800/50 rounded-xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+    <Modal onClose={onClose}>
+      <div className="bg-stone-900 border border-emerald-800/50 rounded-xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-4 border-b border-stone-700 bg-gradient-to-r from-emerald-950/50 to-stone-900 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -78,7 +79,7 @@ const CharacterSheetModal = ({ isOpen, character, onClose }) => {
             <div>
               <h2 className="text-lg font-bold text-emerald-400">{character.name}</h2>
               <p className="text-xs text-stone-400">
-                {character.classes?.map(c => `${c.name} ${c.level}`).join(' / ') || `${character.class} ${character.level}`}
+                {formatClassList(character)}
                 {character.background && ` • ${character.background}`}
               </p>
             </div>
@@ -255,7 +256,7 @@ const CharacterSheetModal = ({ isOpen, character, onClose }) => {
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

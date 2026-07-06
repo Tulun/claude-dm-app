@@ -2,9 +2,12 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import Icons from '../../../components/Icons';
+import Modal from '../../../components/Modal';
 import { Tooltip } from '../../../components/ui';
 import { RARITY_COLORS, ITEM_CATEGORIES, RARITIES } from '../../../magic-items/constants';
-import { getMod as getModNum } from '../constants';
+import { getMod as getModNum, getProfBonus } from '../constants';
+import { getArmorData } from '../../../utils/acCalculation';
+import { generateId } from '../../../utils/generateId';
 
 const WEAPON_PROPERTIES = [
   { name: 'Ammunition', desc: 'Requires ammunition to fire. Drawing ammo is part of the attack.' },
@@ -60,8 +63,8 @@ const PropButton = ({ prop, isSelected, onClick, color = 'amber' }) => {
 
 function DeleteConfirmModal({ itemName, onConfirm, onCancel }) {
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100]" onClick={onCancel}>
-      <div className="bg-stone-800 border border-stone-700 rounded-xl p-5 max-w-sm w-full mx-4 shadow-2xl" onClick={e => e.stopPropagation()}>
+    <Modal onClose={onCancel} layer="top">
+      <div className="bg-stone-800 border border-stone-700 rounded-xl p-5 max-w-sm w-full mx-4 shadow-2xl">
         <h3 className="text-lg font-bold text-stone-100 mb-2">Delete Item</h3>
         <p className="text-sm text-stone-400 mb-4">
           Are you sure you want to delete <span className="text-stone-200 font-medium">{itemName || 'this item'}</span>? This cannot be undone.
@@ -75,7 +78,7 @@ function DeleteConfirmModal({ itemName, onConfirm, onCancel }) {
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 
@@ -113,49 +116,10 @@ function AddItemModal({ onAdd, onClose }) {
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [search, categoryFilter, rarityFilter, magicItems]);
 
-  // Base AC lookup for mundane armor
-  const ARMOR_BASE_AC = {
-    'padded': { baseAC: 11, armorType: 'Light' },
-    'leather': { baseAC: 11, armorType: 'Light' },
-    'studded leather': { baseAC: 12, armorType: 'Light' },
-    'hide': { baseAC: 12, armorType: 'Medium' },
-    'chain shirt': { baseAC: 13, armorType: 'Medium' },
-    'scale mail': { baseAC: 14, armorType: 'Medium' },
-    'breastplate': { baseAC: 14, armorType: 'Medium' },
-    'half plate': { baseAC: 15, armorType: 'Medium' },
-    'ring mail': { baseAC: 14, armorType: 'Heavy' },
-    'chain mail': { baseAC: 16, armorType: 'Heavy' },
-    'splint': { baseAC: 17, armorType: 'Heavy' },
-    'plate': { baseAC: 18, armorType: 'Heavy' },
-    'shield': { baseAC: 2, armorType: 'Shield' },
-  };
-
-  const getArmorData = (magicItem) => {
-    const name = (magicItem.name || '').toLowerCase();
-    // Sort keys longest-first so "studded leather" matches before "leather", "chain mail" before "chain", etc.
-    const sortedKeys = Object.keys(ARMOR_BASE_AC).sort((a, b) => b.length - a.length);
-    for (const key of sortedKeys) {
-      if (name.includes(key)) return ARMOR_BASE_AC[key];
-    }
-    // Try armorType field
-    const aType = (magicItem.armorType || '').toLowerCase();
-    if (aType === 'shield') return ARMOR_BASE_AC['shield'];
-    for (const key of sortedKeys) {
-      if (aType.includes(key)) return ARMOR_BASE_AC[key];
-    }
-    // Parse AC from description (e.g. "AC 12 + DEX modifier")
-    const acMatch = (magicItem.description || '').match(/AC (\d+)/);
-    if (acMatch) {
-      const ac = parseInt(acMatch[1]);
-      return { baseAC: ac, armorType: magicItem.armorType || (ac <= 12 ? 'Light' : ac <= 15 ? 'Medium' : 'Heavy') };
-    }
-    return null;
-  };
-
   const handleAddMagicItem = (magicItem) => {
     const itemType = magicItem.category === 'Weapon' ? 'weapon' : magicItem.category === 'Armor' ? 'armor' : 'gear';
     const newItem = {
-      id: Date.now(),
+      id: generateId('item'),
       name: magicItem.name,
       quantity: 1,
       weight: '',
@@ -189,7 +153,7 @@ function AddItemModal({ onAdd, onClose }) {
   const handleAddCustom = () => {
     if (!customName.trim()) return;
     const newItem = {
-      id: Date.now(),
+      id: generateId('item'),
       name: customName.trim(),
       quantity: 1,
       weight: '',
@@ -201,8 +165,8 @@ function AddItemModal({ onAdd, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100] p-4" onClick={onClose}>
-      <div className="bg-stone-900 border border-stone-700 rounded-xl max-w-2xl w-full max-h-[80vh] flex flex-col shadow-2xl" onClick={e => e.stopPropagation()}>
+    <Modal onClose={onClose} layer="top">
+      <div className="bg-stone-900 border border-stone-700 rounded-xl max-w-2xl w-full max-h-[80vh] flex flex-col shadow-2xl">
         {/* Header */}
         <div className="p-4 border-b border-stone-700">
           <div className="flex items-center justify-between mb-3">
@@ -350,7 +314,7 @@ function AddItemModal({ onAdd, onClose }) {
           )}
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 
@@ -460,8 +424,10 @@ export default function InventoryTab({ character, onUpdate }) {
       abilityMod = strMod;
     }
     
-    // Proficiency bonus (assume proficient)
-    const profBonus = parseInt(character.profBonus) || Math.ceil(1 + (parseInt(character.level) || 1) / 4) + 1;
+    // Proficiency bonus (assume proficient). The old inline formula added a
+    // stray +1 on top of the level-derived bonus — deliberately dropped when
+    // consolidating onto getProfBonus (July 2026).
+    const profBonus = parseInt(character.profBonus) || getProfBonus(character);
     
     // Magic bonus from item name or description
     let magicBonus = 0;

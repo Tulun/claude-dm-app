@@ -24,6 +24,10 @@
 .DS_Store
 *.pem
 
+# corrupt-file recovery backups (see api-route-conventions skill) — the real
+# data/*.json stays tracked as a crude backup, but .bak files shouldn't pile up
+data/*.bak
+
 # debug
 npm-debug.log*
 yarn-debug.log*

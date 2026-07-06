@@ -3,24 +3,17 @@
 import { useState } from 'react';
 import Icons from '../../../components/Icons';
 import SpellPickerModal from '../SpellPickerModal';
-import { getMod as getModNum } from '../constants';
+import { getMod as getModNum, getProfBonus } from '../constants';
+import { abbreviateCastTime, getLevelLabel } from '../../../utils/spellFormat';
+import { getAllClasses } from '../../../utils/rules';
+import { generateId } from '../../../utils/generateId';
 
 // Classes that prepare spells (vs known spells)
 const PREPARED_CASTER_CLASSES = ['Cleric', 'Druid', 'Paladin', 'Wizard'];
 
 // Check if character is a prepared caster and get their caster class info
 function getPreparedCasterInfo(character) {
-  const classes = [];
-  if (character.classes) {
-    character.classes.forEach(c => classes.push({ name: c.name, level: c.level }));
-  } else if (character.class) {
-    classes.push({ name: character.class, level: character.level || 1 });
-  }
-  
-  const preparedClass = classes.find(c => PREPARED_CASTER_CLASSES.includes(c.name));
-  if (!preparedClass) return null;
-  
-  return preparedClass;
+  return getAllClasses(character).find(c => PREPARED_CASTER_CLASSES.includes(c.name)) || null;
 }
 
 // Calculate max prepared spells
@@ -68,7 +61,7 @@ export default function SpellsTab({ character, onUpdate }) {
 
   const addSpell = () => {
     const newSpell = { 
-      id: Date.now(), 
+      id: generateId('spell'), 
       name: '', 
       level: 0, 
       school: '', 
@@ -117,13 +110,6 @@ export default function SpellsTab({ character, onUpdate }) {
     onUpdate('spells', spells.map(s => 
       parseInt(s.level) === parseInt(level) ? { ...s, prepared } : s
     ));
-  };
-
-  const getLevelLabel = (level) => {
-    if (level === 0 || level === '0') return 'Cantrip';
-    const num = parseInt(level);
-    if (isNaN(num)) return level;
-    return `${num}${getOrdinalSuffix(num)}`;
   };
 
   return (
@@ -458,24 +444,6 @@ export default function SpellsTab({ character, onUpdate }) {
   );
 }
 
-function getOrdinalSuffix(n) {
-  const s = ['th', 'st', 'nd', 'rd'];
-  const v = n % 100;
-  return s[(v - 20) % 10] || s[v] || s[0];
-}
-
-// Abbreviate casting time for compact display
-function abbreviateCastTime(castTime) {
-  if (!castTime) return '—';
-  const lower = castTime.toLowerCase();
-  if (lower.startsWith('reaction')) return 'Reaction';
-  if (lower.startsWith('bonus action')) return 'Bonus';
-  if (lower === '1 action') return 'Action';
-  if (lower.includes('minute')) return castTime.match(/\d+\s*min/i)?.[0] || castTime;
-  if (lower.includes('hour')) return castTime.match(/\d+\s*h(ou)?r/i)?.[0] || castTime;
-  return castTime;
-}
-
 // Extract save type from spell description
 function extractSaveType(description) {
   if (!description) return null;
@@ -497,7 +465,7 @@ function calculateSpellDC(character) {
   if (!character.spellStat) return null;
   
   const getMod = getModNum;
-  const profBonus = Math.ceil(1 + (parseInt(character.level) || 1) / 4);
+  const profBonus = getProfBonus(character);
   
   const statMap = { int: 'int', wis: 'wis', cha: 'cha' };
   const stat = statMap[character.spellStat];

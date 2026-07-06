@@ -3,6 +3,10 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Icons from '../components/Icons';
+import Modal from '../components/Modal';
+import { useToast } from '../hooks/useToast';
+import { SHEET_SAVE_DEBOUNCE_MS } from '../utils/timings';
+import { getClassLevel } from '../utils/rules';
 import {
   StatsBar,
   SavingThrows,
@@ -44,7 +48,7 @@ function CharacterPageContent() {
   const [character, setCharacter] = useState(null);
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [saveStatus, setSaveStatus] = useState('');
+  const [saveStatus, showToast] = useToast();
   const [hasChanges, setHasChanges] = useState(false);
   const [activeTab, setActiveTab] = useState('resources');
   const [showProfModal, setShowProfModal] = useState(false);
@@ -109,11 +113,10 @@ function CharacterPageContent() {
         const arr = Array.isArray(data) ? data : [];
         const updated = arr.map(c => c.id === character.id ? character : c);
         await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updated) });
-        setSaveStatus('Saved!');
+        showToast('Saved!');
         setHasChanges(false);
-        setTimeout(() => setSaveStatus(''), 2000);
       }
-    } catch (err) { console.error('Error saving:', err); setSaveStatus('Error'); }
+    } catch (err) { console.error('Error saving:', err); showToast('Error', null); }
   };
 
   // Delete character
@@ -134,7 +137,7 @@ function CharacterPageContent() {
   // Auto-save with debounce
   useEffect(() => {
     if (!hasChanges || !character) return;
-    const timeout = setTimeout(saveCharacter, 1500);
+    const timeout = setTimeout(saveCharacter, SHEET_SAVE_DEBOUNCE_MS);
     return () => clearTimeout(timeout);
   }, [character, hasChanges]);
 
@@ -159,13 +162,7 @@ function CharacterPageContent() {
   const isDmNpc = type === 'dm-npc';
   
   // Check if character is a druid level 2+
-  const isDruid = () => {
-    if (character?.classes) {
-      const druid = character.classes.find(c => c.name?.toLowerCase() === 'druid');
-      return druid && parseInt(druid.level) >= 2;
-    }
-    return character?.class?.toLowerCase() === 'druid' && parseInt(character?.level) >= 2;
-  };
+  const isDruid = () => getClassLevel(character, 'druid') >= 2;
   
   // New tab order: spells, resources, wild shape (druid), inventory, features, feats, companions, notes
   const baseTabs = ['spells', 'resources', 'inventory', 'features', 'feats', 'companions', 'notes'];
@@ -238,8 +235,8 @@ function CharacterPageContent() {
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={() => setShowDeleteModal(false)}>
-          <div className="bg-stone-900 border border-red-800 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl" onClick={e => e.stopPropagation()}>
+        <Modal onClose={() => setShowDeleteModal(false)}>
+          <div className="bg-stone-900 border border-red-800 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-3 bg-red-900/50 rounded-full">
                 <Icons.Trash />
@@ -267,7 +264,7 @@ function CharacterPageContent() {
               </button>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
 
       <div className="max-w-[1800px] mx-auto p-4 space-y-4">

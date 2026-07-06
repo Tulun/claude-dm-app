@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import Icons from '../../../components/Icons';
+import Modal from '../../../components/Modal';
+import { getProfBonus, getClassLevel, formatClassList } from './utils';
+import { generateId } from '../../../utils/generateId';
 
 const METAMAGIC_OPTIONS = {
   'Careful Spell': { cost: 1, description: 'Chosen creatures automatically succeed on the spell\'s saving throw.' },
@@ -22,20 +25,8 @@ export default function SorcererFeaturesModal({ isOpen, onClose, character, onUp
   const resources = character.resources || [];
   const features = character.features || [];
   
-  // Get sorcerer level
-  const getSorcererLevel = () => {
-    if (character.classes) {
-      const sorc = character.classes.find(c => c.name?.toLowerCase() === 'sorcerer');
-      return sorc ? parseInt(sorc.level) || 0 : 0;
-    }
-    return character.class?.toLowerCase() === 'sorcerer' ? parseInt(character.level) || 0 : 0;
-  };
-  const sorcererLevel = getSorcererLevel();
-
-  // Get class display string
-  const classDisplay = character.classes 
-    ? character.classes.map(c => `${c.name} ${c.level}`).join(' / ')
-    : `${character.class} ${character.level}`;
+  const sorcererLevel = getClassLevel(character, 'sorcerer');
+  const classDisplay = formatClassList(character);
 
   // Find sorcery points resource
   const sorceryPointsResource = resources.find(r => 
@@ -81,7 +72,7 @@ export default function SorcererFeaturesModal({ isOpen, onClose, character, onUp
     const spellStat = character.spellStat || 'cha';
     const statValue = character[spellStat] || 10;
     const mod = Math.floor((statValue - 10) / 2);
-    const profBonus = character.profBonus || Math.ceil(1 + (character.level || 1) / 4);
+    const profBonus = character.profBonus || getProfBonus(character);
     const baseDC = 8 + mod + profBonus;
     return innateSorceryActive ? baseDC + 1 : baseDC;
   };
@@ -99,7 +90,7 @@ export default function SorcererFeaturesModal({ isOpen, onClose, character, onUp
     onUpdate({ ...character, resources: updatedResources });
   };
 
-  const useSorceryPoints = (cost) => {
+  const spendSorceryPoints = (cost) => {
     if (sorceryPoints < cost) return;
     updateSorceryPoints(-cost);
   };
@@ -151,8 +142,8 @@ export default function SorcererFeaturesModal({ isOpen, onClose, character, onUp
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-stone-900 border border-purple-700 rounded-xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+    <Modal onClose={onClose}>
+      <div className="bg-stone-900 border border-purple-700 rounded-xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-4 border-b border-stone-700 bg-gradient-to-r from-purple-950/50 to-stone-900">
           <div className="flex items-center justify-between">
@@ -334,7 +325,7 @@ export default function SorcererFeaturesModal({ isOpen, onClose, character, onUp
                             );
                           } else {
                             updatedFeatures = [...features, {
-                              id: Date.now(),
+                              id: generateId('feature'),
                               name: 'Metamagic',
                               description: 'Sorcerer feature allowing you to twist spells.',
                               options: [name]
@@ -368,7 +359,7 @@ export default function SorcererFeaturesModal({ isOpen, onClose, character, onUp
                             </span>
                           </div>
                           <button
-                            onClick={() => useSorceryPoints(meta.cost)}
+                            onClick={() => spendSorceryPoints(meta.cost)}
                             disabled={!canUse}
                             className={`px-3 py-1 rounded text-xs ${
                               canUse 
@@ -399,6 +390,6 @@ export default function SorcererFeaturesModal({ isOpen, onClose, character, onUp
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }

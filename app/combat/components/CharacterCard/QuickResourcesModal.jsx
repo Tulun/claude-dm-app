@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Icons from '../../../components/Icons';
+import Modal from '../../../components/Modal';
+import { getProfBonus, isClass, getClassLevel, formatClassList } from './utils';
 
 // Parse CR string to number for sorting
 function parseCR(cr) {
@@ -24,26 +26,12 @@ const QuickResourcesModal = ({ isOpen, character, onUpdate, onClose, templates =
   const spellSlots = character.spellSlots || {};
   
   // Check if character is a Sorcerer (for Innate Sorcery)
-  const isSorcerer = character.classes?.some(c => c.name?.toLowerCase() === 'sorcerer') || 
-                     character.class?.toLowerCase() === 'sorcerer';
+  const isSorcerer = isClass(character, 'sorcerer');
   const innateSorceryActive = character.innateSorcery || false;
 
   // Check if character is a Druid level 2+ (for Wild Shape)
-  const isDruid = () => {
-    if (character.classes) {
-      const druid = character.classes.find(c => c.name?.toLowerCase() === 'druid');
-      return druid && parseInt(druid.level) >= 2;
-    }
-    return character.class?.toLowerCase() === 'druid' && parseInt(character.level) >= 2;
-  };
-
-  const getDruidLevel = () => {
-    if (character.classes) {
-      const druid = character.classes.find(c => c.name?.toLowerCase() === 'druid');
-      return druid ? parseInt(druid.level) || 0 : 0;
-    }
-    return character.class?.toLowerCase() === 'druid' ? parseInt(character.level) || 0 : 0;
-  };
+  const isDruid = () => getClassLevel(character, 'druid') >= 2;
+  const getDruidLevel = () => getClassLevel(character, 'druid');
 
   const wildShapeForms = character.wildShapeForms || [];
   const activeWildShapeForm = character.wildShapeActive 
@@ -59,7 +47,7 @@ const QuickResourcesModal = ({ isOpen, character, onUpdate, onClose, templates =
     if (!spellStat) return null;
     const statValue = character[spellStat] || 10;
     const mod = Math.floor((statValue - 10) / 2);
-    const profBonus = character.profBonus || Math.ceil(1 + (character.level || 1) / 4);
+    const profBonus = character.profBonus || getProfBonus(character);
     const baseDC = 8 + mod + profBonus;
     return innateSorceryActive ? baseDC + 1 : baseDC;
   };
@@ -80,7 +68,7 @@ const QuickResourcesModal = ({ isOpen, character, onUpdate, onClose, templates =
     onUpdate({ ...character, resources: updated });
   };
 
-  const useResourceWithOption = (index, optionName) => {
+  const spendResourceWithOption = (index, optionName) => {
     const r = resources[index];
     if (r.current <= 0) return;
     
@@ -222,8 +210,8 @@ const QuickResourcesModal = ({ isOpen, character, onUpdate, onClose, templates =
   const hasResources = resources.length > 0;
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-stone-900 border border-emerald-800/50 rounded-xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+    <Modal onClose={onClose}>
+      <div className="bg-stone-900 border border-emerald-800/50 rounded-xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-4 border-b border-stone-700 bg-gradient-to-r from-emerald-950/50 to-stone-900 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -233,7 +221,7 @@ const QuickResourcesModal = ({ isOpen, character, onUpdate, onClose, templates =
             <div>
               <h2 className="text-lg font-bold text-emerald-400">{character.name}</h2>
               <p className="text-xs text-stone-400">
-                {character.classes?.map(c => `${c.name} ${c.level}`).join(' / ') || `${character.class} ${character.level}`}
+                {formatClassList(character)}
               </p>
             </div>
           </div>
@@ -491,7 +479,7 @@ const QuickResourcesModal = ({ isOpen, character, onUpdate, onClose, templates =
                           {r.options.map((opt, optIdx) => (
                             <button
                               key={optIdx}
-                              onClick={() => useResourceWithOption(i, opt.name)}
+                              onClick={() => spendResourceWithOption(i, opt.name)}
                               className="w-full text-left p-2 rounded bg-stone-700/50 hover:bg-stone-700 transition-colors"
                             >
                               <div className="font-medium text-amber-400 text-sm">{opt.name}</div>
@@ -612,13 +600,9 @@ const QuickResourcesModal = ({ isOpen, character, onUpdate, onClose, templates =
 
       {/* Wild Shape Picker Sub-Modal */}
       {showWildShapePicker && (
-        <div 
-          className="fixed inset-0 bg-black/70 flex items-center justify-center z-[60] p-4"
-          onClick={() => setShowWildShapePicker(false)}
-        >
-          <div 
+        <Modal layer="raised" onClose={() => setShowWildShapePicker(false)}>
+          <div
             className="bg-stone-900 border border-lime-700 rounded-xl w-full max-w-md max-h-[60vh] overflow-hidden flex flex-col"
-            onClick={e => e.stopPropagation()}
           >
             <div className="p-4 border-b border-stone-700">
               <div className="flex items-center justify-between">
@@ -682,18 +666,14 @@ const QuickResourcesModal = ({ isOpen, character, onUpdate, onClose, templates =
               </button>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
 
       {/* Option Details Modal */}
       {showOptionDetails && (
-        <div 
-          className="fixed inset-0 bg-black/70 flex items-center justify-center z-[60] p-4"
-          onClick={() => setShowOptionDetails(null)}
-        >
-          <div 
+        <Modal layer="raised" onClose={() => setShowOptionDetails(null)}>
+          <div
             className="bg-stone-900 border border-purple-700 rounded-xl w-full max-w-md overflow-hidden"
-            onClick={e => e.stopPropagation()}
           >
             <div className="p-4 border-b border-stone-700 bg-purple-900/30">
               <h3 className="text-lg font-bold text-purple-400">
@@ -728,9 +708,9 @@ const QuickResourcesModal = ({ isOpen, character, onUpdate, onClose, templates =
               </button>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
-    </div>
+    </Modal>
   );
 };
 

@@ -239,7 +239,8 @@ describe('EncountersPage', () => {
           const body = JSON.parse(posts[posts.length - 1][1].body);
           expect(body).toHaveLength(1);
           expect(body[0]).toMatchObject({ name: 'Dragon Fight', monsters: [] });
-          expect(body[0].id).toMatch(/^encounter-\d+$/);
+          // ids now include a random suffix via generateId() (collision fix, July 2026)
+          expect(body[0].id).toMatch(/^encounter-\d+-[a-z0-9]+$/);
         },
         { timeout: 3000 }
       );

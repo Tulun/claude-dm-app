@@ -18,6 +18,7 @@ with debounced POSTs.
 ## Commands
 
 - `npm run dev` · `npm run build` · `npm test` (vitest run) · `npm run test:watch`
+- `npm run lint` (0 errors expected) · `npm run format:check` (Prettier configured; no mass-reformat has been run)
 
 ## Non-negotiables
 
@@ -28,7 +29,7 @@ with debounced POSTs.
 3. Never silently overwrite a corrupt `data/*.json` — the `.bak` backup policy in
    the `api-route-conventions` skill is mandatory.
 4. D&D math comes from `app/utils/rules.js` / `app/utils/acCalculation.js` — never
-   define a local `getMod` (see `rules-math` skill for the sanctioned exceptions).
+   define a local `getMod` (no sanctioned exceptions remain; see `rules-math` skill).
 5. New auto-save effects must use the `saveEnabled` ref gate (see
    `frontend-patterns` skill) so loads never echo POSTs.
 6. The skills are living docs. If a change alters behavior a skill documents,

@@ -97,64 +97,6 @@ context costs:
 
 ## 2. Rules-math consolidation leftovers
 
-- [ ] **Unguarded list mutators on the combat page** — `updatePartyMember`
-  (`app/combat/page.jsx:261`) and `updateEnemy` (`:263`) `.map()` unconditionally,
-  while the comment above them (lines 258–260) and frontend-patterns §2 describe the
-  bail-out guard ("return `prev` when nothing matched") as universal. Impact is small
-  (callers always pass a fresh object, so the guard only catches unmatched ids), but
-  a no-op call still re-arms the debounced encounter/party save. Align both with
-  `updateInitiative`'s guarded pattern, fix the stale comment, and remove the
-  "Known gap" note from frontend-patterns §2. (Found by skill-sim chunk D.)
-- [ ] **Three local `getMod` variants intentionally not merged** — `Modals.jsx:447`,
-  `TemplateEditor.jsx:391`, `ImportMonsterModal.jsx:127` treat a score of 0 as a real
-  0 (−5 mod), while the canonical `app/utils/rules.js` helpers coerce 0/junk to 10
-  (→ +0). Decide which semantics are right (0 → −5 is correct D&D math), align the
-  canonical helper, then merge these three. (quirk pinned in
-  `test/combat/characterCardUtils.test.js`: "defaults missing or junk input to 10")
-- [ ] **Local prof-bonus formulas** — six sites compute `Math.ceil(1 + level / 4)` inline
-  instead of using the shared `getProfBonus` (same result for levels 1–20, but
-  multiclass-blind): under `app/combat/components/CharacterCard/` —
-  `QuickResourcesModal.jsx:62`, `CharacterSheetModal.jsx:35`, `SpellsModal.jsx:333`,
-  `SorcererFeaturesModal.jsx:84`; plus `app/character/components/tabs/SpellsTab.jsx:500`
-  and `InventoryTab.jsx:464` (a `+1` variant).
-- [ ] **InventoryTab duplicates the armor table** — `ARMOR_BASE_AC` + `getArmorData`
-  in `app/character/components/tabs/InventoryTab.jsx` re-implement
-  `ARMOR_AC_TABLE`/`getArmorBaseAC` from `app/utils/acCalculation.js`. Export the
-  shared table/lookup and delete the copy.
-- [ ] **Spellcasting parser: cantrip lines also populate `atWill`** — a header like
-  "Cantrips (at will):" writes the same list into both `cantrips` and `atWill`, so
-  UIs that render both show duplicates. (test: "parses cantrips lists" documents it)
-- [ ] **Duplicated spell formatters** — `abbreviateCastTime` ×3 (SpellsModal.jsx:304,
-  SpellPickerModal.jsx:11, SpellsTab.jsx:468) and `getLevelLabel` ×3 (same files).
-  Extract to `app/utils/spellFormat.js`.
-- [ ] **Delete three 0-byte files** — `app/character/components/tabs/DruidFeaturesModal.jsx`,
-  `app/character/components/tabs/SorcererFeaturesModal.jsx`,
-  `app/components/QuickResourcesModal.jsx` — all empty and imported nowhere (verified).
-- [ ] **Remove unused legacy helpers in magicItems.js** — `getItemsByCategory`,
-  `getItemsByRarity`, `getItemsByClass`, `getItem` are exported but never imported.
-- [ ] **Dual class-shape ternaries (~20 sites)** — components branch on
-  `character.classes` array vs legacy `class`/`level` everywhere (CardHeader,
-  QuickResourcesModal, Druid/SorcererFeaturesModal, …). `formatClasses`/`getTotalLevel`
-  already exist in shared modules — reuse them, and add `isDruid(char)`-style helpers
-  (or normalize the shape on load).
-- [ ] **Bare `Date.now()` ids** — ~15 sites create ids with no random suffix
-  (TabContent, tabs/*, dm/components/*); collisions possible when creating items in a
-  loop. Extract a `generateId(prefix)` helper (the combat page already uses the safe
-  `Date.now() + random` pattern).
-- [ ] **Shared `<Modal>` wrapper** — 33 hand-rolled `fixed inset-0 bg-black/…` overlay
-  divs with inconsistent opacity (50–80), z-index (50/60/100), and padding.
-- [ ] **Toast/save-status helper** — the `setSaveStatus(msg); setTimeout(clear, 2000)`
-  pair is copied ~10× across pages; extract a `useToast` hook. Same for the magic
-  debounce numbers (500/1000/1500/2000ms) → named constants.
-- [ ] **Housekeeping batch** — standardize `'fs'` → `'node:fs'` imports (3 routes);
-  add ESLint + Prettier; rewrite the stock create-next-app README; decide whether
-  `data/*.json` (campaign data) should stay tracked in git — it works as a crude
-  backup for a local tool, but any push publishes your campaign and `.bak` recovery
-  files will accumulate.
-- [ ] **Component design (larger)** — `InitiativeItem` takes 15 props (drag state
-  belongs in a hook/context); `CharacterCard` juggles 11+ `showX` modal booleans
-  (collapse to one `activeModal` string); `TabContent.jsx` is 1,501 lines and predates
-  the tabs/ split — finish migrating and delete the mega-component.
 
 ## 3. Performance / bundle
 
@@ -216,6 +158,90 @@ context costs:
 
 ## Completed log
 
+- [x] Component design batch — (1) deleted `TabContent.jsx` (1,501 lines): it was
+  already imported nowhere, the tabs/ split was complete; (2) `CharacterCard`'s ten
+  `showX` modal booleans collapsed to one `activeModal` string (the three inline
+  HP/temp-HP/temp-AC delta editors keep their own state — they're popovers, not
+  modals); (3) initiative drag state extracted to `useDragReorder`
+  (`app/combat/useDragReorder.js`) — `InitiativeItem` now takes a single `drag`
+  handlers bundle + per-row `isDragging`/`isDragOver` booleans (12 props, down
+  from 15), and hovering during a drag no longer re-renders every row (the old
+  shared `dragOverIndex` prop did). dm-app-map + frontend-patterns updated —
+  July 2026
+- [x] Shared `<Modal>` wrapper — `app/components/Modal.jsx` replaces all 34
+  hand-rolled `fixed inset-0 bg-black/…` overlays. Standardized: opacity /70
+  (was /50–/80), `p-4` everywhere, layers base/raised/top for z-50/z-[60]/z-[100].
+  Backdrop-only close (`e.target === e.currentTarget`) — panel `stopPropagation`
+  handlers removed as redundant; this also FIXES: nested QuickResources sub-modal
+  backdrop clicks no longer cascade-close the outer modal, and panels that forgot
+  stopPropagation no longer close on panel click. SpellPickerModal keeps its
+  no-backdrop-close behavior (omitted onClose). frontend-patterns §5 updated —
+  July 2026
+- [x] Housekeeping batch — `'fs'` → `'node:fs'` in the 3 raw-fs routes; ESLint
+  (flat config, eslint-config-next/core-web-vitals) + Prettier added with
+  `lint`/`format`/`format:check` scripts. `npm run lint` = 0 errors (27 legacy
+  warnings left visible: exhaustive-deps, set-state-in-effect, no-img-element);
+  no repo-wide Prettier reformat was run (would be pure churn — configs are for
+  new code). Two real lint finds fixed: ImportMonsterModal's setState-inside-
+  useMemo (existingMatch is now derived) and two non-hook `use*` functions
+  renamed (`spendSorceryPoints`, `spendResourceWithOption`). README rewritten
+  with real project docs. Data-tracking decision: `data/*.json` STAYS tracked
+  (deliberate crude backup for a local tool; revisit before ever pushing the
+  repo anywhere public) but `data/*.bak` recovery files are now gitignored —
+  July 2026
+- [x] Dual class-shape ternaries consolidated — new canonical helpers in
+  `app/utils/rules.js`: `getAllClasses`, `getClassLevel`, `isClass`,
+  `formatClassList` (re-exported from CharacterCard/utils.js; index.js's
+  `formatClasses` now delegates to `formatClassList`). Converted ~15 sites:
+  CardHeader, CharacterCard/index, QuickResources/Sorcerer/Druid feature modals
+  (incl. a fourth undocumented local `getMod` found in DruidFeaturesModal —
+  merged), SpellsModal + SpellsTab prepared-caster info, Features/Companions
+  tabs + TabContent class normalization, ClassEditor, WildShapeTab,
+  acCalculation unarmored-defense lookup. Left alone: SpellsTab's
+  `getCharacterClasses` (also reads a third `multiclassClass` shape) and the
+  card's `character.class ? 'party' : 'template'` type sniff — July 2026
+- [x] Bare `Date.now()` ids replaced with `generateId(prefix)`
+  (`app/utils/generateId.js`, timestamp + random suffix) across ~22 client
+  sites (TabContent, tabs/*, dm/components/*, combat modals, encounters,
+  characters); the four pre-existing safe inline patterns unified onto the
+  helper. API routes' server-side ids left as-is (one request at a time).
+  Encounters-page id-shape test updated deliberately — July 2026
+- [x] Toast/save-status helper — `useToast` hook (`app/hooks/useToast.js`)
+  replaces the copied `setSaveStatus + setTimeout` pairs on all six pages;
+  newer messages now reset the clear timer (stale timers can't clear a fresh
+  toast early). Magic timings named in `app/utils/timings.js` (500/1000/1500
+  arm/debounce + 2000/3000 toast durations); values unchanged — July 2026
+- [x] getMod 0-score semantics fixed + three local getMods merged — `getModNum` now
+  treats a real 0 as −5 (correct D&D math); missing/junk input still coerces to 10.
+  Pinning test split/flipped deliberately; local getMods in Modals.jsx,
+  TemplateEditor.jsx, ImportMonsterModal.jsx replaced with the canonical import
+  (ImportMonsterModal's junk-input "NaN" display becomes "+0"). rules-math skill
+  updated — July 2026
+- [x] Six inline prof-bonus formulas consolidated onto `getProfBonus` (QuickResources/
+  CharacterSheet/Spells/SorcererFeatures modals, SpellsTab, InventoryTab). Now
+  multiclass-aware; InventoryTab's stray `+1` on weapon attack bonuses deliberately
+  dropped (was wrong D&D math, untested) — July 2026
+- [x] Armor table consolidated — `acCalculation.js` now exports the richer
+  `ARMOR_AC_TABLE` (name → { baseAC, armorType }) plus `getArmorData`; InventoryTab's
+  duplicate `ARMOR_BASE_AC`/`getArmorData` deleted. Union of both tables' keys, so
+  the inventory lookup gains the 'studded'/'scale'/'chain' fragment aliases;
+  `getEquipmentAC` behavior unchanged (shield entry excluded from its body-armor
+  lookup) — July 2026
+- [x] Spellcasting parser: "Cantrips (at will):" headers no longer leak into `atWill`
+  (duplicate-render bug); a separate "At will:" line still parses. Pinning test
+  flipped deliberately + new coverage for the combined case — July 2026
+- [x] Extracted `app/utils/spellFormat.js` (`abbreviateCastTime`, `getLevelLabel`,
+  `getOrdinalSuffix`) — deleted the three copies in SpellsModal, SpellPickerModal,
+  SpellsTab — July 2026
+- [x] Guarded `updatePartyMember`/`updateEnemy` on the combat page — both now bail
+  out (return `prev`) when nothing matched, matching `updateInitiative`; the
+  in-file comment is accurate again and the frontend-patterns §2 "Known gap" note
+  was removed — July 2026
+- [x] Deleted three 0-byte dead files (tabs/DruidFeaturesModal.jsx,
+  tabs/SorcererFeaturesModal.jsx, app/components/QuickResourcesModal.jsx);
+  dm-app-map's dead-file note updated — July 2026
+- [x] Removed unused legacy helpers from magicItems.js (getItemsByCategory,
+  getItemsByRarity, getItemsByClass, getItem) — July 2026
 - [x] Skill-library drift hardening — closed the residual drift risk from chunk B.
   Each of the four duplicated fact clusters now has ONE canonical skill home, marked
   "CANONICAL" in place: per-view AC flags + temp-AC trap → rules-math; corrupt-file

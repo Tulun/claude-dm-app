@@ -2,22 +2,13 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Icons from '../../components/Icons';
+import Modal from '../../components/Modal';
+import { abbreviateCastTime, getLevelLabel } from '../../utils/spellFormat';
+import { generateId } from '../../utils/generateId';
 
 const SCHOOLS = ['Abjuration', 'Conjuration', 'Divination', 'Enchantment', 'Evocation', 'Illusion', 'Necromancy', 'Transmutation'];
 const CLASSES = ['Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger', 'Sorcerer', 'Warlock', 'Wizard'];
 const LEVELS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-// Abbreviate casting time for compact display
-function abbreviateCastTime(castTime) {
-  if (!castTime) return '—';
-  const lower = castTime.toLowerCase();
-  if (lower.startsWith('reaction')) return 'Reaction';
-  if (lower.startsWith('bonus action')) return 'Bonus';
-  if (lower === '1 action') return 'Action';
-  if (lower.includes('minute')) return castTime.match(/\d+\s*min/i)?.[0] || castTime;
-  if (lower.includes('hour')) return castTime.match(/\d+\s*h(ou)?r/i)?.[0] || castTime;
-  return castTime;
-}
 
 export default function SpellPickerModal({ isOpen, onClose, onAddSpells, characterSpells = [], characterClasses = [] }) {
   const [allSpells, setAllSpells] = useState([]);
@@ -92,7 +83,7 @@ export default function SpellPickerModal({ isOpen, onClose, onAddSpells, charact
   const handleAddSpells = () => {
     // Convert spellbook spells to character spell format
     const spellsToAdd = selectedSpells.map(spell => ({
-      id: Date.now() + Math.random(), // Unique ID for character's spell list
+      id: generateId('spell'), // Unique ID for character's spell list
       sourceId: spell.id, // Reference to spellbook spell
       name: spell.name,
       level: spell.level,
@@ -119,15 +110,10 @@ export default function SpellPickerModal({ isOpen, onClose, onAddSpells, charact
     setSelectedClass(null);
   };
 
-  const getLevelLabel = (level) => {
-    if (level === 0) return 'Cantrip';
-    return `${level}${getOrdinalSuffix(level)}`;
-  };
-
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+    <Modal>
       <div className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
         {/* Header */}
         <div className="p-4 border-b border-stone-700 flex items-center justify-between">
@@ -373,12 +359,6 @@ export default function SpellPickerModal({ isOpen, onClose, onAddSpells, charact
           </div>
         </div>
       </div>
-    </div>
+    </Modal>
   );
-}
-
-function getOrdinalSuffix(n) {
-  const s = ['th', 'st', 'nd', 'rd'];
-  const v = n % 100;
-  return s[(v - 20) % 10] || s[v] || s[0];
 }

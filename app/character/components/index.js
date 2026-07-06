@@ -19,9 +19,6 @@ export {
   WildShapeTab,
 } from './tabs';
 
-export function formatClasses(character) {
-  if (character.classes?.length > 0) {
-    return character.classes.map(c => `${c.name} ${c.level}`).join(' / ');
-  }
-  return character.class ? `${character.class} ${character.level || 1}` : '';
-}
+// Same behavior as before, now backed by the canonical helper in rules.js.
+// (The subclass-aware display variant lives in ./constants.js.)
+export { formatClassList as formatClasses } from '../../utils/rules';

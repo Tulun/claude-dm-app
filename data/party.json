@@ -483,17 +483,6 @@
         "itemType": "gear",
         "acBonus": "+2",
         "equipped": true
-      },
-      {
-        "id": 1783005677207,
-        "name": "All-Purpose Tool",
-        "quantity": 1,
-        "weight": "",
-        "description": "This simple screwdriver can transform into a variety of artisan's tools. As a Bonus Action, you can touch the item and turn it into any type of Artisan's Tools of your choice. While holding it, you gain a bonus to spell attack rolls and your spell save DC: +1 (Uncommon), +2 (Rare), or +3 (Very Rare). As a Magic action, you can choose one cantrip from any class list, which you can cast using the tool as a spellcasting focus until you finish a Long Rest.",
-        "itemType": "gear",
-        "magicItemId": "all-purpose-tool",
-        "rarity": "Varies",
-        "attunement": true
       }
     ],
     "advantages": [

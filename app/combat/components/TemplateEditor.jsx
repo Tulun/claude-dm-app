@@ -3,6 +3,8 @@
 import { useState, useMemo } from 'react';
 import Icons from '../../components/Icons';
 import ImportMonsterModal from './ImportMonsterModal';
+import { getMod } from '../../utils/rules';
+import { generateId } from '../../utils/generateId';
 
 // CR ordered list for range filter
 const CR_LIST = ['0', '1/8', '1/4', '1/2', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
@@ -388,13 +390,12 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
   const hasFilters = searchQuery || crMin !== null || crMax !== null || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || filter !== 'all' || sourceFilter !== 'default';
 
   const parseNum = (val, fallback) => { const num = parseInt(val); return isNaN(num) ? fallback : num; };
-  const getMod = (score) => { const mod = Math.floor((parseNum(score, 10) - 10) / 2); return mod >= 0 ? `+${mod}` : `${mod}`; };
 
   const handleCreate = () => {
     if (!createForm.name.trim()) return;
     onCreate({ 
       ...createForm, 
-      id: `tpl-${Date.now()}`,
+      id: generateId('tpl'),
       ac: parseNum(createForm.ac, 10),
       maxHp: parseNum(createForm.maxHp, 10),
       profBonus: parseNum(createForm.profBonus, 2),

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Icons from '../../../components/Icons';
+import Modal from '../../../components/Modal';
 
 const InventoryModal = ({ isOpen, character, onUpdate, onClose }) => {
   const [expandedItems, setExpandedItems] = useState(new Set());
@@ -81,8 +82,8 @@ const InventoryModal = ({ isOpen, character, onUpdate, onClose }) => {
   const attunedCount = inventory.filter(i => i.attuned).length;
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-stone-900 border border-amber-800/50 rounded-xl w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+    <Modal onClose={onClose}>
+      <div className="bg-stone-900 border border-amber-800/50 rounded-xl w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-4 border-b border-stone-700 bg-gradient-to-r from-amber-950/50 to-stone-900">
           <div className="flex items-center justify-between">
@@ -241,7 +242,7 @@ const InventoryModal = ({ isOpen, character, onUpdate, onClose }) => {
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

@@ -2,22 +2,16 @@
 
 import { useState, useMemo } from 'react';
 import Icons from '../../../components/Icons';
-import { getModNum } from './utils';
+import Modal from '../../../components/Modal';
+import { getModNum, getProfBonus, getAllClasses } from './utils';
+import { abbreviateCastTime, getLevelLabel } from '../../../utils/spellFormat';
 
 // Classes that prepare spells (vs known spells)
 const PREPARED_CASTER_CLASSES = ['Cleric', 'Druid', 'Paladin', 'Wizard'];
 
 // Check if character is a prepared caster and get their caster class info
 function getPreparedCasterInfo(character) {
-  const classes = [];
-  if (character.classes) {
-    character.classes.forEach(c => classes.push({ name: c.name, level: c.level }));
-  } else if (character.class) {
-    classes.push({ name: character.class, level: character.level || 1 });
-  }
-  
-  const preparedClass = classes.find(c => PREPARED_CASTER_CLASSES.includes(c.name));
-  return preparedClass || null;
+  return getAllClasses(character).find(c => PREPARED_CASTER_CLASSES.includes(c.name)) || null;
 }
 
 // Calculate max prepared spells
@@ -105,18 +99,10 @@ export default function SpellsModal({ isOpen, onClose, character }) {
 
   if (!isOpen) return null;
 
-  const getLevelLabel = (level) => {
-    if (level === 0) return 'Cantrips';
-    const suffixes = ['th', 'st', 'nd', 'rd'];
-    const v = level % 100;
-    return `${level}${suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]} Level`;
-  };
-
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div 
+    <Modal onClose={onClose}>
+      <div
         className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-2xl max-h-[85vh] flex flex-col"
-        onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div className="p-4 border-b border-stone-700">
@@ -275,7 +261,7 @@ export default function SpellsModal({ isOpen, onClose, character }) {
               {levels.map(level => (
                 <div key={level}>
                   <h3 className="text-sm font-medium text-purple-400 mb-2 border-b border-stone-700/50 pb-1">
-                    {getLevelLabel(level)}
+                    {level === 0 ? 'Cantrips' : `${getLevelLabel(level)} Level`}
                     <span className="text-stone-500 font-normal ml-2">({spellsByLevel[level].length})</span>
                   </h3>
                   <div className="space-y-1">
@@ -296,20 +282,8 @@ export default function SpellsModal({ isOpen, onClose, character }) {
           )}
         </div>
       </div>
-    </div>
+    </Modal>
   );
-}
-
-// Abbreviate casting time for compact display
-function abbreviateCastTime(castTime) {
-  if (!castTime) return '—';
-  const lower = castTime.toLowerCase();
-  if (lower.startsWith('reaction')) return 'Reaction';
-  if (lower.startsWith('bonus action')) return 'Bonus';
-  if (lower === '1 action') return 'Action';
-  if (lower.includes('minute')) return castTime.match(/\d+\s*min/i)?.[0] || castTime;
-  if (lower.includes('hour')) return castTime.match(/\d+\s*h(ou)?r/i)?.[0] || castTime;
-  return castTime;
 }
 
 // Extract save type from spell description
@@ -330,7 +304,7 @@ function extractSaveType(description) {
 function calculateSpellDC(character) {
   if (!character?.spellStat) return null;
   const getMod = getModNum;
-  const profBonus = Math.ceil(1 + (parseInt(character.level) || 1) / 4);
+  const profBonus = getProfBonus(character);
   const statMap = { int: 'int', wis: 'wis', cha: 'cha' };
   const stat = statMap[character.spellStat];
   if (!stat) return null;

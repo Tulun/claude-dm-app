@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Icons from '../../../components/Icons';
+import Modal from '../../../components/Modal';
+import { generateId } from '../../../utils/generateId';
+import { getClassLevel, getMod } from '../../../utils/rules';
 
 // Wild Shape rules by druid level
 const WILD_SHAPE_TABLE = [
@@ -42,19 +45,7 @@ export default function WildShapeTab({ character, onUpdate, templates = [] }) {
   const [beastSearch, setBeastSearch] = useState('');
   const [formSort, setFormSort] = useState('name'); // 'name' or 'cr'
 
-  // Get druid level
-  const getDruidLevel = () => {
-    if (character.classes) {
-      const druid = character.classes.find(c => c.name?.toLowerCase() === 'druid');
-      return druid ? parseInt(druid.level) || 0 : 0;
-    }
-    if (character.class?.toLowerCase() === 'druid') {
-      return parseInt(character.level) || 0;
-    }
-    return 0;
-  };
-
-  const druidLevel = getDruidLevel();
+  const druidLevel = getClassLevel(character, 'druid');
   const rules = getWildShapeRules(druidLevel);
   const wildShapeForms = character.wildShapeForms || [];
 
@@ -85,7 +76,7 @@ export default function WildShapeTab({ character, onUpdate, templates = [] }) {
     if (wildShapeForms.some(f => f.templateId === beast.id)) return;
 
     const newForm = {
-      id: Date.now(),
+      id: generateId('form'),
       templateId: beast.id,
       name: beast.name,
       currentHp: beast.maxHp,
@@ -154,10 +145,7 @@ export default function WildShapeTab({ character, onUpdate, templates = [] }) {
     ? templates.find(t => t.id === activeForm.templateId)
     : null;
 
-  const getModifier = (score) => {
-    const mod = Math.floor(((parseInt(score) || 10) - 10) / 2);
-    return mod >= 0 ? `+${mod}` : `${mod}`;
-  };
+  const getModifier = getMod;
 
   if (druidLevel < 2) {
     return (
@@ -430,13 +418,9 @@ export default function WildShapeTab({ character, onUpdate, templates = [] }) {
 
       {/* Beast Picker Modal */}
       {showBeastPicker && (
-        <div 
-          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
-          onClick={() => setShowBeastPicker(false)}
-        >
-          <div 
+        <Modal onClose={() => setShowBeastPicker(false)}>
+          <div
             className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-2xl max-h-[80vh] flex flex-col"
-            onClick={e => e.stopPropagation()}
           >
             <div className="p-4 border-b border-stone-700">
               <h2 className="text-lg font-bold text-lime-400">Add Beast Form</h2>
@@ -532,7 +516,7 @@ export default function WildShapeTab({ character, onUpdate, templates = [] }) {
               </button>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

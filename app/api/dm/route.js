@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
+import fs from 'node:fs';
 import path from 'path';
 import { backupCorruptFile } from '../../../lib/jsonStore.js';
 

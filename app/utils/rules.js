@@ -3,8 +3,9 @@
 // redefining these helpers locally.
 
 export const getModNum = (score) => {
-  const num = parseInt(score) || 10;
-  return Math.floor((num - 10) / 2);
+  // A real 0 is a valid score (−5 mod); only missing/unparseable input coerces to 10.
+  const num = parseInt(score);
+  return Math.floor(((Number.isNaN(num) ? 10 : num) - 10) / 2);
 };
 
 export const formatMod = (mod) => (mod >= 0 ? `+${mod}` : `${mod}`);
@@ -19,6 +20,30 @@ export const getTotalLevel = (character) => {
   }
   return parseInt(character?.level) || 0;
 };
+
+// Normalize the dual class shape — legacy flat {class, level, subclass} vs
+// multiclass {classes: [{name, level, subclass}]} — to an array. Use this (or
+// the helpers below) instead of hand-rolling the `classes?.length ? ... : ...`
+// ternary.
+export const getAllClasses = (character) => {
+  if (character?.classes?.length > 0) return character.classes;
+  if (character?.class) return [{ name: character.class, level: character.level || 1, subclass: character.subclass || '' }];
+  return [];
+};
+
+// Level in one specific class (0 when the character doesn't have it)
+export const getClassLevel = (character, className) => {
+  const entry = getAllClasses(character).find(c => c.name?.toLowerCase() === className.toLowerCase());
+  return entry ? parseInt(entry.level) || 0 : 0;
+};
+
+export const isClass = (character, className) => getClassLevel(character, className) > 0;
+
+// Plain class/level display string, e.g. "Fighter 5 / Wizard 3" (no subclass —
+// the character sheet's subclass-aware variant lives in
+// app/character/components/constants.js as formatClasses)
+export const formatClassList = (character) =>
+  getAllClasses(character).map(c => `${c.name} ${c.level}`).join(' / ');
 
 // Proficiency bonus: character level (multiclass-aware) first, then monster CR (full table to CR 30)
 export const getProfBonus = (character) => {

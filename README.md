@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# dm-app — D&D 5e Dungeon Master Tool
 
-## Getting Started
+A local, single-user toolkit for running D&D 5e games: initiative tracker,
+party roster, full character sheets, encounter planner with XP budgets, spell
+and magic-item libraries, monster templates, and DM notes with a read-only
+Obsidian-vault dashboard.
 
-First, run the development server:
+Built with Next.js (App Router), plain JSX (no TypeScript), Tailwind 4, and
+Vitest. No database — your campaign lives as JSON files in `data/`.
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Optional `.env.local`:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```bash
+ANTHROPIC_API_KEY=sk-...        # enables the AI stat-block / spell image parsers
+OBSIDIAN_VAULT_PATH=/path/to/vault   # enables the read-only Campaign tab on /dm
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Commands
 
-## Learn More
+| Command | What it does |
+|---|---|
+| `npm run dev` | Dev server |
+| `npm run build` | Production build (must pass before shipping a change) |
+| `npm test` | Full Vitest suite (must be green before shipping a change) |
+| `npm run test:watch` | Vitest watch mode |
 
-To learn more about Next.js, take a look at the following resources:
+## Pages
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `/combat` — initiative tracker (party, enemies, companions, lair actions)
+- `/characters` — party roster + DM NPCs
+- `/character?id=…&type=party|dm-npc` — character sheet editor
+- `/encounters` — encounter planner + saved-encounter library
+- `/spellbook`, `/magic-items`, `/templates`, `/classes` — libraries/reference
+- `/dm` — session notes, world notes, NPC generator, Obsidian Campaign tab
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Data & persistence
 
-## Deploy on Vercel
+`data/*.json` is real campaign data (tracked in git as a crude backup — see
+SUGGESTIONS.md for the trade-offs). Pages fetch on mount and auto-save with
+debounced POSTs to the API routes under `app/api/`. Treat `data/` as
+production data: never truncate or regenerate it by hand.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contributing / working on the code
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Start with `CLAUDE.md` and the skills under `.claude/skills/` — they are the
+project knowledge base (architecture map, API conventions, D&D rules math,
+frontend patterns, testing guide, debugging playbook). `SUGGESTIONS.md` is the
+living backlog and quirk registry.
+
+Definition of done for any change: `npx vitest run` fully green **and**
+`npm run build` clean.

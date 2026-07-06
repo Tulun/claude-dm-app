@@ -5,7 +5,7 @@
 
 import { getEquipmentAC } from '../../../utils/acCalculation';
 
-export { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus } from '../../../utils/rules';
+export { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, getAllClasses, getClassLevel, isClass, formatClassList } from '../../../utils/rules';
 
 // Combat-card AC: equipment-derived only, no armor-name parsing, and NO temp
 // AC — the card adds character.tempAC separately at display time, so including

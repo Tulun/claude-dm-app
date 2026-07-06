@@ -2,6 +2,9 @@
 
 import { useState, useMemo } from 'react';
 import Icons from '../../components/Icons';
+import Modal from '../../components/Modal';
+import { getMod } from '../../utils/rules';
+import { generateId } from '../../utils/generateId';
 
 // CR values for filtering - expanded range
 const CR_OPTIONS = [
@@ -209,7 +212,7 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
       for (let i = 0; i < quantity; i++) {
         onAdd({ 
           ...template, 
-          id: `enemy-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, 
+          id: generateId('enemy'), 
           name: quantity > 1 ? `${template.name} ${i + 1}` : template.name, 
           currentHp: template.maxHp, 
           initiative: Math.floor(Math.random() * 20) + 1 
@@ -239,8 +242,8 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
   const hasFilters = searchQuery || selectedCRs.length > 0 || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || typeFilter !== 'all';
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={handleClose}>
-      <div className="bg-stone-900 border border-amber-800/50 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
+    <Modal onClose={handleClose}>
+      <div className="bg-stone-900 border border-amber-800/50 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         <div className="p-4 border-b border-stone-700">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-amber-400">Add to Encounter</h2>
@@ -426,7 +429,7 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 
@@ -444,17 +447,11 @@ export const AddPartyModal = ({ isOpen, onClose, onSave }) => {
     return isNaN(num) ? fallback : num;
   };
 
-  const getMod = (score) => {
-    const num = parseNum(score, 10);
-    const mod = Math.floor((num - 10) / 2);
-    return mod >= 0 ? `+${mod}` : `${mod}`;
-  };
-
   const handleSave = () => {
     if (!form.name) return;
     const newMember = { 
       ...form, 
-      id: `party-${Date.now()}`, 
+      id: generateId('party'), 
       level: parseNum(form.level, 1),
       ac: parseNum(form.ac, 10),
       maxHp: parseNum(form.maxHp, 10),
@@ -478,8 +475,8 @@ export const AddPartyModal = ({ isOpen, onClose, onSave }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-stone-900 border border-emerald-800/50 rounded-xl max-w-lg w-full max-h-[90vh] overflow-auto" onClick={(e) => e.stopPropagation()}>
+    <Modal onClose={onClose}>
+      <div className="bg-stone-900 border border-emerald-800/50 rounded-xl max-w-lg w-full max-h-[90vh] overflow-auto">
         <div className="p-4 border-b border-stone-700"><h2 className="text-xl font-bold text-emerald-400">Add Party Member</h2></div>
         <div className="p-4 space-y-4">
           <input type="text" placeholder="Character Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full bg-stone-800 border border-stone-600 rounded px-3 py-2 focus:outline-none focus:border-emerald-500" />
@@ -516,6 +513,6 @@ export const AddPartyModal = ({ isOpen, onClose, onSave }) => {
           <button onClick={handleSave} disabled={!form.name} className="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 flex items-center gap-2"><Icons.Download />Save</button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };

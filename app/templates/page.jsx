@@ -5,10 +5,11 @@ import Icons from '../components/Icons';
 import Navbar from '../components/Navbar';
 import { defaultEnemyTemplates } from '../components/defaultData';
 import TemplateEditor from '../combat/components/TemplateEditor';
+import { useToast } from '../hooks/useToast';
 
 export default function TemplatesPage() {
   const [templates, setTemplates] = useState(null);
-  const [saveStatus, setSaveStatus] = useState('');
+  const [saveStatus, showToast] = useToast();
 
   useEffect(() => {
     fetch('/api/templates').then(r => r.ok ? r.json() : null).then(data => {
@@ -20,7 +21,7 @@ export default function TemplatesPage() {
     if (!templates) return;
     const timeout = setTimeout(() => {
       fetch('/api/templates', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(templates) })
-        .then(() => { setSaveStatus('Saved'); setTimeout(() => setSaveStatus(''), 2000); })
+        .then(() => { showToast('Saved'); })
         .catch(console.error);
     }, 1000);
     return () => clearTimeout(timeout);
@@ -31,8 +32,7 @@ export default function TemplatesPage() {
     if (res.ok) {
       const data = await res.json();
       setTemplates(data && Array.isArray(data) ? data : defaultEnemyTemplates);
-      setSaveStatus('Reloaded');
-      setTimeout(() => setSaveStatus(''), 2000);
+      showToast('Reloaded');
     }
   };
 

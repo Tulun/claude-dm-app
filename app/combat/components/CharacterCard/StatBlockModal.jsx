@@ -1,6 +1,7 @@
 'use client';
 
 import Icons from '../../../components/Icons';
+import Modal from '../../../components/Modal';
 import { getMod } from '../../../utils/rules';
 
 const StatBlockModal = ({ isOpen, onClose, character }) => {
@@ -10,10 +11,9 @@ const StatBlockModal = ({ isOpen, onClose, character }) => {
   const statLabels = { str: 'STR', dex: 'DEX', con: 'CON', int: 'INT', wis: 'WIS', cha: 'CHA' };
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div 
+    <Modal onClose={onClose}>
+      <div
         className="bg-[#fdf1dc] text-[#58180d] rounded-lg w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col shadow-2xl"
-        onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div className="relative">
@@ -179,7 +179,7 @@ const StatBlockModal = ({ isOpen, onClose, character }) => {
           )}
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

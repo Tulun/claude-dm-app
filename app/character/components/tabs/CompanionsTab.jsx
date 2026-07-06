@@ -2,8 +2,11 @@
 
 import { useState } from 'react';
 import Icons from '../../../components/Icons';
+import Modal from '../../../components/Modal';
 import { CLASS_FEATURES, SUBCLASS_FEATURES } from '../constants';
 import { FEATS, FEAT_CATEGORIES, getFeat } from '../feats';
+import { generateId } from '../../../utils/generateId';
+import { getAllClasses } from '../../../utils/rules';
 
 // Feat Picker Modal
 function FeatPickerModal({ isOpen, onClose, onSelect, existingFeats }) {
@@ -25,8 +28,8 @@ function FeatPickerModal({ isOpen, onClose, onSelect, existingFeats }) {
   });
   
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-stone-900 border border-emerald-700 rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+    <Modal onClose={onClose}>
+      <div className="bg-stone-900 border border-emerald-700 rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
         <div className="p-4 border-b border-stone-700">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-bold text-emerald-400">Add Feat or Feature</h2>
@@ -110,7 +113,7 @@ function FeatPickerModal({ isOpen, onClose, onSelect, existingFeats }) {
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 
@@ -194,7 +197,7 @@ export default function FeaturesTab({ character, onUpdate }) {
 
   const addFeature = (feat) => {
     const newFeature = { 
-      id: Date.now(), 
+      id: generateId('feature'), 
       name: feat.name || '', 
       description: feat.description || '', 
       source: feat.source || feat.category || '',
@@ -213,9 +216,7 @@ export default function FeaturesTab({ character, onUpdate }) {
     onUpdate('features', character.features.filter(f => f.id !== id));
   };
 
-  const characterClasses = character.classes?.length > 0 
-    ? character.classes 
-    : character.class ? [{ name: character.class, level: character.level || 1, subclass: character.subclass }] : [];
+  const characterClasses = getAllClasses(character);
 
   const updateClassFeature = (featureName, value) => {
     onUpdate('classFeatures', { ...(character.classFeatures || {}), [featureName]: value });

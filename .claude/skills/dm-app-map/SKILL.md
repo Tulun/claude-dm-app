@@ -33,9 +33,9 @@ Follow this pattern for new pages. Do not introduce Redux/Zustand/Context.
 | `/templates` | `app/templates/page.jsx` | Monster template library |
 | `/dm` | `app/dm/page.jsx` | Tabs: session notes, world notes, DM characters, NPC generator, Campaign (read-only Obsidian vault dashboard, `app/dm/components/VaultTab.jsx`) |
 
-`app/character/components/TabContent.jsx` is a **legacy ~1500-line mega-component** being incrementally replaced by `app/character/components/tabs/` (ResourcesTab, InventoryTab, SpellsTab, FeaturesTab, FeatsTab, BackgroundTab, NotesTab, CompanionsTab, WildShapeTab). Add new sheet functionality to `tabs/`, not to TabContent.
+Character-sheet tab panels live in `app/character/components/tabs/` (ResourcesTab, InventoryTab, SpellsTab, FeaturesTab, FeatsTab, BackgroundTab, NotesTab, CompanionsTab, WildShapeTab). The legacy `TabContent.jsx` mega-component was deleted in July 2026 — the tabs/ split is complete; add new sheet functionality to `tabs/`.
 
-Shared UI: `app/components/` (Navbar.jsx, Icons.jsx, ui.jsx, defaultData.js). (`app/components/QuickResourcesModal.jsx` is a 0-byte dead file slated for deletion — the real one lives under `app/combat/components/CharacterCard/`.)
+Shared UI: `app/components/` (Navbar.jsx, Icons.jsx, ui.jsx, Modal.jsx — the standard modal overlay, see **frontend-patterns** §5 — and defaultData.js). (QuickResourcesModal lives under `app/combat/components/CharacterCard/`, not here.)
 
 ## API inventory (all under `app/api/*/route.js`)
 
@@ -63,8 +63,11 @@ See the **api-route-conventions** skill before adding or editing routes.
 
 ## Shared modules — reach for these BEFORE writing new logic
 
-- `app/utils/rules.js` — canonical 5e math: `getModNum`, `getMod`, `formatMod`, `getTotalLevel`, `getProfBonus`, `getSpellSaveDC`, `getSpellAttackBonus`. Single source of truth (see **rules-math** skill).
-- `app/utils/acCalculation.js` — `getEquipmentAC`, `getCalculatedAC`.
+- `app/utils/rules.js` — canonical 5e math: `getModNum`, `getMod`, `formatMod`, `getTotalLevel`, `getProfBonus`, `getSpellSaveDC`, `getSpellAttackBonus`, plus the dual-class-shape helpers `getAllClasses`, `getClassLevel`, `isClass`, `formatClassList`. Single source of truth (see **rules-math** skill).
+- `app/utils/generateId.js` — `generateId(prefix)`, the collision-safe entity-id helper (timestamp + random suffix). Use it for every new entity id.
+- `app/utils/timings.js` — named client timing constants (save arm/debounce, toast durations); `app/hooks/useToast.js` — the shared save-status toast hook (see **frontend-patterns** §1/§5).
+- `app/utils/acCalculation.js` — `getEquipmentAC`, `getCalculatedAC`, plus the canonical armor table (`ARMOR_AC_TABLE`) and `getArmorData` lookup.
+- `app/utils/spellFormat.js` — shared spell display formatters: `abbreviateCastTime`, `getLevelLabel`, `getOrdinalSuffix`.
 - `lib/jsonStore.js` — `dataPath`, `readJsonFile`, `writeJsonFile`, `deleteJsonFile`, `backupCorruptFile`. All routes persist through this except `app/api/templates/route.js`, which uses raw `node:fs` and a versioned `{ _version, templates }` wrapper (plus its own Conflux loader).
 - `app/magic-items/constants.js` (`ITEM_CATEGORIES`, `RARITIES`, `RARITY_VALUES`, `RARITY_COLORS`) + `app/magic-items/itemUtils.js` (`searchItems`, `sortItems`).
 - `app/encounters/constants.js` — `crToNumber`, `XP_THRESHOLDS`, `getDailyXPBudget`, `getDailyBudget2014`.
@@ -73,10 +76,10 @@ See the **api-route-conventions** skill before adding or editing routes.
 
 ## Data-shape conventions
 
-- **Dual class shape**: characters may have the legacy `{class, level, subclass}` flat fields OR the new `{classes: [{name, level, subclass}]}` array — often both. **Always** use `getTotalLevel` (`app/utils/rules.js`) and `formatClasses` (`app/character/components/constants.js` or `app/character/components/index.js`) — never hand-roll the `classes?.length ? ... : ...` ternary again.
+- **Dual class shape**: characters may have the legacy `{class, level, subclass}` flat fields OR the new `{classes: [{name, level, subclass}]}` array — often both. **Always** use the `app/utils/rules.js` helpers — `getTotalLevel`, `getAllClasses`, `getClassLevel`, `isClass`, `formatClassList` — never hand-roll the `classes?.length ? ... : ...` ternary again. (Two display formatters exist: `formatClassList` in rules.js is plain "Fighter 5 / Wizard 3" — re-exported as `formatClasses` from `app/character/components/index.js` — while `formatClasses` in `app/character/components/constants.js` is the subclass-aware sheet variant.)
 - **Spell field split**: spellbook spells (in `data/spells.json`) use `castingTime`; spell instances on characters use `castTime`. The sync in `app/api/spells/route.js` copies `castingTime → castTime` and strips the legacy `castingTime` key from character instances. UI code that displays both sources reads `spell.castTime || spell.castingTime`.
 - **Template ids**: `mm-*` prefix = Monster Manual defaults; anything else (user-created templates get `tpl-${Date.now()}`) is `source: 'custom'`. `app/api/templates/route.js` backfills `source` at read time for any untagged template (`mm-*` prefix → `'mm'`, else `'custom'`), but persisted `source` values take precedence — and the tag IS stored in `data/templates.json` today, because clients POST the full array (tags included) back.
-- **Entity ids** are strings like `` `enemy-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` `` (combat enemies) or `` `party-${Date.now()}` ``. Never assume numeric ids.
+- **Entity ids** are strings created by `generateId(prefix)` (`app/utils/generateId.js`) — `` `${prefix}-<timestamp>-<random>` ``. Older persisted data may still carry bare-timestamp or even numeric ids. Never assume numeric ids.
 
 ## Process — follow every time
 
@@ -84,7 +87,7 @@ See the **api-route-conventions** skill before adding or editing routes.
 2. **Quirks are pinned by characterization tests** (test names often start with `QUIRK:`). Changing a behavior means finding its pinning test and flipping it *deliberately in the same change* — a surprise test failure with "QUIRK" in the name means you changed intentional behavior.
 3. **Definition of done**: `npx vitest run` fully green (`test/**/*.test.{js,jsx}`; the test count only ever goes up) AND `npm run build` clean. Both, always.
 
-Commands: `npm run dev` · `npm run build` · `npm test` (= `vitest run`) · `npm run test:watch`.
+Commands: `npm run dev` · `npm run build` · `npm test` (= `vitest run`) · `npm run test:watch` · `npm run lint` (ESLint, 0 errors expected; legacy warnings allowed) · `npm run format` / `format:check` (Prettier — configs exist but the codebase has NOT been mass-reformatted; don't run `format` across files you aren't otherwise touching).
 
 ## Traps — do NOT
 
@@ -92,7 +95,7 @@ Commands: `npm run dev` · `npm run build` · `npm test` (= `vitest run`) · `np
 - Do NOT import `public/data/conflux-creatures.json` anywhere except the templates route — it's 5.4 MB and will wreck the bundle.
 - Do NOT hand-roll class/level logic; the dual legacy/multiclass shape is exactly why `getTotalLevel`/`formatClasses` exist.
 - Do NOT write `castingTime` onto a character's spell instance — use `castTime`; the spells-route sync strips `castingTime` from instances.
-- Do NOT add new features to `app/character/components/TabContent.jsx`; extend `app/character/components/tabs/` instead.
+- Do NOT recreate a monolithic sheet component; character-sheet features belong in `app/character/components/tabs/` (the old TabContent.jsx was deleted July 2026).
 - Do NOT add TypeScript, a state library, or React context — the codebase is deliberately plain JSX with local state.
 - Do NOT edit or truncate `data/*.json` casually — it is the user's real campaign data.
 - Do NOT declare a task done without both `npx vitest run` and `npm run build` passing.

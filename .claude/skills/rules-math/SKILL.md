@@ -6,24 +6,30 @@ description: Canonical D&D 5e rules math in this repo — ability modifiers, pro
 # Rules Math: Single Source of Truth
 
 All 5e math lives in `app/utils/rules.js` and `app/utils/acCalculation.js`.
-**Never define a local getMod / prof-bonus / AC formula.** 14 inline copies were
-consolidated in July 2026; the three intentional survivors are documented below
-and in `SUGGESTIONS.md` (section "Rules-math consolidation leftovers").
+**Never define a local getMod / prof-bonus / AC formula.** All inline copies
+(14 in the first pass, plus the three 0-score `getMod`s and six inline
+prof-bonus formulas) were consolidated in July 2026 — there are no sanctioned
+local copies anymore.
 
 ## Canonical helpers — `app/utils/rules.js`
 
 | Export | Returns | Notes |
 |---|---|---|
-| `getModNum(score)` | number | `Math.floor(((parseInt(score) \|\| 10) - 10) / 2)` — coerces junk AND `0` to 10 (see input quirk below) |
+| `getModNum(score)` | number | `parseInt`, then unparseable (NaN) input coerces to 10; a real `0` counts as 0 → −5 (see input handling below) |
 | `formatMod(mod)` | string | `"+2"` / `"-1"` |
 | `getMod(score)` | **string** | `formatMod(getModNum(score))` |
 | `getTotalLevel(character)` | number | Sums the multiclass `character.classes[].level` array; falls back to legacy `character.level` |
+| `getAllClasses(character)` | array | Normalizes the dual class shape to `[{name, level, subclass}]` (legacy flat fields become a one-entry array; `classes` wins when non-empty) |
+| `getClassLevel(character, name)` | number | Level in one class (case-insensitive), 0 when absent |
+| `isClass(character, name)` | boolean | `getClassLevel(...) > 0` |
+| `formatClassList(character)` | string | `"Fighter 5 / Wizard 3"` — plain, no subclass. `app/character/components/index.js` re-exports it as `formatClasses`; the SUBCLASS-AWARE display variant (with CR fallback) is a separate `formatClasses` in `app/character/components/constants.js` |
 | `getProfBonus(character)` | number | Character level first (multiclass-aware); if no level, monster CR table: CR 0–4 → +2 … CR 29+ → +9; defaults to 2 |
 | `getSpellSaveDC(character)` | number or null | `8 + prof + mod(spellStat)`, **+1 if `character.innateSorcery`** (Sorcerer feature). Null when no `spellStat` |
 | `getSpellAttackBonus(character)` | string or null | `prof + mod(spellStat)` formatted. Innate Sorcery does NOT apply here — DC only |
 
 `app/combat/components/CharacterCard/utils.js` re-exports these
-(`getMod`, `getModNum`, `getProfBonus`, `getSpellSaveDC`, `getSpellAttackBonus`)
+(`getMod`, `getModNum`, `getProfBonus`, `getSpellSaveDC`, `getSpellAttackBonus`,
+`getAllClasses`, `getClassLevel`, `isClass`, `formatClassList`)
 so combat-card imports keep working. Its `getMod` is the STRING one.
 
 ## NAME COLLISION: two `getMod`s with different return types
@@ -85,23 +91,25 @@ have **double-counted** temp AC. Read the display code in
 - `unarmoredDefense` — barbarian 10 + con, monk 10 + wis; checks both the `character.classes` array and legacy `character.class`
 - `draconicResilience` — 10 + cha
 
-Armor-name → base-AC lookup (`ARMOR_AC_TABLE`) and light/medium/heavy inference
-only run when `parseArmorNames` is true; otherwise only `item.baseAC` is used.
-Shields add `baseAC || 2`; equipped non-armor items with `acBonus` stack.
+Armor-name → base-AC lookup (`ARMOR_AC_TABLE`, exported: name fragment →
+`{ baseAC, armorType }`) and light/medium/heavy inference only run when
+`parseArmorNames` is true; otherwise only `item.baseAC` is used. Shields add
+`baseAC || 2`; equipped non-armor items with `acBonus` stack. The module also
+exports `getArmorData(item)` → `{ baseAC, armorType }` or null (name /
+armorType-field / "AC n" description lookup, shields included) — used by the
+character sheet's inventory when adding armor; the shield entry is deliberately
+excluded from the body-armor lookup inside `getEquipmentAC`.
 
-## Input quirk (pinned by tests): score 0 becomes 10
+## Input handling (pinned by tests): 0 is a real score, junk coerces to 10
 
-`getModNum` uses `parseInt(score) || 10`, so a score of `0` and junk strings
-both coerce to 10 (→ +0 mod). Real D&D says 0 → −5. Three local `getMod`s were
-**intentionally not merged** because they treat 0 as a real 0:
-
-- `app/combat/components/Modals.jsx` (`getMod` inside the modal component)
-- `app/combat/components/TemplateEditor.jsx`
-- `app/combat/components/ImportMonsterModal.jsx`
-
-Decide the 0-score semantics FIRST (see SUGGESTIONS.md item), then merge — do
-not silently swap one behavior for the other. The quirk is pinned by the test
-"defaults missing or junk input to 10" in `test/combat/characterCardUtils.test.js`.
+Since July 2026, `getModNum` treats a score of `0` as a real 0 (→ −5, correct
+D&D math), while missing/unparseable input (undefined, null, `'potato'`) still
+coerces to 10 (→ +0). Pinned by "defaults missing or junk input to 10" and
+"treats a score of 0 as a real 0 (-5), not missing input" in
+`test/combat/characterCardUtils.test.js`. The three local `getMod`s that
+historically preserved the 0 → −5 behavior (Modals.jsx, TemplateEditor.jsx,
+ImportMonsterModal.jsx) were merged into the canonical helper in the same
+change.
 
 ## Encounter math — `app/encounters/constants.js`
 
@@ -121,21 +129,21 @@ trait/action text (names containing "spellcasting"), falling back to
 `character.notes`.
 
 - Slot lines accept both `"1st (4 slots):"` and Monster Manual `"1st level (4 slots):"`.
-- **Known quirk:** a `"Cantrips (at will):"` header populates BOTH `cantrips`
-  and `atWill` (the "at will" regex also matches inside the header). Documented
-  in the test "parses cantrips lists" and in SUGGESTIONS.md — don't render both
-  lists without dedup, and don't "fix" it without flipping that test deliberately.
+- A `"Cantrips (at will):"` header populates ONLY `cantrips` — "at will"
+  occurrences inside a cantrips header are skipped, so a separate `"At will:"`
+  line is still parsed into `atWill` (fixed July 2026; tests "parses cantrips
+  lists" and "still parses a real at-will line alongside a cantrips header").
 - Adding a new stat-block format? Write the failing case in
   `test/combat/spellcastingParser.test.js` FIRST, then extend the regexes.
 
 ## Do NOT
 
-- Do NOT write a new local `getMod`/`formatMod`/prof-bonus — import from `app/utils/rules.js`. The only sanctioned local copies are the three 0-score files above.
+- Do NOT write a new local `getMod`/`formatMod`/prof-bonus — import from `app/utils/rules.js`. There are no sanctioned local copies.
 - Do NOT add temp AC inside any AC helper used by the combat card — it double-counts (see trap above).
 - Do NOT assume `getMod` returns a number — check the import; `constants.js`'s is a number, everyone else's is a string.
-- Do NOT change the `parseInt(score) || 10` coercion without updating the pinned characterization test and SUGGESTIONS.md.
+- Do NOT change the getModNum input coercion (junk → 10, real 0 → −5) without updating the pinned characterization tests and SUGGESTIONS.md.
 - Do NOT collapse the `getEquipmentAC` option flags "for consistency" — each caller's flags are load-bearing.
-- Do NOT use `Math.ceil(1 + level / 4)` for prof bonus in new code — it is multiclass-blind; use `getProfBonus`. Six legacy inline sites remain: `QuickResourcesModal.jsx:62`, `SpellsModal.jsx:333`, `CharacterSheetModal.jsx:35`, and `SorcererFeaturesModal.jsx:84` under `app/combat/components/CharacterCard/`, plus `app/character/components/tabs/SpellsTab.jsx:500` and `InventoryTab.jsx:464` (a `+1` variant). Note: the SUGGESTIONS.md "Local prof-bonus formulas" item lists only three of these — audit all six.
+- Do NOT use `Math.ceil(1 + level / 4)` for prof bonus — it is multiclass-blind; use `getProfBonus`. The six legacy inline sites were consolidated in July 2026 (the InventoryTab variant also carried a stray `+1` that was deliberately dropped).
 
 ## Verifying changes
 

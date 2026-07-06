@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Icons from '../../../components/Icons';
+import { formatClassList } from '../../../utils/rules';
 
 const CardHeader = ({ 
   character, 
@@ -31,13 +32,7 @@ const CardHeader = ({
           <div>
             <h3 className={`font-bold text-lg ${isDead ? 'line-through text-stone-500' : ''}`}>{character.name}</h3>
             <p className="text-xs text-stone-400">
-              {character.classes?.length > 0 
-                ? character.classes.map(c => `${c.name} ${c.level}`).join(' / ')
-                : character.class 
-                  ? `${character.class} ${character.level || 1}` 
-                  : character.cr 
-                    ? `CR ${character.cr}`
-                    : ''}
+              {formatClassList(character) || (character.cr ? `CR ${character.cr}` : '')}
             </p>
           </div>
         </div>

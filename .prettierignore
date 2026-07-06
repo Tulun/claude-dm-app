@@ -1,0 +1,13 @@
+# build output
+.next
+out
+build
+node_modules
+
+# real campaign data + large datasets — never machine-reformat
+data
+public/data
+package-lock.json
+
+# hand-formatted project knowledge base
+.claude

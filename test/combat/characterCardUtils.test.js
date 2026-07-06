@@ -37,8 +37,14 @@ describe('getMod / getModNum', () => {
     expect(getModNum(undefined)).toBe(0);
     expect(getModNum('potato')).toBe(0);
     expect(getMod(null)).toBe('+0');
-    // Quirk: 0 is falsy, so a score of 0 is treated as 10, not -5.
-    expect(getModNum(0)).toBe(0);
+  });
+
+  it('treats a score of 0 as a real 0 (-5), not missing input', () => {
+    // Deliberate behavior change (July 2026): 0 used to coerce to 10 because it
+    // is falsy; real D&D math says 0 → −5. Junk/missing input still → 10.
+    expect(getModNum(0)).toBe(-5);
+    expect(getMod(0)).toBe('-5');
+    expect(getModNum('0')).toBe(-5);
   });
 });
 

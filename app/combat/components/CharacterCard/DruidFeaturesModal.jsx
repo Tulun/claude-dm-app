@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Icons from '../../../components/Icons';
+import Modal from '../../../components/Modal';
+import { getMod, getClassLevel } from './utils';
 
 // Parse CR string to number for sorting
 function parseCR(cr) {
@@ -10,11 +12,6 @@ function parseCR(cr) {
   if (cr === '1/4') return 0.25;
   if (cr === '1/2') return 0.5;
   return parseFloat(cr) || 0;
-}
-
-function getMod(score) {
-  const mod = Math.floor(((parseInt(score) || 10) - 10) / 2);
-  return mod >= 0 ? `+${mod}` : `${mod}`;
 }
 
 export default function DruidFeaturesModal({ isOpen, onClose, character, onUpdate }) {
@@ -32,15 +29,7 @@ export default function DruidFeaturesModal({ isOpen, onClose, character, onUpdat
   const wildShapeUses = wildShapeResource?.current || 0;
   const wildShapeMax = wildShapeResource?.max || 2;
 
-  // Get druid level
-  const getDruidLevel = () => {
-    if (character.classes) {
-      const druid = character.classes.find(c => c.name?.toLowerCase() === 'druid');
-      return druid ? parseInt(druid.level) || 0 : 0;
-    }
-    return character.class?.toLowerCase() === 'druid' ? parseInt(character.level) || 0 : 0;
-  };
-  const druidLevel = getDruidLevel();
+  const druidLevel = getClassLevel(character, 'druid');
 
   // Active form
   const activeForm = character.wildShapeActive 
@@ -98,8 +87,8 @@ export default function DruidFeaturesModal({ isOpen, onClose, character, onUpdat
   });
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-stone-900 border border-lime-700 rounded-xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+    <Modal onClose={onClose}>
+      <div className="bg-stone-900 border border-lime-700 rounded-xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-4 border-b border-stone-700 bg-gradient-to-r from-lime-950/50 to-stone-900">
           <div className="flex items-center justify-between">
@@ -274,6 +263,6 @@ export default function DruidFeaturesModal({ isOpen, onClose, character, onUpdat
           </p>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }

@@ -2,8 +2,10 @@
 
 import { useState, useMemo } from 'react';
 import Icons from '../components/Icons';
+import Modal from '../components/Modal';
 import { crToNumber } from './constants';
 import { getMod } from '../utils/rules';
+import { generateId } from '../utils/generateId';
 
 // CR values for filtering
 const CR_OPTIONS = [
@@ -178,7 +180,7 @@ const EncounterEditor = ({
       const template = templates.find(t => t.id === templateId);
       if (!template) return null;
       return {
-        id: `${template.id}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+        id: generateId(template.id),
         templateId: template.id,
         name: template.name,
         customName: '',
@@ -473,8 +475,8 @@ const EncounterEditor = ({
 
       {/* Add Monster Modal */}
       {showAddMonster && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={cancelAddMonsters}>
-          <div className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-2xl max-h-[85vh] flex flex-col" onClick={e => e.stopPropagation()}>
+        <Modal onClose={cancelAddMonsters}>
+          <div className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-2xl max-h-[85vh] flex flex-col">
             <div className="p-4 border-b border-stone-700">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-bold text-red-400 flex items-center gap-2">
@@ -643,7 +645,7 @@ const EncounterEditor = ({
               </button>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

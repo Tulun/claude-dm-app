@@ -3,13 +3,14 @@
 import { useState } from 'react';
 import Icons from '../../../components/Icons';
 import ResourceRow from '../ResourceRow';
+import { generateId } from '../../../utils/generateId';
 
 export default function ResourcesTab({ character, onUpdate }) {
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
 
   const addResource = () => {
-    const newResource = { id: Date.now(), name: '', current: 1, max: 1 };
+    const newResource = { id: generateId('resource'), name: '', current: 1, max: 1 };
     onUpdate('resources', [...(character.resources || []), newResource]);
   };
 

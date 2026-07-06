@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Icons from '../components/Icons';
+import Modal from '../components/Modal';
 import { getDailyXPBudget } from './constants';
 
 const EncounterList = ({
@@ -149,8 +150,8 @@ const EncounterList = ({
 
       {/* New Encounter Name Modal */}
       {showNameModal && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setShowNameModal(false)}>
-          <div className="bg-stone-900 border border-amber-800/50 rounded-xl w-full max-w-md" onClick={e => e.stopPropagation()}>
+        <Modal onClose={() => setShowNameModal(false)}>
+          <div className="bg-stone-900 border border-amber-800/50 rounded-xl w-full max-w-md">
             <div className="p-4 border-b border-stone-700">
               <h2 className="text-lg font-bold text-amber-400">Create New Encounter</h2>
             </div>
@@ -181,13 +182,13 @@ const EncounterList = ({
               </button>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
 
       {/* Delete Confirmation Modal */}
       {deleteConfirm && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setDeleteConfirm(null)}>
-          <div className="bg-stone-900 border border-red-800/50 rounded-xl w-full max-w-md" onClick={e => e.stopPropagation()}>
+        <Modal onClose={() => setDeleteConfirm(null)}>
+          <div className="bg-stone-900 border border-red-800/50 rounded-xl w-full max-w-md">
             <div className="p-4 border-b border-stone-700">
               <h2 className="text-lg font-bold text-red-400 flex items-center gap-2">
                 <Icons.Trash /> Delete Encounter
@@ -217,7 +218,7 @@ const EncounterList = ({
               </button>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

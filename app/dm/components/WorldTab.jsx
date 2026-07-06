@@ -5,6 +5,7 @@ import Icons from '../../components/Icons';
 import { WORLD_CATEGORIES } from './constants';
 import WorldItemForm from './WorldItemForm';
 import WorldItemCard from './WorldItemCard';
+import { generateId } from '../../utils/generateId';
 
 export default function WorldTab({ data, onSave }) {
   const [activeCategory, setActiveCategory] = useState('places');
@@ -24,7 +25,7 @@ export default function WorldTab({ data, onSave }) {
     if (editingItem) {
       updated = items.map(i => i.id === item.id ? item : i);
     } else {
-      updated = [...items, { ...item, id: `${activeCategory}-${Date.now()}` }];
+      updated = [...items, { ...item, id: generateId(activeCategory) }];
     }
     onSave({ world: { ...world, [activeCategory]: updated } });
     setShowForm(false);

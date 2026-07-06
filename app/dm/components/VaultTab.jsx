@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import Icons from '../../components/Icons';
+import Modal from '../../components/Modal';
 import VaultMarkdown from './VaultMarkdown';
 import {
   groupNotes,
@@ -229,13 +230,9 @@ export default function VaultTab() {
 
       {/* Note reader modal */}
       {(openNote || noteLoading) && (
-        <div
-          className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
-          onClick={() => setOpenNote(null)}
-        >
+        <Modal onClose={() => setOpenNote(null)}>
           <div
             className="bg-stone-900 border border-stone-700 rounded-lg max-w-3xl w-full max-h-[85vh] flex flex-col"
-            onClick={e => e.stopPropagation()}
           >
             {noteLoading ? (
               <div className="p-10 flex justify-center">
@@ -267,7 +264,7 @@ export default function VaultTab() {
               </>
             )}
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

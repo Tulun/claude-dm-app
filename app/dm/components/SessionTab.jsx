@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Icons from '../../components/Icons';
+import { generateId } from '../../utils/generateId';
 
 const DEFAULT_CARD_COLORS = [
   { bg: 'bg-amber-900/20', border: 'border-amber-700/50', text: 'text-amber-400' },
@@ -54,7 +55,7 @@ export default function SessionTab({ data, onSave }) {
     if (!title.trim()) return;
     const colorIndex = cards.length % DEFAULT_CARD_COLORS.length;
     const newCard = {
-      id: `card-${Date.now()}`,
+      id: generateId('card'),
       title: title.trim(),
       content: '',
       colorIndex,
@@ -84,7 +85,7 @@ export default function SessionTab({ data, onSave }) {
     if (!confirm('Archive all current cards? They will be saved with today\'s date.')) return;
     
     const newSession = {
-      id: `session-${Date.now()}`,
+      id: generateId('session'),
       date: new Date().toISOString(),
       cards: [...cards]
     };

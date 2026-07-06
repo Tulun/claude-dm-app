@@ -4,12 +4,17 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Icons from '../components/Icons';
+import Modal from '../components/Modal';
 import Navbar from '../components/Navbar';
 import { defaultPartyData, defaultEnemyTemplates } from '../components/defaultData';
 import CharacterCard from './components/CharacterCard';
 import InitiativeItem from './components/InitiativeItem';
 import { AddEnemyModal, AddPartyModal } from './components/Modals';
 import { getCalculatedAC } from '../utils/acCalculation';
+import { generateId } from '../utils/generateId';
+import { useDragReorder } from './useDragReorder';
+import { useToast } from '../hooks/useToast';
+import { SAVE_ARM_DELAY_MS, SAVE_DEBOUNCE_MS } from '../utils/timings';
 
 const EMPTY_TEMPLATES = [];
 
@@ -22,9 +27,7 @@ export default function CombatPage() {
   const [expandedCards, setExpandedCards] = useState({});
   const [showAddEnemy, setShowAddEnemy] = useState(false);
   const [showAddParty, setShowAddParty] = useState(false);
-  const [dragIndex, setDragIndex] = useState(null);
-  const [dragOverIndex, setDragOverIndex] = useState(null);
-  const [saveStatus, setSaveStatus] = useState('');
+  const [saveStatus, showToast] = useToast();
   const [savedEncounters, setSavedEncounters] = useState([]);
   const [showLoadEncounter, setShowLoadEncounter] = useState(false);
   const [encounterToLoad, setEncounterToLoad] = useState(null);
@@ -76,13 +79,13 @@ export default function CombatPage() {
         }
 
         // Enable saving after a delay to ensure state has settled
-        setTimeout(() => { saveEnabled.current = true; }, 500);
+        setTimeout(() => { saveEnabled.current = true; }, SAVE_ARM_DELAY_MS);
       } catch (err) {
         console.error('Error loading data:', err);
         // Fall back to defaults on error
         setParty(defaultPartyData);
         setTemplates(defaultEnemyTemplates);
-        setTimeout(() => { saveEnabled.current = true; }, 500);
+        setTimeout(() => { saveEnabled.current = true; }, SAVE_ARM_DELAY_MS);
       }
     };
     loadData();
@@ -97,10 +100,9 @@ export default function CombatPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(party),
       }).then(() => {
-        setSaveStatus('Party saved');
-        setTimeout(() => setSaveStatus(''), 2000);
+        showToast('Party saved');
       }).catch(console.error);
-    }, 1000);
+    }, SAVE_DEBOUNCE_MS);
     return () => clearTimeout(timeout);
   }, [party]);
 
@@ -113,10 +115,9 @@ export default function CombatPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(templates),
       }).then(() => {
-        setSaveStatus('Templates saved');
-        setTimeout(() => setSaveStatus(''), 2000);
+        showToast('Templates saved');
       }).catch(console.error);
-    }, 1000);
+    }, SAVE_DEBOUNCE_MS);
     return () => clearTimeout(timeout);
   }, [templates]);
 
@@ -131,10 +132,9 @@ export default function CombatPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ enemies, lairAction }),
       }).then(() => {
-        setSaveStatus('Encounter saved');
-        setTimeout(() => setSaveStatus(''), 2000);
+        showToast('Encounter saved');
       }).catch(console.error);
-    }, 1000);
+    }, SAVE_DEBOUNCE_MS);
     return () => clearTimeout(timeout);
   }, [enemies, lairAction]);
 
@@ -148,8 +148,7 @@ export default function CombatPage() {
         } else {
           setParty(defaultPartyData);
         }
-        setSaveStatus('Party reloaded');
-        setTimeout(() => setSaveStatus(''), 2000);
+        showToast('Party reloaded');
       }
     } catch (err) {
       console.error('Error reloading party:', err);
@@ -173,7 +172,7 @@ export default function CombatPage() {
         
         newEnemies.push({
           ...template,
-          id: `enemy-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          id: generateId('enemy'),
           name: displayName,
           currentHp: template.maxHp,
           initiative: 0,
@@ -184,8 +183,7 @@ export default function CombatPage() {
     setEnemies(prev => [...prev, ...newEnemies]);
     setEncounterToLoad(null);
     setShowLoadEncounter(false);
-    setSaveStatus(`Loaded: ${encounter.name}`);
-    setTimeout(() => setSaveStatus(''), 2000);
+    showToast(`Loaded: ${encounter.name}`);
   };
 
 
@@ -241,26 +239,29 @@ export default function CombatPage() {
     setInitiativeOrder(sorted.map(c => c.id));
   };
 
-  const handleDrop = useCallback((e, dropIndex) => {
-    e.preventDefault();
-    if (dragIndex === null || dragIndex === dropIndex) return;
-
-    // Reorder without changing initiative values
+  // Reorder without changing initiative values (drag state lives in useDragReorder)
+  const reorderInitiative = useCallback((fromIndex, toIndex) => {
     const currentOrder = fullOrderIds.length > 0 ? [...fullOrderIds] : allCombatants.map(c => c.id);
-    const [draggedId] = currentOrder.splice(dragIndex, 1);
-    currentOrder.splice(dropIndex, 0, draggedId);
+    const [draggedId] = currentOrder.splice(fromIndex, 1);
+    currentOrder.splice(toIndex, 0, draggedId);
     setInitiativeOrder(currentOrder);
+  }, [fullOrderIds, allCombatants]);
 
-    setDragIndex(null);
-    setDragOverIndex(null);
-  }, [dragIndex, fullOrderIds, allCombatants]);
+  const { dragIndex, dragOverIndex, dragHandlers } = useDragReorder(reorderInitiative);
 
   // Stable handlers so React.memo on CharacterCard / InitiativeItem can skip
   // re-renders. All use functional setState; list setters bail out (return
   // prev) when nothing matched so no-op updates don't trigger saves.
-  const updatePartyMember = useCallback((u) => setParty(prev => prev ? prev.map(p => p.id === u.id ? u : p) : prev), []);
+  const updatePartyMember = useCallback((u) => setParty(prev => {
+    if (!prev) return prev;
+    const next = prev.map(p => p.id === u.id ? u : p);
+    return next.some((p, i) => p !== prev[i]) ? next : prev;
+  }), []);
   const removePartyMember = useCallback((id) => setParty(prev => prev ? prev.filter(p => p.id !== id) : prev), []);
-  const updateEnemy = useCallback((u) => setEnemies(prev => prev.map(x => x.id === u.id ? u : x)), []);
+  const updateEnemy = useCallback((u) => setEnemies(prev => {
+    const next = prev.map(x => x.id === u.id ? u : x);
+    return next.some((x, i) => x !== prev[i]) ? next : prev;
+  }), []);
   const removeEnemy = useCallback((id) => setEnemies(prev => prev.filter(x => x.id !== id)), []);
   const toggleExpand = useCallback((id) => setExpandedCards(prev => ({ ...prev, [id]: !prev[id] })), []);
   const addEnemy = useCallback((e) => setEnemies(prev => [...prev, e]), []);
@@ -302,9 +303,6 @@ export default function CombatPage() {
   const updateCompanionHp = useCallback((id, hp) => updateCompanion(id, { currentHp: hp }), [updateCompanion]);
   const updateLairNotes = useCallback((notes) => setLairAction(prev => ({ ...prev, notes })), []);
   const removeLairAction = useCallback(() => setLairAction(null), []);
-  const handleDragStart = useCallback((e, idx) => { setDragIndex(idx); e.dataTransfer.effectAllowed = 'move'; }, []);
-  const handleDragOver = useCallback((e, idx) => { e.preventDefault(); setDragOverIndex(idx); }, []);
-  const handleDragEnd = useCallback(() => { setDragIndex(null); setDragOverIndex(null); }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100">
@@ -337,7 +335,7 @@ export default function CombatPage() {
               <button onClick={sortByInitiative} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.Refresh />Sort by Init</button>
             </div>
             <div className="space-y-2">
-              {fullInitiativeList.map((c, i) => <InitiativeItem key={c.id} character={c} isEnemy={enemies.some(e => e.id === c.id)} isCompanion={c.isCompanion} isLairAction={c.isLairAction} index={i} onDragStart={handleDragStart} onDragOver={handleDragOver} onDrop={handleDrop} onDragEnd={handleDragEnd} isDragging={dragIndex === i} dragOverIndex={dragOverIndex} onUpdateInitiative={updateInitiative} onUpdateHp={c.isCompanion ? updateCompanionHp : undefined} onUpdateLairNotes={c.isLairAction ? updateLairNotes : undefined} onRemoveLairAction={c.isLairAction ? removeLairAction : undefined} />)}
+              {fullInitiativeList.map((c, i) => <InitiativeItem key={c.id} character={c} isEnemy={enemies.some(e => e.id === c.id)} isCompanion={c.isCompanion} isLairAction={c.isLairAction} index={i} drag={dragHandlers} isDragging={dragIndex === i} isDragOver={dragOverIndex === i} onUpdateInitiative={updateInitiative} onUpdateHp={c.isCompanion ? updateCompanionHp : undefined} onUpdateLairNotes={c.isLairAction ? updateLairNotes : undefined} onRemoveLairAction={c.isLairAction ? removeLairAction : undefined} />)}
               {!fullInitiativeList.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">Add combatants to begin!</div>}
             </div>
           </div>
@@ -373,8 +371,8 @@ export default function CombatPage() {
 
       {/* Load Encounter Modal */}
       {showLoadEncounter && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => { setShowLoadEncounter(false); setEncounterToLoad(null); }}>
-          <div className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-lg max-h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
+        <Modal onClose={() => { setShowLoadEncounter(false); setEncounterToLoad(null); }}>
+          <div className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-lg max-h-[80vh] flex flex-col">
             <div className="p-4 border-b border-stone-700">
               <h2 className="text-lg font-bold text-amber-400 flex items-center gap-2">
                 <Icons.FolderOpen /> Load Encounter
@@ -451,7 +449,7 @@ export default function CombatPage() {
               </button>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

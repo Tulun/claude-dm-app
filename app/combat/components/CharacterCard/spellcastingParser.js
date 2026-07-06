@@ -47,8 +47,16 @@ const parseSpellText = (desc, spellcasting) => {
   const cantripMatch = desc.match(/cantrips?[^:]*:\s*([^.]+?)(?:\.|$|\d+(?:st|nd|rd|th))/i);
   if (cantripMatch) spellcasting.cantrips = cantripMatch[1].split(/,\s*/).map(s => s.trim()).filter(Boolean);
 
-  const atWillMatch = desc.match(/at will[^:]*:\s*([^.]+)/i);
-  if (atWillMatch) spellcasting.atWill = atWillMatch[1].split(/,\s*/).map(s => s.trim()).filter(Boolean);
+  // Skip "at will" occurrences inside a cantrips header ("Cantrips (at will):")
+  // so the same list doesn't land in both cantrips and atWill.
+  for (const atWillMatch of desc.matchAll(/at will[^:]*:\s*([^.]+)/gi)) {
+    const insideCantripHeader = cantripMatch
+      && atWillMatch.index >= cantripMatch.index
+      && atWillMatch.index < cantripMatch.index + cantripMatch[0].length;
+    if (insideCantripHeader) continue;
+    spellcasting.atWill = atWillMatch[1].split(/,\s*/).map(s => s.trim()).filter(Boolean);
+    break;
+  }
 
   const perDayMatches = desc.matchAll(/(\d+)\/day[^:]*:\s*([^.]+)/gi);
   for (const match of perDayMatches) {

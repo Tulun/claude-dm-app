@@ -46,10 +46,14 @@ Rules:
 - Existing gated pages: `app/combat/page.jsx`, `app/characters/page.jsx`,
   `app/encounters/page.jsx`.
 - This section is the CANONICAL home for the gate/debounce timings (500ms arm,
-  1000ms debounce). The test-settle advances in **testing-and-validation**
+  1000ms debounce). In code they live as named constants in
+  `app/utils/timings.js` (`SAVE_ARM_DELAY_MS`, `SAVE_DEBOUNCE_MS`,
+  `SHEET_SAVE_DEBOUNCE_MS` for the character sheet's 1500ms variant, plus the
+  toast durations). The test-settle advances in **testing-and-validation**
   (~1600ms after load, ~1100ms after an edit) and the "wait ~2 seconds" advice
-  in **debugging-playbook** derive from them — if you change the timings here,
-  update both derived references in the same change.
+  in **debugging-playbook** derive from them — if you change the timings,
+  update the constants, this section, and both derived references in the same
+  change.
 
 **Intentional exception:** the dm-npcs save in `app/characters/page.jsx` fires
 even when `dmNpcs` is `[]` — deleting the last NPC must persist (this was a
@@ -77,15 +81,6 @@ setEnemies(prev => {
 });
 ```
 
-  **Known gap (July 2026):** `updateInitiative` and `updateCompanion` follow
-  this, but `updatePartyMember` (`app/combat/page.jsx:261`) and `updateEnemy`
-  (`app/combat/page.jsx:263`) still `.map()` unconditionally — and the comment
-  above them claims all list setters bail out. Practical impact is small
-  (callers always pass a freshly spread object, so the guard only catches
-  unmatched ids), but a no-op call still re-arms the debounced save. Tracked in
-  `SUGGESTIONS.md` §2; if you add the guards, also fix the stale comment at
-  `page.jsx:258-260` and delete this note.
-
 - Companion updates reconstruct the composite id string
   `` `companion-${p.id}-${comp.id}` `` inside the setter (see `updateCompanion`)
   instead of looking anything up in derived lists — derived lists would make
@@ -101,6 +96,15 @@ setEnemies(prev => {
 - `onToggleExpand` receives the character id: the card calls
   `onToggleExpand(character.id)`; the page handler is
   `useCallback((id) => setExpandedCards(prev => ({ ...prev, [id]: !prev[id] })), [])`.
+- Initiative drag-reorder state lives in the `useDragReorder` hook
+  (`app/combat/useDragReorder.js`), not on the page. Each `InitiativeItem` gets
+  ONE `drag` handlers-bundle prop plus per-row `isDragging`/`isDragOver`
+  booleans — do not go back to passing four separate handler props or a shared
+  `dragOverIndex` (the shared index re-rendered every row on hover).
+- Inside `CharacterCard`, the ten modals are driven by ONE `activeModal`
+  string (`'delete' | 'actions' | 'resources' | 'sheet' | 'inventory' |
+  'notes' | 'statblock' | 'spells' | 'druid' | 'sorcerer'`, `null` = closed) —
+  add new card modals to that enum, not as a new `showX` boolean.
 
 ## 3. XSS rule: exactly one dangerouslySetInnerHTML
 
@@ -133,15 +137,20 @@ anything AC-related on this card.
 - Color language: **emerald** = party/allies, **red** = enemies,
   **amber** = initiative/actions/highlights, **purple** = lair actions/arcane.
   Match these when adding UI.
-- Modal overlays are hand-rolled divs: `fixed inset-0 bg-black/70` (opacity
-  varies /50–/80 across ~33 copies — known inconsistency, tracked in
-  `SUGGESTIONS.md` under "Shared `<Modal>` wrapper"). If your change touches
-  several modals, extract a shared `Modal` component instead of adding copy #34;
-  otherwise copy the pattern from the Load Encounter modal in
-  `app/combat/page.jsx` (outer div closes on click, inner div
-  `e.stopPropagation()`).
-- Toast pattern: `setSaveStatus('Party saved')` then
-  `setTimeout(() => setSaveStatus(''), 2000)`; `Navbar` renders the
+- Modal overlays use the shared `Modal` component (`app/components/Modal.jsx`)
+  — do NOT hand-roll a `fixed inset-0 bg-black/…` overlay div (34 copies were
+  migrated in July 2026). `<Modal onClose={...}>` renders the standardized
+  backdrop (`bg-black/70`, centered, `p-4`, z-50) and only fires `onClose`
+  when the backdrop itself is clicked, so panel content needs no
+  `stopPropagation`. Options: omit `onClose` for modals that must not close on
+  backdrop click (see SpellPickerModal); `layer="raised"` (z-[60]) for a modal
+  over a modal; `layer="top"` (z-[100]) to beat everything. Render your panel
+  div as the child.
+- Toast pattern: `const [saveStatus, showToast] = useToast()`
+  (`app/hooks/useToast.js`), then `showToast('Party saved')` — auto-clears
+  after `TOAST_DURATION_MS`; pass `TOAST_ERROR_DURATION_MS` for errors or
+  `null` for a message that persists until the next one. Do NOT hand-roll the
+  old `setSaveStatus(msg); setTimeout(clear, 2000)` pair. `Navbar` renders the
   `saveStatus` prop (`app/components/Navbar.jsx`). Note `saveStatus` is ONE
   shared string per page — on `/combat` three debounced effects (party,
   templates, encounter) all write it, so the toast shows whichever save

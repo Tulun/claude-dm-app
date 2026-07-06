@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Icons from '../../../components/Icons';
+import Modal from '../../../components/Modal';
+import { generateId } from '../../../utils/generateId';
 
 const COMMON_FEATS = [
   { name: 'Alert', description: 'You gain a +5 bonus to Initiative. You can\'t be Surprised while you are conscious. Other creatures don\'t gain Advantage on attack rolls against you as a result of being hidden from you.' },
@@ -35,7 +37,7 @@ export default function FeatsTab({ character, onUpdate }) {
   const [customDesc, setCustomDesc] = useState('');
 
   const addFeat = (feat) => {
-    onUpdate('feats', [...feats, { id: Date.now(), ...feat }]);
+    onUpdate('feats', [...feats, { id: generateId('feat'), ...feat }]);
   };
 
   const removeFeat = (id) => {
@@ -91,8 +93,8 @@ export default function FeatsTab({ character, onUpdate }) {
 
       {/* Add Feat Modal */}
       {showAdd && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowAdd(false)}>
-          <div className="bg-stone-900 border border-stone-700 rounded-xl p-4 w-full max-w-lg max-h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
+        <Modal onClose={() => setShowAdd(false)}>
+          <div className="bg-stone-900 border border-stone-700 rounded-xl p-4 w-full max-w-lg max-h-[80vh] flex flex-col">
             <div className="flex justify-between items-center mb-3">
               <h3 className="font-bold text-lg">Add Feat</h3>
               <button onClick={() => setShowAdd(false)} className="text-stone-400 hover:text-stone-200">×</button>
@@ -160,7 +162,7 @@ export default function FeatsTab({ character, onUpdate }) {
               </div>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

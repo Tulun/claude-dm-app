@@ -5,6 +5,7 @@ import Icons from '../../components/Icons';
 import { CHARACTER_TYPES } from './constants';
 import CharacterForm from './CharacterForm';
 import CharacterCard from './CharacterCard';
+import { generateId } from '../../utils/generateId';
 
 export default function CharactersTab({ data, onSave }) {
   const [showForm, setShowForm] = useState(false);
@@ -25,7 +26,7 @@ export default function CharactersTab({ data, onSave }) {
     if (editingChar) {
       updated = characters.map(c => c.id === char.id ? char : c);
     } else {
-      updated = [...characters, { ...char, id: `char-${Date.now()}` }];
+      updated = [...characters, { ...char, id: generateId('char') }];
     }
     onSave({ characters: updated });
     setShowForm(false);

@@ -4,16 +4,20 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Icons from '../components/Icons';
 import Navbar from '../components/Navbar';
+import Modal from '../components/Modal';
 import { defaultPartyData } from '../components/defaultData';
 import { AddPartyModal } from '../combat/components/Modals';
 import { getCalculatedAC } from '../utils/acCalculation';
+import { generateId } from '../utils/generateId';
+import { useToast } from '../hooks/useToast';
+import { SAVE_ARM_DELAY_MS, SAVE_DEBOUNCE_MS } from '../utils/timings';
 
 export default function CharactersPage() {
   const [party, setParty] = useState(null);
   const [dmNpcs, setDmNpcs] = useState([]);
   const [showAddParty, setShowAddParty] = useState(false);
   const [showAddNpc, setShowAddNpc] = useState(false);
-  const [saveStatus, setSaveStatus] = useState('');
+  const [saveStatus, showToast] = useToast();
   // Saving stays disabled until the initial load settles, so loading data
   // never echoes an unchanged copy back to the API.
   const saveEnabled = useRef(false);
@@ -26,7 +30,7 @@ export default function CharactersPage() {
       setParty(partyData && Array.isArray(partyData) && partyData.length > 0 ? partyData : defaultPartyData);
       if (Array.isArray(npcsData)) setDmNpcs(npcsData);
     }).catch(console.error).finally(() => {
-      setTimeout(() => { saveEnabled.current = true; }, 500);
+      setTimeout(() => { saveEnabled.current = true; }, SAVE_ARM_DELAY_MS);
     });
   }, []);
 
@@ -34,7 +38,7 @@ export default function CharactersPage() {
     if (!saveEnabled.current || !party) return;
     const timeout = setTimeout(() => {
       fetch('/api/party', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(party) }).catch(console.error);
-    }, 1000);
+    }, SAVE_DEBOUNCE_MS);
     return () => clearTimeout(timeout);
   }, [party]);
 
@@ -43,7 +47,7 @@ export default function CharactersPage() {
     if (!saveEnabled.current) return;
     const timeout = setTimeout(() => {
       fetch('/api/dm-npcs', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dmNpcs) }).catch(console.error);
-    }, 1000);
+    }, SAVE_DEBOUNCE_MS);
     return () => clearTimeout(timeout);
   }, [dmNpcs]);
 
@@ -112,7 +116,7 @@ export default function CharactersPage() {
                     </div>
                   </Link>
                   <div className="flex gap-2 mt-3 pt-2 border-t border-stone-700/30">
-                    <button onClick={() => { const copy = { ...npc, id: `npc-init-${Date.now()}`, initiative: 0, currentHp: npc.currentHp || npc.maxHp, sourceNpcId: npc.id }; setParty(prev => [...(prev || []), copy]); setSaveStatus('NPC added to party'); setTimeout(() => setSaveStatus(''), 2000); }}
+                    <button onClick={() => { const copy = { ...npc, id: generateId('npc-init'), initiative: 0, currentHp: npc.currentHp || npc.maxHp, sourceNpcId: npc.id }; setParty(prev => [...(prev || []), copy]); showToast('NPC added to party'); }}
                       className="flex items-center gap-1 px-2 py-1 rounded text-xs bg-emerald-800/50 hover:bg-emerald-700/50 text-emerald-300"><Icons.Plus /> Add to Party</button>
                     <button onClick={() => { if (confirm(`Delete ${npc.name}?`)) setDmNpcs(prev => prev.filter(n => n.id !== npc.id)); }}
                       className="flex items-center gap-1 px-2 py-1 rounded text-xs bg-red-900/30 hover:bg-red-800/30 text-red-400">Delete</button>
@@ -131,11 +135,11 @@ export default function CharactersPage() {
       <AddPartyModal isOpen={showAddParty} onClose={() => setShowAddParty(false)} onSave={(m) => { setParty(prev => [...(prev || []), m]); }} />
 
       {showAddNpc && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setShowAddNpc(false)}>
-          <div className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-md p-6" onClick={e => e.stopPropagation()}>
+        <Modal onClose={() => setShowAddNpc(false)}>
+          <div className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-md p-6">
             <h2 className="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2"><Icons.Crown /> New DM NPC</h2>
             <form onSubmit={(e) => { e.preventDefault(); const f = e.target;
-              const npc = { id: `dm-npc-${Date.now()}`, name: f.npcName.value, class: f.npcClass.value, level: parseInt(f.npcLevel.value) || 1, ac: parseInt(f.npcAC.value) || 10, maxHp: parseInt(f.npcHP.value) || 10, currentHp: parseInt(f.npcHP.value) || 10, initiative: 0, speed: parseInt(f.npcSpeed.value) || 30, str: parseInt(f.npcStr.value) || 10, dex: parseInt(f.npcDex.value) || 10, con: parseInt(f.npcCon.value) || 10, int: parseInt(f.npcInt.value) || 10, wis: parseInt(f.npcWis.value) || 10, cha: parseInt(f.npcCha.value) || 10, notes: f.npcNotes.value, isDmNpc: true, resources: [], inventory: [], spells: [], features: [], feats: [], skillProficiencies: {}, saveProficiencies: {} };
+              const npc = { id: generateId('dm-npc'), name: f.npcName.value, class: f.npcClass.value, level: parseInt(f.npcLevel.value) || 1, ac: parseInt(f.npcAC.value) || 10, maxHp: parseInt(f.npcHP.value) || 10, currentHp: parseInt(f.npcHP.value) || 10, initiative: 0, speed: parseInt(f.npcSpeed.value) || 30, str: parseInt(f.npcStr.value) || 10, dex: parseInt(f.npcDex.value) || 10, con: parseInt(f.npcCon.value) || 10, int: parseInt(f.npcInt.value) || 10, wis: parseInt(f.npcWis.value) || 10, cha: parseInt(f.npcCha.value) || 10, notes: f.npcNotes.value, isDmNpc: true, resources: [], inventory: [], spells: [], features: [], feats: [], skillProficiencies: {}, saveProficiencies: {} };
               setDmNpcs(prev => [...prev, npc]); setShowAddNpc(false);
             }} className="space-y-3">
               <div><label className="text-xs text-stone-400">Name *</label><input name="npcName" required className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" autoFocus /></div>
@@ -160,7 +164,7 @@ export default function CharactersPage() {
               </div>
             </form>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

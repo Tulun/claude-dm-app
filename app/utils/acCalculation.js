@@ -4,14 +4,32 @@
 // different views historically applied slightly different rules (temp AC,
 // armor-name parsing) and callers rely on those exact behaviors.
 
-import { getModNum } from './rules';
+import { getModNum, getAllClasses } from './rules';
 
-const ARMOR_AC_TABLE = {
-  'padded': 11, 'leather': 11, 'studded leather': 12, 'studded': 12,
-  'hide': 12, 'chain shirt': 13, 'scale mail': 14, 'scale': 14,
-  'breastplate': 14, 'half plate': 15, 'ring mail': 14,
-  'chain mail': 16, 'chain': 16, 'splint': 17, 'plate': 18,
+// Canonical mundane-armor table (name fragment → base AC + armor type).
+// Shared with the character sheet's inventory (getArmorData below); the
+// bare-fragment aliases ('studded', 'scale', 'chain') keep name parsing
+// forgiving. The shield entry is kept separate so body-armor lookups
+// (getArmorBaseAC) never match an item named "Shield".
+export const ARMOR_AC_TABLE = {
+  'padded': { baseAC: 11, armorType: 'Light' },
+  'leather': { baseAC: 11, armorType: 'Light' },
+  'studded leather': { baseAC: 12, armorType: 'Light' },
+  'studded': { baseAC: 12, armorType: 'Light' },
+  'hide': { baseAC: 12, armorType: 'Medium' },
+  'chain shirt': { baseAC: 13, armorType: 'Medium' },
+  'scale mail': { baseAC: 14, armorType: 'Medium' },
+  'scale': { baseAC: 14, armorType: 'Medium' },
+  'breastplate': { baseAC: 14, armorType: 'Medium' },
+  'half plate': { baseAC: 15, armorType: 'Medium' },
+  'ring mail': { baseAC: 14, armorType: 'Heavy' },
+  'chain mail': { baseAC: 16, armorType: 'Heavy' },
+  'chain': { baseAC: 16, armorType: 'Heavy' },
+  'splint': { baseAC: 17, armorType: 'Heavy' },
+  'plate': { baseAC: 18, armorType: 'Heavy' },
 };
+
+const SHIELD_DATA = { baseAC: 2, armorType: 'Shield' };
 
 const sortedArmorKeys = Object.keys(ARMOR_AC_TABLE).sort((a, b) => b.length - a.length);
 
@@ -19,11 +37,35 @@ const getArmorBaseAC = (item) => {
   if (item.baseAC) return parseInt(item.baseAC);
   const name = (item.name || '').toLowerCase();
   for (const key of sortedArmorKeys) {
-    if (name.includes(key)) return ARMOR_AC_TABLE[key];
+    if (name.includes(key)) return ARMOR_AC_TABLE[key].baseAC;
   }
   const match = (item.description || '').match(/AC (\d+)/);
   if (match) return parseInt(match[1]);
   return 10;
+};
+
+// Resolve { baseAC, armorType } for an armor-ish item (incl. shields) from its
+// name, armorType field, or an "AC n" description fragment; null when nothing
+// matches. Used by the character sheet when adding armor from the magic-item
+// library.
+export const getArmorData = (item) => {
+  const name = (item.name || '').toLowerCase();
+  const keysWithShield = [...sortedArmorKeys, 'shield'].sort((a, b) => b.length - a.length);
+  const lookup = (key) => (key === 'shield' ? SHIELD_DATA : ARMOR_AC_TABLE[key]);
+  for (const key of keysWithShield) {
+    if (name.includes(key)) return lookup(key);
+  }
+  const aType = (item.armorType || '').toLowerCase();
+  if (aType === 'shield') return SHIELD_DATA;
+  for (const key of keysWithShield) {
+    if (aType.includes(key)) return lookup(key);
+  }
+  const acMatch = (item.description || '').match(/AC (\d+)/);
+  if (acMatch) {
+    const ac = parseInt(acMatch[1]);
+    return { baseAC: ac, armorType: item.armorType || (ac <= 12 ? 'Light' : ac <= 15 ? 'Medium' : 'Heavy') };
+  }
+  return null;
 };
 
 // Returns the AC derived from equipment and active effects, or null when the
@@ -51,7 +93,7 @@ export const getEquipmentAC = (character, { includeTempAC = true, parseArmorName
   } else if (character.acEffect === 'unarmoredDefense') {
     const conMod = getModNum(character.con);
     const wisMod = getModNum(character.wis);
-    const classes = character.classes?.map(c => c.name.toLowerCase()) || [character.class?.toLowerCase()];
+    const classes = getAllClasses(character).map(c => c.name?.toLowerCase());
     if (classes.includes('barbarian')) baseAC = 10 + conMod;
     else if (classes.includes('monk')) baseAC = 10 + wisMod;
   } else if (character.acEffect === 'draconicResilience') {

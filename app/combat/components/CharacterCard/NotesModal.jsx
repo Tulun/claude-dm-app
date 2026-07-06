@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Icons from '../../../components/Icons';
+import Modal from '../../../components/Modal';
 
 const NotesModal = ({ isOpen, character, onUpdate, onClose }) => {
   const [notesText, setNotesText] = useState(character.combatNotes || '');
@@ -16,8 +17,8 @@ const NotesModal = ({ isOpen, character, onUpdate, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-stone-900 border border-amber-800/50 rounded-xl w-full max-w-md overflow-hidden" onClick={e => e.stopPropagation()}>
+    <Modal onClose={onClose}>
+      <div className="bg-stone-900 border border-amber-800/50 rounded-xl w-full max-w-md overflow-hidden">
         <div className="p-4 border-b border-stone-700 bg-gradient-to-r from-amber-950/50 to-stone-900">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold text-amber-400 flex items-center gap-2">
@@ -70,7 +71,7 @@ const NotesModal = ({ isOpen, character, onUpdate, onClose }) => {
           </div>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 
