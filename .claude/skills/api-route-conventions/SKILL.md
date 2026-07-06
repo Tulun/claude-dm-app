@@ -55,11 +55,19 @@ empty shape (`{}`/`[]`) without writing anything; corrupt → `backupCorruptFile
 throw + 500; the next request finds no file and returns the empty shape, so recovery
 works exactly as above. Having nothing to seed is not a reason to fall back silently.
 
-**Known inconsistency (tracked in SUGGESTIONS.md, section 1):** `party`, `dm-npcs`, and
-`templates` return 500 on a corrupt file but leave it in place (no `.bak`); `encounter`
-and `encounters` silently fall back to defaults (`EMPTY_ENCOUNTER` / `[]`), and the next
-user save overwrites the corrupt file. If you touch any of these routes, upgrade them to
-the `.bak`-then-throw pattern and update SUGGESTIONS.md.
+**Route-by-route corrupt-file behavior — CANONICAL table** (the debugging-playbook
+recovery entry points here; update this table, and only this table, when any of it
+changes). Verified in `test/api/`; inconsistencies tracked in SUGGESTIONS.md §1:
+
+- `spells`, `magic-items`, `dm`: `.bak` + 500; next request reseeds defaults.
+- `templates`: 500, corrupt file left IN PLACE (no `.bak`, no reseed) — pinned by
+  "returns 500 ... (file NOT overwritten)" in `test/api/templatesRoute.test.js`.
+- `party`, `dm-npcs`: 500, file left in place (no `.bak`).
+- `encounter`, `encounters`: silently fall back to defaults (`EMPTY_ENCOUNTER` / `[]`),
+  and the next user save OVERWRITES the corrupt file.
+
+If you touch any non-`.bak` route, upgrade it to the `.bak`-then-throw pattern and
+update SUGGESTIONS.md.
 
 ## 3. Version-migration pattern (spells / magic-items / templates / dm)
 
@@ -109,7 +117,9 @@ Default datasets live at `app/data/defaultSpells.js` (`defaultSpells`),
   `castingTime` key. Sync failures are logged, never thrown — the spell save still succeeds.
 - **GET /api/templates** caches `public/data/conflux-creatures.json` in module memory
   for the process lifetime (`confluxCache`) — editing that file requires a dev-server
-  restart. It also runs its migration inside GET, so a plain GET can rewrite `templates.json`.
+  restart. This bullet is the CANONICAL description of the conflux cache (dm-app-map
+  and debugging-playbook point here). The route also runs its migration inside GET,
+  so a plain GET can rewrite `templates.json`.
 
 ## 5. New-route checklist
 
@@ -133,7 +143,7 @@ Default datasets live at `app/data/defaultSpells.js` (`defaultSpells`),
 5. Add a test file under `test/api/` using the mocked-cwd pattern: `// @vitest-environment node`,
    `vi.spyOn(process, 'cwd').mockReturnValue(tmpDir)` **before** the dynamic
    `await import(...)` of the route — see `test/api/spellsRoute.test.js` and the
-   **testing-and-validation** skill. Run `npm test` (307 tests must stay green).
+   **testing-and-validation** skill. Run `npm test` (the full suite must stay green).
 
 ## Traps / Do NOT
 

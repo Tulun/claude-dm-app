@@ -14,7 +14,7 @@ characterization test.
 
 - Start the app: `npm run dev`. Next.js binds LAN interfaces too (a "Network:" URL is
   printed) - on untrusted networks run `npx next dev -H 127.0.0.1` instead.
-- Run tests: `npm test` (Vitest, 307 tests across 22 files as of July 2026).
+- Run tests: `npm test` (full Vitest suite; must be green).
 - `ANTHROPIC_API_KEY` in `.env.local` is ONLY needed for the image-import features
   (`app/api/parse-monster/route.js`, `app/api/parse-spell/route.js`). Everything else
   works without it. `.env.local` is gitignored (`.env*` in `.gitignore`).
@@ -27,11 +27,11 @@ characterization test.
 
 ### "My data disappeared" / a route returned 500 mentioning a backup
 
-Cause: a data file under `data/` was corrupt JSON. The spells, magic-items, and dm
-routes call `backupCorruptFile` (exported from `lib/jsonStore.js`), which renames the
-file to `data/<name>.json.corrupt-<timestamp>.bak` and returns 500 once. On the NEXT
-request the file no longer exists, so the route reseeds defaults - your data is not
-gone, it is sitting in the `.bak`.
+Cause: a data file under `data/` was corrupt JSON. Routes with the `.bak` policy call
+`backupCorruptFile` (exported from `lib/jsonStore.js`), which renames the file to
+`data/<name>.json.corrupt-<timestamp>.bak` and returns 500 once. On the NEXT request
+the file no longer exists, so the route reseeds defaults - your data is not gone, it
+is sitting in the `.bak`.
 
 Recovery:
 1. Stop the dev server.
@@ -42,21 +42,19 @@ Recovery:
    `mv data/spells.json.corrupt-1751500000000.bak data/spells.json`.
 5. Restart the dev server.
 
-Route-by-route corrupt-file behavior (verified in `test/api/`):
-- `spells`, `magic-items`, `dm`: `.bak` + 500, reseed defaults next request.
-- `templates`: 500, corrupt file left IN PLACE (no `.bak`, no reseed) - pinned by
-  "returns 500 ... (file NOT overwritten)" in `test/api/templatesRoute.test.js`.
-- `party`, `dm-npcs`: 500, file left in place (no backup - see `SUGGESTIONS.md` §1).
-- `encounter`, `encounters`: silently fall back to empty; the next save OVERWRITES the
-  corrupt file. Recover before touching those pages.
+Which routes back up, which leave the corrupt file in place, and which silently fall
+back: see the CANONICAL route-by-route table in **api-route-conventions** §2. The
+recovery-critical case: `encounter`/`encounters` silently fall back to empty and the
+next save OVERWRITES the corrupt file - recover before touching those pages.
 
 ### "Edits are not saving"
 
 Check in this order:
-1. **Debounce + gate.** Pages auto-save with a 1000ms debounce, and saving is disabled
-   until 500ms after the initial load settles (`saveEnabled` ref in
-   `app/characters/page.jsx` and `app/combat/page.jsx`). Wait ~2 seconds after an edit
-   before concluding nothing saved.
+1. **Debounce + gate.** Pages debounce auto-saves and keep saving disabled until
+   shortly after the initial load settles (`saveEnabled` ref in
+   `app/characters/page.jsx` and `app/combat/page.jsx`; canonical timings in
+   **frontend-patterns** §1). Wait ~2 seconds after an edit before concluding
+   nothing saved.
 2. **Server terminal.** Look for `POST /api/...` log lines and `console.error` output
    in the terminal running `npm run dev` - route errors never reach the browser console.
 3. **Empty-list regression.** On `/characters`, deleting the last NPC DOES save an
@@ -84,8 +82,8 @@ are `React.memo`'d — so this class of bug is almost always a broken identity. 
 
 ### "Conflux monsters are stale after editing public/data/conflux-creatures.json"
 
-Cause: `app/api/templates/route.js` caches the 5.4MB conflux file in a module-level
-variable (`confluxCache` in `loadConflux`) for the process lifetime.
+Cause: the templates route caches the conflux file in module memory for the process
+lifetime (CANONICAL description: **api-route-conventions** §4).
 Fix: restart the dev server. This is intentional (see `SUGGESTIONS.md` §1); do not
 "fix" it by removing the cache.
 
@@ -111,17 +109,12 @@ with spells and magic-items.
 
 ### "AC differs between the combat card and the initiative row / characters page"
 
-STOP - read the rules-math skill FIRST. The per-view differences are deliberate and
-this was mis-diagnosed as a bug once already:
-- Combat card (`app/combat/components/CharacterCard/utils.js`, `getCalculatedAC`):
-  `getEquipmentAC(character, { includeTempAC: false, parseArmorNames: false })` - the
-  card adds `character.tempAC` at display time, so including it in the calculator
-  would double-count.
-- Initiative row (`app/combat/components/InitiativeItem.jsx`): `getEquipmentAC(character,
-  { parseArmorNames: false })` - temp AC included, no armor-name parsing.
-- Characters page (`app/characters/page.jsx`): `getCalculatedAC` from
-  `app/utils/acCalculation.js` - both flags on, so armor names like "studded leather"
-  are parsed into base AC only here.
+STOP - read the **rules-math** skill FIRST: its per-view `getEquipmentAC` caller
+table and "THE TEMP-AC TRAP" section are the CANONICAL description of these
+deliberate differences, and this was mis-diagnosed as a bug once already. Short
+version: the combat card excludes temp AC from calculation (it adds it at display
+time - "fixing" that double-counts), the initiative row includes temp AC, and only
+the characters page parses armor names into base AC.
 
 ## Test failures decoder
 

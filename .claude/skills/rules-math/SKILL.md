@@ -51,7 +51,10 @@ from `app/utils/rules.js` so intent is unambiguous.
 - `getCalculatedAC(character)` → `getEquipmentAC` with full defaults, falling
   back to `character.ac || 10` on null.
 
-The option flags encode **deliberate** per-view differences. Do not "unify" them:
+The option flags encode **deliberate** per-view differences. Do not "unify" them.
+This table and the temp-AC trap below are the CANONICAL home for per-view AC
+behavior — frontend-patterns §4 and the debugging-playbook AC entry point here;
+update this section (only) when the behavior changes:
 
 | Caller | Options | Fallback on null |
 |---|---|---|
@@ -136,7 +139,7 @@ trait/action text (names containing "spellcasting"), falling back to
 
 ## Verifying changes
 
-Run `npm test` (Vitest, 307 tests). Rules-math coverage lives in
+Run `npm test` (full Vitest suite, must be green). Rules-math coverage lives in
 `test/combat/characterCardUtils.test.js`, `test/utils/acCalculation.test.js`,
 `test/combat/spellcastingParser.test.js`, `test/character/constants.test.js`,
 and `test/encounters/constants.test.js` — see the **testing-and-validation**

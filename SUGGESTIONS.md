@@ -185,7 +185,7 @@ context costs:
   largest untested surface) — no page tests; it edits party.json data directly.
 - [ ] **Spellbook, magic-items, dm, classes, templates pages** — no page tests.
 - [ ] **CI** — no automated runner; a GitHub Action doing `npm test` + `npm run build`
-  on push would lock in the 307-test suite.
+  on push would lock in the suite mechanically.
 - [ ] **jsdom form quirk** — jsdom lacks named-property access on forms
   (`form.npcName`); tests shim it (see `charactersPage.test.jsx`). Any new form using
   that pattern needs the same shim — or refactor forms to controlled state instead.
@@ -216,6 +216,18 @@ context costs:
 
 ## Completed log
 
+- [x] Skill-library drift hardening — closed the residual drift risk from chunk B.
+  Each of the four duplicated fact clusters now has ONE canonical skill home, marked
+  "CANONICAL" in place: per-view AC flags + temp-AC trap → rules-math; corrupt-file
+  route-by-route table → api-route-conventions §2; conflux-cache behavior →
+  api-route-conventions §4; save-gate/debounce timings → frontend-patterns §1 (the
+  test-settle advances in testing-and-validation explicitly note they derive from
+  it). All other copies replaced with cross-references (frontend-patterns §4,
+  debugging-playbook ×4, dm-app-map ×1). Exact test counts (307/22 files) replaced
+  with stale-proof wording in five skills + CLAUDE.md + the §4 CI item. New
+  CLAUDE.md non-negotiable #6: behavior changes must patch the documenting skill in
+  the same change, and drift-prone facts are cross-referenced, never re-duplicated —
+  July 2026
 - [x] Skill-library validation chunk E (zero-context Sonnet simulation planning the
   "Atomic writes in lib/jsonStore.js" item + tests) — final chunk; the §0.5 validation
   tail is complete. Triggers all correct (dm-app-map → api-route-conventions →

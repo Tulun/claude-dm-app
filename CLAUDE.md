@@ -1,7 +1,7 @@
 # dm-app — D&D 5e Dungeon Master tool
 
 Local single-user Next.js 16 App Router app, plain JSX (no TypeScript), Tailwind 4,
-Vitest (307 tests). Persistence = JSON files under `data/` (real campaign data,
+Vitest (300+ tests; the count only grows). Persistence = JSON files under `data/` (real campaign data,
 deliberately tracked in git). No state library — pages fetch on mount and auto-save
 with debounced POSTs.
 
@@ -31,3 +31,7 @@ with debounced POSTs.
    define a local `getMod` (see `rules-math` skill for the sanctioned exceptions).
 5. New auto-save effects must use the `saveEnabled` ref gate (see
    `frontend-patterns` skill) so loads never echo POSTs.
+6. The skills are living docs. If a change alters behavior a skill documents,
+   patch the skill in the same change. Drift-prone facts have ONE canonical
+   skill home (marked "canonical" in the skill) — everywhere else must
+   cross-reference it, never restate it.

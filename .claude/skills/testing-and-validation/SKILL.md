@@ -1,6 +1,6 @@
 ---
 name: testing-and-validation
-description: How to run, read, and write tests in this repo (Vitest + React Testing Library, 307 tests), plus the validation checklist to run before declaring any task done. Load when writing or fixing tests, when a test fails, when asked "run the tests", or before finishing any code change.
+description: How to run, read, and write tests in this repo (Vitest + React Testing Library), plus the validation checklist to run before declaring any task done. Load when writing or fixing tests, when a test fails, when asked "run the tests", or before finishing any code change.
 ---
 
 # Testing and Validation
@@ -93,7 +93,7 @@ vi.mock('next/navigation', () => ({
 - Mock `global.fetch` with a `vi.fn` that routes by URL and returns `{ ok: true, json: async () => data }`; non-GET calls return a generic `{ success: true }` unless the test overrides.
 - `vi.useFakeTimers()` in `beforeEach`; `vi.useRealTimers()` + `vi.restoreAllMocks()` in `afterEach`.
 - Flush mocked-fetch microtasks with `const flush = () => act(async () => {});`.
-- Auto-save gating: the combat (`app/combat/page.jsx`) and characters (`app/characters/page.jsx`) pages enable saving via a 500ms `saveEnabled` timer after load, then debounce each save by 1000ms. To settle after initial render, advance ~1600ms inside `act`:
+- Auto-save gating: the combat (`app/combat/page.jsx`) and characters (`app/characters/page.jsx`) pages arm saving shortly after load, then debounce each save (canonical timings: **frontend-patterns** §1 — currently 500ms arm + 1000ms debounce; the advances below derive from them, so update these together with §1). To settle after initial render, advance ~1600ms inside `act`:
 
 ```js
 const settle = async () => {
@@ -134,7 +134,7 @@ Do this in any test that submits a form whose handler reads fields by name.
 
 ## Validation checklist (before declaring any task done)
 
-1. `npx vitest run` — fully green (22 files / 307 tests at last count; the count only goes up).
+1. `npx vitest run` — fully green (the run prints the current file/test counts; they only ever go up).
 2. `npm run build` — Next.js production build succeeds.
 3. If you changed page behavior: the relevant page test asserts the NEW behavior, ideally via fetch-mock POST counts and bodies (the strongest regression guard in this suite).
 4. If you deferred a cleanup or found a quirk: record it in `SUGGESTIONS.md`.

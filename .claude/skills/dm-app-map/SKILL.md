@@ -59,7 +59,7 @@ See the **api-route-conventions** skill before adding or editing routes.
 ## Data
 
 - `data/*.json` is the user's **real campaign data**, deliberately tracked in git as a crude backup. Never delete or regenerate these files; treat any change to them as touching production data.
-- `public/data/conflux-creatures.json` is 5.4 MB / 2383 monsters. It is **never imported statically** — it is lazy-loaded only inside `app/api/templates/route.js` when `GET /api/templates?source=conflux` is hit, and cached in module memory for the process lifetime (edit → restart dev server to see changes). Do not import it into any client bundle.
+- `public/data/conflux-creatures.json` is 5.4 MB / 2383 monsters. It is **never imported statically** — it is lazy-loaded only inside `app/api/templates/route.js` when `GET /api/templates?source=conflux` is hit, and cached (canonical cache description + dev-restart caveat: **api-route-conventions** §4). Do not import it into any client bundle.
 
 ## Shared modules — reach for these BEFORE writing new logic
 
@@ -82,7 +82,7 @@ See the **api-route-conventions** skill before adding or editing routes.
 
 1. **Read `SUGGESTIONS.md` (repo root) before starting any task.** It is the living backlog and quirk registry. When you complete an item from it, move it to the "Completed log" section at the bottom.
 2. **Quirks are pinned by characterization tests** (test names often start with `QUIRK:`). Changing a behavior means finding its pinning test and flipping it *deliberately in the same change* — a surprise test failure with "QUIRK" in the name means you changed intentional behavior.
-3. **Definition of done**: `npx vitest run` green (307+ tests, `test/**/*.test.{js,jsx}`) AND `npm run build` clean. Both, always.
+3. **Definition of done**: `npx vitest run` fully green (`test/**/*.test.{js,jsx}`; the test count only ever goes up) AND `npm run build` clean. Both, always.
 
 Commands: `npm run dev` · `npm run build` · `npm test` (= `vitest run`) · `npm run test:watch`.
 

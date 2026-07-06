@@ -45,6 +45,11 @@ Rules:
   `test/characters/charactersPage.test.jsx` — asserts `postCalls(fetchMock, '/api/dm-npcs')` is empty after load.
 - Existing gated pages: `app/combat/page.jsx`, `app/characters/page.jsx`,
   `app/encounters/page.jsx`.
+- This section is the CANONICAL home for the gate/debounce timings (500ms arm,
+  1000ms debounce). The test-settle advances in **testing-and-validation**
+  (~1600ms after load, ~1100ms after an edit) and the "wait ~2 seconds" advice
+  in **debugging-playbook** derive from them — if you change the timings here,
+  update both derived references in the same change.
 
 **Intentional exception:** the dm-npcs save in `app/characters/page.jsx` fires
 even when `dmNpcs` is `[]` — deleting the last NPC must persist (this was a
@@ -113,21 +118,13 @@ paragraphs via `dangerouslySetInnerHTML={{ __html: formatSpellText(paragraph) }}
 
 ## 4. CharacterCard AC display logic
 
-In `app/combat/components/CharacterCard/index.jsx`:
-
-```jsx
-const calculatedAC = getCalculatedAC(character);            // from ./utils
-const baseAC = character.acOverride || calculatedAC || character.ac || 10;
-const displayAC = activeWildShapeForm ? (activeWildShapeForm.ac || 10) : (baseAC + tempAcValue);
-```
-
-- Precedence: manual override → equipment-derived AC → stored `ac` → 10.
-- `tempAC` is added at DISPLAY time only. The card's `getCalculatedAC`
-  (`app/combat/components/CharacterCard/utils.js`) deliberately calls
-  `getEquipmentAC(character, { includeTempAC: false, parseArmorNames: false })`
-  — including tempAC there would double-count it.
-- Active wild shape REPLACES AC entirely (no tempAC added).
-- Deeper AC/modifier math: see the `rules-math` skill and `app/utils/rules.js`.
+Precedence on the combat card (`app/combat/components/CharacterCard/index.jsx`):
+manual `acOverride` → equipment-derived AC → stored `ac` → 10, with `tempAC`
+added at DISPLAY time only, and an active wild shape REPLACING AC entirely
+(no tempAC). The exact display snippet, the per-view `getEquipmentAC` option
+flags, and the double-count trap live in the **rules-math** skill ("THE TEMP-AC
+TRAP" — the canonical home for per-view AC behavior). Read it before touching
+anything AC-related on this card.
 
 ## 5. Styling conventions
 
