@@ -25,27 +25,58 @@ Convention: `[ ]` open · `[x]` done (move to the log at the bottom when complet
 - [ ] **If this ever gets deployed** (LAN party use, hosting): add auth, rate limiting,
   and CSRF tokens before anything else — the API is intentionally wide open today.
 
-## 0.5 Paused: skill-library validation tail (resume when token budget allows)
+## 0.5 Paused: skill-library validation tail (run in small chunks, token-friendly)
 
-- [ ] **Finish the .claude/skills validation workflow** — the library (6 skills) is
-  authored and live; 5/6 are adversarially machine-verified (api-route-conventions,
-  rules-math, testing-and-validation, frontend-patterns, debugging-playbook pass).
-  Remaining tail: (1) formal re-verify of `dm-app-map` after its fix pass (it was
-  human-reviewed and looks accurate), (2) a whole-library critic pass (gaps /
-  overlaps / trigger collisions), (3) three "first-day junior" simulation sessions
-  (tasks: new /api/conditions route + tests; combat HP-edit flicker bug; atomic-writes
-  backlog item) that grade the library. To resume IN THE ORIGINAL SESSION: rerun the
-  Workflow tool with scriptPath
-  `~/.claude/projects/-Users-jasonkiraly-Desktop-projects-claude-dm-app/7bc353df-5f13-4e17-bf4a-bc3e9bf13c5d/workflows/scripts/author-skill-library-wf_98e63a80-8dd.js`
-  and resumeFromRunId `wf_98e63a80-8dd` (completed agents are cached). From any OTHER
-  session: just run the three parts as plain subagent prompts — the prompts live in
-  that script file (verifyPrompt for dm-app-map, the Critic block, the SIM_TASKS block).
+All 6 skills under `.claude/skills/` are authored AND verified (adversarial
+fact-check; dm-app-map's last three claims spot-verified July 2026). Remaining
+tail, split into independent low-cost chunks — run each in a FRESH session
+("read SUGGESTIONS.md section 0.5, run chunk N") to avoid long-conversation
+context costs:
+
+- [x] **Chunk B — library critic (cheap, can be done inline by the assistant):**
+  read all six SKILL.md files and report gaps (tasks not covered), overlaps that
+  could drift, and trigger-description collisions. No subagents needed.
+  *Done July 2026 — verified inaccuracies patched (stale test counts 269→307,
+  missing /api/vault coverage, dead QuickResourcesModal listing). Residual drift
+  risks (facts duplicated across skills) noted in the Completed log entry.*
+- [x] **Chunk C — simulation: plan a /api/conditions route (Sonnet, zero context).**
+  *Done July 2026 — agent produced a correct plan (right analog routes, `.bak`-then-500
+  policy, mocked-cwd tests) using dm-app-map, api-route-conventions, and
+  testing-and-validation. Zero inaccuracies, zero trigger problems. Three missing-info
+  gaps found and patched into api-route-conventions: (1) explicit policy for seedless
+  routes (empty default + strict `.bak` on corrupt, skip migration), (2) checklist item 2
+  now includes the no-default-dataset category, (3) shape guidance for per-entity-keyed
+  resources (object map keyed by entity id; keep whole-file POST contract).*
+- [x] **Chunk D — simulation: diagnose "editing an enemy's HP makes the party column
+  flicker and fires a party auto-save" (Sonnet, zero context).**
+  *Done July 2026 — see Completed log. Triggers all correct; one real doc/code gap
+  found (unguarded `updateEnemy`/`updatePartyMember`) and patched into two skills;
+  new §2 backlog item for the code-side fix.*
+- [x] **Chunk E — one simulation, run on a SONNET-class model** (that's
+  the audience being tested; also ~5x cheaper). Prompt: "You are a new engineer
+  with zero context. Task: <X>. First read .claude/skills/, then only the files
+  the skills point to. Produce an implementation plan; do NOT modify files. Then
+  grade the library: skills used, missing info, inaccuracies." Task:
+  - E: plan the "Atomic writes in lib/jsonStore.js" backlog item incl. tests.
+  Act on any missing-info/inaccuracy findings by patching the relevant skill.
+  *Done July 2026 — see Completed log. Zero inaccuracies, all triggers correct;
+  one missing-info gap (jsonStore has no dedicated unit tests) patched into
+  testing-and-validation. Skill-library validation tail is now COMPLETE.*
 
 ## 1. Data safety / API quirks
 
 - [ ] **Atomic writes in `lib/jsonStore.js`** — write to a temp file and rename over the
   original instead of `writeFileSync` in place. Prevents the corrupt-file case (power
   loss / crash mid-write) that the `.bak` recovery path exists for. Cheap, high value.
+  Plan sketched by skill-sim chunk E (July 2026): temp file in the SAME directory as
+  the target (rename is only atomic same-filesystem), fsync before rename, unlink the
+  temp on failure and rethrow (routes' 500 handling unchanged); scope is `writeJsonFile`
+  only, i.e. the 4 simple routes — spells/magic-items/dm/templates use raw `fs` and
+  would need a separate pass. Tests: new `test/lib/jsonStore.test.js` (node env,
+  mkdtemp + cwd mock) — round-trip, pretty-print preserved, no `.tmp` leftovers,
+  original untouched when rename/write throws; existing route tests unchanged.
+  Residual gap: a crash between open and our cleanup can still orphan a `.tmp` file
+  in `data/` (harmless; would need a startup sweep to fully close).
 - [ ] **Extend corrupt-file `.bak` protection to the simple routes** — spells,
   magic-items, and dm now back up corrupt files; `party`, `dm-npcs`, `encounter(s)`
   routes do not. Party is the most valuable user data in the app. Note: corrupt
@@ -66,15 +97,26 @@ Convention: `[ ]` open · `[x]` done (move to the log at the bottom when complet
 
 ## 2. Rules-math consolidation leftovers
 
+- [ ] **Unguarded list mutators on the combat page** — `updatePartyMember`
+  (`app/combat/page.jsx:261`) and `updateEnemy` (`:263`) `.map()` unconditionally,
+  while the comment above them (lines 258–260) and frontend-patterns §2 describe the
+  bail-out guard ("return `prev` when nothing matched") as universal. Impact is small
+  (callers always pass a fresh object, so the guard only catches unmatched ids), but
+  a no-op call still re-arms the debounced encounter/party save. Align both with
+  `updateInitiative`'s guarded pattern, fix the stale comment, and remove the
+  "Known gap" note from frontend-patterns §2. (Found by skill-sim chunk D.)
 - [ ] **Three local `getMod` variants intentionally not merged** — `Modals.jsx:447`,
   `TemplateEditor.jsx:391`, `ImportMonsterModal.jsx:127` treat a score of 0 as a real
   0 (−5 mod), while the canonical `app/utils/rules.js` helpers coerce 0/junk to 10
   (→ +0). Decide which semantics are right (0 → −5 is correct D&D math), align the
   canonical helper, then merge these three. (quirk pinned in
   `test/combat/characterCardUtils.test.js`: "defaults missing or junk input to 10")
-- [ ] **Local prof-bonus formulas** — `SpellsModal.jsx:331`, `SpellsTab.jsx:498`, and
-  `CharacterSheetModal.jsx` compute `Math.ceil(1 + level / 4)` inline instead of using
-  the shared `getProfBonus` (same result for levels 1–20, but multiclass-blind).
+- [ ] **Local prof-bonus formulas** — six sites compute `Math.ceil(1 + level / 4)` inline
+  instead of using the shared `getProfBonus` (same result for levels 1–20, but
+  multiclass-blind): under `app/combat/components/CharacterCard/` —
+  `QuickResourcesModal.jsx:62`, `CharacterSheetModal.jsx:35`, `SpellsModal.jsx:333`,
+  `SorcererFeaturesModal.jsx:84`; plus `app/character/components/tabs/SpellsTab.jsx:500`
+  and `InventoryTab.jsx:464` (a `+1` variant).
 - [ ] **InventoryTab duplicates the armor table** — `ARMOR_BASE_AC` + `getArmorData`
   in `app/character/components/tabs/InventoryTab.jsx` re-implement
   `ARMOR_AC_TABLE`/`getArmorBaseAC` from `app/utils/acCalculation.js`. Export the
@@ -143,7 +185,7 @@ Convention: `[ ]` open · `[x]` done (move to the log at the bottom when complet
   largest untested surface) — no page tests; it edits party.json data directly.
 - [ ] **Spellbook, magic-items, dm, classes, templates pages** — no page tests.
 - [ ] **CI** — no automated runner; a GitHub Action doing `npm test` + `npm run build`
-  on push would lock in the 262-test suite.
+  on push would lock in the 307-test suite.
 - [ ] **jsdom form quirk** — jsdom lacks named-property access on forms
   (`form.npcName`); tests shim it (see `charactersPage.test.jsx`). Any new form using
   that pattern needs the same shim — or refactor forms to controlled state instead.
@@ -174,6 +216,44 @@ Convention: `[ ]` open · `[x]` done (move to the log at the bottom when complet
 
 ## Completed log
 
+- [x] Skill-library validation chunk E (zero-context Sonnet simulation planning the
+  "Atomic writes in lib/jsonStore.js" item + tests) — final chunk; the §0.5 validation
+  tail is complete. Triggers all correct (dm-app-map → api-route-conventions →
+  testing-and-validation → debugging-playbook, no spurious loads); ZERO inaccuracies —
+  every skill claim the agent checked matched source (writeJsonFile consumer list,
+  raw-fs route split, corrupt-file behavior table, mocked-cwd test pattern). Plan was
+  correctly scoped (writeJsonFile only; flagged the raw-fs routes as out of scope) and
+  technically sound (same-dir temp + fsync + rename, cleanup on failure). One
+  missing-info gap patched into testing-and-validation: jsonStore.js has no dedicated
+  unit tests (indirect route-test coverage only) — note added incl. the nuance the
+  agent got slightly wrong (ensureDataDir still reads process.cwd(), so the cwd-mock
+  pattern still applies). Plan details folded into the §1 atomic-writes item — July 2026
+- [x] Skill-library validation chunk D (zero-context Sonnet simulation diagnosing
+  "enemy HP edit flickers party column + fires party auto-save") — skill triggers all
+  correct (dm-app-map → debugging-playbook → frontend-patterns, no spurious loads,
+  correct delegation); agent found the real gap: `updateEnemy`/`updatePartyMember`
+  lack the bail-out guard that the in-file comment and frontend-patterns §2 present
+  as universal. Verification pass: the literal symptom does NOT reproduce today
+  (enemy edits never touch `setParty`; party-card memo props are stable via
+  module-level `EMPTY_TEMPLATES`) — it matches pre-memoization behavior, and the
+  agent's "flicker extends to the party column" mechanism was rejected. Patches:
+  frontend-patterns §2 "Known gap" note naming the unguarded mutators, §5 note on
+  the shared `saveStatus` toast race (three effects, one string), debugging-playbook
+  gained the missing "spurious renders/saves" symptom entry; code-side fix logged as
+  a new §2 backlog item — July 2026
+- [x] Skill-library validation chunk C (zero-context Sonnet simulation of the
+  /api/conditions task) — plan was correct on the first pass; no inaccuracies or
+  trigger issues; three missing-info gaps patched into api-route-conventions
+  (seedless-route corrupt policy, no-default checklist category, per-entity-keyed
+  data-shape guidance) — July 2026
+- [x] Skill-library validation chunk B (library critic) — patched verified inaccuracies:
+  stale test counts (269/18 → 307/22 in five skills + CLAUDE.md), `/api/vault` +
+  `OBSIDIAN_VAULT_PATH` added to dm-app-map/api-route-conventions/debugging-playbook,
+  dead `app/components/QuickResourcesModal.jsx` no longer listed as shared UI, §2
+  prof-bonus item expanded to all six sites. Residual (accepted) drift risks: the
+  temp-AC display snippet, corrupt-file route table, conflux-cache note, and save-gate
+  timings are each duplicated across 2–4 skills — when any of those behaviors change,
+  update every copy — July 2026
 - [x] Obsidian vault Campaign dashboard on /dm — read-only `/api/vault` route
   (OBSIDIAN_VAULT_PATH in .env.local, traversal-guarded, GET-only by design),
   folder-merged dashboard with Current Session / Recently edited / search, safe

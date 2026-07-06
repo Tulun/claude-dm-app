@@ -14,10 +14,12 @@ characterization test.
 
 - Start the app: `npm run dev`. Next.js binds LAN interfaces too (a "Network:" URL is
   printed) - on untrusted networks run `npx next dev -H 127.0.0.1` instead.
-- Run tests: `npm test` (Vitest, 269 tests across 18 files as of July 2026).
+- Run tests: `npm test` (Vitest, 307 tests across 22 files as of July 2026).
 - `ANTHROPIC_API_KEY` in `.env.local` is ONLY needed for the image-import features
   (`app/api/parse-monster/route.js`, `app/api/parse-spell/route.js`). Everything else
   works without it. `.env.local` is gitignored (`.env*` in `.gitignore`).
+- `OBSIDIAN_VAULT_PATH` in `.env.local` is only needed for the /dm Campaign tab
+  (`/api/vault`, read-only) — the rest of the app works without it.
 - Route `console.error`/`console.log` output goes to the TERMINAL running `npm run dev`,
   not the browser console. Always check both.
 
@@ -63,6 +65,22 @@ Check in this order:
    `saveEnabled.current` - someone adding a `dmNpcs.length` guard reintroduces the bug.
    Pinned by "persists deleting the last NPC (empty list is saved)" in
    `test/characters/charactersPage.test.jsx`.
+
+### "Editing one card makes other columns flicker" / "a save fired for data I didn't touch"
+
+The mirror image of "edits are not saving": extra renders or saves instead of missing
+ones. The combat page's save effects key on array IDENTITY (`[party]`, `[templates]`,
+`[enemies, lairAction]` in `app/combat/page.jsx`), and `CharacterCard`/`InitiativeItem`
+are `React.memo`'d — so this class of bug is almost always a broken identity. Check:
+1. An inline closure or inline `|| []` fallback passed as a prop, silently defeating
+   `React.memo` (this is why the memoization contract in frontend-patterns §2 exists;
+   before the July 2026 memoization pass, edits re-rendered every card).
+2. A list setter returning a new array when nothing changed, re-arming the debounced
+   save — see the bail-out guard in frontend-patterns §2, and note
+   `updatePartyMember`/`updateEnemy` currently lack it (known gap, `SUGGESTIONS.md` §2).
+3. Misattribution: the Navbar toast is one shared `saveStatus` string written by all
+   three effects, so its text can name the wrong save. Confirm which `POST /api/...`
+   actually fired (server terminal or Network tab) before trusting the toast.
 
 ### "Conflux monsters are stale after editing public/data/conflux-creatures.json"
 

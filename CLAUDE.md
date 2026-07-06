@@ -1,7 +1,7 @@
 # dm-app — D&D 5e Dungeon Master tool
 
 Local single-user Next.js 16 App Router app, plain JSX (no TypeScript), Tailwind 4,
-Vitest (269 tests). Persistence = JSON files under `data/` (real campaign data,
+Vitest (307 tests). Persistence = JSON files under `data/` (real campaign data,
 deliberately tracked in git). No state library — pages fetch on mount and auto-save
 with debounced POSTs.
 

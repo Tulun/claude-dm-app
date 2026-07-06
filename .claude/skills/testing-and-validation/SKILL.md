@@ -1,6 +1,6 @@
 ---
 name: testing-and-validation
-description: How to run, read, and write tests in this repo (Vitest + React Testing Library, 269 tests), plus the validation checklist to run before declaring any task done. Load when writing or fixing tests, when a test fails, when asked "run the tests", or before finishing any code change.
+description: How to run, read, and write tests in this repo (Vitest + React Testing Library, 307 tests), plus the validation checklist to run before declaring any task done. Load when writing or fixing tests, when a test fails, when asked "run the tests", or before finishing any code change.
 ---
 
 # Testing and Validation
@@ -63,6 +63,13 @@ new Request('http://localhost/api/test', {
 ```
 
 6. Module-level caches: `app/api/templates/route.js` caches conflux data in a module variable `confluxCache`. Tests that need a fresh cache use `vi.resetModules()` + a fresh dynamic `import(...)` — see the `freshRoute()` helper in `test/api/templatesRoute.test.js`.
+
+Coverage note: `lib/jsonStore.js` has NO dedicated unit tests — it is covered only
+indirectly through the route tests above (e.g. `test/api/userDataRoutes.test.js`).
+If you change jsonStore behavior directly, add a `test/lib/jsonStore.test.js`
+(`// @vitest-environment node`). Its read/write/delete helpers take explicit file
+paths, but `readJsonFile`/`writeJsonFile` still call `ensureDataDir()`, which reads
+`process.cwd()` — keep the mkdtemp + cwd-mock pattern there too.
 
 See the api-route-conventions skill for how the routes themselves are structured.
 
@@ -127,7 +134,7 @@ Do this in any test that submits a form whose handler reads fields by name.
 
 ## Validation checklist (before declaring any task done)
 
-1. `npx vitest run` — fully green (18 files / 269 tests at last count; the count only goes up).
+1. `npx vitest run` — fully green (22 files / 307 tests at last count; the count only goes up).
 2. `npm run build` — Next.js production build succeeds.
 3. If you changed page behavior: the relevant page test asserts the NEW behavior, ideally via fetch-mock POST counts and bodies (the strongest regression guard in this suite).
 4. If you deferred a cleanup or found a quirk: record it in `SUGGESTIONS.md`.

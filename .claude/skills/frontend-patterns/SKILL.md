@@ -72,6 +72,15 @@ setEnemies(prev => {
 });
 ```
 
+  **Known gap (July 2026):** `updateInitiative` and `updateCompanion` follow
+  this, but `updatePartyMember` (`app/combat/page.jsx:261`) and `updateEnemy`
+  (`app/combat/page.jsx:263`) still `.map()` unconditionally — and the comment
+  above them claims all list setters bail out. Practical impact is small
+  (callers always pass a freshly spread object, so the guard only catches
+  unmatched ids), but a no-op call still re-arms the debounced save. Tracked in
+  `SUGGESTIONS.md` §2; if you add the guards, also fix the stale comment at
+  `page.jsx:258-260` and delete this note.
+
 - Companion updates reconstruct the composite id string
   `` `companion-${p.id}-${comp.id}` `` inside the setter (see `updateCompanion`)
   instead of looking anything up in derived lists — derived lists would make
@@ -136,7 +145,11 @@ const displayAC = activeWildShapeForm ? (activeWildShapeForm.ac || 10) : (baseAC
   `e.stopPropagation()`).
 - Toast pattern: `setSaveStatus('Party saved')` then
   `setTimeout(() => setSaveStatus(''), 2000)`; `Navbar` renders the
-  `saveStatus` prop (`app/components/Navbar.jsx`).
+  `saveStatus` prop (`app/components/Navbar.jsx`). Note `saveStatus` is ONE
+  shared string per page — on `/combat` three debounced effects (party,
+  templates, encounter) all write it, so the toast shows whichever save
+  resolved last. A report of "X saved when I edited Y" may be this race, not a
+  wrong save — check which POST actually fired before trusting the toast text.
 
 ## 6. Testing hooks for pages
 

@@ -31,11 +31,11 @@ Follow this pattern for new pages. Do not introduce Redux/Zustand/Context.
 | `/magic-items` | `app/magic-items/page.jsx` | Magic item library |
 | `/classes` | `app/classes/page.jsx` | Static class reference (`classData.js`, `classDetails.js`) |
 | `/templates` | `app/templates/page.jsx` | Monster template library |
-| `/dm` | `app/dm/page.jsx` | Tabs: session notes, world notes, DM characters, NPC generator |
+| `/dm` | `app/dm/page.jsx` | Tabs: session notes, world notes, DM characters, NPC generator, Campaign (read-only Obsidian vault dashboard, `app/dm/components/VaultTab.jsx`) |
 
 `app/character/components/TabContent.jsx` is a **legacy ~1500-line mega-component** being incrementally replaced by `app/character/components/tabs/` (ResourcesTab, InventoryTab, SpellsTab, FeaturesTab, FeatsTab, BackgroundTab, NotesTab, CompanionsTab, WildShapeTab). Add new sheet functionality to `tabs/`, not to TabContent.
 
-Shared UI: `app/components/` (Navbar.jsx, Icons.jsx, ui.jsx, QuickResourcesModal.jsx, defaultData.js).
+Shared UI: `app/components/` (Navbar.jsx, Icons.jsx, ui.jsx, defaultData.js). (`app/components/QuickResourcesModal.jsx` is a 0-byte dead file slated for deletion — the real one lives under `app/combat/components/CharacterCard/`.)
 
 ## API inventory (all under `app/api/*/route.js`)
 
@@ -51,6 +51,8 @@ Eight fs-backed JSON CRUD routes persisting to `data/*.json` — seven via `lib/
 - `/api/dm` → `data/dm.json` (world + session notes)
 
 Two Anthropic-vision parser routes: `/api/parse-monster` and `/api/parse-spell`. Both require `ANTHROPIC_API_KEY` in `.env.local` and return a helpful error if it is missing.
+
+One vault route: `/api/vault` serves the user's Obsidian vault (path from `OBSIDIAN_VAULT_PATH` in `.env.local`) via `lib/vaultStore.js` for the /dm Campaign tab. It is **GET-only and traversal-guarded by design** — never add write endpoints; the vault is never modified by this app.
 
 See the **api-route-conventions** skill before adding or editing routes.
 
@@ -80,7 +82,7 @@ See the **api-route-conventions** skill before adding or editing routes.
 
 1. **Read `SUGGESTIONS.md` (repo root) before starting any task.** It is the living backlog and quirk registry. When you complete an item from it, move it to the "Completed log" section at the bottom.
 2. **Quirks are pinned by characterization tests** (test names often start with `QUIRK:`). Changing a behavior means finding its pinning test and flipping it *deliberately in the same change* — a surprise test failure with "QUIRK" in the name means you changed intentional behavior.
-3. **Definition of done**: `npx vitest run` green (269+ tests, `test/**/*.test.{js,jsx}`) AND `npm run build` clean. Both, always.
+3. **Definition of done**: `npx vitest run` green (307+ tests, `test/**/*.test.{js,jsx}`) AND `npm run build` clean. Both, always.
 
 Commands: `npm run dev` · `npm run build` · `npm test` (= `vitest run`) · `npm run test:watch`.
 

@@ -136,7 +136,7 @@ trait/action text (names containing "spellcasting"), falling back to
 
 ## Verifying changes
 
-Run `npm test` (Vitest, 269 tests). Rules-math coverage lives in
+Run `npm test` (Vitest, 307 tests). Rules-math coverage lives in
 `test/combat/characterCardUtils.test.js`, `test/utils/acCalculation.test.js`,
 `test/combat/spellcastingParser.test.js`, `test/character/constants.test.js`,
 and `test/encounters/constants.test.js` — see the **testing-and-validation**

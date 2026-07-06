@@ -10,6 +10,10 @@ All user data lives as pretty-printed JSON files in `data/` at the repo root
 `dm-npcs.json`, `encounter.json`, `encounters.json`). The Next.js route handlers
 under `app/api/*/route.js` are the only code that reads or writes them.
 
+(`/api/vault` is outside this layer: it reads the user's external Obsidian vault via
+`lib/vaultStore.js`, is GET-only by design, and never touches `data/` — this skill's
+jsonStore/backup/migration rules do not apply to it, and it must never gain write endpoints.)
+
 ## 1. Use lib/jsonStore.js for all file access
 
 `lib/jsonStore.js` exports the only sanctioned helpers:
@@ -44,6 +48,12 @@ The canonical pattern is `loadSpells` in `app/api/spells/route.js`:
 Routes that follow this pattern: `spells`, `magic-items`, `dm`. Characterization tests in
 `test/api/spellsRoute.test.js`, `test/api/magicItemsRoute.test.js`, `test/api/dmRoute.test.js`
 enforce it — do not weaken them.
+
+**Routes with no default dataset** (a new resource with nothing to seed): the same
+policy applies with "seed" replaced by "empty default" — file missing → return the
+empty shape (`{}`/`[]`) without writing anything; corrupt → `backupCorruptFile` +
+throw + 500; the next request finds no file and returns the empty shape, so recovery
+works exactly as above. Having nothing to seed is not a reason to fall back silently.
 
 **Known inconsistency (tracked in SUGGESTIONS.md, section 1):** `party`, `dm-npcs`, and
 `templates` return 500 on a corrupt file but leave it in place (no `.bak`); `encounter`
@@ -106,8 +116,15 @@ Default datasets live at `app/data/defaultSpells.js` (`defaultSpells`),
 1. Create `app/api/<name>/route.js`; import helpers from `../../../lib/jsonStore.js`
    (copy `app/api/party/route.js` as the minimal template).
 2. Decide the GET-when-missing default **consciously**: `null` (party), `[]`
-   (dm-npcs, encounters), an object (`EMPTY_ENCOUNTER` in encounter), or seed-and-write
-   defaults (spells/magic-items/dm). Document the choice in a comment.
+   (dm-npcs, encounters), an object (`EMPTY_ENCOUNTER` in encounter), seed-and-write
+   defaults (spells/magic-items/dm), or — for a resource with no default dataset —
+   a plain empty shape with no seeding (and skip section 3 entirely: no version
+   stamp, no migration). Document the choice in a comment.
+   For a resource keyed per entity (per-combatant, per-character, …) there is no
+   precedent in `data/` yet — existing files are flat arrays or single documents.
+   An object map keyed by the entity's existing id (see **dm-app-map**'s entity-id
+   section) is fine; whichever shape you pick, keep the whole-file
+   POST-replaces-everything contract and state the shape in a comment in the route.
 3. Corrupt file → follow section 2. Do not add a new silent-fallback route.
 4. Response shapes: successful POST/DELETE that don't return data respond
    `{ success: true }`; errors respond `{ error: <message> }` with a proper status
@@ -116,7 +133,7 @@ Default datasets live at `app/data/defaultSpells.js` (`defaultSpells`),
 5. Add a test file under `test/api/` using the mocked-cwd pattern: `// @vitest-environment node`,
    `vi.spyOn(process, 'cwd').mockReturnValue(tmpDir)` **before** the dynamic
    `await import(...)` of the route — see `test/api/spellsRoute.test.js` and the
-   **testing-and-validation** skill. Run `npm test` (269 tests must stay green).
+   **testing-and-validation** skill. Run `npm test` (307 tests must stay green).
 
 ## Traps / Do NOT
 
