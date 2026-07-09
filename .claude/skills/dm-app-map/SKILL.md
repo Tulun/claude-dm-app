@@ -33,7 +33,7 @@ Follow this pattern for new pages. Do not introduce Redux/Zustand/Context.
 | `/templates` | `app/templates/page.jsx` | Monster template library |
 | `/dm` | `app/dm/page.jsx` | Tabs: session notes, world notes, DM characters, NPC generator, Campaign (read-only Obsidian vault dashboard, `app/dm/components/VaultTab.jsx`) |
 
-Character-sheet tab panels live in `app/character/components/tabs/` (ResourcesTab, InventoryTab, SpellsTab, FeaturesTab, FeatsTab, BackgroundTab, NotesTab, CompanionsTab, WildShapeTab). The legacy `TabContent.jsx` mega-component was deleted in July 2026 — the tabs/ split is complete; add new sheet functionality to `tabs/`.
+Character-sheet tab panels live in `app/character/components/tabs/` (ResourcesTab, InventoryTab, SpellsTab, FeaturesTab, BackgroundTab, NotesTab, CompanionsTab, WildShapeTab). FeaturesTab covers class features, subclass features, AND feats (all in `character.features`; the short-lived separate FeatsTab and its `character.feats` field were merged away in July 2026 — the sheet folds any legacy `feats` array into `features` at load). Two tabs are conditional: WildShapeTab shows only for druid 2+, and CompanionsTab is opt-in (shown when `character.companions` is non-empty or `character.companionsEnabled` is set — the "+ Companions" tab-strip button toggles it). The legacy `TabContent.jsx` mega-component was deleted in July 2026 — the tabs/ split is complete; add new sheet functionality to `tabs/`.
 
 Shared UI: `app/components/` (Navbar.jsx, Icons.jsx, ui.jsx, Modal.jsx — the standard modal overlay, see **frontend-patterns** §5 — and defaultData.js). (QuickResourcesModal lives under `app/combat/components/CharacterCard/`, not here.)
 

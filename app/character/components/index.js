@@ -12,7 +12,6 @@ export {
   InventoryTab,
   SpellsTab,
   FeaturesTab,
-  FeatsTab,
   BackgroundTab,
   NotesTab,
   CompanionsTab,

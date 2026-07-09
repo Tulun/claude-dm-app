@@ -158,6 +158,25 @@ context costs:
 
 ## Completed log
 
+- [x] Merged the Feats tab into Features. The tabs split had left feats data
+  forked: the new FeatsTab wrote a fresh `character.feats` field (empty for
+  everyone) while the real entries (Inspiring Leader, Metamagic) sat invisible
+  in `character.features`, which no tab rendered anymore. FeaturesTab now has
+  the "Feats & Other Features" section back (rich `feats.js` picker with
+  categories/prereqs, plus FeatsTab's per-feat notes input); `character.features`
+  is the single canonical field; the sheet folds any legacy `feats` array into
+  `features` at load (persisted on next edit, no echo save); FeatsTab.jsx
+  deleted. Pinned by `test/character/featuresTab.test.jsx` — July 2026
+- [x] Fixed: CompanionsTab regression — the tabs refactor's real companions UI
+  (familiars/steeds/summons, `character.companions`, the shape the combat page's
+  initiative tracker consumes) was clobbered one commit later (d1d24ed) by a
+  stale copy of FeaturesTab, so the Companions tab showed class features.
+  Restored from 428bdfb, modernized (`generateId('companion')` ids, canonical
+  `getMod` from rules.js instead of its local copy). Companions tab is now
+  opt-in: shown when `character.companions` is non-empty or
+  `character.companionsEnabled` is set ("+ Companions" button in the sheet's
+  tab strip enables it; "Hide this tab" in the empty state disables it).
+  Pinned by `test/character/companionsTab.test.jsx` — July 2026
 - [x] Component design batch — (1) deleted `TabContent.jsx` (1,501 lines): it was
   already imported nowhere, the tabs/ split was complete; (2) `CharacterCard`'s ten
   `showX` modal booleans collapsed to one `activeModal` string (the three inline

@@ -19,7 +19,6 @@ import {
   InventoryTab,
   SpellsTab,
   FeaturesTab,
-  FeatsTab,
   BackgroundTab,
   NotesTab,
   CompanionsTab,
@@ -76,6 +75,11 @@ function CharacterPageContent() {
             if (!found.skillProficiencies) found.skillProficiencies = {};
             if (!found.saveProficiencies) found.saveProficiencies = {};
             if (!found.features) found.features = [];
+            // Fold legacy feats (from the removed Feats tab) into features
+            if (found.feats?.length) {
+              found.features = [...found.features, ...found.feats];
+              found.feats = [];
+            }
             if (!found.spells) found.spells = [];
             if (!found.inventory) found.inventory = [];
             if (!found.resources) found.resources = [];
@@ -163,10 +167,29 @@ function CharacterPageContent() {
   
   // Check if character is a druid level 2+
   const isDruid = () => getClassLevel(character, 'druid') >= 2;
-  
-  // New tab order: spells, resources, wild shape (druid), inventory, features, feats, companions, notes
-  const baseTabs = ['spells', 'resources', 'inventory', 'features', 'feats', 'companions', 'notes'];
-  const tabs = isDruid() ? ['spells', 'resources', 'wild shape', 'inventory', 'features', 'feats', 'companions', 'notes'] : baseTabs;
+
+  // Companions is opt-in: shown when the character already has companions,
+  // or after enabling it via the "+ Companions" button in the tab strip
+  const showCompanions = (character.companions || []).length > 0 || character.companionsEnabled;
+
+  // New tab order: spells, resources, wild shape (druid), inventory, features (incl. feats), companions (opt-in), notes
+  const tabs = [
+    'spells', 'resources',
+    ...(isDruid() ? ['wild shape'] : []),
+    'inventory', 'features',
+    ...(showCompanions ? ['companions'] : []),
+    'notes',
+  ];
+
+  const enableCompanionsTab = () => {
+    updateField('companionsEnabled', true);
+    setActiveTab('companions');
+  };
+
+  const hideCompanionsTab = () => {
+    setActiveTab('features');
+    updateField('companionsEnabled', false);
+  };
 
   return (
     <div className="min-h-screen bg-stone-950 text-stone-100">
@@ -310,6 +333,15 @@ function CharacterPageContent() {
                   {tab}
                 </button>
               ))}
+              {!showCompanions && (
+                <button
+                  onClick={enableCompanionsTab}
+                  className="px-4 py-2 rounded-t text-sm font-medium text-stone-600 hover:text-stone-300"
+                  title="Show the companions tab (familiars, mounts, summons)"
+                >
+                  + Companions
+                </button>
+              )}
             </div>
 
             {/* Tab Content */}
@@ -317,10 +349,9 @@ function CharacterPageContent() {
               {activeTab === 'resources' && <ResourcesTab character={character} onUpdate={updateField} />}
               {activeTab === 'inventory' && <InventoryTab character={character} onUpdate={updateField} />}
               {activeTab === 'wild shape' && <WildShapeTab character={character} onUpdate={updateField} templates={templates} />}
-              {activeTab === 'companions' && <CompanionsTab character={character} onUpdate={updateField} />}
+              {activeTab === 'companions' && <CompanionsTab character={character} onUpdate={updateField} onHideTab={hideCompanionsTab} />}
               {activeTab === 'spells' && <SpellsTab character={character} onUpdate={updateField} />}
               {activeTab === 'features' && <FeaturesTab character={character} onUpdate={updateField} />}
-              {activeTab === 'feats' && <FeatsTab character={character} onUpdate={updateField} />}
               {activeTab === 'background' && <BackgroundTab character={character} onUpdate={updateField} />}
               {activeTab === 'notes' && <NotesTab character={character} onUpdate={updateField} />}
             </div>

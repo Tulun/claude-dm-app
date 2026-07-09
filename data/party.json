@@ -1473,7 +1473,8 @@
     },
     "acEffect": "draconicResilience",
     "innateSorcery": false,
-    "tempHp": 0
+    "tempHp": 0,
+    "companionsEnabled": false
   },
   {
     "id": "npc-init-1775957421593",
