@@ -18,7 +18,7 @@ import SorcererFeaturesModal from './SorcererFeaturesModal';
 import { parseSpellcasting } from './spellcastingParser';
 import { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, getCalculatedAC, getClassLevel, isClass, formatClassList } from './utils';
 
-const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onToggleExpand, showResources, templates = [] }) => {
+const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onToggleExpand, showResources, templates = [], stretch = false }) => {
   // One modal open at a time — a single key replaces the old 10 showX booleans
   const [activeModal, setActiveModal] = useState(null);
   const closeModal = () => setActiveModal(null);
@@ -66,8 +66,13 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   
   const iconBgColor = isEnemy ? (isNpc ? 'bg-teal-900/50' : 'bg-red-900/50') : 'bg-emerald-900/50';
 
+  // `stretch` (party grid only): the card fills its grid row and the collapsed
+  // stat bar anchors to the bottom (mt-auto), so side-by-side cards line up
+  // even when one lacks a badge row. NEVER apply h-full unconditionally — in
+  // the enemies column the grid cell has a resolved height, so h-full blew the
+  // first card up to the full column height.
   return (
-    <div className={`border rounded-lg overflow-hidden transition-all ${cardColors}`}>
+    <div className={`border rounded-lg overflow-hidden transition-all ${stretch ? 'h-full flex flex-col' : ''} ${cardColors}`}>
       <div className="p-3">
         {/* Top row: Icon, Name, and action buttons */}
         <div className="flex items-center justify-between mb-2">
@@ -410,9 +415,10 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
         </div>
       </div>
 
-      {/* Quick stats bar - collapsed */}
+      {/* Quick stats bar - collapsed (mt-auto pins it to the card bottom
+          when the card is stretched in the party grid) */}
       {!expanded && (
-        <div className="px-3 pb-2 grid grid-cols-6 gap-1 text-center border-t border-stone-700/30 pt-2">
+        <div className="mt-auto px-3 pb-2 grid grid-cols-6 gap-1 text-center border-t border-stone-700/30 pt-2">
           {['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'].map(label => {
             const key = label.toLowerCase();
             

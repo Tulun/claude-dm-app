@@ -64,8 +64,10 @@ const settle = async () => {
   await flush();
 };
 
-const initCol = () => document.querySelector('main').children[1];
-const tracker = () => initCol().children[1];
+// The initiative bar (header + TurnTracker) is main.children[0]; the
+// party/enemies grid is main.children[1].
+const initBar = () => document.querySelector('main').children[0];
+const tracker = () => initBar().children[1];
 // The order only renders inside the Manage Order modal now
 const orderModal = () => screen.getByText('Initiative Order').closest('.fixed');
 
@@ -86,7 +88,10 @@ const nowName = () => {
   const heading = within(tracker()).getByText('Now');
   return heading.nextElementSibling.textContent;
 };
-const nextName = () => within(tracker()).getByText('Next').nextElementSibling.textContent;
+// The upcoming order renders as chips under "Up Next"; each chip's title is
+// the combatant's name and the first chip is whoever acts next.
+const upNextChips = () => [...within(tracker()).getByText('Up Next').nextElementSibling.children];
+const nextName = () => upNextChips()[0].title;
 
 const postCalls = (fetchMock, url) =>
   fetchMock.mock.calls.filter(([u, opts]) => u === url && opts?.method === 'POST');
@@ -110,6 +115,43 @@ describe('CombatPage — turn tracker', () => {
     expect(nextName()).toBe('Mira');
     // dex modifier rides along on the Now card (Theren dex 14 → +2)
     expect(within(tracker()).getByText('DEX +2')).toBeInTheDocument();
+    // everyone else shows as upcoming chips, in order
+    expect(upNextChips().map(c => c.title)).toEqual(['Mira', 'Wolfy', 'Ogre']);
+  });
+
+  it('clicking an Up Next chip jumps the pointer to that combatant', async () => {
+    mockFetch();
+    render(<CombatPage />);
+    await settle();
+    await startCombat();
+
+    click(upNextChips().find(c => c.title === 'Ogre'));
+    await flush();
+    expect(nowName()).toBe('Ogre');
+    expect(nextName()).toBe('Theren'); // chips wrap into the next round
+  });
+
+  it('End Combat asks for confirmation and can be cancelled', async () => {
+    mockFetch();
+    render(<CombatPage />);
+    await settle();
+    await startCombat();
+
+    click(within(tracker()).getByText('End Combat'));
+    await flush();
+    expect(within(tracker()).getByText('End combat and reset the round?')).toBeInTheDocument();
+
+    // cancel keeps combat running
+    click(within(tracker()).getByText('Cancel'));
+    await flush();
+    expect(nowName()).toBe('Theren');
+
+    // confirming actually ends it
+    click(within(tracker()).getByText('End Combat'));
+    await flush();
+    click(within(tracker()).getByText('End Combat')); // the red confirm button
+    await flush();
+    expect(screen.getByText('Start Combat')).toBeInTheDocument();
   });
 
   it('End Turn walks the order and rolls over into the next round', async () => {
@@ -237,7 +279,7 @@ describe('CombatPage — turn tracker', () => {
     await flush();
     expect(nowName()).toBe('Ogre');
 
-    const enemiesCol = document.querySelector('main').children[2];
+    const enemiesCol = document.querySelector('main').children[1].children[1];
     click(within(enemiesCol).getByTitle('Clear encounter'));
     await flush();
 

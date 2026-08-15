@@ -291,9 +291,10 @@ export default function CombatPage() {
     return Math.min(Math.max(turn.index, 0), fullInitiativeList.length - 1);
   }, [combatActive, fullInitiativeList, turn]);
 
+  // nextIndex feeds the order modal's NEXT badge; the tracker derives its own
+  // upcoming chips from `list` + `activeIndex`.
   const nextIndex = activeIndex >= 0 ? (activeIndex + 1) % fullInitiativeList.length : -1;
   const currentCombatant = activeIndex >= 0 ? fullInitiativeList[activeIndex] : null;
-  const nextCombatant = nextIndex >= 0 ? fullInitiativeList[nextIndex] : null;
 
   const kindOf = useCallback((c) => {
     if (!c) return 'party';
@@ -440,8 +441,40 @@ export default function CombatPage() {
 
       <Navbar saveStatus={saveStatus} />
 
-      <main className="relative max-w-7xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="space-y-4">
+      <main className="relative max-w-7xl mx-auto p-4 space-y-4">
+          {/* Initiative bar: full-width tracker above the columns. The full
+              order lives in the Manage Order modal so the table view stays
+              uncluttered. */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold text-amber-400 flex items-center gap-2"><Icons.Sword />Initiative</h2>
+              <button onClick={() => setShowOrderModal(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.GripVertical />Manage Order</button>
+            </div>
+
+            <TurnTracker
+              combatActive={combatActive}
+              round={round}
+              turnNumber={activeIndex + 1}
+              turnCount={fullInitiativeList.length}
+              current={currentCombatant}
+              currentKind={kindOf(currentCombatant)}
+              list={fullInitiativeList}
+              activeIndex={activeIndex}
+              kindOf={kindOf}
+              onJumpTo={goToTurn}
+              interrupt={interrupt}
+              interruptCreature={interruptCreature}
+              onStart={startCombat}
+              onEndCombat={endCombat}
+              onNextTurn={nextTurn}
+              onPrevTurn={prevTurn}
+              onOpenLegendary={openLegendary}
+              onResume={resumeTurn}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="space-y-4 lg:col-span-2">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-emerald-400 flex items-center gap-2"><Icons.Shield />Party & Allies</h2>
               <div className="flex gap-2">
@@ -453,38 +486,15 @@ export default function CombatPage() {
             {!party ? (
               <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg animate-pulse">Loading party...</div>
             ) : party.length > 0 ? (
-              party.map(m => <CharacterCard key={m.id} character={m} isEnemy={false} onUpdate={updatePartyMember} onRemove={removePartyMember} expanded={expandedCards[m.id]} onToggleExpand={toggleExpand} showResources templates={templates || EMPTY_TEMPLATES} />)
+              // Two card columns on desktop so more of the party is visible
+              // without scrolling; rows stretch so side-by-side cards line up
+              // (cards get the `stretch` prop to pin their stat bars).
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {party.map(m => <CharacterCard key={m.id} character={m} isEnemy={false} onUpdate={updatePartyMember} onRemove={removePartyMember} expanded={expandedCards[m.id]} onToggleExpand={toggleExpand} showResources templates={templates || EMPTY_TEMPLATES} stretch />)}
+              </div>
             ) : (
               <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No party members yet.</div>
             )}
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-amber-400 flex items-center gap-2"><Icons.Sword />Initiative</h2>
-              <button onClick={() => setShowOrderModal(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.GripVertical />Manage Order</button>
-            </div>
-
-            {/* The full order lives in the Manage Order modal; the main column
-                is just the turn tracker so the table view stays uncluttered. */}
-            <TurnTracker
-              combatActive={combatActive}
-              round={round}
-              turnNumber={activeIndex + 1}
-              turnCount={fullInitiativeList.length}
-              current={currentCombatant}
-              currentKind={kindOf(currentCombatant)}
-              next={nextCombatant}
-              nextKind={kindOf(nextCombatant)}
-              interrupt={interrupt}
-              interruptCreature={interruptCreature}
-              onStart={startCombat}
-              onEndCombat={endCombat}
-              onNextTurn={nextTurn}
-              onPrevTurn={prevTurn}
-              onOpenLegendary={openLegendary}
-              onResume={resumeTurn}
-            />
           </div>
 
           <div className="space-y-4">
@@ -510,6 +520,7 @@ export default function CombatPage() {
             </div>
             {enemies.map(e => <CharacterCard key={e.id} character={e} isEnemy={true} onUpdate={updateEnemy} onRemove={removeEnemy} />)}
             {!enemies.length && !lairAction && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No enemies yet. <Link href="/encounters" className="text-amber-500 hover:text-amber-400">Create encounters</Link> to quickly add groups.</div>}
+          </div>
           </div>
         </main>
 

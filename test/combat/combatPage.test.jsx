@@ -71,9 +71,12 @@ const settle = async () => {
   await flush();
 };
 
+// Layout: main.children[0] is the initiative bar (header + TurnTracker),
+// main.children[1] is the party/enemies grid (party spans 2 columns).
 const getColumns = () => {
   const main = document.querySelector('main');
-  return { partyCol: main.children[0], initCol: main.children[1], enemiesCol: main.children[2] };
+  const grid = main.children[1];
+  return { initCol: main.children[0], partyCol: grid.children[0], enemiesCol: grid.children[1] };
 };
 
 const postCalls = (fetchMock, url) =>

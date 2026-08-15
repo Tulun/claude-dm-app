@@ -165,9 +165,16 @@ context costs:
   on `acEffect` — see the rules-math caller table), and the Now card and order
   rows show the DEX modifier via the canonical `getMod`. The full order renders
   ONLY inside `InitiativeOrderModal.jsx` (sort, drag-reorder, initiative
-  editing, Now/Next badges, click-to-jump); the main column is just the tracker
-  — the "Sort by Init" / lair-action / companion page tests open the modal
-  first. Legendary actions are an *interrupt* (`LegendaryActionModal.jsx`):
+  editing, Now/Next badges, click-to-jump) — the "Sort by Init" / lair-action /
+  companion page tests open the modal first. Page layout: the tracker is a
+  full-width bar ABOVE the columns — Now card left, the rest of the round as
+  clickable color-coded "Up Next" chips filling the middle (click to jump the
+  pointer; chips wrap into the next round), controls right, and End Combat is
+  a header button with an inline confirm. Party & Allies spans 2 of the 3 grid
+  columns with cards in a 2-col sub-grid (`stretch` prop on CharacterCard
+  evens up rows — see frontend-patterns §2.5 for why it must stay opt-in),
+  Enemies takes the third; the tests' `getColumns` helper encodes the DOM
+  shape. Legendary actions are an *interrupt* (`LegendaryActionModal.jsx`):
   they overlay the tracker, list the creature's legendary actions, and resume
   the same turn on Done, without touching the order. The pointer is derived
   from `{ index, id }` so it follows its combatant across a re-sort and clamps

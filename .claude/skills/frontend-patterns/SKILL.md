@@ -102,9 +102,13 @@ setEnemies(prev => {
   `isDragging`/`isDragOver` booleans — do not go back to passing four separate
   handler props or a shared `dragOverIndex` (the shared index re-rendered every
   row on hover). `drag` is OPT-IN: only `InitiativeOrderModal` passes it (and
-  supplies `onSelect` for click-to-jump). The main initiative column renders NO
-  `InitiativeItem` rows at all — it is just the `TurnTracker` (§2.5); the full
-  order lives exclusively in the Manage Order modal.
+  supplies `onSelect` for click-to-jump). The main page renders NO
+  `InitiativeItem` rows at all — initiative is a full-width `TurnTracker` bar
+  ABOVE the party/enemies grid (§2.5); the full order lives exclusively in the
+  Manage Order modal. Layout: `main.children[0]` = initiative bar (header +
+  tracker), `main.children[1]` = the `lg:grid-cols-3` grid where Party spans 2
+  columns (cards themselves in a 2-col sub-grid) and Enemies takes the third —
+  the page tests' `getColumns` helper encodes this.
 - Inside `CharacterCard`, the ten modals are driven by ONE `activeModal`
   string (`'delete' | 'actions' | 'resources' | 'sheet' | 'inventory' |
   'notes' | 'statblock' | 'spells' | 'druid' | 'sorcerer'`, `null` = closed) —
@@ -136,6 +140,19 @@ Three rules keep the pointer honest:
   `getEquipmentAC(c, { parseArmorNames: false })`, stored-ac fallback, cyan when
   `acEffect` — see the caller table in **rules-math** (canonical) before
   changing it.
+- **The bar shows the rest of the round as "Up Next" chips** derived inside
+  `TurnTracker` from `list` + `activeIndex` (cyclic, wraps into next round);
+  each chip's `title` is the combatant name (the tests key on this) and
+  clicking one calls `onJumpTo(index)`. **End Combat two-steps**: the header
+  button swaps to an inline confirm (local `confirmingEnd` state) because
+  ending combat discards the round/turn position — keep destructive tracker
+  actions behind a confirm.
+- **Party cards stretch; enemy cards must NOT.** `CharacterCard` takes a
+  `stretch` prop (party grid only): `h-full flex flex-col` + `mt-auto` on the
+  collapsed stat bar so side-by-side cards line up. Never apply `h-full`
+  unconditionally — the enemies column's grid cell has a resolved height, so an
+  unconditional `h-full` inflated the first enemy card to the full column
+  height (shipped briefly, August 2026).
 
 All of it (plus `initiativeOrder`) persists through the ONE encounter auto-save
 effect — see the payload shape in the **dm-app-map** skill. Tests:
