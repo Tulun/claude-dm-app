@@ -54,5 +54,26 @@
       }
     ],
     "createdAt": "2026-04-11T21:52:19.611Z"
+  },
+  {
+    "id": "encounter-1783729554504-6m0fsvm9j",
+    "name": "Goblins",
+    "monsters": [
+      {
+        "id": "mm-hobgoblin-captain-1783729563621-yljacesml",
+        "templateId": "mm-hobgoblin-captain",
+        "name": "Hobgoblin Captain",
+        "customName": "",
+        "quantity": 1
+      },
+      {
+        "id": "mm-goblin-boss-1783729574246-4wo76z6m1",
+        "templateId": "mm-goblin-boss",
+        "name": "Goblin Boss",
+        "customName": "",
+        "quantity": 1
+      }
+    ],
+    "createdAt": "2026-07-11T00:25:54.504Z"
   }
 ]
