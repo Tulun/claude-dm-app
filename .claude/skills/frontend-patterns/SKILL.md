@@ -97,14 +97,49 @@ setEnemies(prev => {
   `onToggleExpand(character.id)`; the page handler is
   `useCallback((id) => setExpandedCards(prev => ({ ...prev, [id]: !prev[id] })), [])`.
 - Initiative drag-reorder state lives in the `useDragReorder` hook
-  (`app/combat/useDragReorder.js`), not on the page. Each `InitiativeItem` gets
-  ONE `drag` handlers-bundle prop plus per-row `isDragging`/`isDragOver`
-  booleans — do not go back to passing four separate handler props or a shared
-  `dragOverIndex` (the shared index re-rendered every row on hover).
+  (`app/combat/useDragReorder.js`), not on the page. An `InitiativeItem` that
+  is meant to be draggable gets ONE `drag` handlers-bundle prop plus per-row
+  `isDragging`/`isDragOver` booleans — do not go back to passing four separate
+  handler props or a shared `dragOverIndex` (the shared index re-rendered every
+  row on hover). `drag` is OPT-IN: only `InitiativeOrderModal` passes it (and
+  supplies `onSelect` for click-to-jump). The main initiative column renders NO
+  `InitiativeItem` rows at all — it is just the `TurnTracker` (§2.5); the full
+  order lives exclusively in the Manage Order modal.
 - Inside `CharacterCard`, the ten modals are driven by ONE `activeModal`
   string (`'delete' | 'actions' | 'resources' | 'sheet' | 'inventory' |
   'notes' | 'statblock' | 'spells' | 'druid' | 'sorcerer'`, `null` = closed) —
   add new card modals to that enum, not as a new `showX` boolean.
+
+## 2.5 The combat turn tracker (canonical)
+
+`app/combat/page.jsx` owns whose turn it is; `TurnTracker.jsx` only renders it.
+Three rules keep the pointer honest:
+
+- **`turn` state is `{ index, id }` — position AND occupant.** The rendered
+  pointer is `activeIndex`, a `useMemo` that prefers `turn.id`'s current
+  position and falls back to a clamped `turn.index` when that combatant has
+  left the fight. Never store the resolved index in state: derive it, so a
+  re-sort or a deletion can't leave the pointer aimed at the wrong creature.
+  Every deliberate move goes through `goToTurn(index)`, which sets index and id
+  together (`nextTurn`/`prevTurn` bump `round` first when they wrap).
+- **The turn handlers read `listRef` / `activeIndexRef`, not state.**
+  `goToTurn` is a prop on the memoized `InitiativeItem` rows, so it must be an
+  empty-dependency `useCallback`. The refs are synced in `useEffect`s — do NOT
+  assign `ref.current` during render, ESLint's react-hooks rules make that an
+  **error** ("Cannot access refs during render"), and `npm run lint` must stay
+  at 0 errors.
+- **A legendary action is an interrupt, not a turn.** `interrupt`
+  (`{ id, name, label }`) overlays the tracker and leaves `turn` untouched, so
+  dismissing it resumes exactly where the round was. Do not implement it by
+  splicing a temporary combatant into the initiative order.
+- **The Now card's AC uses the initiative-row view** —
+  `getEquipmentAC(c, { parseArmorNames: false })`, stored-ac fallback, cyan when
+  `acEffect` — see the caller table in **rules-math** (canonical) before
+  changing it.
+
+All of it (plus `initiativeOrder`) persists through the ONE encounter auto-save
+effect — see the payload shape in the **dm-app-map** skill. Tests:
+`test/combat/turnTracker.test.jsx`.
 
 ## 3. XSS rule: exactly one dangerouslySetInnerHTML
 
@@ -179,6 +214,10 @@ Full details in the `testing-and-validation` skill.
   `CharacterCard` or `InitiativeItem` — it silently defeats `React.memo`.
 - Do NOT return a new array from a list setter when nothing changed — return
   `prev`, or you trigger a pointless render AND a pointless API save.
+- Do NOT assign `ref.current` during render to make a handler stable (lint
+  error, see §2.5) — sync the ref in a `useEffect`.
+- Do NOT store the combat page's resolved turn index in state, and do NOT model
+  a legendary action as a real entry in the initiative order (§2.5).
 - Do NOT add a new `dangerouslySetInnerHTML` or touch the escape-then-highlight
   order in `app/spellbook/formatSpellText.js`.
 - Do NOT include tempAC inside AC calculation helpers used by the combat card —

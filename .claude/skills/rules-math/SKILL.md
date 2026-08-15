@@ -66,6 +66,7 @@ update this section (only) when the behavior changes:
 |---|---|---|
 | `app/characters/page.jsx` | full defaults (temp AC in, name parsing on) | `character.ac \|\| 10` via `getCalculatedAC` |
 | `app/combat/components/InitiativeItem.jsx` | `{ parseArmorNames: false }` | local wrapper |
+| `app/combat/components/TurnTracker.jsx` (Now card) | `{ parseArmorNames: false }` — must match InitiativeItem's view | `character.ac \|\| 10` |
 | `app/combat/components/CharacterCard/utils.js` (`getCalculatedAC`) | `{ includeTempAC: false, parseArmorNames: false }` | card computes `character.acOverride || calculatedAC || character.ac || 10` |
 
 ### THE TEMP-AC TRAP (a past audit got this wrong)

@@ -43,7 +43,7 @@ Eight fs-backed JSON CRUD routes persisting to `data/*.json` — seven via `lib/
 
 - `/api/party` → `data/party.json` (party members — most valuable user data)
 - `/api/dm-npcs` → `data/dm-npcs.json`
-- `/api/encounter` → `data/encounter.json` — the **active combat** (`{ enemies, round, turnIndex }` + lairAction). Singular.
+- `/api/encounter` → `data/encounter.json` — the **active combat**. Singular. The combat page POSTs the whole thing as one payload: `{ enemies, lairAction, initiativeOrder, combatActive, round, turnIndex, turnId, interrupt }` — enemies + the lair action, the manual initiative order (array of combatant ids), and the turn-tracker state (see **frontend-patterns** §2.5 for how the turn pointer works). The route's `EMPTY_ENCOUNTER` default is `{ enemies: [], round: 1, turnIndex: 0 }`; every other key is optional and the page tolerates its absence.
 - `/api/encounters` → `data/encounters.json` — the **saved-encounter library**. Plural. Do not confuse the two.
 - `/api/spells` → `data/spells.json` (also syncs edits into character spell instances)
 - `/api/magic-items` → `data/magic-items.json`

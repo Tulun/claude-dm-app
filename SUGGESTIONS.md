@@ -158,6 +158,24 @@ context costs:
 
 ## Completed log
 
+- [x] **Turn tracker on /combat** — the initiative column now tracks whose turn
+  it is instead of leaving it to the DM's memory. `TurnTracker.jsx` shows
+  round, Now/Next and the End Turn / ← Back controls; the Now card's AC uses
+  the initiative-row view (`getEquipmentAC` with `parseArmorNames: false`, cyan
+  on `acEffect` — see the rules-math caller table), and the Now card and order
+  rows show the DEX modifier via the canonical `getMod`. The full order renders
+  ONLY inside `InitiativeOrderModal.jsx` (sort, drag-reorder, initiative
+  editing, Now/Next badges, click-to-jump); the main column is just the tracker
+  — the "Sort by Init" / lair-action / companion page tests open the modal
+  first. Legendary actions are an *interrupt* (`LegendaryActionModal.jsx`):
+  they overlay the tracker, list the creature's legendary actions, and resume
+  the same turn on Done, without touching the order. The pointer is derived
+  from `{ index, id }` so it follows its combatant across a re-sort and clamps
+  when one is removed. `initiativeOrder` + turn state now persist through the
+  existing encounter auto-save, so a refresh no longer loses the manual order
+  or the round. Tests: `test/combat/turnTracker.test.jsx` (11). Documented in
+  frontend-patterns §2.5 (canonical) + the /api/encounter shape in dm-app-map
+  — August 2026
 - [x] Merged the Feats tab into Features. The tabs split had left feats data
   forked: the new FeatsTab wrote a fresh `character.feats` field (empty for
   everyone) while the real entries (Inspiring Leader, Metamagic) sat invisible

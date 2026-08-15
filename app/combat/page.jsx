@@ -8,7 +8,9 @@ import Modal from '../components/Modal';
 import Navbar from '../components/Navbar';
 import { defaultPartyData, defaultEnemyTemplates } from '../components/defaultData';
 import CharacterCard from './components/CharacterCard';
-import InitiativeItem from './components/InitiativeItem';
+import TurnTracker from './components/TurnTracker';
+import InitiativeOrderModal from './components/InitiativeOrderModal';
+import LegendaryActionModal from './components/LegendaryActionModal';
 import { AddEnemyModal, AddPartyModal } from './components/Modals';
 import { getCalculatedAC } from '../utils/acCalculation';
 import { generateId } from '../utils/generateId';
@@ -31,6 +33,18 @@ export default function CombatPage() {
   const [savedEncounters, setSavedEncounters] = useState([]);
   const [showLoadEncounter, setShowLoadEncounter] = useState(false);
   const [encounterToLoad, setEncounterToLoad] = useState(null);
+  const [showOrderModal, setShowOrderModal] = useState(false);
+  const [showLegendaryModal, setShowLegendaryModal] = useState(false);
+  // Turn tracker. `turn` keeps BOTH the position and who was standing there,
+  // so the pointer can follow its combatant when the order is re-sorted and
+  // fall back to the position when that combatant is removed.
+  const [combatActive, setCombatActive] = useState(false);
+  const [round, setRound] = useState(1);
+  const [turn, setTurn] = useState({ index: 0, id: null });
+  // A legendary action OVERLAYS the pointer instead of moving it: { id, name, label }.
+  const [interrupt, setInterrupt] = useState(null);
+  // Manual initiative order - stores IDs in display order
+  const [initiativeOrder, setInitiativeOrder] = useState([]);
   // Saving stays disabled until the initial load settles, so loading data
   // never echoes an unchanged copy back to the API.
   const saveEnabled = React.useRef(false);
@@ -68,6 +82,21 @@ export default function CombatPage() {
           }
           if (encounterData && encounterData.lairAction) {
             setLairAction(encounterData.lairAction);
+          }
+          if (encounterData && Array.isArray(encounterData.initiativeOrder)) {
+            setInitiativeOrder(encounterData.initiativeOrder);
+          }
+          if (encounterData && typeof encounterData.round === 'number') {
+            setRound(encounterData.round);
+          }
+          if (encounterData && typeof encounterData.turnIndex === 'number') {
+            setTurn({ index: encounterData.turnIndex, id: encounterData.turnId || null });
+          }
+          if (encounterData && encounterData.combatActive) {
+            setCombatActive(true);
+          }
+          if (encounterData && encounterData.interrupt) {
+            setInterrupt(encounterData.interrupt);
           }
         }
 
@@ -121,22 +150,32 @@ export default function CombatPage() {
     return () => clearTimeout(timeout);
   }, [templates]);
 
-  // Auto-save encounter (enemies + lairAction) when it changes (debounced, only after initial load)
+  // Auto-save encounter (enemies + lairAction + initiative/turn state) when it
+  // changes (debounced, only after initial load)
   useEffect(() => {
     // Only save if loading is complete and save is enabled
     if (!saveEnabled.current) return;
-    
+
     const timeout = setTimeout(() => {
       fetch('/api/encounter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ enemies, lairAction }),
+        body: JSON.stringify({
+          enemies,
+          lairAction,
+          initiativeOrder,
+          combatActive,
+          round,
+          turnIndex: turn.index,
+          turnId: turn.id,
+          interrupt,
+        }),
       }).then(() => {
         showToast('Encounter saved');
       }).catch(console.error);
     }, SAVE_DEBOUNCE_MS);
     return () => clearTimeout(timeout);
-  }, [enemies, lairAction]);
+  }, [enemies, lairAction, initiativeOrder, combatActive, round, turn, interrupt]);
 
   const reloadParty = async () => {
     try {
@@ -188,9 +227,6 @@ export default function CombatPage() {
 
 
 
-  // Manual initiative order - stores IDs in display order
-  const [initiativeOrder, setInitiativeOrder] = useState([]);
-  
   // Extract active companions from party members that are marked for combat
   const partyCompanions = useMemo(() => (party || []).flatMap(member =>
     (member.companions || [])
@@ -233,10 +269,104 @@ export default function CombatPage() {
     return fullOrderIds.map(id => byId.get(id)).filter(Boolean);
   }, [fullOrderIds, allCombatants]);
 
+  const enemyIds = useMemo(() => new Set(enemies.map(e => e.id)), [enemies]);
+
   // Sort by initiative values (including lair action)
   const sortByInitiative = () => {
     const sorted = [...allCombatants].sort((a, b) => b.initiative - a.initiative);
     setInitiativeOrder(sorted.map(c => c.id));
+  };
+
+  // ---- Turn tracker -------------------------------------------------------
+  // Where the pointer actually sits. `turn` records BOTH the position and who
+  // was standing there, so the pointer follows its combatant across a re-sort
+  // and falls back to the position when that combatant leaves the fight.
+  // Derived rather than stored: a stale pointer can never survive a reorder.
+  const activeIndex = useMemo(() => {
+    if (!combatActive || fullInitiativeList.length === 0) return -1;
+    if (turn.id) {
+      const followed = fullInitiativeList.findIndex(c => c.id === turn.id);
+      if (followed >= 0) return followed;
+    }
+    return Math.min(Math.max(turn.index, 0), fullInitiativeList.length - 1);
+  }, [combatActive, fullInitiativeList, turn]);
+
+  const nextIndex = activeIndex >= 0 ? (activeIndex + 1) % fullInitiativeList.length : -1;
+  const currentCombatant = activeIndex >= 0 ? fullInitiativeList[activeIndex] : null;
+  const nextCombatant = nextIndex >= 0 ? fullInitiativeList[nextIndex] : null;
+
+  const kindOf = useCallback((c) => {
+    if (!c) return 'party';
+    if (c.isLairAction) return 'lair';
+    if (c.isCompanion) return 'companion';
+    return enemyIds.has(c.id) ? 'enemy' : 'party';
+  }, [enemyIds]);
+
+  // The turn handlers read the live list/pointer through refs so they can stay
+  // identity-stable — `goToTurn` is a prop on the memoized InitiativeItem rows,
+  // and a fresh closure per render would silently kill their React.memo.
+  const listRef = React.useRef(fullInitiativeList);
+  const activeIndexRef = React.useRef(activeIndex);
+  useEffect(() => { listRef.current = fullInitiativeList; }, [fullInitiativeList]);
+  useEffect(() => { activeIndexRef.current = activeIndex; }, [activeIndex]);
+
+  // Every deliberate pointer move goes through here so index and id stay in
+  // sync (the `activeIndex` derivation above trusts that pairing).
+  const goToTurn = useCallback((index) => {
+    const list = listRef.current;
+    if (!list.length) return;
+    const wrapped = ((index % list.length) + list.length) % list.length;
+    setInterrupt(null);
+    setTurn({ index: wrapped, id: list[wrapped].id });
+  }, []);
+
+  const startCombat = useCallback(() => {
+    if (!listRef.current.length) return;
+    setCombatActive(true);
+    setRound(1);
+    goToTurn(0);
+  }, [goToTurn]);
+
+  const endCombat = useCallback(() => {
+    setCombatActive(false);
+    setInterrupt(null);
+    setRound(1);
+    setTurn({ index: 0, id: null });
+  }, []);
+
+  const nextTurn = useCallback(() => {
+    const list = listRef.current;
+    const i = activeIndexRef.current;
+    if (!list.length || i < 0) return;
+    if (i + 1 >= list.length) setRound(r => r + 1);
+    goToTurn(i + 1);
+  }, [goToTurn]);
+
+  const prevTurn = useCallback(() => {
+    const list = listRef.current;
+    const i = activeIndexRef.current;
+    if (!list.length || i < 0) return;
+    if (i - 1 < 0) setRound(r => Math.max(1, r - 1));
+    goToTurn(i - 1);
+  }, [goToTurn]);
+
+  const openLegendary = useCallback(() => setShowLegendaryModal(true), []);
+  const resumeTurn = useCallback(() => setInterrupt(null), []);
+  const startInterrupt = useCallback((creature) => {
+    setInterrupt({ id: creature.id, name: creature.name, label: 'Legendary Action' });
+    setShowLegendaryModal(false);
+  }, []);
+
+  const interruptCreature = useMemo(
+    () => (interrupt ? allCombatants.find(c => c.id === interrupt.id) || null : null),
+    [interrupt, allCombatants]
+  );
+
+  const clearEncounter = () => {
+    setEnemies([]);
+    setLairAction(null);
+    endCombat();
+    fetch('/api/encounter', { method: 'DELETE' });
   };
 
   // Reorder without changing initiative values (drag state lives in useDragReorder)
@@ -332,12 +462,29 @@ export default function CombatPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-amber-400 flex items-center gap-2"><Icons.Sword />Initiative</h2>
-              <button onClick={sortByInitiative} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.Refresh />Sort by Init</button>
+              <button onClick={() => setShowOrderModal(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.GripVertical />Manage Order</button>
             </div>
-            <div className="space-y-2">
-              {fullInitiativeList.map((c, i) => <InitiativeItem key={c.id} character={c} isEnemy={enemies.some(e => e.id === c.id)} isCompanion={c.isCompanion} isLairAction={c.isLairAction} index={i} drag={dragHandlers} isDragging={dragIndex === i} isDragOver={dragOverIndex === i} onUpdateInitiative={updateInitiative} onUpdateHp={c.isCompanion ? updateCompanionHp : undefined} onUpdateLairNotes={c.isLairAction ? updateLairNotes : undefined} onRemoveLairAction={c.isLairAction ? removeLairAction : undefined} />)}
-              {!fullInitiativeList.length && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">Add combatants to begin!</div>}
-            </div>
+
+            {/* The full order lives in the Manage Order modal; the main column
+                is just the turn tracker so the table view stays uncluttered. */}
+            <TurnTracker
+              combatActive={combatActive}
+              round={round}
+              turnNumber={activeIndex + 1}
+              turnCount={fullInitiativeList.length}
+              current={currentCombatant}
+              currentKind={kindOf(currentCombatant)}
+              next={nextCombatant}
+              nextKind={kindOf(nextCombatant)}
+              interrupt={interrupt}
+              interruptCreature={interruptCreature}
+              onStart={startCombat}
+              onEndCombat={endCombat}
+              onNextTurn={nextTurn}
+              onPrevTurn={prevTurn}
+              onOpenLegendary={openLegendary}
+              onResume={resumeTurn}
+            />
           </div>
 
           <div className="space-y-4">
@@ -345,7 +492,7 @@ export default function CombatPage() {
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-bold text-red-400 flex items-center gap-2"><Icons.Skull />Enemies</h2>
                 <div className="flex gap-2">
-                  {(enemies.length > 0 || lairAction) && <button onClick={() => { setEnemies([]); setLairAction(null); fetch('/api/encounter', { method: 'DELETE' }); }} className="flex items-center gap-1 px-2 py-1 rounded text-stone-500 hover:text-stone-300 hover:bg-stone-700/50 text-sm"><Icons.Trash /></button>}
+                  {(enemies.length > 0 || lairAction) && <button onClick={clearEncounter} title="Clear encounter" className="flex items-center gap-1 px-2 py-1 rounded text-stone-500 hover:text-stone-300 hover:bg-stone-700/50 text-sm"><Icons.Trash /></button>}
                   <button onClick={() => setShowAddEnemy(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-red-800/50 hover:bg-red-700/50 text-red-300 text-sm"><Icons.Plus />Add</button>
                 </div>
               </div>
@@ -368,6 +515,32 @@ export default function CombatPage() {
 
       <AddEnemyModal isOpen={showAddEnemy} onClose={() => setShowAddEnemy(false)} onAdd={addEnemy} templates={templates || EMPTY_TEMPLATES} />
       <AddPartyModal isOpen={showAddParty} onClose={() => setShowAddParty(false)} onSave={addPartyMember} />
+
+      <InitiativeOrderModal
+        isOpen={showOrderModal}
+        onClose={() => setShowOrderModal(false)}
+        list={fullInitiativeList}
+        enemyIds={enemyIds}
+        activeIndex={activeIndex}
+        nextIndex={nextIndex}
+        combatActive={combatActive}
+        onSort={sortByInitiative}
+        drag={dragHandlers}
+        dragIndex={dragIndex}
+        dragOverIndex={dragOverIndex}
+        onUpdateInitiative={updateInitiative}
+        onUpdateHp={updateCompanionHp}
+        onUpdateLairNotes={updateLairNotes}
+        onRemoveLairAction={removeLairAction}
+        onSelectTurn={goToTurn}
+      />
+
+      <LegendaryActionModal
+        isOpen={showLegendaryModal}
+        onClose={() => setShowLegendaryModal(false)}
+        creatures={enemies}
+        onSelect={startInterrupt}
+      />
 
       {/* Load Encounter Modal */}
       {showLoadEncounter && (

@@ -94,13 +94,16 @@ describe('CombatPage — loading and layout', () => {
     render(<CombatPage />);
     await settle();
 
-    const { partyCol, initCol, enemiesCol } = getColumns();
+    const { partyCol, enemiesCol } = getColumns();
     expect(within(partyCol).getByText('Theren')).toBeInTheDocument();
     expect(within(partyCol).getByText('Mira')).toBeInTheDocument();
     expect(within(enemiesCol).getByText('Ogre')).toBeInTheDocument();
-    // active + inCombat companion joins initiative; benched companion does not
-    expect(within(initCol).getByText('Wolfy')).toBeInTheDocument();
-    expect(within(initCol).queryByText('Benchwarmer')).not.toBeInTheDocument();
+    // the order (incl. companions) lives in the Manage Order modal;
+    // active + inCombat companion joins initiative, benched companion does not
+    fireEvent.click(screen.getByText('Manage Order'));
+    expect(screen.getByText('Wolfy')).toBeInTheDocument();
+    expect(screen.queryByText('Benchwarmer')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByText('Done'));
     // saved encounters exist, so the Load Saved shortcut shows
     expect(screen.getByText('Load Saved')).toBeInTheDocument();
   });
@@ -143,23 +146,27 @@ describe('CombatPage — initiative', () => {
     render(<CombatPage />);
     await settle();
 
+    // The order only renders inside the Manage Order modal; the main column
+    // is the turn tracker.
+    fireEvent.click(screen.getByText('Manage Order'));
     fireEvent.click(screen.getByText('Sort by Init'));
 
-    const { initCol } = getColumns();
-    const names = within(initCol)
+    const modal = screen.getByText('Initiative Order').closest('.fixed');
+    const names = within(modal)
       .getAllByText(/^(Theren|Mira|Ogre|Wolfy)$/)
       .map((el) => el.textContent.match(/^(Theren|Mira|Ogre|Wolfy)/)[0]);
     expect(names).toEqual(['Theren', 'Ogre', 'Wolfy', 'Mira']); // 15, 9, 8, 5
   });
 
-  it('adding a lair action puts it in the initiative list', async () => {
+  it('adding a lair action puts it in the initiative order', async () => {
     mockFetch();
     render(<CombatPage />);
     await settle();
 
     fireEvent.click(screen.getByText('+ Lair Action'));
-    const { initCol } = getColumns();
-    expect(within(initCol).getByText('Lair Action')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Manage Order'));
+    expect(screen.getByText('Lair Action')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Done'));
     // the option disappears once one exists
     expect(screen.queryByText('+ Lair Action')).not.toBeInTheDocument();
   });

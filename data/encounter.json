@@ -47,7 +47,7 @@
       "notes": "Natural Armor",
       "source": "mm",
       "currentHp": 136,
-      "initiative": 0
+      "initiative": 18
     },
     {
       "id": "enemy-1783005663016-fv78oaazc",
@@ -106,8 +106,22 @@
       "isNpc": false,
       "source": "custom",
       "currentHp": 117,
-      "initiative": 0
+      "initiative": 10
     }
   ],
-  "lairAction": null
+  "lairAction": null,
+  "initiativeOrder": [
+    "enemy-1783005663015-js8ua6mq0",
+    "party-1770431961400",
+    "enemy-1783005663016-fv78oaazc",
+    "party-1770062695464",
+    "npc-init-1775957421593",
+    "party-1770417737904",
+    "companion-party-1770062695464-1770655770144"
+  ],
+  "combatActive": true,
+  "round": 3,
+  "turnIndex": 5,
+  "turnId": "party-1770417737904",
+  "interrupt": null
 }
