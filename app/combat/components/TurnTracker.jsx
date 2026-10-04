@@ -4,6 +4,14 @@ import { memo, useState } from 'react';
 import Icons from '../../components/Icons';
 import { getEquipmentAC } from '../../utils/acCalculation';
 import { getMod } from '../../utils/rules';
+import { LEGENDARY_ACTIONS_PER_ROUND, getLegendaryCost } from '../legendary';
+import LegendaryPips from './LegendaryPips';
+import TurnEconomy from './TurnEconomy';
+import MonsterAbilities from './MonsterAbilities';
+import CardActionButtons from './CharacterCard/CardActionButtons';
+import CardModals from './CharacterCard/CardModals';
+import { parseSpellcasting } from './CharacterCard/spellcastingParser';
+import { getCardDisplayAC } from './CharacterCard/utils';
 
 // Colour language matches the rest of combat: emerald = party, red = enemies,
 // purple = companions/lair, amber = the turn pointer itself.
@@ -12,13 +20,6 @@ const KIND_STYLES = {
   companion: { border: 'border-purple-600/60', bg: 'bg-purple-950/40', text: 'text-purple-300' },
   enemy: { border: 'border-red-600/60', bg: 'bg-red-950/40', text: 'text-red-300' },
   lair: { border: 'border-purple-600/60', bg: 'bg-purple-950/40', text: 'text-purple-300' },
-};
-
-const CHIP_STYLES = {
-  party: 'border-emerald-800/60 bg-emerald-950/40 text-emerald-200',
-  companion: 'border-purple-800/60 bg-purple-950/40 text-purple-200',
-  enemy: 'border-red-800/60 bg-red-950/40 text-red-200',
-  lair: 'border-purple-700/60 bg-purple-950/40 text-purple-200',
 };
 
 const styleFor = (kind) => KIND_STYLES[kind] || KIND_STYLES.party;
@@ -52,8 +53,11 @@ const VitalsLine = ({ combatant }) => {
 };
 
 /**
- * The turn bar above the combat columns: whose turn it is right now, the
- * upcoming order as clickable chips, and the buttons that move the pointer.
+ * The turn bar above the combat columns: whose turn it is right now, who is
+ * up next (in the header), the current combatant's action economy (This Turn), the current
+ * monster's abilities + limited-use tracker, and the buttons that move the
+ * pointer. Full Order and Legendary live as header buttons beside the
+ * round/turn info.
  * Legendary actions are an *interrupt* — they overlay the pointer without
  * moving it, so ending the interrupt returns to exactly the same turn.
  */
@@ -67,7 +71,15 @@ const TurnTracker = ({
   list,
   activeIndex,
   kindOf,
-  onJumpTo,
+  onOpenOrder,
+  legendaryCreatures,
+  onSetLegendaryUsed,
+  turnUsage,
+  reactionsUsed,
+  onUpdateTurnUsage,
+  onToggleReaction,
+  onSpendSlot,
+  onUpdateEnemy,
   interrupt,
   interruptCreature,
   onStart,
@@ -76,10 +88,16 @@ const TurnTracker = ({
   onPrevTurn,
   onOpenLegendary,
   onResume,
+  onUpdateParty,
+  templates,
 }) => {
   // Ending combat throws away the round/turn position, so it two-steps:
   // the header button swaps to an inline confirm.
   const [confirmingEnd, setConfirmingEnd] = useState(false);
+  // The Now card's own copy of the combatant modals (sheet, spells, stat
+  // block…): { id, key }. Tied to whoever was current when it opened, so it
+  // never shows a different combatant after the turn moves on.
+  const [cardModal, setCardModal] = useState(null);
 
   if (!combatActive) {
     return (
@@ -104,21 +122,65 @@ const TurnTracker = ({
 
   const style = styleFor(currentKind);
 
-  // The rest of the round in cyclic order after the pointer (wraps into the
-  // top of the next round).
-  const upcoming = [];
+  // Only the next combatant shows here (wrapping into the next round); the
+  // full order is one click away in the order modal.
   const n = list?.length || 0;
-  for (let i = 1; i < n; i++) {
-    const index = (activeIndex + i) % n;
-    upcoming.push({ c: list[index], index });
-  }
+  const next = n > 1 ? list[(activeIndex + 1) % n] : null;
+  const nextKind = next ? styleFor(kindOf ? kindOf(next) : 'party') : null;
+  const nextDead = next && !next.isLairAction && next.currentHp <= 0;
+  const interruptUsed = interruptCreature?.legendaryActionsUsed || 0;
 
+  // Party members and enemies get the same contextual buttons as their card
+  // (companions and the lair action have no card modals).
+  const cardUpdate = currentKind === 'party' ? onUpdateParty : currentKind === 'enemy' ? onUpdateEnemy : null;
+  const showCardButtons = !!(current && cardUpdate);
+  const spellcastingInfo = showCardButtons ? parseSpellcasting(current) : null;
+  const openCardModal = (key) => setCardModal({ id: current.id, key });
+  const closeCardModal = () => setCardModal(null);
+
+  // The modals render OUTSIDE the sticky bar: its z-10 stacking context would
+  // otherwise trap their fixed overlay underneath the navbar.
   return (
+    <>
     <div className="rounded-xl border border-amber-800/50 bg-stone-900/70 p-3 space-y-3 sticky top-2 z-10 shadow-lg shadow-black/40">
       <div className="flex items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3 min-w-0">
           <span className="font-bold uppercase tracking-widest text-amber-400">Round {round}</span>
           <span className="text-stone-500">Turn {turnNumber} / {turnCount}</span>
+          {/* Just the next combatant — Full Order opens the rest. */}
+          {next && (
+            <span className="flex items-center gap-1.5 min-w-0 pl-3 border-l border-stone-700">
+              <span className="font-bold uppercase tracking-widest text-stone-500">Up Next</span>
+              <span data-testid="up-next" title={combatantName(next)} className={`flex items-center gap-1.5 min-w-0 ${nextDead ? 'opacity-40' : ''}`}>
+                <span className={`px-1.5 py-0.5 rounded border ${nextKind.border} ${nextKind.bg} font-bold`}>{formatInit(next.initiative)}</span>
+                <span className={`text-sm font-semibold truncate max-w-[240px] ${nextKind.text} ${nextDead ? 'line-through' : ''}`}>{combatantName(next)}</span>
+              </span>
+            </span>
+          )}
+          <button
+            onClick={onOpenOrder}
+            title="Show the full initiative order"
+            className="flex items-center gap-1 px-2.5 py-1 rounded border border-amber-800/60 bg-amber-950/40 text-amber-300 hover:border-amber-600 hover:text-amber-200 font-medium"
+          >
+            <Icons.GripVertical />Full Order
+          </button>
+          <button
+            onClick={onOpenLegendary}
+            title="Slot in a legendary action"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded border border-purple-800/60 bg-purple-950/40 text-purple-300 hover:border-purple-500 hover:text-purple-200 font-medium"
+          >
+            <Icons.Bolt />Legendary
+            {legendaryCreatures?.map(c => {
+              const left = LEGENDARY_ACTIONS_PER_ROUND - (c.legendaryActionsUsed || 0);
+              return (
+                <span key={c.id} title={`${c.name}: ${left}/${LEGENDARY_ACTIONS_PER_ROUND} left`} className="flex items-center gap-0.5 ml-0.5">
+                  {Array.from({ length: LEGENDARY_ACTIONS_PER_ROUND }, (_, i) => (
+                    <span key={i} className={`w-1.5 h-1.5 rounded-full ${i < left ? 'bg-purple-400' : 'bg-stone-600'}`} />
+                  ))}
+                </span>
+              );
+            })}
+          </button>
         </div>
         {confirmingEnd ? (
           <div className="flex items-center gap-2">
@@ -152,15 +214,34 @@ const TurnTracker = ({
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-400">
               <Icons.Bolt />{interrupt.label || 'Legendary Action'}
             </div>
-            <div className="text-xl font-bold text-amber-100 mt-1">{interrupt.name}</div>
+            <div className="flex items-center justify-between gap-3 mt-1">
+              <div className="text-xl font-bold text-amber-100 truncate">{interrupt.name}</div>
+              {interruptCreature?.legendaryActions?.length > 0 && onSetLegendaryUsed && (
+                <LegendaryPips creature={interruptCreature} onSetUsed={onSetLegendaryUsed} />
+              )}
+            </div>
             {interruptCreature?.legendaryActions?.length > 0 && (
               <ul className="mt-2 space-y-1">
-                {interruptCreature.legendaryActions.map((la, i) => (
-                  <li key={la.name || i} className="text-xs text-stone-300">
-                    <span className="font-medium text-amber-300">{la.name}</span>
-                    {la.description ? ` — ${la.description}` : ''}
-                  </li>
-                ))}
+                {interruptCreature.legendaryActions.map((la, i) => {
+                  // Clicking an action spends its cost from the round's budget.
+                  const cost = getLegendaryCost(la);
+                  const affordable = interruptUsed + cost <= LEGENDARY_ACTIONS_PER_ROUND;
+                  return (
+                    <li key={la.name || i}>
+                      <button
+                        disabled={!affordable || !onSetLegendaryUsed}
+                        onClick={() => onSetLegendaryUsed(interruptCreature.id, interruptUsed + cost)}
+                        title={affordable ? `Spend ${cost} legendary action${cost === 1 ? '' : 's'}` : 'Not enough legendary actions left this round'}
+                        className={`w-full text-left text-xs rounded px-1.5 py-1 ${
+                          affordable ? 'text-stone-300 hover:bg-amber-900/30' : 'text-stone-600 cursor-not-allowed'
+                        }`}
+                      >
+                        <span className={`font-medium ${affordable ? 'text-amber-300' : ''}`}>{la.name}</span>
+                        {la.description ? ` — ${la.description}` : ''}
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
             )}
             <div className="mt-3 flex items-center justify-between gap-2">
@@ -187,32 +268,29 @@ const TurnTracker = ({
                 <div className="text-xs text-stone-300 mt-1">{current.notes}</div>
               )}
               <VitalsLine combatant={current} />
+              {showCardButtons && (
+                <div className="flex items-center gap-0.5 mt-1.5 -ml-2">
+                  <CardActionButtons
+                    character={current}
+                    isEnemy={currentKind === 'enemy'}
+                    spellcastingInfo={spellcastingInfo}
+                    onOpen={openCardModal}
+                  />
+                </div>
+              )}
             </div>
 
-            {/* The rest of the order as clickable chips — click to jump the
-                pointer (same as the Manage Order modal rows). */}
-            <div className="flex-1 min-w-0">
-              <div className="text-[10px] font-bold uppercase tracking-widest text-stone-500 mb-1.5">Up Next</div>
-              <div className="flex flex-wrap gap-1.5">
-                {upcoming.map(({ c, index }, i) => {
-                  const kind = kindOf ? kindOf(c) : 'party';
-                  const dead = !c.isLairAction && c.currentHp <= 0;
-                  return (
-                    <button
-                      key={c.id}
-                      title={combatantName(c)}
-                      onClick={() => onJumpTo && onJumpTo(index)}
-                      className={`flex items-center gap-1.5 pl-1.5 pr-2.5 py-1 rounded-lg border text-sm transition-colors hover:border-amber-500/70 ${
-                        CHIP_STYLES[kind] || CHIP_STYLES.party
-                      } ${dead ? 'opacity-40' : ''} ${i === 0 ? 'ring-1 ring-amber-500/60' : ''}`}
-                    >
-                      <span className="w-6 h-6 rounded bg-black/30 flex items-center justify-center text-xs font-bold shrink-0">{formatInit(c.initiative)}</span>
-                      <span className={`truncate max-w-[140px] ${dead ? 'line-through' : ''}`}>{combatantName(c)}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+            {current && !current.isLairAction ? (
+              <TurnEconomy
+                combatant={current}
+                usage={turnUsage}
+                reactionUsed={!!reactionsUsed?.[current.id]}
+                onUpdate={onUpdateTurnUsage}
+                onToggleReaction={onToggleReaction}
+              />
+            ) : (
+              <div className="flex-1" />
+            )}
           </>
         )}
 
@@ -230,16 +308,33 @@ const TurnTracker = ({
           >
             End Turn →
           </button>
-          <button
-            onClick={onOpenLegendary}
-            title="Slot in a legendary action"
-            className="flex items-center gap-1 px-3 py-2 rounded-lg bg-amber-900/50 hover:bg-amber-800/50 text-amber-300 text-sm"
-          >
-            <Icons.Bolt />
-          </button>
         </div>
       </div>
+
+      {!interrupt && currentKind === 'enemy' && current && (
+        <MonsterAbilities
+          key={current.id}
+          creature={current}
+          usage={turnUsage}
+          reactionUsed={!!reactionsUsed?.[current.id]}
+          onUpdateEnemy={onUpdateEnemy}
+          onSpendSlot={onSpendSlot}
+        />
+      )}
     </div>
+    {showCardButtons && cardModal?.id === current.id && (
+      <CardModals
+        activeModal={cardModal.key}
+        onClose={closeCardModal}
+        character={current}
+        isEnemy={currentKind === 'enemy'}
+        onUpdate={cardUpdate}
+        templates={templates}
+        displayAC={getCardDisplayAC(current)}
+        spellcastingInfo={spellcastingInfo}
+      />
+    )}
+    </>
   );
 };
 

@@ -67,22 +67,24 @@ update this section (only) when the behavior changes:
 | `app/characters/page.jsx` | full defaults (temp AC in, name parsing on) | `character.ac \|\| 10` via `getCalculatedAC` |
 | `app/combat/components/InitiativeItem.jsx` | `{ parseArmorNames: false }` | local wrapper |
 | `app/combat/components/TurnTracker.jsx` (Now card) | `{ parseArmorNames: false }` — must match InitiativeItem's view | `character.ac \|\| 10` |
-| `app/combat/components/CharacterCard/utils.js` (`getCalculatedAC`) | `{ includeTempAC: false, parseArmorNames: false }` | card computes `character.acOverride || calculatedAC || character.ac || 10` |
+| `app/combat/components/CharacterCard/utils.js` (`getCalculatedAC`) | `{ includeTempAC: false, parseArmorNames: false }` | `getCardBaseAC` = `character.acOverride \|\| calculatedAC \|\| character.ac \|\| 10`; `getCardDisplayAC` adds temp AC / swaps in wild shape (used by the card AND the tracker's Now-card modals) |
 
 ### THE TEMP-AC TRAP (a past audit got this wrong)
 
 The combat card adds `character.tempAC` **separately at display time** — in
-`app/combat/components/CharacterCard/index.jsx`:
+`getCardDisplayAC` (`app/combat/components/CharacterCard/utils.js`, moved out
+of the card verbatim in Oct 2026 so the tracker shares it):
 
 ```js
-const baseAC = character.acOverride || calculatedAC || character.ac || 10;
-const displayAC = activeWildShapeForm ? (activeWildShapeForm.ac || 10) : (baseAC + tempAcValue);
+const form = getActiveWildShapeForm(character);
+if (form) return form.ac || 10;                       // wild shape replaces AC, no temp AC
+return getCardBaseAC(character) + (parseInt(character.tempAC) || 0);
 ```
 
 So the combat-card AC helper passes `includeTempAC: false` on purpose. An audit
 once flagged this as "combat card ignores temp AC" and the proposed fix would
-have **double-counted** temp AC. Read the display code in
-`CharacterCard/index.jsx` before touching anything temp-AC related.
+have **double-counted** temp AC. Read `getCardDisplayAC` in
+`CharacterCard/utils.js` before touching anything temp-AC related.
 (SUGGESTIONS.md completed log: "Investigated, not a bug".)
 
 ### `acEffect` values handled by `getEquipmentAC`

@@ -2,40 +2,62 @@
 
 import Icons from '../../components/Icons';
 import Modal from '../../components/Modal';
+import LegendaryPips from './LegendaryPips';
 
 /**
  * Picker for slotting an out-of-turn action into the round. Creatures that
  * actually have legendary actions float to the top; anything else in the
  * encounter is still selectable (readied actions, reactions, mid-turn lair
  * effects). Choosing one sets the turn tracker's interrupt — it does NOT move
- * the turn pointer, so "Done" resumes exactly where the round was.
+ * the turn pointer, so "Done" resumes exactly where the round was. Legendary
+ * creatures also show their per-round budget as pips (opened from the
+ * tracker header's Legendary button, which is the main-view tracker).
  */
-export default function LegendaryActionModal({ isOpen, onClose, creatures, onSelect }) {
+export default function LegendaryActionModal({
+  isOpen,
+  onClose,
+  creatures,
+  onSelect,
+  onSetLegendaryUsed,
+}) {
   if (!isOpen) return null;
 
-  const withLegendary = creatures.filter(c => c.legendaryActions?.length > 0);
-  const others = creatures.filter(c => !(c.legendaryActions?.length > 0));
+  const withLegendary = creatures.filter((c) => c.legendaryActions?.length > 0);
+  const others = creatures.filter((c) => !(c.legendaryActions?.length > 0));
 
   const row = (c) => (
-    <button
+    <div
       key={c.id}
-      onClick={() => onSelect(c)}
-      className="w-full text-left p-3 rounded-lg border border-stone-700 bg-stone-800/50 hover:border-amber-600/60 hover:bg-amber-950/20 transition-colors"
+      className="flex items-center gap-3 rounded-lg border border-stone-700 bg-stone-800/50 hover:border-amber-600/60 transition-colors"
     >
-      <div className="flex items-center justify-between gap-2">
-        <span className="font-medium truncate">{c.name}</span>
+      <button
+        onClick={() => onSelect(c)}
+        className="flex-1 min-w-0 text-left p-3 rounded-lg hover:bg-amber-950/20"
+      >
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-medium truncate">{c.name}</span>
+          {c.legendaryActions?.length > 0 && (
+            <span className="text-xs text-amber-400 shrink-0">
+              {c.legendaryActions.length} legendary action
+              {c.legendaryActions.length === 1 ? '' : 's'}
+            </span>
+          )}
+        </div>
         {c.legendaryActions?.length > 0 && (
-          <span className="text-xs text-amber-400 shrink-0">
-            {c.legendaryActions.length} legendary action{c.legendaryActions.length === 1 ? '' : 's'}
-          </span>
+          <div className="text-xs text-stone-500 truncate mt-0.5">
+            {c.legendaryActions
+              .map((la) => la.name)
+              .filter(Boolean)
+              .join(' · ')}
+          </div>
         )}
-      </div>
-      {c.legendaryActions?.length > 0 && (
-        <div className="text-xs text-stone-500 truncate mt-0.5">
-          {c.legendaryActions.map(la => la.name).filter(Boolean).join(' · ')}
+      </button>
+      {c.legendaryActions?.length > 0 && onSetLegendaryUsed && (
+        <div className="pr-3 shrink-0">
+          <LegendaryPips creature={c} onSetUsed={onSetLegendaryUsed} />
         </div>
       )}
-    </button>
+    </div>
   );
 
   return (
@@ -53,7 +75,9 @@ export default function LegendaryActionModal({ isOpen, onClose, creatures, onSel
         <div className="flex-1 overflow-y-auto p-4 space-y-2">
           {withLegendary.map(row)}
           {withLegendary.length > 0 && others.length > 0 && (
-            <div className="pt-2 text-xs uppercase tracking-widest text-stone-600">Other combatants</div>
+            <div className="pt-2 text-xs uppercase tracking-widest text-stone-600">
+              Other combatants
+            </div>
           )}
           {others.map(row)}
           {!creatures.length && (
@@ -62,7 +86,10 @@ export default function LegendaryActionModal({ isOpen, onClose, creatures, onSel
         </div>
 
         <div className="p-4 border-t border-stone-700">
-          <button onClick={onClose} className="w-full py-2 rounded-lg bg-stone-700 hover:bg-stone-600">
+          <button
+            onClick={onClose}
+            className="w-full py-2 rounded-lg bg-stone-700 hover:bg-stone-600"
+          >
             Cancel
           </button>
         </div>

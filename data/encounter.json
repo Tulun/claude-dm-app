@@ -106,7 +106,89 @@
       "isNpc": false,
       "source": "custom",
       "currentHp": 117,
-      "initiative": 10
+      "initiative": 10,
+      "abilityUses": {
+        "Golemcraft Ward (1/Day)": 0
+      }
+    },
+    {
+      "id": "enemy-1791137377523-0w4wx79mb",
+      "name": "Ancient Brass Dragon",
+      "size": "Gargantuan",
+      "creatureType": "Dragon",
+      "ac": 20,
+      "maxHp": 297,
+      "hitDice": "17d20+119",
+      "speed": "40, burrow 40, fly 80",
+      "cr": "20",
+      "xp": 25000,
+      "profBonus": 6,
+      "str": 27,
+      "dex": 10,
+      "con": 25,
+      "int": 16,
+      "wis": 15,
+      "cha": 19,
+      "savingThrows": "Dex +6, Con +13, Wis +8, Cha +10",
+      "skills": "History +9, Perception +14, Persuasion +10, Stealth +6",
+      "immunities": "Fire",
+      "senses": "Blindsight 60 ft., Darkvision 120 ft., Passive Perception 24",
+      "languages": "Common, Draconic",
+      "isNpc": false,
+      "traits": [
+        {
+          "name": "Legendary Resistance (3/Day)",
+          "description": "If fails a save, can choose to succeed instead."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Uses Frightful Presence, then three attacks: one Bite and two Claws."
+        },
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +14, reach 15 ft. Hit: 19 (2d10+8) Piercing damage."
+        },
+        {
+          "name": "Claw",
+          "description": "Melee Attack Roll: +14, reach 10 ft. Hit: 15 (2d6+8) Slashing damage."
+        },
+        {
+          "name": "Tail",
+          "description": "Melee Attack Roll: +14, reach 20 ft. Hit: 17 (2d8+8) Bludgeoning damage."
+        },
+        {
+          "name": "Frightful Presence",
+          "description": "Creatures within 120 ft: DC 18 WIS or Frightened 1 min (save ends). Success = immune 24 hrs."
+        },
+        {
+          "name": "Breath Weapons (Recharge 5-6)",
+          "description": "Fire Breath: 90-ft Line. DC 21 DEX, 56 (16d6) Fire (half on save). Sleep Breath: 90-ft Cone. DC 21 CON or unconscious 10 min (ends if takes damage or shaken awake)."
+        },
+        {
+          "name": "Change Shape",
+          "description": "Polymorphs into humanoid or beast with CR equal to or less than its own, or back."
+        }
+      ],
+      "legendaryActions": [
+        {
+          "name": "Detect",
+          "description": "Makes Perception check."
+        },
+        {
+          "name": "Tail Attack",
+          "description": "Makes Tail attack."
+        },
+        {
+          "name": "Wing Attack (2 Actions)",
+          "description": "DC 22 DEX or 15 (2d6+8) Bludgeoning and Prone. Dragon can fly half speed."
+        }
+      ],
+      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "source": "mm",
+      "currentHp": 297,
+      "initiative": 18
     }
   ],
   "lairAction": null,
@@ -121,7 +203,15 @@
   ],
   "combatActive": true,
   "round": 4,
-  "turnIndex": 0,
-  "turnId": "enemy-1783005663015-js8ua6mq0",
-  "interrupt": null
+  "turnIndex": 1,
+  "turnId": "party-1770431961400",
+  "interrupt": null,
+  "reactionsUsed": {},
+  "turnUsage": {
+    "id": "enemy-1783005663016-fv78oaazc",
+    "action": true,
+    "bonus": false,
+    "move": 0,
+    "dash": true
+  }
 }

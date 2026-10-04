@@ -109,10 +109,17 @@ setEnemies(prev => {
   tracker), `main.children[1]` = the `lg:grid-cols-3` grid where Party spans 2
   columns (cards themselves in a 2-col sub-grid) and Enemies takes the third —
   the page tests' `getColumns` helper encodes this.
-- Inside `CharacterCard`, the ten modals are driven by ONE `activeModal`
-  string (`'delete' | 'actions' | 'resources' | 'sheet' | 'inventory' |
-  'notes' | 'statblock' | 'spells' | 'druid' | 'sorcerer'`, `null` = closed) —
-  add new card modals to that enum, not as a new `showX` boolean.
+- Combatant modals are driven by ONE `activeModal` key (`'delete' | 'actions'
+  | 'resources' | 'sheet' | 'inventory' | 'notes' | 'statblock' | 'spells' |
+  'druid' | 'sorcerer'`, `null` = closed) rendered by
+  `CharacterCard/CardModals.jsx`; the contextual buttons that open them live
+  in `CharacterCard/CardActionButtons.jsx` (`onOpen(key)`, each button has an
+  `aria-label` = its tooltip). BOTH the card and the turn tracker's Now card
+  use these two components — add new combatant modals/buttons THERE (not as a
+  `showX` boolean, not as a copy in one view). The tracker keeps its own
+  `cardModal` `{ id, key }` and renders `CardModals` OUTSIDE its sticky z-10
+  bar (a fixed overlay inside that stacking context would sit under the
+  navbar). Companions and the lair action get no card buttons.
 
 ## 2.5 The combat turn tracker (canonical)
 
@@ -140,13 +147,52 @@ Three rules keep the pointer honest:
   `getEquipmentAC(c, { parseArmorNames: false })`, stored-ac fallback, cyan when
   `acEffect` — see the caller table in **rules-math** (canonical) before
   changing it.
-- **The bar shows the rest of the round as "Up Next" chips** derived inside
+- **The bar shows ONLY the next combatant**, inline in the tracker HEADER row
+  (Round · Turn · Up Next · Full Order · Legendary), derived inside
   `TurnTracker` from `list` + `activeIndex` (cyclic, wraps into next round);
-  each chip's `title` is the combatant name (the tests key on this) and
-  clicking one calls `onJumpTo(index)`. **End Combat two-steps**: the header
+  the name element carries `data-testid="up-next"` and `title` = the
+  combatant name (the tests key on this). It is not clickable; the
+  "Full Order" header button opens the order modal (`onOpenOrder`) — the tracker no longer jumps the pointer;
+  jumping happens from modal rows. **End Combat two-steps**: the header
   button swaps to an inline confirm (local `confirmingEnd` state) because
   ending combat discards the round/turn position — keep destructive tracker
   actions behind a confirm.
+- **Turn start refreshes per-round resources.** `goToTurn(index, refresh = true)`
+  clears the landed-on combatant's entry in `reactionsUsed` (page state,
+  `{ [id]: true }`, persisted in the encounter — NOT on party/companion
+  records) and zeroes that enemy's `legendaryActionsUsed`. Only `prevTurn`
+  passes `refresh = false` (rewinding isn't a new turn). `startCombat` resets
+  both for everyone; `endCombat` clears reactions. Reactions are toggled on the
+  order-modal rows (`InitiativeItem` `reactionUsed` + stable
+  `onToggleReaction(id)`) AND on the tracker's This Turn panel — same map.
+  Legendary budgets are NOT a panel on the bar (too much space): the header's
+  **Legendary** button (beside Full Order; replaces the old ⚡ control) shows
+  mini dots per living legendary enemy and opens `LegendaryActionModal`, whose
+  rows carry clickable `LegendaryPips`; the interrupt panel also shows pips and
+  clicking an action spends its parsed cost. Budget/cost math lives in
+  `app/combat/legendary.js` (`LEGENDARY_ACTIONS_PER_ROUND`, `getLegendaryCost`,
+  `toggledLegendaryUsed`) — shared with the enemy card's QuickActionsModal;
+  don't re-hardcode `3`.
+- **Action economy = `turnUsage`** (`{ id, action, bonus, move, dash }`, page
+  state, persisted). Only meaningful while `id` is the current combatant — the
+  page passes `null` otherwise (e.g. after Back), and `updateTurnUsage` starts
+  from `FRESH_USAGE` when the id is stale. `TurnEconomy.jsx` renders it:
+  Action/Bonus/Reaction toggles plus a hand-typed "Moved __ / speed ft" text
+  input (`inputMode="numeric"`, no spinner arrows; speed from
+  `parseWalkSpeed`) plus a Dash toggle that adds another speed's worth to the
+  budget WITHOUT touching the Action/Bonus toggles (Cunning Action dashes as a
+  bonus action — the DM marks which; auto-spending the Action was tried and
+  rejected, Oct 2026). Over budget reads "N over". 5/10/15-ft
+  step buttons were tried and rejected as clunky (Oct 2026) — keep movement
+  hand-typed.
+- **Monster panel**: on an enemy's turn `MonsterAbilities.jsx` lists
+  actions / bonus actions / reactions as chips (click → text + Use, which
+  spends the matching economy slot via `onSpendSlot`), and a Limited row:
+  X/Day, recharge (with a d6 Roll) and per-rest abilities stored in
+  `enemy.abilityUses[name]` — each is ONE toggle button (click spends a use,
+  greys out when none left, click again restores; X/Day shows "2/3"), plus spell slots / per-day spells via the shared
+  `parseSpellcasting` and the card's existing `spellSlots<level>Used` /
+  `perDay<N>Used` fields. Parsing lives in `app/combat/monsterAbilities.js`.
 - **Party cards stretch; enemy cards must NOT.** `CharacterCard` takes a
   `stretch` prop (party grid only): `h-full flex flex-col` + `mt-auto` on the
   collapsed stat bar so side-by-side cards line up. Never apply `h-full`
@@ -197,7 +243,11 @@ anything AC-related on this card.
   `stopPropagation`. Options: omit `onClose` for modals that must not close on
   backdrop click (see SpellPickerModal); `layer="raised"` (z-[60]) for a modal
   over a modal; `layer="top"` (z-[100]) to beat everything. Render your panel
-  div as the child.
+  div as the child. **Escape** also calls `onClose`, but only for the TOPMOST
+  open `Modal` (module-level open stack) — stacked modals peel one per press;
+  an `onClose`-less modal still blocks Escape from reaching the one beneath;
+  an inner handler can `e.preventDefault()` to keep Escape for itself. Tests:
+  `test/components/modal.test.jsx`.
 - Toast pattern: `const [saveStatus, showToast] = useToast()`
   (`app/hooks/useToast.js`), then `showToast('Party saved')` — auto-clears
   after `TOAST_DURATION_MS`; pass `TOAST_ERROR_DURATION_MS` for errors or

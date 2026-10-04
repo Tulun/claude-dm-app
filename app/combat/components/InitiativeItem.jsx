@@ -14,8 +14,9 @@ const getCalculatedAC = (character) => getEquipmentAC(character, { parseArmorNam
 // so only the affected rows re-render during a drag. Rows are only draggable
 // where `drag` is supplied — the main initiative column omits it (reordering
 // lives in the Manage Order modal) and passes `onSelect` instead, which makes
-// the row a click target for "jump the turn pointer here".
-const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, drag, isDragging, isDragOver, isActive, isNext, onSelect, onUpdateInitiative, onUpdateHp, onUpdateLairNotes, onRemoveLairAction }) => {
+// the row a click target for "jump the turn pointer here". `onToggleReaction`
+// (stable, receives the id) adds the per-round reaction toggle.
+const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, drag, isDragging, isDragOver, isActive, isNext, onSelect, onUpdateInitiative, onUpdateHp, onUpdateLairNotes, onRemoveLairAction, reactionUsed, onToggleReaction }) => {
   const isDead = !isLairAction && character.currentHp <= 0;
   const [editing, setEditing] = useState(false);
   const [editingHp, setEditingHp] = useState(false);
@@ -236,6 +237,20 @@ const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, 
         </div>
       </div>
       {turnBadge}
+      {onToggleReaction && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onToggleReaction(character.id); }}
+          aria-pressed={!!reactionUsed}
+          title={reactionUsed ? 'Reaction used — refreshes on their turn (click to restore)' : 'Reaction available — click to mark used'}
+          className={`px-2 py-1 rounded border text-[10px] font-bold uppercase tracking-wider shrink-0 transition-colors ${
+            reactionUsed
+              ? 'border-stone-700 bg-stone-800/80 text-stone-500 line-through'
+              : 'border-amber-700/60 bg-amber-950/40 text-amber-300 hover:border-amber-500'
+          }`}
+        >
+          Reaction
+        </button>
+      )}
     </div>
   );
 };

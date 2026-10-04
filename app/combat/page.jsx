@@ -11,6 +11,7 @@ import CharacterCard from './components/CharacterCard';
 import TurnTracker from './components/TurnTracker';
 import InitiativeOrderModal from './components/InitiativeOrderModal';
 import LegendaryActionModal from './components/LegendaryActionModal';
+import { FRESH_USAGE } from './components/TurnEconomy';
 import { AddEnemyModal, AddPartyModal } from './components/Modals';
 import { getCalculatedAC } from '../utils/acCalculation';
 import { generateId } from '../utils/generateId';
@@ -43,6 +44,14 @@ export default function CombatPage() {
   const [turn, setTurn] = useState({ index: 0, id: null });
   // A legendary action OVERLAYS the pointer instead of moving it: { id, name, label }.
   const [interrupt, setInterrupt] = useState(null);
+  // Reactions spent this round, keyed by combatant id ({ [id]: true }). Kept
+  // in the encounter (not on party/companion records) and cleared for a
+  // combatant when their turn starts.
+  const [reactionsUsed, setReactionsUsed] = useState({});
+  // Action / bonus action / movement spent by whoever's turn it is:
+  // { id, action, bonus, move, dash }. Reset when a turn starts; ignored when
+  // `id` isn't the current combatant (e.g. after stepping Back).
+  const [turnUsage, setTurnUsage] = useState(null);
   // Manual initiative order - stores IDs in display order
   const [initiativeOrder, setInitiativeOrder] = useState([]);
   // Saving stays disabled until the initial load settles, so loading data
@@ -97,6 +106,12 @@ export default function CombatPage() {
           }
           if (encounterData && encounterData.interrupt) {
             setInterrupt(encounterData.interrupt);
+          }
+          if (encounterData && encounterData.reactionsUsed && typeof encounterData.reactionsUsed === 'object') {
+            setReactionsUsed(encounterData.reactionsUsed);
+          }
+          if (encounterData && encounterData.turnUsage && typeof encounterData.turnUsage === 'object') {
+            setTurnUsage(encounterData.turnUsage);
           }
         }
 
@@ -169,13 +184,15 @@ export default function CombatPage() {
           turnIndex: turn.index,
           turnId: turn.id,
           interrupt,
+          reactionsUsed,
+          turnUsage,
         }),
       }).then(() => {
         showToast('Encounter saved');
       }).catch(console.error);
     }, SAVE_DEBOUNCE_MS);
     return () => clearTimeout(timeout);
-  }, [enemies, lairAction, initiativeOrder, combatActive, round, turn, interrupt]);
+  }, [enemies, lairAction, initiativeOrder, combatActive, round, turn, interrupt, reactionsUsed, turnUsage]);
 
   const reloadParty = async () => {
     try {
@@ -312,28 +329,52 @@ export default function CombatPage() {
   useEffect(() => { activeIndexRef.current = activeIndex; }, [activeIndex]);
 
   // Every deliberate pointer move goes through here so index and id stay in
-  // sync (the `activeIndex` derivation above trusts that pairing).
-  const goToTurn = useCallback((index) => {
+  // sync (the `activeIndex` derivation above trusts that pairing). Landing on
+  // a combatant starts their turn: their reaction and legendary actions
+  // refresh. Only Back passes `refresh = false` — rewinding isn't a new turn.
+  const goToTurn = useCallback((index, refresh = true) => {
     const list = listRef.current;
     if (!list.length) return;
     const wrapped = ((index % list.length) + list.length) % list.length;
+    const id = list[wrapped].id;
     setInterrupt(null);
-    setTurn({ index: wrapped, id: list[wrapped].id });
+    setTurn({ index: wrapped, id });
+    if (!refresh) return;
+    setTurnUsage({ id, ...FRESH_USAGE });
+    setReactionsUsed(prev => {
+      if (!prev[id]) return prev;
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    setEnemies(prev => {
+      const next = prev.map(x => x.id === id && x.legendaryActionsUsed ? { ...x, legendaryActionsUsed: 0 } : x);
+      return next.some((x, i) => x !== prev[i]) ? next : prev;
+    });
   }, []);
+
+  const clearReactions = useCallback(() => setReactionsUsed(prev => (Object.keys(prev).length ? {} : prev)), []);
 
   const startCombat = useCallback(() => {
     if (!listRef.current.length) return;
     setCombatActive(true);
     setRound(1);
+    clearReactions();
+    setEnemies(prev => {
+      const next = prev.map(x => x.legendaryActionsUsed ? { ...x, legendaryActionsUsed: 0 } : x);
+      return next.some((x, i) => x !== prev[i]) ? next : prev;
+    });
     goToTurn(0);
-  }, [goToTurn]);
+  }, [goToTurn, clearReactions]);
 
   const endCombat = useCallback(() => {
     setCombatActive(false);
     setInterrupt(null);
     setRound(1);
     setTurn({ index: 0, id: null });
-  }, []);
+    setTurnUsage(null);
+    clearReactions();
+  }, [clearReactions]);
 
   const nextTurn = useCallback(() => {
     const list = listRef.current;
@@ -348,7 +389,7 @@ export default function CombatPage() {
     const i = activeIndexRef.current;
     if (!list.length || i < 0) return;
     if (i - 1 < 0) setRound(r => Math.max(1, r - 1));
-    goToTurn(i - 1);
+    goToTurn(i - 1, false);
   }, [goToTurn]);
 
   const openLegendary = useCallback(() => setShowLegendaryModal(true), []);
@@ -357,6 +398,42 @@ export default function CombatPage() {
     setInterrupt({ id: creature.id, name: creature.name, label: 'Legendary Action' });
     setShowLegendaryModal(false);
   }, []);
+
+  const toggleReaction = useCallback((id) => setReactionsUsed(prev => {
+    const next = { ...prev };
+    if (next[id]) delete next[id];
+    else next[id] = true;
+    return next;
+  }), []);
+
+  // Edits the current combatant's turn usage; a stale entry (someone else's
+  // turn) starts over from fresh.
+  const updateTurnUsage = useCallback((changes) => {
+    const id = listRef.current[activeIndexRef.current]?.id;
+    if (!id) return;
+    setTurnUsage(prev => ({ ...(prev?.id === id ? prev : { id, ...FRESH_USAGE }), ...changes }));
+  }, []);
+
+  // A monster ability's Use button spends the matching economy slot.
+  const spendSlot = useCallback((slot) => {
+    const id = listRef.current[activeIndexRef.current]?.id;
+    if (!id) return;
+    if (slot === 'reaction') setReactionsUsed(prev => (prev[id] ? prev : { ...prev, [id]: true }));
+    else updateTurnUsage({ [slot]: true });
+  }, [updateTurnUsage]);
+
+  const setLegendaryUsed = useCallback((id, used) => setEnemies(prev => {
+    const next = prev.map(x => x.id === id && (x.legendaryActionsUsed || 0) !== used ? { ...x, legendaryActionsUsed: used } : x);
+    return next.some((x, i) => x !== prev[i]) ? next : prev;
+  }), []);
+
+  // Legendary creatures still in the fight get a pip row on the tracker.
+  const legendaryCreatures = useMemo(
+    () => enemies.filter(e => e.legendaryActions?.length > 0 && e.currentHp > 0),
+    [enemies]
+  );
+
+  const openOrder = useCallback(() => setShowOrderModal(true), []);
 
   const interruptCreature = useMemo(
     () => (interrupt ? allCombatants.find(c => c.id === interrupt.id) || null : null),
@@ -448,7 +525,7 @@ export default function CombatPage() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-amber-400 flex items-center gap-2"><Icons.Sword />Initiative</h2>
-              <button onClick={() => setShowOrderModal(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.GripVertical />Manage Order</button>
+              <button onClick={openOrder} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.GripVertical />Manage Order</button>
             </div>
 
             <TurnTracker
@@ -461,7 +538,17 @@ export default function CombatPage() {
               list={fullInitiativeList}
               activeIndex={activeIndex}
               kindOf={kindOf}
-              onJumpTo={goToTurn}
+              onOpenOrder={openOrder}
+              legendaryCreatures={legendaryCreatures}
+              onSetLegendaryUsed={setLegendaryUsed}
+              turnUsage={turnUsage?.id === currentCombatant?.id ? turnUsage : null}
+              reactionsUsed={reactionsUsed}
+              onUpdateTurnUsage={updateTurnUsage}
+              onToggleReaction={toggleReaction}
+              onSpendSlot={spendSlot}
+              onUpdateEnemy={updateEnemy}
+              onUpdateParty={updatePartyMember}
+              templates={templates || EMPTY_TEMPLATES}
               interrupt={interrupt}
               interruptCreature={interruptCreature}
               onStart={startCombat}
@@ -544,6 +631,9 @@ export default function CombatPage() {
         onUpdateLairNotes={updateLairNotes}
         onRemoveLairAction={removeLairAction}
         onSelectTurn={goToTurn}
+        round={round}
+        reactionsUsed={reactionsUsed}
+        onToggleReaction={toggleReaction}
       />
 
       <LegendaryActionModal
@@ -551,6 +641,7 @@ export default function CombatPage() {
         onClose={() => setShowLegendaryModal(false)}
         creatures={enemies}
         onSelect={startInterrupt}
+        onSetLegendaryUsed={setLegendaryUsed}
       />
 
       {/* Load Encounter Modal */}

@@ -5,10 +5,12 @@ import Modal from '../../components/Modal';
 import InitiativeItem from './InitiativeItem';
 
 /**
- * Manage Order: the editing surface for the initiative list (sort by rolled
- * initiative, drag to rearrange, edit initiative values / companion HP / lair
- * notes). The main column stays a read-only turn display so the DM can't
- * knock the order around mid-combat by accident.
+ * The full initiative order (opened from Manage Order or the tracker's Up Next
+ * card): sort by rolled initiative, drag to rearrange, edit initiative values /
+ * companion HP / lair notes, and tick off each combatant's reaction for the
+ * round (it refreshes automatically when their turn comes back around). The
+ * main view stays a compact turn display so the DM can't knock the order
+ * around mid-combat by accident.
  */
 export default function InitiativeOrderModal({
   isOpen,
@@ -27,19 +29,23 @@ export default function InitiativeOrderModal({
   onUpdateLairNotes,
   onRemoveLairAction,
   onSelectTurn,
+  round,
+  reactionsUsed,
+  onToggleReaction,
 }) {
   if (!isOpen) return null;
 
   return (
     <Modal onClose={onClose}>
-      <div className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-lg max-h-[85vh] flex flex-col">
+      <div className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-2xl max-h-[85vh] flex flex-col">
         <div className="p-4 border-b border-stone-700 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-bold text-amber-400 flex items-center gap-2">
               <Icons.GripVertical /> Initiative Order
+              {combatActive && <span className="text-xs font-bold uppercase tracking-widest text-stone-500">Round {round}</span>}
             </h2>
             <p className="text-sm text-stone-400 mt-1">
-              Drag to rearrange, click a number to edit it{combatActive ? ', click a name to jump the turn pointer' : ''}.
+              Drag to rearrange, click a number to edit it{combatActive ? ', click a name to jump the turn pointer' : ''}. Reactions refresh at the start of each combatant&apos;s turn.
             </p>
           </div>
           <button
@@ -69,6 +75,8 @@ export default function InitiativeOrderModal({
               onUpdateHp={c.isCompanion ? onUpdateHp : undefined}
               onUpdateLairNotes={c.isLairAction ? onUpdateLairNotes : undefined}
               onRemoveLairAction={c.isLairAction ? onRemoveLairAction : undefined}
+              reactionUsed={!!reactionsUsed?.[c.id]}
+              onToggleReaction={c.isLairAction ? undefined : onToggleReaction}
             />
           ))}
           {!list.length && (

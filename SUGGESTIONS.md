@@ -158,6 +158,32 @@ context costs:
 
 ## Completed log
 
+- [x] Turn tracker cleanup: the bar shows only the next combatant in an
+  "Up Next" card, with a "Full Order" header button for the modal (chips removed); living
+  legendary enemies get clickable budget pips on the bar (refresh at the start
+  of the creature's turn; interrupt-panel actions spend their parsed cost via
+  `app/combat/legendary.js`); the order modal gets a per-row Reaction toggle
+  (`reactionsUsed` map in the encounter, refreshed when that combatant's turn
+  starts, not on Back). Tests: `test/combat/turnTracker.test.jsx`,
+  `test/combat/legendary.test.js`. Documented in frontend-patterns §2.5 —
+  October 2026
+- [x] Turn tracker, round 2: legendary budgets moved off the bar into a
+  header **Legendary** button (mini dots; modal has the pips; replaces ⚡);
+  a **This Turn** panel tracks action / bonus / reaction and movement
+  (5/10/15-ft steps, Dash) for whoever's turn it is (`turnUsage`, persisted);
+  on a monster's turn a panel lists its actions / bonus actions / reactions
+  (Use spends the slot) and tracks limited uses — X/Day, recharge with a d6
+  roll, per-rest (`abilityUses`), spell slots + per-day spells (existing
+  card fields). Tests: `turnTracker.test.jsx`, `monsterAbilities.test.js` —
+  October 2026. Follow-up: Up Next moved into the header row; movement is a
+  typed "Moved" field plus a Dash toggle (+speed only; step buttons removed).
+- [x] Escape closes modals app-wide (shared `Modal`, topmost only — stacked
+  modals peel one per press). The combat card's contextual buttons + modals
+  were extracted to `CharacterCard/CardActionButtons.jsx` / `CardModals.jsx`
+  and reused on the turn tracker's Now card; the card's display-AC formula
+  moved verbatim into `getCardDisplayAC` (CharacterCard/utils.js). Tests:
+  `test/components/modal.test.jsx`, `turnTracker.test.jsx` — October 2026
+
 - [x] **Turn tracker on /combat** — the initiative column now tracks whose turn
   it is instead of leaving it to the DM's memory. `TurnTracker.jsx` shows
   round, Now/Next and the End Turn / ← Back controls; the Now card's AC uses

@@ -2,6 +2,7 @@
 
 import Icons from '../../../components/Icons';
 import Modal from '../../../components/Modal';
+import { LEGENDARY_ACTIONS_PER_ROUND, toggledLegendaryUsed } from '../../legendary';
 
 const QuickActionsModal = ({ isOpen, character, onUpdate, onClose, displayAC, spellcastingInfo }) => {
   if (!isOpen) return null;
@@ -72,18 +73,17 @@ const LegendaryActionsSection = ({ character, onUpdate }) => (
     <div className="flex items-center justify-between mb-3">
       <h3 className="text-sm font-bold text-purple-400 flex items-center gap-2">
         ★ Legendary Actions
-        <span className="text-xs text-stone-400 font-normal">(3 per round)</span>
+        <span className="text-xs text-stone-400 font-normal">({LEGENDARY_ACTIONS_PER_ROUND} per round)</span>
       </h3>
       <div className="flex items-center gap-2">
         <span className="text-xs text-stone-400">Used:</span>
         <div className="flex gap-1">
-          {[0, 1, 2].map(i => (
+          {Array.from({ length: LEGENDARY_ACTIONS_PER_ROUND }, (_, i) => (
             <button
               key={i}
               onClick={(e) => {
                 e.stopPropagation();
-                const used = character.legendaryActionsUsed || 0;
-                onUpdate({ ...character, legendaryActionsUsed: i < used ? i : i + 1 });
+                onUpdate({ ...character, legendaryActionsUsed: toggledLegendaryUsed(character.legendaryActionsUsed || 0, i) });
               }}
               className={`w-6 h-6 rounded-full border-2 transition-colors ${
                 i < (character.legendaryActionsUsed || 0) ? 'bg-purple-600 border-purple-400' : 'bg-stone-800 border-stone-600 hover:border-purple-500'

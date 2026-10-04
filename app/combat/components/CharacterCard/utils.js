@@ -14,6 +14,24 @@ export { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, g
 export const getCalculatedAC = (character) =>
   getEquipmentAC(character, { includeTempAC: false, parseArmorNames: false });
 
+// The wild-shape form a druid is currently in, or null.
+export const getActiveWildShapeForm = (character) =>
+  character.wildShapeActive
+    ? (character.wildShapeForms || []).find(f => f.id === character.wildShapeFormId) || null
+    : null;
+
+// Combat-card AC before temp AC: manual override → equipment → stored → 10.
+export const getCardBaseAC = (character) =>
+  character.acOverride || getCalculatedAC(character) || character.ac || 10;
+
+// What the combat card shows: an active wild shape REPLACES AC entirely (no
+// temp AC); otherwise base AC + tempAC, added here at display time only.
+export const getCardDisplayAC = (character) => {
+  const form = getActiveWildShapeForm(character);
+  if (form) return form.ac || 10;
+  return getCardBaseAC(character) + (parseInt(character.tempAC) || 0);
+};
+
 export const MASTERY_DESC = {
   'Cleave': 'Hit another creature within 5 ft (weapon dice only)',
   'Graze': 'Deal modifier damage on miss',

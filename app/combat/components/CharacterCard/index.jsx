@@ -5,18 +5,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Icons from '../../../components/Icons';
 import { EditableField, HpBar, Tooltip } from '../../../components/ui';
-import QuickActionsModal from './QuickActionsModal';
-import QuickResourcesModal from './QuickResourcesModal';
-import CharacterSheetModal from './CharacterSheetModal';
-import InventoryModal from './InventoryModal';
-import NotesModal from './NotesModal';
-import DeleteConfirmModal from './DeleteConfirmModal';
-import StatBlockModal from './StatBlockModal';
-import SpellsModal from './SpellsModal';
-import DruidFeaturesModal from './DruidFeaturesModal';
-import SorcererFeaturesModal from './SorcererFeaturesModal';
 import { parseSpellcasting } from './spellcastingParser';
-import { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, getCalculatedAC, getClassLevel, isClass, formatClassList } from './utils';
+import CardActionButtons from './CardActionButtons';
+import CardModals from './CardModals';
+import { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, formatClassList, getActiveWildShapeForm, getCardBaseAC, getCardDisplayAC } from './utils';
 
 const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onToggleExpand, showResources, templates = [], stretch = false }) => {
   // One modal open at a time — a single key replaces the old 10 showX booleans
@@ -37,23 +29,15 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   const profBonus = getProfBonus(character);
   const spellDC = getSpellSaveDC(character);
   const spellAttack = getSpellAttackBonus(character);
-  const calculatedAC = getCalculatedAC(character);
-  const baseAC = character.acOverride || calculatedAC || character.ac || 10;
-  const tempAcValue = parseInt(tempAC) || 0;
-  
-  // Check for wild shape - use beast AC when active
-  const activeWildShapeForm = character.wildShapeActive 
-    ? (character.wildShapeForms || []).find(f => f.id === character.wildShapeFormId)
-    : null;
-  const displayAC = activeWildShapeForm ? (activeWildShapeForm.ac || 10) : (baseAC + tempAcValue);
+  const baseAC = getCardBaseAC(character);
+  // Wild shape replaces AC entirely; otherwise temp AC is added at display time
+  const activeWildShapeForm = getActiveWildShapeForm(character);
+  const displayAC = getCardDisplayAC(character);
   const isWildShapeAC = !!activeWildShapeForm;
   
   const spellcastingInfo = parseSpellcasting(character);
   const isNpc = character.isNpc;
 
-  // Check for class-specific features
-  const isDruid = () => getClassLevel(character, 'druid') >= 2;
-  const isSorcerer = () => isClass(character, 'sorcerer');
 
   // Determine card colors - NPCs get teal, enemies get red, party gets emerald
   const cardColors = isDead 
@@ -95,118 +79,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
             </div>
           </div>
           <div className="flex items-center gap-1">
-            {/* Stat Block Button - for enemies/NPCs */}
-            {isEnemy && (
-              <Tooltip text="View Stat Block">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setActiveModal('statblock'); }}
-                  className="p-2 rounded-lg text-stone-400 hover:text-amber-300 hover:bg-amber-900/30 transition-colors"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
-                    <path d="M4 6h16M4 10h16M4 14h10M4 18h7" />
-                  </svg>
-                </button>
-              </Tooltip>
-            )}
-            {/* Character Sheet Button - for party members */}
-            {!isEnemy && (
-              <Tooltip text="Character Sheet">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setActiveModal('sheet'); }}
-                  className="p-2 rounded-lg text-stone-400 hover:text-emerald-300 hover:bg-emerald-900/30 transition-colors"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
-                    <path d="M4 6h16M4 10h16M4 14h10M4 18h7" />
-                  </svg>
-                </button>
-              </Tooltip>
-            )}
-            {/* Inventory Button - for party members */}
-            {!isEnemy && character.inventory?.length > 0 && (
-              <Tooltip text="Inventory">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setActiveModal('inventory'); }}
-                  className="p-2 rounded-lg text-stone-400 hover:text-amber-300 hover:bg-amber-900/30 transition-colors"
-                >
-                  <Icons.Book />
-                </button>
-              </Tooltip>
-            )}
-            {/* Spells Button - for party members with spells */}
-            {!isEnemy && character.spells?.length > 0 && (
-              <Tooltip text="Spells">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setActiveModal('spells'); }}
-                  className="p-2 rounded-lg text-purple-400 hover:text-purple-300 hover:bg-purple-900/30 transition-colors"
-                >
-                  <Icons.Sparkles />
-                </button>
-              </Tooltip>
-            )}
-            {/* Quick Resources Button - for party members */}
-            {!isEnemy && ((character.resources?.length > 0) || (character.spellSlots && Object.keys(character.spellSlots).some(k => k.startsWith('level') && character.spellSlots[k]?.max > 0))) && (
-              <Tooltip text="Quick Resources">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setActiveModal('resources'); }}
-                  className="p-2 rounded-lg text-amber-400 hover:bg-amber-900/30 transition-colors"
-                >
-                  <Icons.Sparkles />
-                </button>
-              </Tooltip>
-            )}
-            {/* Druid Wild Shape Button */}
-            {!isEnemy && isDruid() && (
-              <Tooltip text="Wild Shape">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setActiveModal('druid'); }}
-                  className={`p-2 rounded-lg transition-colors ${
-                    character.wildShapeActive 
-                      ? 'text-lime-400 bg-lime-900/30 hover:bg-lime-900/40' 
-                      : 'text-lime-500 hover:text-lime-400 hover:bg-lime-900/30'
-                  }`}
-                >
-                  <span className="text-lg">🐾</span>
-                </button>
-              </Tooltip>
-            )}
-            {/* Sorcerer Features Button */}
-            {!isEnemy && isSorcerer() && (
-              <Tooltip text="Sorcerer Features">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setActiveModal('sorcerer'); }}
-                  className={`p-2 rounded-lg transition-colors ${
-                    character.innateSorcery 
-                      ? 'text-purple-400 bg-purple-900/30 hover:bg-purple-900/40' 
-                      : 'text-purple-500 hover:text-purple-400 hover:bg-purple-900/30'
-                  }`}
-                >
-                  <Icons.Flame className="w-5 h-5" />
-                </button>
-              </Tooltip>
-            )}
-            {/* Notes Button */}
-            {isEnemy && (
-              <Tooltip text="Combat Notes">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setActiveModal('notes'); }}
-                  className={`p-2 rounded-lg transition-colors ${character.combatNotes ? 'text-amber-400 hover:bg-amber-900/30 bg-amber-900/20' : 'text-stone-500 hover:text-amber-400 hover:bg-amber-900/30'}`}
-                >
-                  <Icons.Scroll className="w-5 h-5" />
-                </button>
-              </Tooltip>
-            )}
-            {/* Quick Actions Button */}
-            {isEnemy && (character.actions?.length > 0 || character.legendaryActions?.length > 0 || spellcastingInfo.found) && (
-              <Tooltip text="Quick Actions">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setActiveModal('actions'); }}
-                  className={`p-2 rounded-lg transition-colors flex items-center gap-1 ${character.legendaryActions?.length > 0 ? 'text-purple-400 hover:bg-purple-900/30 bg-purple-900/20' : 'text-red-400 hover:bg-red-900/30'}`}
-                >
-                  <Icons.Sword />
-                  {character.legendaryActions?.length > 0 && <span className="text-xs">★</span>}
-                </button>
-              </Tooltip>
-            )}
+            <CardActionButtons character={character} isEnemy={isEnemy} spellcastingInfo={spellcastingInfo} onOpen={setActiveModal} />
             {isEnemy && onRemove && (
               <Tooltip text="Remove from Combat">
                 <button 
@@ -630,16 +503,17 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
       )}
 
       {/* Modals */}
-      <DeleteConfirmModal isOpen={activeModal === 'delete'} onClose={closeModal} character={character} isEnemy={isEnemy} onRemove={onRemove} />
-      <QuickActionsModal isOpen={activeModal === 'actions'} onClose={closeModal} character={character} onUpdate={onUpdate} displayAC={displayAC} spellcastingInfo={spellcastingInfo} />
-      <QuickResourcesModal isOpen={activeModal === 'resources'} onClose={closeModal} character={character} onUpdate={onUpdate} templates={templates} />
-      <CharacterSheetModal isOpen={activeModal === 'sheet'} onClose={closeModal} character={character} />
-      <InventoryModal isOpen={activeModal === 'inventory'} onClose={closeModal} character={character} onUpdate={onUpdate} />
-      <NotesModal isOpen={activeModal === 'notes'} onClose={closeModal} character={character} onUpdate={onUpdate} />
-      <StatBlockModal isOpen={activeModal === 'statblock'} onClose={closeModal} character={character} />
-      <SpellsModal isOpen={activeModal === 'spells'} onClose={closeModal} character={character} />
-      <DruidFeaturesModal isOpen={activeModal === 'druid'} onClose={closeModal} character={character} onUpdate={onUpdate} />
-      <SorcererFeaturesModal isOpen={activeModal === 'sorcerer'} onClose={closeModal} character={character} onUpdate={onUpdate} />
+      <CardModals
+        activeModal={activeModal}
+        onClose={closeModal}
+        character={character}
+        isEnemy={isEnemy}
+        onUpdate={onUpdate}
+        onRemove={onRemove}
+        templates={templates}
+        displayAC={displayAC}
+        spellcastingInfo={spellcastingInfo}
+      />
     </div>
   );
 };
