@@ -49,16 +49,12 @@ export const getMonsterAbilities = (creature) => {
 
 export const getAbilityUsed = (creature, name) => creature?.abilityUses?.[name] || 0;
 
-// First number in the speed field is the walking speed: 30, "40 ft.",
-// "40, burrow 40, fly 80" → 30 / 40 / 40. Falls back to 30.
-export const parseWalkSpeed = (speed) => {
-  if (typeof speed === 'number' && speed > 0) return speed;
-  const match = /\d+/.exec(String(speed ?? ''));
-  return match ? Number(match[0]) : 30;
-};
-
-// The other movement modes, for display: "40, burrow 40, fly 80" → "burrow 40, fly 80".
-export const otherSpeeds = (speed) => {
-  if (typeof speed !== 'string') return '';
-  return speed.split(',').slice(1).map(s => s.trim().replace(/\s*ft\.?$/i, '')).filter(Boolean).join(', ');
+// Every movement mode as display strings: 30 → ['30 ft'];
+// "40, burrow 40, fly 80" → ['40 ft', 'burrow 40 ft', 'fly 80 ft'];
+// "0, fly 50 ft. (hover)" → ['0 ft', 'fly 50 ft (hover)']. Missing → ['30 ft'].
+export const formatSpeeds = (speed) => {
+  if (typeof speed === 'number') return [`${speed} ft`];
+  const parts = String(speed ?? '').split(',').map(p => p.trim()).filter(Boolean);
+  if (!parts.length) return ['30 ft'];
+  return parts.map(p => p.replace(/(\d+)\s*(?:ft\.?|feet)?/i, '$1 ft').replace(/\s+/g, ' ').trim());
 };

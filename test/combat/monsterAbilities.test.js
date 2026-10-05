@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  parseUsage, abilityLabel, getMonsterAbilities, parseWalkSpeed, otherSpeeds,
+  parseUsage, abilityLabel, getMonsterAbilities, formatSpeeds,
 } from '../../app/combat/monsterAbilities.js';
 
 describe('parseUsage', () => {
@@ -49,18 +49,17 @@ describe('getMonsterAbilities', () => {
   });
 });
 
-describe('speed helpers', () => {
-  it('walk speed is the first number, defaulting to 30', () => {
-    expect(parseWalkSpeed(35)).toBe(35);
-    expect(parseWalkSpeed('40 ft.')).toBe(40);
-    expect(parseWalkSpeed('40, burrow 40, fly 80')).toBe(40);
-    expect(parseWalkSpeed(undefined)).toBe(30);
-    expect(parseWalkSpeed('')).toBe(30);
+describe('formatSpeeds', () => {
+  it('lists every movement mode with units', () => {
+    expect(formatSpeeds(35)).toEqual(['35 ft']);
+    expect(formatSpeeds('40 ft.')).toEqual(['40 ft']);
+    expect(formatSpeeds('40, burrow 40, fly 80')).toEqual(['40 ft', 'burrow 40 ft', 'fly 80 ft']);
+    expect(formatSpeeds('20 ft., swim 20 ft.')).toEqual(['20 ft', 'swim 20 ft']);
+    expect(formatSpeeds('0, fly 50 ft. (hover)')).toEqual(['0 ft', 'fly 50 ft (hover)']);
   });
 
-  it('lists the other movement modes', () => {
-    expect(otherSpeeds('40, burrow 40, fly 80')).toBe('burrow 40, fly 80');
-    expect(otherSpeeds('20 ft., swim 20 ft.')).toBe('swim 20');
-    expect(otherSpeeds(30)).toBe('');
+  it('defaults to 30 ft', () => {
+    expect(formatSpeeds(undefined)).toEqual(['30 ft']);
+    expect(formatSpeeds('')).toEqual(['30 ft']);
   });
 });

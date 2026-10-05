@@ -283,6 +283,7 @@ const TurnTracker = ({
             {current && !current.isLairAction ? (
               <TurnEconomy
                 combatant={current}
+                isParty={currentKind === 'party'}
                 usage={turnUsage}
                 reactionUsed={!!reactionsUsed?.[current.id]}
                 onUpdate={onUpdateTurnUsage}

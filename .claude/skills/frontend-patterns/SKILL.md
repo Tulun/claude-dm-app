@@ -173,18 +173,25 @@ Three rules keep the pointer honest:
   `app/combat/legendary.js` (`LEGENDARY_ACTIONS_PER_ROUND`, `getLegendaryCost`,
   `toggledLegendaryUsed`) — shared with the enemy card's QuickActionsModal;
   don't re-hardcode `3`.
-- **Action economy = `turnUsage`** (`{ id, action, bonus, move, dash }`, page
-  state, persisted). Only meaningful while `id` is the current combatant — the
-  page passes `null` otherwise (e.g. after Back), and `updateTurnUsage` starts
-  from `FRESH_USAGE` when the id is stale. `TurnEconomy.jsx` renders it:
-  Action/Bonus/Reaction toggles plus a hand-typed "Moved __ / speed ft" text
-  input (`inputMode="numeric"`, no spinner arrows; speed from
-  `parseWalkSpeed`) plus a Dash toggle that adds another speed's worth to the
-  budget WITHOUT touching the Action/Bonus toggles (Cunning Action dashes as a
-  bonus action — the DM marks which; auto-spending the Action was tried and
-  rejected, Oct 2026). Over budget reads "N over". 5/10/15-ft
-  step buttons were tried and rejected as clunky (Oct 2026) — keep movement
-  hand-typed.
+- **Action economy = `turnUsage`** (`{ id, action, bonus }`, page state,
+  persisted). Only meaningful while `id` is the current combatant — the page
+  passes `null` otherwise (e.g. after Back), and `updateTurnUsage` starts from
+  `FRESH_USAGE` when the id is stale. `TurnEconomy.jsx` renders
+  Action/Bonus/Reaction toggles plus a READ-ONLY speed line (every mode via
+  `formatSpeeds`, e.g. "40 ft · climb 30 ft · fly 80 ft"). Movement is NOT
+  tracked in the app — 5/10/15-ft step buttons, then a typed "Moved" field +
+  Dash toggle, were both tried and dropped as awkward (Oct 2026). Don't
+  re-add a movement tracker without the user asking. Party members
+  (`isParty`) also get a Spells line (`getSpellSaveDC` / `getSpellAttackBonus`
+  from rules.js — only when `spellStat` is set) and `PartyLoadout.jsx`:
+  EQUIPPED weapons with the sheet's attack/damage (`getWeaponStatsFor`) and
+  equipped gear chips; clicking any chip opens `ItemDetailModal.jsx` (to-hit /
+  damage breakdown from `getWeaponStatsFor`'s `ability`/`abilityMod`/
+  `profBonus`/`magicBonus`, property + mastery text, description as plain
+  text). It PORTALS to <body> — anything opened from inside the sticky z-10
+  tracker must either portal or render outside the bar. Unequipped items are
+  deliberately hidden — the fix for "my weapon isn't showing" is ticking Equip
+  on the sheet's inventory.
 - **Monster panel**: on an enemy's turn `MonsterAbilities.jsx` lists
   actions / bonus actions / reactions as chips (click → text + Use, which
   spends the matching economy slot via `onSpendSlot`), and a Limited row:

@@ -24,7 +24,13 @@ const party = [
   },
   // acEffect: the Now card must show the initiative-view AC (mage armor
   // 13 + dex 0 = 13), not the stored ac of 18
-  { id: 'p2', name: 'Mira', class: 'Cleric', level: 5, dex: 10, currentHp: 40, maxHp: 40, initiative: 5, ac: 18, acEffect: 'mageArmor' },
+  { id: 'p2', name: 'Mira', class: 'Cleric', level: 5, dex: 10, wis: 16, spellStat: 'wis', currentHp: 40, maxHp: 40, initiative: 5, ac: 18, acEffect: 'mageArmor',
+    inventory: [
+      { id: 'i1', name: 'Mace', itemType: 'weapon', equipped: true, description: 'A flanged mace.' },
+      { id: 'i2', name: 'Holy Symbol', itemType: 'gear', equipped: true, description: 'Spellcasting focus.' },
+      { id: 'i3', name: 'Dagger', itemType: 'weapon', equipped: false },
+    ],
+  },
 ];
 
 const templates = [{ id: 't-ogre', name: 'Ogre', maxHp: 59, ac: 11, cr: '2', xp: 450 }];
@@ -112,7 +118,7 @@ const openLegendary = async () => {
   return legendaryModal();
 };
 const economy = () => within(tracker()).getByText('This Turn').parentElement;
-const moveLeft = () => within(tracker()).getByTestId('move-left').textContent;
+const speeds = () => within(tracker()).getByTestId('speeds').textContent;
 
 const postCalls = (fetchMock, url) =>
   fetchMock.mock.calls.filter(([u, opts]) => u === url && opts?.method === 'POST');
@@ -393,51 +399,31 @@ describe('CombatPage — turn tracker', () => {
     expect(within(tracker()).getByTitle('Ogre: 3/3 left')).toBeInTheDocument();
   });
 
-  it('This Turn tracks action, bonus action and hand-entered movement, resetting on the next turn', async () => {
+  it('This Turn tracks action and bonus action, resetting on the next turn, and lists speeds', async () => {
     const fetchMock = mockFetch();
     render(<CombatPage />);
     await settle();
     await startCombat();
 
-    const moved = () => within(economy()).getByLabelText('Feet moved this turn');
-    expect(moveLeft()).toBe('/ 30 ft · 30 left'); // no speed on the sheet → 30
+    // movement is tracked at the table — no form, just the speeds
+    expect(within(economy()).queryByLabelText('Feet moved this turn')).not.toBeInTheDocument();
+    expect(within(economy()).queryByText('Dash')).not.toBeInTheDocument();
+    expect(speeds()).toBe('Speed30 ft'); // no speed on the sheet → 30
+
     click(within(economy()).getByText('Action'));
-    act(() => { fireEvent.change(moved(), { target: { value: '15' } }); });
     await flush();
     expect(within(economy()).getByText('Action')).toHaveAttribute('aria-pressed', 'true');
     expect(within(economy()).getByText('Bonus')).toHaveAttribute('aria-pressed', 'false');
-    expect(moveLeft()).toBe('/ 30 ft · 15 left');
-
-    // keep moving later in the turn; past speed shows how far over
-    act(() => { fireEvent.change(moved(), { target: { value: '45' } }); });
-    await flush();
-    expect(moveLeft()).toBe('/ 30 ft · 15 over');
-
-    // Dash adds another speed's worth of movement and leaves Action/Bonus alone
-    click(within(economy()).getByText('Dash'));
-    await flush();
-    expect(moveLeft()).toBe('/ 60 ft · 15 left');
-    expect(within(economy()).getByText('Dash +30')).toHaveAttribute('aria-pressed', 'true');
-    expect(within(economy()).getByText('Bonus')).toHaveAttribute('aria-pressed', 'false');
-    // undo and redo
-    click(within(economy()).getByText('Dash +30'));
-    await flush();
-    expect(moveLeft()).toBe('/ 30 ft · 15 over');
-    click(within(economy()).getByText('Dash'));
-    await flush();
 
     fetchMock.mockClear();
     await act(async () => { vi.advanceTimersByTime(1100); });
     const body = JSON.parse(postCalls(fetchMock, '/api/encounter').at(-1)[1].body);
-    expect(body.turnUsage).toEqual({ id: 'p1', action: true, bonus: false, move: 45, dash: true });
+    expect(body.turnUsage).toEqual({ id: 'p1', action: true, bonus: false });
 
     click(screen.getByText('End Turn →'));
     await flush();
     expect(nowName()).toBe('Mira');
     expect(within(economy()).getByText('Action')).toHaveAttribute('aria-pressed', 'false');
-    expect(moved()).toHaveValue('');
-    expect(within(economy()).getByText('Dash')).toHaveAttribute('aria-pressed', 'false');
-    expect(moveLeft()).toBe('/ 30 ft · 30 left');
   });
 
   it('the This Turn reaction is the same toggle as the order modal\'s', async () => {
@@ -465,8 +451,8 @@ describe('CombatPage — turn tracker', () => {
     click(screen.getByText('← Back')); // Ogre
     await flush();
     expect(nowName()).toBe('Ogre');
-    expect(moveLeft()).toBe('/ 40 ft · 40 left');
-    expect(within(tracker()).getByText('(also climb 20)')).toBeInTheDocument();
+    // every movement mode is listed
+    expect(speeds()).toBe('Speed40 ftclimb 20 ft');
 
     // actions / reactions as chips, usage parenthetical stripped
     expect(within(tracker()).getByText('Club')).toBeInTheDocument();
@@ -653,6 +639,62 @@ describe('CombatPage — turn tracker', () => {
     expect(nowName()).toBe('Wolfy');
     const nowCard = within(tracker()).getByText('Now').parentElement;
     expect(within(nowCard).queryByRole('button')).not.toBeInTheDocument();
+  });
+
+  it('party members show spell DC / to-hit and their equipped weapons and gear', async () => {
+    mockFetch();
+    render(<CombatPage />);
+    await settle();
+    await startCombat();
+
+    // Theren has no spellcasting stat → no spells line
+    expect(within(tracker()).queryByTestId('spellcasting')).not.toBeInTheDocument();
+
+    click(screen.getByText('End Turn →')); // Mira: cleric 5, WIS 16 → DC 14, +6
+    await flush();
+    expect(within(tracker()).getByTestId('spellcasting')).toHaveTextContent('SpellsDC 14+6 to hit');
+
+    // equipped weapon with sheet math (STR 10 → +0, prof +3), equipped gear;
+    // the unequipped dagger stays off
+    const mace = within(economy()).getByTitle('A flanged mace.');
+    expect(mace).toHaveTextContent('Mace+3 to hit1d6 bludgeoning');
+    expect(within(economy()).getByTitle('Spellcasting focus.')).toHaveTextContent('Holy Symbol');
+    expect(within(economy()).queryByText('Dagger')).not.toBeInTheDocument();
+  });
+
+  it('clicking a weapon opens what it does, with the to-hit breakdown; Escape closes it', async () => {
+    mockFetch();
+    render(<CombatPage />);
+    await settle();
+    await startCombat();
+    click(screen.getByText('End Turn →')); // Mira
+    await flush();
+
+    click(within(economy()).getByTitle('A flanged mace.'));
+    await flush();
+    const modal = screen.getByRole('heading', { name: 'Mace' }).closest('.fixed');
+    expect(within(modal).getByText('STR +0 + Prof +3')).toBeInTheDocument();
+    expect(within(modal).getByText('A flanged mace.')).toBeInTheDocument();
+    act(() => { fireEvent.keyDown(document, { key: 'Escape' }); });
+    await flush();
+    expect(screen.queryByRole('heading', { name: 'Mace' })).not.toBeInTheDocument();
+
+    // gear opens too (description only, no attack block)
+    click(within(economy()).getByTitle('Spellcasting focus.'));
+    await flush();
+    const gear = screen.getByRole('heading', { name: 'Holy Symbol' }).closest('.fixed');
+    expect(within(gear).queryByText('To Hit')).not.toBeInTheDocument();
+  });
+
+  it('monsters get no party loadout or party spell line', async () => {
+    mockFetch();
+    render(<CombatPage />);
+    await settle();
+    await startCombat();
+    click(screen.getByText('← Back')); // Ogre
+    await flush();
+    expect(within(tracker()).queryByTestId('spellcasting')).not.toBeInTheDocument();
+    expect(within(economy()).queryByText('Weapons')).not.toBeInTheDocument();
   });
 
   it('persists turn state with the encounter and restores it on load', async () => {

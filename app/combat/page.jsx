@@ -48,8 +48,8 @@ export default function CombatPage() {
   // in the encounter (not on party/companion records) and cleared for a
   // combatant when their turn starts.
   const [reactionsUsed, setReactionsUsed] = useState({});
-  // Action / bonus action / movement spent by whoever's turn it is:
-  // { id, action, bonus, move, dash }. Reset when a turn starts; ignored when
+  // Action / bonus action spent by whoever's turn it is:
+  // { id, action, bonus }. Reset when a turn starts; ignored when
   // `id` isn't the current combatant (e.g. after stepping Back).
   const [turnUsage, setTurnUsage] = useState(null);
   // Manual initiative order - stores IDs in display order

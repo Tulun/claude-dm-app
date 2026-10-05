@@ -183,6 +183,20 @@ context costs:
   and reused on the turn tracker's Now card; the card's display-AC formula
   moved verbatim into `getCardDisplayAC` (CharacterCard/utils.js). Tests:
   `test/components/modal.test.jsx`, `turnTracker.test.jsx` — October 2026
+- [x] Movement tracking removed from the turn tracker (DM tracks it at the
+  table): This Turn shows a read-only speed line with every mode
+  (`formatSpeeds`); `turnUsage` is now `{ id, action, bonus }`. Deleted the
+  dead `CharacterCard/CardHeader.jsx` (unimported duplicate of the card
+  header) — October 2026
+- [x] Party members on the turn tracker show spell save DC / spell attack and
+  their EQUIPPED weapons (sheet attack/damage) + gear. The weapon math moved
+  verbatim from InventoryTab into `app/utils/weaponStats.js`. Note: in the
+  real data several weapons (Braadlei's daggers, Vesna's crossbow/scimitar)
+  aren't marked equipped, so they won't show until ticked. Tests:
+  `test/utils/weaponStats.test.js`, `turnTracker.test.jsx` — October 2026.
+  Follow-up: loadout chips open `ItemDetailModal` (to-hit breakdown, props,
+  mastery, description). Checked: Javelin of Lightning +2 / 1d6+0 for Marshuh
+  is correct — Thrown without Finesse uses STR (10 → +0), prof +2.
 
 - [x] **Turn tracker on /combat** — the initiative column now tracks whose turn
   it is instead of leaving it to the DM's memory. `TurnTracker.jsx` shows
