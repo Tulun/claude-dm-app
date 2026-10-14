@@ -6,7 +6,7 @@ import { getClassLevel, isClass } from './utils';
 
 /**
  * The contextual modal buttons for a combatant (stat block / sheet /
- * inventory / spells / resources / wild shape / sorcerer / notes / quick
+ * inventory / spellbook / resources / wild shape / sorcerer / notes / quick
  * actions — whichever apply). Shared by the combat CharacterCard header and
  * the turn tracker's Now card; `onOpen(key)` receives a CardModals key.
  * Remove / expand / edit stay on the card itself.
@@ -53,31 +53,31 @@ export default function CardActionButtons({ character, isEnemy, spellcastingInfo
             onClick={(e) => { e.stopPropagation(); onOpen('inventory'); }}
             className="p-2 rounded-lg text-stone-400 hover:text-amber-300 hover:bg-amber-900/30 transition-colors"
           >
-            <Icons.Book />
+            <Icons.Backpack className="w-5 h-5" />
           </button>
         </Tooltip>
       )}
-      {/* Spells Button - for party members with spells */}
+      {/* Spellbook Button - for party members with spells */}
       {!isEnemy && character.spells?.length > 0 && (
-        <Tooltip text="Spells">
+        <Tooltip text="Spellbook">
           <button
-            aria-label="Spells"
+            aria-label="Spellbook"
             onClick={(e) => { e.stopPropagation(); onOpen('spells'); }}
             className="p-2 rounded-lg text-purple-400 hover:text-purple-300 hover:bg-purple-900/30 transition-colors"
           >
-            <Icons.Sparkles />
+            <Icons.Spellbook className="w-5 h-5" />
           </button>
         </Tooltip>
       )}
-      {/* Quick Resources Button - for party members */}
+      {/* Resources Button - for party members */}
       {!isEnemy && ((character.resources?.length > 0) || (character.spellSlots && Object.keys(character.spellSlots).some(k => k.startsWith('level') && character.spellSlots[k]?.max > 0))) && (
-        <Tooltip text="Quick Resources">
+        <Tooltip text="Resources">
           <button
-            aria-label="Quick Resources"
+            aria-label="Resources"
             onClick={(e) => { e.stopPropagation(); onOpen('resources'); }}
             className="p-2 rounded-lg text-amber-400 hover:bg-amber-900/30 transition-colors"
           >
-            <Icons.Sparkles />
+            <Icons.Charges className="w-5 h-5" />
           </button>
         </Tooltip>
       )}

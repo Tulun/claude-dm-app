@@ -42,6 +42,9 @@ const Icons = {
   // Class feature icons
   Flame: ({ className }) => <svg viewBox="0 0 24 24" fill="currentColor" className={className || "w-4 h-4"}><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>,
   Bolt: ({ className }) => <svg viewBox="0 0 24 24" fill="currentColor" className={className || "w-4 h-4"}><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>,
+  Backpack: ({ className }) => <svg viewBox="0 0 24 24" fill="currentColor" className={className || "w-4 h-4"}><path d="M20 8v12c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V8c0-1.86 1.28-3.41 3-3.86V2h3v2h4V2h3v2.14c1.72.45 3 2 3 3.86zM6 12v2h10v2h2v-4H6z"/></svg>,
+  Spellbook: ({ className }) => <svg viewBox="0 0 24 24" fill="currentColor" fillRule="evenodd" className={className || "w-4 h-4"}><path d="M6 2h12a2 2 0 012 2v16a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm6 5l-1.3 3.2L7.5 11.5l3.2 1.3L12 16l1.3-3.2 3.2-1.3-3.2-1.3z"/></svg>,
+  Charges: ({ className }) => <svg viewBox="0 0 24 24" fill="currentColor" fillRule="evenodd" className={className || "w-4 h-4"}><path d="M3 6h18a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V7a1 1 0 011-1zm1 2v8h16V8z"/><circle cx="7.5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="16.5" cy="12" r="2"/></svg>,
   Play: ({ className }) => <svg viewBox="0 0 24 24" fill="currentColor" className={className || "w-4 h-4"}><path d="M8 5v14l11-7z"/></svg>,
 };
 
