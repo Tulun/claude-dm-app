@@ -167,11 +167,16 @@ context costs:
 - [ ] **Party card at-a-glance follow-ups** (⋯ menu, resource pips, passives
   and save row shipped Oct 2026):
   - Thin HP bar (bloodied colouring); shrink "+ Condition" to a small "+".
+  - Damage / Heal (`app/combat/hp.js`) is card-only so far — the Table view
+    rows and the tracker's Now card still edit HP and THP as raw numbers.
 
 ---
 
 ## Completed log
 
+- [x] Combat card HP editor: Damage / Heal amount (Enter = Damage) with temp
+  HP absorbing damage first (`app/combat/hp.js`), so "20 damage with 10 THP"
+  is one entry instead of editing two fields — Oct 2026.
 - [x] Combat card vitals: temp HP folded into the HP pill (one combined
   HP/THP editor, separate +THP chip removed) so AC / HP / DC fit one row;
   AC and DC pills dropped their icons — Oct 2026.

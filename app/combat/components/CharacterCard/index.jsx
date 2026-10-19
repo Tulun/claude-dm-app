@@ -10,6 +10,7 @@ import CardActionMenu from './CardActionMenu';
 import CardModals from './CardModals';
 import ConditionChips from '../ConditionChips';
 import PartyGlance from './PartyGlance';
+import { applyDamage, applyHealing } from '../../hp';
 import { getSaveBonus } from '../../../character/components/constants';
 import { formatMod } from '../../../utils/rules';
 import { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, formatClassList, getActiveWildShapeForm, getCardBaseAC, getCardDisplayAC } from './utils';
@@ -21,6 +22,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   const [showHpEditor, setShowHpEditor] = useState(false);
   const [hpDelta, setHpDelta] = useState('');
   const [tempHpDelta, setTempHpDelta] = useState('');
+  const [hpAmount, setHpAmount] = useState('');
   const [showTempAcEditor, setShowTempAcEditor] = useState(false);
   const [tempAcDelta, setTempAcDelta] = useState('');
   
@@ -35,6 +37,13 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
     if (!isNaN(hp) && hp >= 0) next.currentHp = hp;
     if (!isNaN(thp) && thp >= 0) next.tempHp = thp;
     if (next.currentHp !== character.currentHp || (next.tempHp || 0) !== (character.tempHp || 0)) onUpdate(next);
+    setShowHpEditor(false);
+  };
+  // Damage / Heal row: one amount, the 5e bookkeeping (THP first) is done
+  // for you. Works off the stored values, not the HP/THP fields above it.
+  const applyHpAmount = (fn) => {
+    const next = fn(character, hpAmount);
+    if (next !== character) onUpdate(next);
     setShowHpEditor(false);
   };
   const hpEditorKeyDown = (e) => {
@@ -214,11 +223,12 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               </button>
             )}
           </div>
-          {/* HP pill — shows temp HP inline; click edits HP and THP together.
-              Enter (either field) or clicking away commits, Escape cancels.
-              No commit-on-blur, so Tab moves between the two fields. Each
-              field keeps the Table view's rule: blank/invalid/negative is
-              ignored (type 0 to clear THP). */}
+          {/* HP pill — shows temp HP inline. Click opens the editor: a
+              Damage / Heal amount (focused; Enter = Damage; damage drains THP
+              first) plus direct HP and THP fields. In the HP/THP fields Enter
+              or clicking away commits, Escape cancels; no commit-on-blur, so
+              Tab moves between fields. Each field keeps the Table view's rule:
+              blank/invalid/negative is ignored (type 0 to clear THP). */}
           <div className="relative">
             {showHpEditor ? (
               <>
@@ -233,7 +243,6 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                     onKeyDown={hpEditorKeyDown}
                     onFocus={(e) => e.target.select()}
                     className="w-12 text-center bg-stone-900 border border-amber-500 rounded px-1 py-0.5 font-mono focus:outline-none"
-                    autoFocus
                   />
                   <span className="text-stone-500">/</span>
                   <span className="font-mono text-stone-400">{character.maxHp}</span>
@@ -249,11 +258,41 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                     placeholder="0"
                   />
                   <span className="text-xs text-cyan-500">THP</span>
+                  <div className="absolute left-0 top-full mt-1 flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-stone-900 border border-stone-700 shadow-xl">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      aria-label={`Damage or healing for ${character.name}`}
+                      value={hpAmount}
+                      onChange={(e) => setHpAmount(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') applyHpAmount(applyDamage);
+                        else if (e.key === 'Escape') setShowHpEditor(false);
+                      }}
+                      className="w-12 text-center bg-stone-950 border border-stone-500 rounded px-1 py-0.5 font-mono focus:outline-none focus:border-amber-500"
+                      placeholder="amt"
+                      autoFocus
+                    />
+                    <button
+                      onClick={() => applyHpAmount(applyDamage)}
+                      className="px-2 py-0.5 rounded bg-red-800 hover:bg-red-700 text-white text-xs font-medium"
+                      title={tempHp > 0 ? 'Temp HP absorbs damage first (Enter)' : 'Apply damage (Enter)'}
+                    >
+                      Damage
+                    </button>
+                    <button
+                      onClick={() => applyHpAmount(applyHealing)}
+                      className="px-2 py-0.5 rounded bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-medium"
+                      title="Heal (up to max HP)"
+                    >
+                      Heal
+                    </button>
+                  </div>
                 </div>
               </>
             ) : (
               <button
-                onClick={(e) => { e.stopPropagation(); setHpDelta(String(character.currentHp)); setTempHpDelta(String(tempHp)); setShowHpEditor(true); }}
+                onClick={(e) => { e.stopPropagation(); setHpDelta(String(character.currentHp)); setTempHpDelta(String(tempHp)); setHpAmount(''); setShowHpEditor(true); }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm cursor-pointer transition-colors ${isDead ? 'bg-red-900/40 text-red-400 hover:bg-red-900/50' : tempHp > 0 ? 'bg-stone-800/60 text-stone-300 hover:bg-stone-700/60 ring-1 ring-cyan-500/50' : 'bg-stone-800/60 text-stone-300 hover:bg-stone-700/60'}`}
                 title={tempHp > 0 ? `${tempHp} temp HP — click to edit HP / THP` : 'Click to edit HP / temp HP'}
                 aria-label={`HP for ${character.name}`}

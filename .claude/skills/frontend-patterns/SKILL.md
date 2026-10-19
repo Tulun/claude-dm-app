@@ -142,10 +142,15 @@ setEnemies(prev => {
   `onUpdate`/`onRemove`/`templates` props as the cards and its inline
   HP/THP/temp-AC edits mirror the card badges' commit rules — keep them in
   sync if a badge's validation changes. On the CARD, HP and THP share ONE
-  pill (no separate THP chip; THP shows as cyan `+N`): clicking it opens a
-  combined HP + THP editor that commits on Enter or backdrop click (NOT on
-  blur, so Tab moves between fields), Escape cancels, each field applies
+  pill (no separate THP chip; THP shows as cyan `+N`): clicking it opens an
+  editor whose FOCUSED field is a Damage / Heal amount (Enter = Damage) —
+  the 5e bookkeeping lives in `app/combat/hp.js` (`applyDamage`: THP absorbs
+  first, HP floors at 0; `applyHealing`: caps at maxHp, never touches THP;
+  both return the same object when nothing changes) — plus direct HP + THP
+  override fields that commit on Enter or backdrop click (NOT on blur, so
+  Tab moves between fields). Escape cancels, each override field applies
   only if it parses to >= 0, and no `onUpdate` fires when nothing changed.
+  Tests: `test/combat/hp.test.js` (+ the pill tests below).
   The AC / DC pills carry no icon — the "AC" / "DC" label is enough. Tests:
   `test/combat/combatantTable.test.jsx`, `test/combat/hpPill.test.jsx`
   and the "Party / Enemies / Table tabs" block in `combatPage.test.jsx`.

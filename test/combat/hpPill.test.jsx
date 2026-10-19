@@ -73,6 +73,28 @@ describe('HP pill with inline temp HP', () => {
     expect(onUpdate).toHaveBeenLastCalledWith({ ...hero, tempHp: 0 });
   });
 
+  it('Damage drains THP first, in one step (Enter = Damage)', () => {
+    const onUpdate = setup({ ...hero, tempHp: 10 });
+    openEditor();
+    const amt = screen.getByLabelText('Damage or healing for Efa');
+    expect(amt).toHaveFocus();
+    fireEvent.change(amt, { target: { value: '20' } });
+    fireEvent.keyDown(amt, { key: 'Enter' });
+    expect(onUpdate).toHaveBeenLastCalledWith({ ...hero, tempHp: 0, currentHp: 20 });
+    expect(screen.queryByLabelText('Damage or healing for Efa')).not.toBeInTheDocument();
+  });
+
+  it('Heal button heals up to max; a blank amount sends nothing', () => {
+    const onUpdate = setup();
+    openEditor();
+    fireEvent.click(screen.getByRole('button', { name: 'Heal' }));
+    expect(onUpdate).not.toHaveBeenCalled();
+    openEditor();
+    fireEvent.change(screen.getByLabelText('Damage or healing for Efa'), { target: { value: '50' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Heal' }));
+    expect(onUpdate).toHaveBeenLastCalledWith({ ...hero, currentHp: 35 });
+  });
+
   it('works the same on enemy cards', () => {
     const onUpdate = setup({ id: 'e1', name: 'Efa', cr: '1', currentHp: 7, maxHp: 7, ac: 12 }, true);
     openEditor();
