@@ -47,7 +47,8 @@
       "notes": "Natural Armor",
       "source": "mm",
       "currentHp": 136,
-      "initiative": 18
+      "initiative": 18,
+      "combatNotes": ""
     },
     {
       "id": "enemy-1783005663016-fv78oaazc",
@@ -188,7 +189,7 @@
       "notes": "Natural Armor. 3 Legendary Actions/round.",
       "source": "mm",
       "currentHp": 297,
-      "initiative": 18
+      "initiative": 5
     }
   ],
   "lairAction": null,
@@ -199,6 +200,7 @@
     "party-1770062695464",
     "npc-init-1775957421593",
     "party-1770417737904",
+    "enemy-1791137377523-0w4wx79mb",
     "companion-party-1770062695464-1770655770144"
   ],
   "combatActive": true,

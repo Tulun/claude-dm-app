@@ -123,7 +123,7 @@ const speeds = () => within(tracker()).getByTestId('speeds').textContent;
 const postCalls = (fetchMock, url) =>
   fetchMock.mock.calls.filter(([u, opts]) => u === url && opts?.method === 'POST');
 
-beforeEach(() => { vi.useFakeTimers(); });
+beforeEach(() => { vi.useFakeTimers(); localStorage.clear(); });
 afterEach(() => { vi.useRealTimers(); vi.restoreAllMocks(); });
 
 describe('CombatPage — turn tracker', () => {
@@ -323,7 +323,8 @@ describe('CombatPage — turn tracker', () => {
     await flush();
     expect(nowName()).toBe('Ogre');
 
-    const enemiesCol = document.querySelector('main').children[1].children[1];
+    click(screen.getByRole('tab', { name: /^Enemies/ }));
+    const enemiesCol = document.querySelector('main section[aria-label="Enemies"]');
     click(within(enemiesCol).getByTitle('Clear encounter'));
     await flush();
 

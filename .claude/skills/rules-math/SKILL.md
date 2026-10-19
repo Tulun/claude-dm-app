@@ -26,6 +26,7 @@ local copies anymore.
 | `getProfBonus(character)` | number | Character level first (multiclass-aware); if no level, monster CR table: CR 0–4 → +2 … CR 29+ → +9; defaults to 2 |
 | `getSpellSaveDC(character)` | number or null | `8 + prof + mod(spellStat)`, **+1 if `character.innateSorcery`** (Sorcerer feature). Null when no `spellStat` |
 | `getSpellAttackBonus(character)` | string or null | `prof + mod(spellStat)` formatted. Innate Sorcery does NOT apply here — DC only |
+| `compareInitiative(a, b)` | number | Sort comparator for **Sort by Init** on /combat: initiative desc → lair action loses ties → higher raw DEX score → missing DEX last → otherwise stable. Unparseable initiative sorts last |
 
 `app/combat/components/CharacterCard/utils.js` re-exports these
 (`getMod`, `getModNum`, `getProfBonus`, `getSpellSaveDC`, `getSpellAttackBonus`,
@@ -67,7 +68,7 @@ update this section (only) when the behavior changes:
 | `app/characters/page.jsx` | full defaults (temp AC in, name parsing on) | `character.ac \|\| 10` via `getCalculatedAC` |
 | `app/combat/components/InitiativeItem.jsx` | `{ parseArmorNames: false }` | local wrapper |
 | `app/combat/components/TurnTracker.jsx` (Now card) | `{ parseArmorNames: false }` — must match InitiativeItem's view | `character.ac \|\| 10` |
-| `app/combat/components/CharacterCard/utils.js` (`getCalculatedAC`) | `{ includeTempAC: false, parseArmorNames: false }` | `getCardBaseAC` = `character.acOverride \|\| calculatedAC \|\| character.ac \|\| 10`; `getCardDisplayAC` adds temp AC / swaps in wild shape (used by the card AND the tracker's Now-card modals) |
+| `app/combat/components/CharacterCard/utils.js` (`getCalculatedAC`) | `{ includeTempAC: false, parseArmorNames: false }` | `getCardBaseAC` = `character.acOverride \|\| calculatedAC \|\| character.ac \|\| 10`; `getCardDisplayAC` adds temp AC / swaps in wild shape (used by the card, the /combat Table-view rows in `CombatantTable.jsx`, AND the tracker's Now-card modals) |
 
 ### THE TEMP-AC TRAP (a past audit got this wrong)
 

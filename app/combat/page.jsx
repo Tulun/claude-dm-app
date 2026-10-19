@@ -8,6 +8,7 @@ import Modal from '../components/Modal';
 import Navbar from '../components/Navbar';
 import { defaultPartyData, defaultEnemyTemplates } from '../components/defaultData';
 import CharacterCard from './components/CharacterCard';
+import CombatantTable from './components/CombatantTable';
 import TurnTracker from './components/TurnTracker';
 import InitiativeOrderModal from './components/InitiativeOrderModal';
 import LegendaryActionModal from './components/LegendaryActionModal';
@@ -15,11 +16,15 @@ import { FRESH_USAGE } from './components/TurnEconomy';
 import { AddEnemyModal, AddPartyModal } from './components/Modals';
 import { getCalculatedAC } from '../utils/acCalculation';
 import { generateId } from '../utils/generateId';
+import { compareInitiative } from '../utils/rules';
 import { useDragReorder } from './useDragReorder';
 import { useToast } from '../hooks/useToast';
 import { SAVE_ARM_DELAY_MS, SAVE_DEBOUNCE_MS } from '../utils/timings';
 
 const EMPTY_TEMPLATES = [];
+// Per-viewer UI preference (Party / Enemies / Table tab) — browser-local, never persisted
+// to the encounter.
+const VIEW_MODE_KEY = 'dm-combat-view-mode';
 
 export default function CombatPage() {
   const router = useRouter();
@@ -28,6 +33,7 @@ export default function CombatPage() {
   const [lairAction, setLairAction] = useState(null); // { initiative: 20, notes: '' }
   const [templates, setTemplates] = useState(null); // Start with null to detect loading
   const [expandedCards, setExpandedCards] = useState({});
+  const [viewMode, setViewMode] = useState('party'); // 'party' | 'enemies' | 'table'
   const [showAddEnemy, setShowAddEnemy] = useState(false);
   const [showAddParty, setShowAddParty] = useState(false);
   const [saveStatus, showToast] = useToast();
@@ -288,9 +294,10 @@ export default function CombatPage() {
 
   const enemyIds = useMemo(() => new Set(enemies.map(e => e.id)), [enemies]);
 
-  // Sort by initiative values (including lair action)
+  // Sort by initiative values (including lair action); ties broken by DEX —
+  // see compareInitiative in app/utils/rules.js
   const sortByInitiative = () => {
-    const sorted = [...allCombatants].sort((a, b) => b.initiative - a.initiative);
+    const sorted = [...allCombatants].sort(compareInitiative);
     setInitiativeOrder(sorted.map(c => c.id));
   };
 
@@ -512,6 +519,27 @@ export default function CombatPage() {
   const updateLairNotes = useCallback((notes) => setLairAction(prev => ({ ...prev, notes })), []);
   const removeLairAction = useCallback(() => setLairAction(null), []);
 
+  // Restore the viewer's tab after mount (localStorage is unavailable during
+  // SSR and can throw in private windows). 'cards' is the pre-tabs value.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(VIEW_MODE_KEY);
+      if (saved === 'enemies' || saved === 'table') setViewMode(saved);
+    } catch { /* storage blocked — keep the default */ }
+  }, []);
+  const changeViewMode = useCallback((mode) => {
+    setViewMode(mode);
+    try { localStorage.setItem(VIEW_MODE_KEY, mode); } catch { /* storage blocked */ }
+  }, []);
+  const isTable = viewMode === 'table';
+  const showParty = viewMode !== 'enemies';
+  const showEnemies = viewMode !== 'party';
+  const viewTabs = [
+    { id: 'party', label: 'Party & Allies', icon: <Icons.Shield />, count: party?.length, active: 'text-emerald-400 border-emerald-500' },
+    { id: 'enemies', label: 'Enemies', icon: <Icons.Skull />, count: enemies.length, active: 'text-red-400 border-red-500' },
+    { id: 'table', label: 'Table', icon: <Icons.Filter />, active: 'text-amber-400 border-amber-500' },
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100">
       <div className="fixed inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
@@ -560,10 +588,29 @@ export default function CombatPage() {
             />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="space-y-4 lg:col-span-2">
+          {/* Combatant tabs: Party & Allies cards | Enemies cards | Table
+              (both tables stacked full width). Choice is per-viewer
+              localStorage. */}
+          <div>
+          <div role="tablist" aria-label="Combatant view" className="flex gap-1 border-b border-stone-800 mb-4">
+            {viewTabs.map(tab => (
+              <button
+                key={tab.id}
+                role="tab"
+                aria-selected={viewMode === tab.id}
+                onClick={() => changeViewMode(tab.id)}
+                className={`flex items-center gap-2 px-4 py-2 -mb-px border-b-2 text-sm font-semibold transition-colors ${viewMode === tab.id ? tab.active : 'border-transparent text-stone-500 hover:text-stone-300'}`}
+              >
+                {tab.icon}{tab.label}
+                {tab.count > 0 && <span className="text-xs font-mono px-1.5 rounded bg-stone-800 text-stone-400">{tab.count}</span>}
+              </button>
+            ))}
+          </div>
+          <div className="space-y-6">
+          {showParty && (
+          <section aria-label="Party & Allies" className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-emerald-400 flex items-center gap-2"><Icons.Shield />Party & Allies</h2>
+              {isTable ? <h2 className="text-lg font-bold text-emerald-400 flex items-center gap-2"><Icons.Shield />Party & Allies</h2> : <span />}
               <div className="flex gap-2">
                 <button onClick={reloadParty} className="flex items-center gap-1 px-2 py-1 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-xs"><Icons.Refresh />Reload</button>
                 <button onClick={() => setParty(prev => (prev || []).map(p => ({ ...p, resources: (p.resources || []).map(r => ({ ...r, current: r.max })) })))} className="flex items-center gap-1 px-2 py-1 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-xs"><Icons.Refresh />Rest</button>
@@ -573,40 +620,54 @@ export default function CombatPage() {
             {!party ? (
               <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg animate-pulse">Loading party...</div>
             ) : party.length > 0 ? (
-              // Two card columns on desktop so more of the party is visible
-              // without scrolling; rows stretch so side-by-side cards line up
-              // (cards get the `stretch` prop to pin their stat bars).
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              isTable ? (
+                <CombatantTable combatants={party} isEnemy={false} onUpdate={updatePartyMember} onRemove={removePartyMember} templates={templates || EMPTY_TEMPLATES} />
+              ) : (
+              // Full-width tab: up to three card columns; rows stretch so
+              // side-by-side cards line up (`stretch` pins their stat bars).
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {party.map(m => <CharacterCard key={m.id} character={m} isEnemy={false} onUpdate={updatePartyMember} onRemove={removePartyMember} expanded={expandedCards[m.id]} onToggleExpand={toggleExpand} showResources templates={templates || EMPTY_TEMPLATES} stretch />)}
               </div>
+              )
             ) : (
               <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No party members yet.</div>
             )}
-          </div>
+          </section>
+          )}
 
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-bold text-red-400 flex items-center gap-2"><Icons.Skull />Enemies</h2>
-                <div className="flex gap-2">
-                  {(enemies.length > 0 || lairAction) && <button onClick={clearEncounter} title="Clear encounter" className="flex items-center gap-1 px-2 py-1 rounded text-stone-500 hover:text-stone-300 hover:bg-stone-700/50 text-sm"><Icons.Trash /></button>}
-                  <button onClick={() => setShowAddEnemy(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-red-800/50 hover:bg-red-700/50 text-red-300 text-sm"><Icons.Plus />Add</button>
+          {showEnemies && (
+          <section aria-label="Enemies" className="space-y-4">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="flex items-center gap-4">
+                {isTable && <h2 className="text-lg font-bold text-red-400 flex items-center gap-2"><Icons.Skull />Enemies</h2>}
+                <div className="flex items-center gap-2 text-xs">
+                  <Link href="/encounters" className="text-stone-500 hover:text-stone-300">Manage Encounters →</Link>
+                  {savedEncounters.length > 0 && <>
+                    <span className="text-stone-600">•</span>
+                    <button onClick={() => setShowLoadEncounter(true)} className="text-amber-500 hover:text-amber-400">Load Saved</button>
+                  </>}
+                  {!lairAction && <>
+                    <span className="text-stone-600">•</span>
+                    <button onClick={() => setLairAction({ initiative: 20, notes: '' })} className="text-purple-400 hover:text-purple-300">+ Lair Action</button>
+                  </>}
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-xs">
-                <Link href="/encounters" className="text-stone-500 hover:text-stone-300">Manage Encounters →</Link>
-                {savedEncounters.length > 0 && <>
-                  <span className="text-stone-600">•</span>
-                  <button onClick={() => setShowLoadEncounter(true)} className="text-amber-500 hover:text-amber-400">Load Saved</button>
-                </>}
-                {!lairAction && <>
-                  <span className="text-stone-600">•</span>
-                  <button onClick={() => setLairAction({ initiative: 20, notes: '' })} className="text-purple-400 hover:text-purple-300">+ Lair Action</button>
-                </>}
+              <div className="flex gap-2">
+                {(enemies.length > 0 || lairAction) && <button onClick={clearEncounter} title="Clear encounter" aria-label="Clear encounter" className="flex items-center gap-1 px-2 py-1 rounded text-stone-500 hover:text-stone-300 hover:bg-stone-700/50 text-sm"><Icons.Trash /></button>}
+                <button onClick={() => setShowAddEnemy(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-red-800/50 hover:bg-red-700/50 text-red-300 text-sm"><Icons.Plus />Add</button>
               </div>
             </div>
-            {enemies.map(e => <CharacterCard key={e.id} character={e} isEnemy={true} onUpdate={updateEnemy} onRemove={removeEnemy} />)}
+            {isTable
+              ? enemies.length > 0 && <CombatantTable combatants={enemies} isEnemy onUpdate={updateEnemy} onRemove={removeEnemy} templates={templates || EMPTY_TEMPLATES} />
+              : enemies.length > 0 && (
+                // items-start: enemy cards must NOT stretch (frontend-patterns §2.5)
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
+                  {enemies.map(e => <CharacterCard key={e.id} character={e} isEnemy={true} onUpdate={updateEnemy} onRemove={removeEnemy} />)}
+                </div>
+              )}
             {!enemies.length && !lairAction && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No enemies yet. <Link href="/encounters" className="text-amber-500 hover:text-amber-400">Create encounters</Link> to quickly add groups.</div>}
+          </section>
+          )}
           </div>
           </div>
         </main>

@@ -65,7 +65,9 @@ data-loss bug). Do not "optimize" it away with a `length > 0` check. Test:
 `CharacterCard` (`app/combat/components/CharacterCard/index.jsx`, exported as
 `React.memo(CharacterCard)`) and `InitiativeItem`
 (`app/combat/components/InitiativeItem.jsx`, `export default memo(InitiativeItem)`)
-are memoized. Therefore in `app/combat/page.jsx`:
+are memoized, as are the Table-view rows (`CombatantRow` inside
+`app/combat/components/CombatantTable.jsx`, `React.memo`). Therefore in
+`app/combat/page.jsx`:
 
 - Every function prop passed to them MUST be a stable `useCallback` using
   functional setState. A fresh inline closure compiles and runs fine but
@@ -104,18 +106,35 @@ setEnemies(prev => {
   row on hover). `drag` is OPT-IN: only `InitiativeOrderModal` passes it (and
   supplies `onSelect` for click-to-jump). The main page renders NO
   `InitiativeItem` rows at all — initiative is a full-width `TurnTracker` bar
-  ABOVE the party/enemies grid (§2.5); the full order lives exclusively in the
+  ABOVE the combatant tabs (§2.5); the full order lives exclusively in the
   Manage Order modal. Layout: `main.children[0]` = initiative bar (header +
-  tracker), `main.children[1]` = the `lg:grid-cols-3` grid where Party spans 2
-  columns (cards themselves in a 2-col sub-grid) and Enemies takes the third —
-  the page tests' `getColumns` helper encodes this.
+  tracker), `main.children[1]` = the combatant TABS — a `role="tablist"`
+  (Party & Allies | Enemies | Table, each with a count badge) above the
+  matching `<section aria-label="Party & Allies">` / `<section
+  aria-label="Enemies">`. Party and Enemies tabs show only their own cards,
+  full width in a `md:grid-cols-2 xl:grid-cols-3` grid (enemy grid uses
+  `items-start` — see the no-stretch rule in §2.5); the Table tab shows BOTH
+  sections stacked, each as a `CombatantTable`, with section `<h2>`s (the card
+  tabs omit them — the tab is the title). Hidden sections are unmounted, so
+  the Enemies-section shortcuts (Load Saved, + Lair Action, Clear encounter)
+  exist only on the Enemies/Table tabs. Page state `viewMode` (`'party' |
+  'enemies' | 'table'`, default party) persists per viewer in
+  `localStorage['dm-combat-view-mode']`, read in a mount effect, every access
+  in try/catch (the pre-tabs value `'cards'` falls back to party). Tests find
+  sections via the `getColumns` helper and switch with `showTab(name)`; both
+  combat page test files `localStorage.clear()` in `beforeEach` so the saved
+  tab doesn't leak between tests. `CombatantTable` takes the same
+  `onUpdate`/`onRemove`/`templates` props as the cards and its inline
+  HP/THP/temp-AC edits mirror the card badges' commit rules — keep them in
+  sync if a badge's validation changes. Tests: `test/combat/combatantTable.test.jsx`
+  and the "Party / Enemies / Table tabs" block in `combatPage.test.jsx`.
 - Combatant modals are driven by ONE `activeModal` key (`'delete' | 'actions'
   | 'resources' | 'sheet' | 'inventory' | 'notes' | 'statblock' | 'spells' |
   'druid' | 'sorcerer'`, `null` = closed) rendered by
   `CharacterCard/CardModals.jsx`; the contextual buttons that open them live
   in `CharacterCard/CardActionButtons.jsx` (`onOpen(key)`, each button has an
-  `aria-label` = its tooltip). BOTH the card and the turn tracker's Now card
-  use these two components — add new combatant modals/buttons THERE (not as a
+  `aria-label` = its tooltip). The card, the Table-view rows and the turn
+  tracker's Now card ALL use these two components — add new combatant modals/buttons THERE (not as a
   `showX` boolean, not as a copy in one view). The tracker keeps its own
   `cardModal` `{ id, key }` and renders `CardModals` OUTSIDE its sticky z-10
   bar (a fixed overlay inside that stacking context would sit under the

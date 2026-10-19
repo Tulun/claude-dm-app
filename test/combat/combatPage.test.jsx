@@ -71,12 +71,15 @@ const settle = async () => {
   await flush();
 };
 
-// Layout: main.children[0] is the initiative bar (header + TurnTracker),
-// main.children[1] is the party/enemies grid (party spans 2 columns).
+// Layout: main.children[0] is the initiative bar (header + TurnTracker);
+// below it a tab strip (Party & Allies | Enemies | Table) shows the matching
+// <section>s — Party by default, only the Table tab shows both.
+const showTab = (name) => fireEvent.click(screen.getByRole('tab', { name: new RegExp(`^${name}`) }));
 const getColumns = () => {
   const main = document.querySelector('main');
-  const grid = main.children[1];
-  return { initCol: main.children[0], partyCol: grid.children[0], enemiesCol: grid.children[1] };
+  // (jsdom's selector engine trips on the "&" in an attribute selector)
+  const section = (label) => [...main.querySelectorAll('section')].find(el => el.getAttribute('aria-label') === label) || null;
+  return { initCol: main.children[0], partyCol: section('Party & Allies'), enemiesCol: section('Enemies') };
 };
 
 const postCalls = (fetchMock, url) =>
@@ -84,6 +87,7 @@ const postCalls = (fetchMock, url) =>
 
 beforeEach(() => {
   vi.useFakeTimers();
+  localStorage.clear(); // the selected tab persists per viewer — don't leak it between tests
 });
 
 afterEach(() => {
@@ -100,7 +104,9 @@ describe('CombatPage — loading and layout', () => {
     const { partyCol, enemiesCol } = getColumns();
     expect(within(partyCol).getByText('Theren')).toBeInTheDocument();
     expect(within(partyCol).getByText('Mira')).toBeInTheDocument();
-    expect(within(enemiesCol).getByText('Ogre')).toBeInTheDocument();
+    expect(enemiesCol).toBeNull(); // Party tab is the default
+    showTab('Enemies');
+    expect(within(getColumns().enemiesCol).getByText('Ogre')).toBeInTheDocument();
     // the order (incl. companions) lives in the Manage Order modal;
     // active + inCombat companion joins initiative, benched companion does not
     fireEvent.click(screen.getByText('Manage Order'));
@@ -166,6 +172,7 @@ describe('CombatPage — initiative', () => {
     render(<CombatPage />);
     await settle();
 
+    showTab('Enemies'); // the lair-action shortcut lives in the Enemies section
     fireEvent.click(screen.getByText('+ Lair Action'));
     fireEvent.click(screen.getByText('Manage Order'));
     expect(screen.getByText('Lair Action')).toBeInTheDocument();
@@ -201,9 +208,9 @@ describe('CombatPage — enemies and encounters', () => {
     render(<CombatPage />);
     await settle();
 
+    showTab('Enemies');
     const { enemiesCol } = getColumns();
-    // the trash button is the first button in the enemies header (icon-only)
-    fireEvent.click(within(enemiesCol).getAllByRole('button')[0]);
+    fireEvent.click(within(enemiesCol).getByLabelText('Clear encounter'));
 
     expect(within(enemiesCol).queryByText('Ogre')).not.toBeInTheDocument();
     expect(fetchMock.mock.calls.some(([u, o]) => u === '/api/encounter' && o?.method === 'DELETE')).toBe(true);
@@ -215,6 +222,7 @@ describe('CombatPage — enemies and encounters', () => {
     await settle();
     fetchMock.mockClear();
 
+    showTab('Enemies');
     fireEvent.click(screen.getByText('Load Saved'));
     fireEvent.click(screen.getByText('Goblin Ambush'));
     fireEvent.click(screen.getByText('Add to Combat')); // label because enemies already exist
@@ -233,5 +241,101 @@ describe('CombatPage — enemies and encounters', () => {
     expect(savedState.enemies.map((e) => e.name)).toEqual(['Ogre', 'Goblin 1', 'Goblin 2']);
     expect(savedState.enemies[1].maxHp).toBe(7);
     expect(savedState.enemies[1].currentHp).toBe(7); // spawned at full HP
+  });
+});
+
+describe('CombatPage — Party / Enemies / Table tabs', () => {
+
+  it('defaults to the Party tab and each tab shows only its own cards', async () => {
+    mockFetch();
+    render(<CombatPage />);
+    await settle();
+
+    expect(screen.getByRole('tab', { name: /^Party & Allies/ })).toHaveAttribute('aria-selected', 'true');
+    expect(getColumns().partyCol).not.toBeNull();
+    expect(getColumns().enemiesCol).toBeNull();
+    expect(screen.queryByRole('table')).not.toBeInTheDocument();
+
+    showTab('Enemies');
+    expect(screen.getByRole('tab', { name: /^Enemies/ })).toHaveAttribute('aria-selected', 'true');
+    expect(getColumns().partyCol).toBeNull();
+    expect(within(getColumns().enemiesCol).getByText('Ogre')).toBeInTheDocument();
+    expect(screen.queryByRole('table')).not.toBeInTheDocument();
+    expect(localStorage.getItem('dm-combat-view-mode')).toBe('enemies');
+  });
+
+  it('tab labels carry party and enemy counts', async () => {
+    mockFetch();
+    render(<CombatPage />);
+    await settle();
+    expect(screen.getByRole('tab', { name: /^Party & Allies/ })).toHaveTextContent('Party & Allies2');
+    expect(screen.getByRole('tab', { name: /^Enemies/ })).toHaveTextContent('Enemies1');
+  });
+
+  it('the Table tab shows party and enemy tables together', async () => {
+    mockFetch();
+    render(<CombatPage />);
+    await settle();
+
+    showTab('Table');
+    const { partyCol, enemiesCol } = getColumns();
+    const partyTable = within(partyCol).getByRole('table', { name: 'Party table' });
+    expect(within(partyTable).getByText('Theren')).toBeInTheDocument();
+    expect(within(partyTable).getByText('Mira')).toBeInTheDocument();
+    const enemyTable = within(enemiesCol).getByRole('table', { name: 'Enemies table' });
+    expect(within(enemyTable).getByText('Ogre')).toBeInTheDocument();
+    expect(localStorage.getItem('dm-combat-view-mode')).toBe('table');
+
+    showTab('Party & Allies');
+    expect(screen.queryByRole('table')).not.toBeInTheDocument();
+    expect(localStorage.getItem('dm-combat-view-mode')).toBe('party');
+  });
+
+  it('restores the saved tab on load without echoing a save', async () => {
+    localStorage.setItem('dm-combat-view-mode', 'table');
+    const fetchMock = mockFetch();
+    render(<CombatPage />);
+    await settle();
+
+    expect(screen.getByRole('tab', { name: /^Table/ })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('table', { name: 'Party table' })).toBeInTheDocument();
+    expect(postCalls(fetchMock, '/api/party')).toHaveLength(0);
+    expect(postCalls(fetchMock, '/api/encounter')).toHaveLength(0);
+  });
+
+  it('the legacy "cards" value falls back to the Party tab', async () => {
+    localStorage.setItem('dm-combat-view-mode', 'cards');
+    mockFetch();
+    render(<CombatPage />);
+    await settle();
+    expect(screen.getByRole('tab', { name: /^Party & Allies/ })).toHaveAttribute('aria-selected', 'true');
+  });
+
+  it('an HP edit in the table auto-saves the party like a card edit', async () => {
+    const fetchMock = mockFetch();
+    render(<CombatPage />);
+    await settle();
+    showTab('Table');
+    fetchMock.mockClear();
+
+    fireEvent.click(screen.getByLabelText('Current HP for Theren'));
+    const input = screen.getByLabelText('Current HP for Theren');
+    fireEvent.change(input, { target: { value: '10' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    await act(async () => { vi.advanceTimersByTime(1100); });
+    await flush();
+
+    const saves = postCalls(fetchMock, '/api/party');
+    expect(saves).toHaveLength(1);
+    expect(JSON.parse(saves[0][1].body).find((p) => p.id === 'p1').currentHp).toBe(10);
+  });
+
+  it('falls back to the Party tab when localStorage throws', async () => {
+    const spy = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('blocked'); });
+    mockFetch();
+    render(<CombatPage />);
+    await settle();
+    expect(screen.getByRole('tab', { name: /^Party & Allies/ })).toHaveAttribute('aria-selected', 'true');
+    spy.mockRestore();
   });
 });

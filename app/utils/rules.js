@@ -83,3 +83,19 @@ export const getSpellAttackBonus = (character) => {
   const bonus = getProfBonus(character) + getModNum(spellStatScore(character));
   return formatMod(bonus);
 };
+
+// Initiative order comparator (for Array.prototype.sort, which is stable).
+// Higher initiative first; ties go to the higher DEX score; a lair action
+// loses every tie (5e: "initiative count 20, losing initiative ties").
+// Combatants with no DEX sort after those with one; anything still tied keeps
+// its current relative order.
+const initRank = (value) => {
+  const n = parseFloat(value);
+  return Number.isNaN(n) ? -Infinity : n;
+};
+const desc = (a, b) => (a === b ? 0 : a > b ? -1 : 1);
+
+export const compareInitiative = (a, b) =>
+  desc(initRank(a.initiative), initRank(b.initiative)) ||
+  desc(a.isLairAction ? 0 : 1, b.isLairAction ? 0 : 1) ||
+  desc(initRank(a.dex), initRank(b.dex));

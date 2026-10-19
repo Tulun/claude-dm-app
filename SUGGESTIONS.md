@@ -158,6 +158,19 @@ context costs:
 
 ## Completed log
 
+- [x] /combat combatant tabs: Party & Allies (cards) | Enemies (cards) | Table.
+  Card tabs use the full width (up to 3 columns). The Table tab renders party
+  and enemies as compact rows (`app/combat/components/CombatantTable.jsx`) —
+  name/class or CR, Init, AC (click = temp AC), HP + bar (click = current HP),
+  THP, spell DC (stat-block DC for enemies), speed, six abilities with mods,
+  and the shared `CardActionButtons`/`CardModals`. Selected tab is per-viewer
+  localStorage (`dm-combat-view-mode`) — Oct 2026. The table is expected to
+  keep evolving (user wants to iterate on it).
+  Quirk kept for parity with the card: an ability score of `0` displays as
+  10/+0 (`character[key] || 10`), unlike `getModNum`'s real-0 rule.
+- [x] Sort by Init breaks ties: higher DEX score wins, the lair action loses
+  ties (5e RAW), remaining ties keep their order. Comparator is
+  `compareInitiative` in `app/utils/rules.js` (see rules-math skill).
 - [x] Turn tracker cleanup: the bar shows only the next combatant in an
   "Up Next" card, with a "Full Order" header button for the modal (chips removed); living
   legendary enemies get clickable budget pips on the bar (refresh at the start
