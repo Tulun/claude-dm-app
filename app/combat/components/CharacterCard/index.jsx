@@ -9,6 +9,9 @@ import CardActionButtons from './CardActionButtons';
 import CardActionMenu from './CardActionMenu';
 import CardModals from './CardModals';
 import ConditionChips from '../ConditionChips';
+import PartyGlance from './PartyGlance';
+import { getSaveBonus } from '../../../character/components/constants';
+import { formatMod } from '../../../utils/rules';
 import { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, formatClassList, getActiveWildShapeForm, getCardBaseAC, getCardDisplayAC } from './utils';
 
 const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onToggleExpand, showResources, templates = [], stretch = false }) => {
@@ -322,6 +325,10 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
         <div className="mt-2">
           <ConditionChips character={character} onUpdate={onUpdate} onOpen={setActiveModal} />
         </div>
+        {/* Party: resource pips + passives / speed / advantages */}
+        {!isEnemy && showResources && (
+          <PartyGlance character={character} wildShapeForm={activeWildShapeForm} onUpdate={onUpdate} onOpen={setActiveModal} />
+        )}
       </div>
 
       {/* Quick stats bar - collapsed (mt-auto pins it to the card bottom
@@ -331,20 +338,39 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
           {['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'].map(label => {
             const key = label.toLowerCase();
             
-            // Check if wild shape is active and get the active form
-            const wildShapeForm = character.wildShapeActive 
-              ? (character.wildShapeForms || []).find(f => f.id === character.wildShapeFormId)
-              : null;
-            
             // Use beast stats for STR/DEX/CON when wild shaped
-            const usesBeastStat = wildShapeForm && ['str', 'dex', 'con'].includes(key);
-            const statValue = usesBeastStat ? (wildShapeForm[key] || 10) : (character[key] || 10);
-            
+            const usesBeastStat = activeWildShapeForm && ['str', 'dex', 'con'].includes(key);
+            const statValue = usesBeastStat ? (activeWildShapeForm[key] || 10) : (character[key] || 10);
+            const scoreClass = usesBeastStat ? 'text-lime-500' : 'text-stone-500';
+
+            // Enemies: score + modifier, as before
+            if (isEnemy) {
+              return (
+                <div key={label} className="rounded p-1 bg-stone-800/50">
+                  <div className="text-[10px] text-stone-500">{label}</div>
+                  <div className="text-sm font-bold">{statValue}</div>
+                  <div className="text-xs text-stone-400">{getMod(statValue)}</div>
+                </div>
+              );
+            }
+
+            // Party: the modifier leads (it's what gets rolled), the score is
+            // small beside the label, and the save line marks proficiency.
+            // Wild shape keeps the druid's save proficiencies on beast scores.
+            const saveProf = (character.saveProficiencies?.[key] || 0) >= 1;
+            const save = getSaveBonus({ ...character, [key]: statValue }, key);
             return (
-              <div key={label} className={`rounded p-1 ${usesBeastStat ? 'bg-lime-900/50' : 'bg-stone-800/50'}`}>
-                <div className={`text-[10px] ${usesBeastStat ? 'text-lime-500' : 'text-stone-500'}`}>{label}</div>
-                <div className={`text-sm font-bold ${usesBeastStat ? 'text-lime-400' : ''}`}>{statValue}</div>
-                <div className={`text-xs ${usesBeastStat ? 'text-lime-400/70' : 'text-stone-400'}`}>{getMod(statValue)}</div>
+              <div
+                key={label}
+                className={`rounded p-1 ${usesBeastStat ? 'bg-lime-900/50' : 'bg-stone-800/50'} ${saveProf ? 'ring-1 ring-emerald-600/50' : ''}`}
+                title={`${label} ${statValue} · save ${formatMod(save)}${saveProf ? ' (proficient)' : ''}`}
+                data-testid={`ability-${key}`}
+              >
+                <div className="text-[10px] text-stone-500">{label} <span className={`font-mono ${scoreClass}`}>{statValue}</span></div>
+                <div className={`text-base font-bold leading-tight ${usesBeastStat ? 'text-lime-400' : ''}`}>{getMod(statValue)}</div>
+                <div className={`text-[10px] ${saveProf ? 'text-emerald-400 font-semibold' : 'text-stone-500'}`} data-testid={`save-${key}`}>
+                  save {formatMod(save)}
+                </div>
               </div>
             );
           })}

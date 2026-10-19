@@ -97,6 +97,17 @@ context costs:
 
 ## 2. Rules-math consolidation leftovers
 
+- [ ] **Combat CharacterSheetModal has its own skill/save/passive math**
+  (`app/combat/components/CharacterCard/CharacterSheetModal.jsx`): ignores
+  background skill profs, Skilled feat, Primal/Divine Order bonuses and Jack of
+  All Trades, and honours a stored `profBonus`. The party card's passives use
+  the sheet's `getSkillBonus` from `app/character/components/constants.js`, so
+  e.g. a Bard's passives can differ between the card and the modal. Fix: switch
+  the modal to `getSkillBonus` / `getSaveBonus`. (Also: QuickResourcesModal and
+  SorcererFeaturesModal compute spell DC inline instead of `getSpellSaveDC`.)
+  Side note: the combat bundle now imports that 100 KB constants module — if
+  bundle size matters, lift the skill helpers into `app/utils/`.
+
 
 ## 3. Performance / bundle
 
@@ -153,15 +164,8 @@ context costs:
     hint. Actual file moves should happen in Obsidian, by the user.
   - Embedded images (`![[map.png]]`) render as placeholders; could serve them via the
     vault route with the same traversal guard.
-- [ ] **Party card at-a-glance follow-ups** (header ⋯ menu shipped Oct 2026):
-  - Resource pips from `character.resources` (spell slots, Wild Shape, Bardic
-    Inspiration, Sorcery Points) on the card, click to spend; a pip could then
-    open its feature modal (Wild Shape / Sorcerer) instead of the menu.
-  - Passive Perception / Insight / Investigation + speed line (from
-    `skillProficiencies`, 1 = prof, 2 = expertise, via rules.js); show
-    `advantages` as chips.
-  - Ability row: modifier big / score small, save bonuses with proficient saves
-    highlighted.
+- [ ] **Party card at-a-glance follow-ups** (⋯ menu, resource pips, passives
+  and save row shipped Oct 2026):
   - Fold THP into the HP pill so AC / HP / DC fit one row; thin HP bar
     (bloodied colouring); shrink "+ Condition" to a small "+".
 
@@ -169,6 +173,10 @@ context costs:
 
 ## Completed log
 
+- [x] Party combat card at-a-glance (`PartyGlance.jsx`): clickable resource
+  pips (spell slots first; options pools open the Resources modal), passive
+  Perception/Insight/Investigation, speed, advantages chips; ability row leads
+  with the modifier and shows save bonuses with proficiency marked — Oct 2026.
 - [x] Party combat card header: the 6–8 icon buttons collapsed into one ⋯
   menu (`CardActionMenu`, fed by the shared `getCardActions` list); the name
   opens the character sheet, the Spell DC chip opens the spellbook, active

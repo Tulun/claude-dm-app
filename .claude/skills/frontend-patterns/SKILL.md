@@ -160,7 +160,21 @@ setEnemies(prev => {
   flame beside the name (its lit header icon is now in the menu). Add new
   combatant modals/actions to `getCardActions` + CardModals (not as a
   `showX` boolean, not as a copy in one view). Tests:
-  `test/combat/cardActionMenu.test.jsx`. The tracker keeps its own
+  `test/combat/cardActionMenu.test.jsx`.
+- **Party card at-a-glance block** (`CharacterCard/PartyGlance.jsx`, party
+  cards only, gated on the `showResources` prop the party grid passes):
+  resource pips from `getResourcePools(character)` — spell slots first
+  (`resources` named "Nth Level Spell Slot(s)" OR the legacy
+  `spellSlots.levelN` map), then the rest in `resources` order; a lit pip
+  spends one, an empty pip restores one, pools over 8 show `n/max` with −/+,
+  and a pool with `options` (Spirit Totem) opens the Resources modal instead
+  of spending (the picker applies side effects like Bear Spirit temp HP).
+  Below it: passive Perception / Insight / Investigation, speed (wild-shape
+  form's when shaped) and `advantages` chips. The party ability row leads
+  with the modifier, shows the score beside the label and a `save ±N` line
+  (proficient saves emerald + ringed; wild shape uses beast STR/DEX/CON with
+  the druid's proficiencies). Enemy rows are unchanged. Skill/save math: see
+  **rules-math**. Tests: `test/combat/partyGlance.test.jsx`. The tracker keeps its own
   `cardModal` `{ id, key }` and renders `CardModals` OUTSIDE its sticky z-10
   bar (a fixed overlay inside that stacking context would sit under the
   navbar). Companions and the lair action get no card buttons.

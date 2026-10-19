@@ -50,6 +50,20 @@ one, or rendering the number one where "+2" is expected, are both silent bugs.
 When writing new code, prefer importing `getModNum` / `getMod` (string) directly
 from `app/utils/rules.js` so intent is unambiguous.
 
+## Skills, saves, passives — `app/character/components/constants.js`
+
+`getSkillBonus(character, skill)` (skill = a `SKILLS` entry `{ name, stat }`)
+and `getSaveBonus(character, stat)` → numbers. `getSkillBonus` is the full
+version: `getSkillProficiency` (manual `skillProficiencies` 1/2, background
+skills, Skilled feat), feature bonuses (Primal Order / Divine Order) and Jack
+of All Trades. Passive = `10 + getSkillBonus(...)`. Used by the sheet's
+`Senses.jsx` and the combat party card (`PartyGlance.jsx`, ability-row save
+line) — use these, not a new local copy. Known drift: the combat
+`CharacterSheetModal.jsx` still has its own simpler skill/save/passive math
+(no background profs, feature bonuses or Jack of All Trades, and it honours a
+stored `character.profBonus`), so its numbers can differ from the card's —
+tracked in SUGGESTIONS.md §2.
+
 ## AC — `app/utils/acCalculation.js`
 
 - `getEquipmentAC(character, { includeTempAC = true, parseArmorNames = true })`
