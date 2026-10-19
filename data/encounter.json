@@ -191,7 +191,11 @@
       "notes": "Natural Armor. 3 Legendary Actions/round.",
       "source": "mm",
       "currentHp": 297,
-      "initiative": 5
+      "initiative": 5,
+      "abilityUses": {
+        "Breath Weapons (Recharge 5-6)": 1,
+        "Legendary Resistance (3/Day)": 0
+      }
     }
   ],
   "lairAction": null,
@@ -214,7 +218,7 @@
   "reactionsUsed": {},
   "turnUsage": {
     "id": "enemy-1791137377523-0w4wx79mb",
-    "action": false,
+    "action": true,
     "bonus": false
   }
 }

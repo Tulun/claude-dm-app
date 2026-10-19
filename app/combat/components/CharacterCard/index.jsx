@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { useState } from 'react';
-import Link from 'next/link';
 import Icons from '../../../components/Icons';
 import { EditableField, HpBar, Tooltip } from '../../../components/ui';
 import { parseSpellcasting } from './spellcastingParser';
 import CardActionButtons from './CardActionButtons';
+import CardActionMenu from './CardActionMenu';
 import CardModals from './CardModals';
 import ConditionChips from '../ConditionChips';
 import { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, formatClassList, getActiveWildShapeForm, getCardBaseAC, getCardDisplayAC } from './utils';
@@ -67,11 +67,33 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
             </div>
             <div>
               <h3 className={`font-bold text-lg ${isDead ? 'line-through text-stone-500' : ''}`}>
-                {character.name}
+                {/* Party: the name opens the character sheet (its header
+                    button moved into the ⋯ menu) */}
+                {isEnemy ? character.name : (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setActiveModal('sheet'); }}
+                    className="text-left hover:text-emerald-300 transition-colors"
+                    title="Open character sheet"
+                  >
+                    {character.name}
+                  </button>
+                )}
                 {activeWildShapeForm && (
                   <span className="ml-2 text-sm font-normal text-lime-400">
                     🐾 {activeWildShapeForm.name}
                   </span>
+                )}
+                {/* Active Innate Sorcery lost its lit header icon to the menu,
+                    so flag it beside the name */}
+                {!isEnemy && character.innateSorcery && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setActiveModal('sorcerer'); }}
+                    className="ml-2 align-middle text-purple-400 hover:text-purple-300"
+                    title="Innate Sorcery active"
+                    aria-label="Innate Sorcery active"
+                  >
+                    <Icons.Flame className="w-4 h-4 inline" />
+                  </button>
                 )}
               </h3>
               <p className="text-xs text-stone-400">
@@ -82,7 +104,16 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
           {/* p-1.5 (vs the buttons' default p-2) keeps names from wrapping in
               the 3-column card grid */}
           <div className="flex items-center gap-0.5 [&_button]:p-1.5 [&_a]:p-1.5">
-            <CardActionButtons character={character} isEnemy={isEnemy} spellcastingInfo={spellcastingInfo} onOpen={setActiveModal} />
+            {isEnemy ? (
+              <CardActionButtons character={character} isEnemy spellcastingInfo={spellcastingInfo} onOpen={setActiveModal} />
+            ) : (
+              <CardActionMenu
+                character={character}
+                spellcastingInfo={spellcastingInfo}
+                onOpen={setActiveModal}
+                editHref={`/character?id=${character.id}&type=${characterType}`}
+              />
+            )}
             {isEnemy && onRemove && (
               <Tooltip text="Remove from Combat">
                 <button 
@@ -93,8 +124,8 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                 </button>
               </Tooltip>
             )}
-            {/* Edit link for party, Expand/Collapse for enemies */}
-            {isEnemy ? (
+            {/* Expand/Collapse for enemies (party Edit lives in the ⋯ menu) */}
+            {isEnemy && (
               onToggleExpand && (
                 <Tooltip text={expanded ? "Collapse" : "Expand"}>
                   <button 
@@ -109,16 +140,6 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                   </button>
                 </Tooltip>
               )
-            ) : (
-              <Tooltip text="Edit Character">
-                <Link 
-                  href={`/character?id=${character.id}&type=${characterType}`}
-                  className="p-2 rounded-lg transition-colors hover:bg-emerald-900/30 text-stone-400 hover:text-emerald-400 inline-flex"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Icons.Edit />
-                </Link>
-              </Tooltip>
             )}
           </div>
         </div>
@@ -268,13 +289,24 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               </button>
             )}
           </div>
-          {spellDC && (
+          {/* Spell DC — opens the spellbook when there is one */}
+          {spellDC && (!isEnemy && character.spells?.length > 0 ? (
+            <button
+              onClick={(e) => { e.stopPropagation(); setActiveModal('spells'); }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-purple-900/30 text-purple-400 hover:bg-purple-900/50 transition-colors"
+              title="Open spellbook"
+            >
+              <Icons.Sparkles />
+              <span className="font-mono font-medium">{spellDC}</span>
+              <span className="text-xs text-purple-500">DC</span>
+            </button>
+          ) : (
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-purple-900/30 text-purple-400">
               <Icons.Sparkles />
               <span className="font-mono font-medium">{spellDC}</span>
               <span className="text-xs text-purple-500">DC</span>
             </div>
-          )}
+          ))}
           {/* Combat Notes indicator */}
           {character.combatNotes && (
             <div 

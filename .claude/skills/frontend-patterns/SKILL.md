@@ -146,11 +146,21 @@ setEnemies(prev => {
 - Combatant modals are driven by ONE `activeModal` key (`'delete' | 'actions'
   | 'resources' | 'sheet' | 'inventory' | 'notes' | 'statblock' | 'spells' |
   'druid' | 'sorcerer' | 'conditions'`, `null` = closed) rendered by
-  `CharacterCard/CardModals.jsx`; the contextual buttons that open them live
-  in `CharacterCard/CardActionButtons.jsx` (`onOpen(key)`, each button has an
-  `aria-label` = its tooltip). The card, the Table-view rows and the turn
-  tracker's Now card ALL use these two components — add new combatant modals/buttons THERE (not as a
-  `showX` boolean, not as a copy in one view). The tracker keeps its own
+  `CharacterCard/CardModals.jsx`; the contextual actions that open them are
+  ONE descriptor list, `getCardActions(character, isEnemy, spellcastingInfo)`
+  in `CharacterCard/CardActionButtons.jsx`, rendered two ways:
+  `CardActionButtons` (icon row, `onOpen(key)`, each button's `aria-label` =
+  its tooltip) on the Table-view rows, the turn tracker's Now card and ENEMY
+  cards; and `CardActionMenu` (`CharacterCard/CardActionMenu.jsx`) — the
+  PARTY card's single ⋯ button (`aria-label` "More actions for <name>",
+  items are `role="menuitem"`, plus an Edit Character link). The menu portals
+  to <body> with fixed positioning because the card is `overflow-hidden`.
+  On party cards the name opens the sheet, the Spell DC chip opens the
+  spellbook (when there are spells), and an active Innate Sorcery shows a
+  flame beside the name (its lit header icon is now in the menu). Add new
+  combatant modals/actions to `getCardActions` + CardModals (not as a
+  `showX` boolean, not as a copy in one view). Tests:
+  `test/combat/cardActionMenu.test.jsx`. The tracker keeps its own
   `cardModal` `{ id, key }` and renders `CardModals` OUTSIDE its sticky z-10
   bar (a fixed overlay inside that stacking context would sit under the
   navbar). Companions and the lair action get no card buttons.
@@ -263,9 +273,12 @@ Three rules keep the pointer honest:
   economy toggles) and lists
   actions / bonus actions / reactions as chips (click → text + Use, which
   spends the matching economy slot via `onSpendSlot`), and a Limited row:
-  X/Day, recharge (with a d6 Roll) and per-rest abilities stored in
-  `enemy.abilityUses[name]` — each is ONE toggle button (click spends a use,
-  greys out when none left, click again restores; X/Day shows "2/3"), plus spell slots / per-day spells via the shared
+  X/Day, recharge and per-rest abilities stored in
+  `enemy.abilityUses[name]` — each is a label + one `Pips` circle per use
+  (same component as spell slots; recharge = a single pip, no dice roll —
+  the DM rolls at the table and clicks the spent pip, or the selected
+  ability's Recharge button, to restore; ability chips never grey out —
+  the pips show what's spent), plus spell slots / per-day spells via the shared
   `parseSpellcasting` and the card's existing `spellSlots<level>Used` /
   `perDay<N>Used` fields. Parsing lives in `app/combat/monsterAbilities.js`.
 - **Party cards stretch; enemy cards must NOT.** `CharacterCard` takes a

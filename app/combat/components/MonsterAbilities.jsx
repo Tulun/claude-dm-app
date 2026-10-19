@@ -32,13 +32,12 @@ const Pips = ({ label, total, used, onToggle }) => (
  * What the current monster has on hand: its actions / bonus actions /
  * reactions as chips (click one for its text and a Use button that spends the
  * matching economy slot), plus a tracker for everything limited-use —
- * X/Day and recharge abilities (with a d6 recharge roll), spell slots and
+ * X/Day, recharge and per-rest abilities (as pips), spell slots and
  * per-day spells. Usage is stored on the enemy (see monsterAbilities.js), so
  * the card's Quick Actions modal shows the same spell-slot counts.
  */
 export default function MonsterAbilities({ creature, usage, reactionUsed, onUpdateEnemy, onSpendSlot }) {
   const [selected, setSelected] = useState(null); // `${section}:${name}`
-  const [rolls, setRolls] = useState({}); // last recharge roll per ability name
 
   const abilities = useMemo(() => getMonsterAbilities(creature), [creature]);
   const spells = useMemo(() => parseSpellcasting(creature), [creature]);
@@ -65,12 +64,6 @@ export default function MonsterAbilities({ creature, usage, reactionUsed, onUpda
     if (slot && !slotSpent(slot)) onSpendSlot(slot);
   };
 
-  const rollRecharge = (a) => {
-    const roll = Math.floor(Math.random() * 6) + 1;
-    setRolls(prev => ({ ...prev, [a.name]: roll }));
-    if (roll >= a.usage.min) setUses(a.name, 0);
-  };
-
   const selectedAbility = selected
     ? [...GROUPS.flatMap(g => abilities[g.key]), ...abilities.limitedTraits].find(a => `${a.section}:${a.name}` === selected)
     : null;
@@ -83,7 +76,6 @@ export default function MonsterAbilities({ creature, usage, reactionUsed, onUpda
             <span className="text-[10px] font-bold uppercase tracking-widest text-stone-500 mr-0.5">{g.label}</span>
             {abilities[g.key].map(a => {
               const id = `${a.section}:${a.name}`;
-              const exhausted = a.usage && getAbilityUsed(creature, a.name) >= a.usage.max;
               return (
                 <button
                   key={id}
@@ -91,7 +83,7 @@ export default function MonsterAbilities({ creature, usage, reactionUsed, onUpda
                   title={a.description || a.name}
                   className={`px-2 py-0.5 rounded border text-xs transition-colors ${g.chip} ${
                     selected === id ? 'ring-1 ring-amber-400' : 'hover:border-amber-500/70'
-                  } ${exhausted ? 'opacity-40 line-through' : ''}`}
+                  }`}
                 >
                   {abilityLabel(a.name)}
                 </button>
@@ -109,6 +101,17 @@ export default function MonsterAbilities({ creature, usage, reactionUsed, onUpda
           {(() => {
             const slot = ECONOMY_BY_SECTION[selectedAbility.section];
             const exhausted = selectedAbility.usage && getAbilityUsed(creature, selectedAbility.name) >= selectedAbility.usage.max;
+            // A spent recharge ability offers Recharge (the DM rolled it at
+            // the table); other spent uses (X/Day) stay disabled.
+            const canRecharge = exhausted && selectedAbility.usage.kind === 'recharge';
+            if (canRecharge) return (
+              <button
+                onClick={() => setUses(selectedAbility.name, 0)}
+                className="shrink-0 px-2.5 py-1 rounded bg-purple-700 hover:bg-purple-600 text-white font-medium"
+              >
+                Recharge
+              </button>
+            );
             return (
               <button
                 onClick={() => spendAbility(selectedAbility)}
@@ -127,43 +130,15 @@ export default function MonsterAbilities({ creature, usage, reactionUsed, onUpda
           <span className="text-[10px] font-bold uppercase tracking-widest text-purple-400">Limited</span>
           {limited.map(a => {
             const used = getAbilityUsed(creature, a.name);
-            const spent = used >= a.usage.max;
+            const label = abilityLabel(a.name);
             return (
               <span key={`${a.section}:${a.name}`} className="flex items-center gap-1.5 text-xs">
-                {/* The ability itself is the toggle: each click spends a use,
-                    greying out once none are left; clicking a spent one
-                    restores it. */}
-                <button
-                  onClick={() => setUses(a.name, spent ? 0 : used + 1)}
-                  aria-pressed={spent}
-                  title={spent ? `${abilityLabel(a.name)} spent — click to restore` : `Use ${abilityLabel(a.name)}`}
-                  className={`px-2 py-0.5 rounded border transition-colors ${
-                    spent
-                      ? 'border-stone-700 bg-stone-800/80 text-stone-500 line-through'
-                      : 'border-purple-700/60 bg-purple-950/40 text-purple-200 hover:border-purple-400'
-                  }`}
-                >
-                  {abilityLabel(a.name)}
-                  {a.usage.max > 1 && <span className="ml-1 tabular-nums opacity-70">{a.usage.max - used}/{a.usage.max}</span>}
-                </button>
+                <span className="text-purple-200">{label}</span>
+                {/* One pip per use (recharge abilities get a single pip:
+                    filled = ready, grey = spent until the DM restores it). */}
+                <Pips label={label} total={a.usage.max} used={used} onToggle={(i) => setUses(a.name, toggledUsed(used, i))} />
                 {a.usage.kind === 'recharge' && (
-                  <>
-                    <span className="text-stone-500">{a.usage.min === 6 ? '6' : `${a.usage.min}–6`}</span>
-                    {spent && (
-                      <button
-                        onClick={() => rollRecharge(a)}
-                        title={`Roll a d6 — recharges on ${a.usage.min}+`}
-                        className="px-1.5 py-0.5 rounded border border-purple-700/60 text-purple-300 hover:border-purple-400"
-                      >
-                        Roll
-                      </button>
-                    )}
-                    {rolls[a.name] != null && (
-                      <span className={rolls[a.name] >= a.usage.min ? 'text-emerald-400' : 'text-stone-500'}>
-                        rolled {rolls[a.name]}
-                      </span>
-                    )}
-                  </>
+                  <span className="text-stone-500">Recharge {a.usage.min === 6 ? '6' : `${a.usage.min}+`}</span>
                 )}
                 {a.usage.kind === 'rest' && <span className="text-stone-500">/rest</span>}
               </span>

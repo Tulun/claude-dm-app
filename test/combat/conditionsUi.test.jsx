@@ -123,7 +123,9 @@ describe('combat notes', () => {
   it('party members get a Combat Notes button and the modal is free text only', () => {
     const spy = vi.fn();
     render(<Harness initial={hero} isEnemy={false} spy={spy} />);
-    fireEvent.click(screen.getByLabelText('Combat Notes'));
+    // party cards keep Combat Notes in the ⋯ menu
+    fireEvent.click(screen.getByLabelText('More actions for Theren'));
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Combat Notes' }));
     expect(screen.queryByText('Quick add:')).not.toBeInTheDocument();
     const box = screen.getByRole('textbox');
     fireEvent.change(box, { target: { value: '  Hiding behind the pillar  ' } });

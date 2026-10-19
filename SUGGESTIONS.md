@@ -153,11 +153,27 @@ context costs:
     hint. Actual file moves should happen in Obsidian, by the user.
   - Embedded images (`![[map.png]]`) render as placeholders; could serve them via the
     vault route with the same traversal guard.
+- [ ] **Party card at-a-glance follow-ups** (header ⋯ menu shipped Oct 2026):
+  - Resource pips from `character.resources` (spell slots, Wild Shape, Bardic
+    Inspiration, Sorcery Points) on the card, click to spend; a pip could then
+    open its feature modal (Wild Shape / Sorcerer) instead of the menu.
+  - Passive Perception / Insight / Investigation + speed line (from
+    `skillProficiencies`, 1 = prof, 2 = expertise, via rules.js); show
+    `advantages` as chips.
+  - Ability row: modifier big / score small, save bonuses with proficient saves
+    highlighted.
+  - Fold THP into the HP pill so AC / HP / DC fit one row; thin HP bar
+    (bloodied colouring); shrink "+ Condition" to a small "+".
 
 ---
 
 ## Completed log
 
+- [x] Party combat card header: the 6–8 icon buttons collapsed into one ⋯
+  menu (`CardActionMenu`, fed by the shared `getCardActions` list); the name
+  opens the character sheet, the Spell DC chip opens the spellbook, active
+  Innate Sorcery shows a flame by the name. Enemy cards, Table rows and the
+  Now card keep the icon row — Oct 2026.
 - [x] /combat Enemies encounter bar: shows the loaded saved encounter's name
   (`loadedEncounter` in the active encounter), real bordered buttons for Edit
   Encounter (deep link `/encounters?edit=<id>&from=combat` → editor with
@@ -222,6 +238,9 @@ context costs:
   card fields). Tests: `turnTracker.test.jsx`, `monsterAbilities.test.js` —
   October 2026. Follow-up: Up Next moved into the header row; movement is a
   typed "Moved" field plus a Dash toggle (+speed only; step buttons removed).
+  Follow-up: limited uses render as pips like spell slots (Legendary
+  Resistance = 3 circles); recharge abilities get one pip and the d6 Roll
+  button was removed. Temp HP chip icon is now an outlined heart + plus.
 - [x] Escape closes modals app-wide (shared `Modal`, topmost only — stacked
   modals peel one per press). The combat card's contextual buttons + modals
   were extracted to `CharacterCard/CardActionButtons.jsx` / `CardModals.jsx`

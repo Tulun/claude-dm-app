@@ -441,7 +441,6 @@ describe('CombatPage — turn tracker', () => {
 
   it('lists a monster\'s abilities on its turn and tracks limited uses', async () => {
     const fetchMock = mockFetch();
-    vi.spyOn(Math, 'random').mockReturnValue(0.99); // d6 → 6
     render(<CombatPage />);
     await settle();
     await startCombat();
@@ -460,7 +459,9 @@ describe('CombatPage — turn tracker', () => {
     expect(within(tracker()).getByText('Parry')).toBeInTheDocument();
     // passive traits are not listed; limited-use traits are tracked
     expect(within(tracker()).queryByText('Keen Smell')).not.toBeInTheDocument();
-    expect(within(tracker()).getByTitle('Use Legendary Resistance')).toHaveTextContent('3/3');
+    // limited uses are pips like spell slots; a recharge ability gets one
+    expect(within(tracker()).getAllByTitle(/^Legendary Resistance: use/)).toHaveLength(3);
+    expect(within(tracker()).getAllByTitle(/^Rock Throw: use/)).toHaveLength(1);
     // spell slots parsed from the stat block
     expect(within(tracker()).getAllByTitle(/^1st-level slots: use/)).toHaveLength(2);
 
@@ -471,12 +472,16 @@ describe('CombatPage — turn tracker', () => {
     click(within(tracker()).getByText('Use (Action)'));
     await flush();
     expect(within(economy()).getByText('Action')).toHaveAttribute('aria-pressed', 'true');
-    expect(within(tracker()).getByText('Spent')).toBeDisabled();
+    // a spent recharge ability offers Recharge instead of a disabled Spent
+    expect(within(tracker()).queryByText('Spent')).not.toBeInTheDocument();
+    expect(within(tracker()).getByText('Recharge')).not.toBeDisabled();
 
-    // recharge roll: 6 → back up
-    click(within(tracker()).getByText('Roll'));
+    expect(within(tracker()).getByTitle('Rock Throw: use 1 (spent)')).toHaveAttribute('aria-pressed', 'true');
+    expect(within(tracker()).queryByText('Roll')).not.toBeInTheDocument();
+
+    // recharged at the table: the Recharge button restores it
+    click(within(tracker()).getByText('Recharge'));
     await flush();
-    expect(within(tracker()).getByText('rolled 6')).toBeInTheDocument();
     expect(within(tracker()).getByText('Use (Action)')).not.toBeDisabled();
 
     // a reaction ability spends the reaction
@@ -487,7 +492,7 @@ describe('CombatPage — turn tracker', () => {
     expect(within(economy()).getByText('Reaction')).toHaveAttribute('aria-pressed', 'true');
 
     // limited-use pips persist on the enemy
-    click(within(tracker()).getByTitle('Use Legendary Resistance'));
+    click(within(tracker()).getByTitle('Legendary Resistance: use 1'));
     click(within(tracker()).getAllByTitle(/^1st-level slots: use/)[0]);
     fetchMock.mockClear();
     await act(async () => { vi.advanceTimersByTime(1100); });
@@ -574,7 +579,7 @@ describe('CombatPage — turn tracker', () => {
     expect(reactionButton(await openOrderModal(), 'Theren')).toHaveAttribute('aria-pressed', 'true');
   });
 
-  it('a limited ability greys out once its uses are spent and restores on click', async () => {
+  it('limited abilities are pips: click to spend, click a spent pip to restore', async () => {
     mockFetch();
     render(<CombatPage />);
     await settle();
@@ -582,27 +587,33 @@ describe('CombatPage — turn tracker', () => {
     click(screen.getByText('← Back')); // Ogre
     await flush();
 
-    // single-use recharge ability: one click greys it out
-    const rock = () => within(tracker()).getByTitle(/Rock Throw/, { selector: '[aria-pressed]' });
+    // single-use recharge ability: one pip, no dice roll
+    const rock = () => within(tracker()).getByTitle(/^Rock Throw: use 1/);
+    expect(within(tracker()).queryByText('Roll')).not.toBeInTheDocument();
+    expect(within(tracker()).getByText('Recharge 5+')).toBeInTheDocument();
     click(rock());
     await flush();
     expect(rock()).toHaveAttribute('aria-pressed', 'true');
-    expect(rock()).toHaveAttribute('title', 'Rock Throw spent — click to restore');
+    expect(rock()).toHaveAttribute('title', 'Rock Throw: use 1 (spent)');
+    click(rock());
+    await flush();
+    expect(rock()).toHaveAttribute('aria-pressed', 'false');
 
-    // 3/Day counts down, then greys out
-    const lr = () => within(tracker()).getByTitle(/Legendary Resistance/, { selector: '[aria-pressed]' });
-    for (let i = 0; i < 2; i++) click(lr());
+    // 3/Day = three pips, spent left to right
+    const lr = () => within(tracker()).getAllByTitle(/^Legendary Resistance: use/);
+    const spent = () => lr().filter(p => p.getAttribute('aria-pressed') === 'true').length;
+    click(lr()[0]);
     await flush();
-    expect(lr()).toHaveTextContent('1/3');
-    expect(lr()).toHaveAttribute('aria-pressed', 'false');
-    click(lr());
+    click(lr()[1]);
     await flush();
-    expect(lr()).toHaveAttribute('aria-pressed', 'true');
-    // clicking a spent ability restores it
-    click(lr());
+    expect(spent()).toBe(2);
+    click(lr()[2]);
     await flush();
-    expect(lr()).toHaveTextContent('3/3');
-    expect(lr()).toHaveAttribute('aria-pressed', 'false');
+    expect(spent()).toBe(3);
+    // clicking a spent pip restores it and everything after it
+    click(lr()[0]);
+    await flush();
+    expect(spent()).toBe(0);
   });
 
   it('the Now card carries the combatant\'s card buttons, and Escape closes their modal', async () => {
