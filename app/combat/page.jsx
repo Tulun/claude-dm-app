@@ -10,6 +10,7 @@ import { defaultPartyData, defaultEnemyTemplates } from '../components/defaultDa
 import CharacterCard from './components/CharacterCard';
 import CombatantTable from './components/CombatantTable';
 import TurnTracker from './components/TurnTracker';
+import InitiativeItem from './components/InitiativeItem';
 import InitiativeOrderModal from './components/InitiativeOrderModal';
 import LegendaryActionModal from './components/LegendaryActionModal';
 import { FRESH_USAGE } from './components/TurnEconomy';
@@ -20,8 +21,19 @@ import { compareInitiative } from '../utils/rules';
 import { useDragReorder } from './useDragReorder';
 import { useToast } from '../hooks/useToast';
 import { SAVE_ARM_DELAY_MS, SAVE_DEBOUNCE_MS } from '../utils/timings';
+import { applyTurnChange, endOfTurnSaveConditions } from './conditions';
 
 const EMPTY_TEMPLATES = [];
+// Enemies encounter-bar buttons: bordered so they read as buttons, colored
+// per the combat palette (amber = load, purple = lair, red = enemies).
+const BAR_BASE = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-medium transition-colors';
+const BAR_BUTTON = {
+  neutral: `${BAR_BASE} border-stone-700 bg-stone-800/60 text-stone-300 hover:border-stone-500 hover:text-stone-100`,
+  amber: `${BAR_BASE} border-amber-700/60 bg-amber-900/30 text-amber-300 hover:border-amber-500 hover:text-amber-200`,
+  purple: `${BAR_BASE} border-purple-700/60 bg-purple-900/30 text-purple-300 hover:border-purple-500 hover:text-purple-200`,
+  red: `${BAR_BASE} border-red-700/60 bg-red-800/50 text-red-200 hover:bg-red-700/50`,
+  danger: `${BAR_BASE} border-stone-700 bg-transparent text-stone-400 hover:border-red-700 hover:text-red-300`,
+};
 // Per-viewer UI preference (Party / Enemies / Table tab) — browser-local, never persisted
 // to the encounter.
 const VIEW_MODE_KEY = 'dm-combat-view-mode';
@@ -40,6 +52,10 @@ export default function CombatPage() {
   const [savedEncounters, setSavedEncounters] = useState([]);
   const [showLoadEncounter, setShowLoadEncounter] = useState(false);
   const [encounterToLoad, setEncounterToLoad] = useState(null);
+  // Which saved encounter (from /api/encounters) the current enemies came
+  // from: { id, name } or null. Persisted with the encounter; the header shows
+  // the library's current name for that id and links to its editor.
+  const [loadedEncounter, setLoadedEncounter] = useState(null);
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [showLegendaryModal, setShowLegendaryModal] = useState(false);
   // Turn tracker. `turn` keeps BOTH the position and who was standing there,
@@ -58,6 +74,10 @@ export default function CombatPage() {
   // { id, action, bonus }. Reset when a turn starts; ignored when
   // `id` isn't the current combatant (e.g. after stepping Back).
   const [turnUsage, setTurnUsage] = useState(null);
+  // Transient turn-start reminder (NOT persisted): timed conditions that just
+  // expired + the new combatant's conditions that usually allow an end-of-turn
+  // save. { id, expired: [{ name, labels }], saves: [name] } or null.
+  const [turnReminder, setTurnReminder] = useState(null);
   // Manual initiative order - stores IDs in display order
   const [initiativeOrder, setInitiativeOrder] = useState([]);
   // Saving stays disabled until the initial load settles, so loading data
@@ -97,6 +117,9 @@ export default function CombatPage() {
           }
           if (encounterData && encounterData.lairAction) {
             setLairAction(encounterData.lairAction);
+          }
+          if (encounterData && encounterData.loadedEncounter?.id) {
+            setLoadedEncounter(encounterData.loadedEncounter);
           }
           if (encounterData && Array.isArray(encounterData.initiativeOrder)) {
             setInitiativeOrder(encounterData.initiativeOrder);
@@ -184,6 +207,7 @@ export default function CombatPage() {
         body: JSON.stringify({
           enemies,
           lairAction,
+          loadedEncounter,
           initiativeOrder,
           combatActive,
           round,
@@ -198,7 +222,7 @@ export default function CombatPage() {
       }).catch(console.error);
     }, SAVE_DEBOUNCE_MS);
     return () => clearTimeout(timeout);
-  }, [enemies, lairAction, initiativeOrder, combatActive, round, turn, interrupt, reactionsUsed, turnUsage]);
+  }, [enemies, lairAction, loadedEncounter, initiativeOrder, combatActive, round, turn, interrupt, reactionsUsed, turnUsage]);
 
   const reloadParty = async () => {
     try {
@@ -217,8 +241,10 @@ export default function CombatPage() {
     }
   };
 
-  // Load a saved encounter into the current combat
-  const loadEncounter = (encounter) => {
+  // Load a saved encounter into the current combat. 'add' appends its
+  // monsters (and takes its lair action only if there is none yet); 'replace'
+  // swaps out every enemy and the lair action. Party and turn state are kept.
+  const loadEncounter = (encounter, mode = 'add') => {
     if (!encounter || !templates) return;
     
     const newEnemies = [];
@@ -242,7 +268,19 @@ export default function CombatPage() {
       }
     });
     
-    setEnemies(prev => [...prev, ...newEnemies]);
+    const replacing = mode === 'replace' || enemies.length === 0;
+    const savedLair = encounter.lairAction
+      ? { initiative: encounter.lairAction.initiative ?? 20, notes: encounter.lairAction.notes || '' }
+      : null;
+    if (replacing) {
+      setEnemies(newEnemies);
+      setLairAction(savedLair);
+      setLoadedEncounter({ id: encounter.id, name: encounter.name });
+    } else {
+      setEnemies(prev => [...prev, ...newEnemies]);
+      if (savedLair) setLairAction(prev => prev || savedLair);
+      setLoadedEncounter(prev => prev || { id: encounter.id, name: encounter.name });
+    }
     setEncounterToLoad(null);
     setShowLoadEncounter(false);
     showToast(`Loaded: ${encounter.name}`);
@@ -268,16 +306,20 @@ export default function CombatPage() {
   ), [party]);
 
   // Build the initiative list based on manual order or default to all combatants
-  const allCombatants = useMemo(() => {
-    const lairActionEntry = lairAction ? {
-      id: 'lair-action',
-      name: 'Lair Action',
-      initiative: lairAction.initiative,
-      isLairAction: true,
-      notes: lairAction.notes
-    } : null;
-    return [...(party || []), ...partyCompanions, ...enemies, ...(lairActionEntry ? [lairActionEntry] : [])];
-  }, [party, partyCompanions, enemies, lairAction]);
+  // Own memo so the Enemies section's lair card (a memoized InitiativeItem)
+  // gets a stable object.
+  const lairActionEntry = useMemo(() => (lairAction ? {
+    id: 'lair-action',
+    name: 'Lair Action',
+    initiative: lairAction.initiative,
+    isLairAction: true,
+    notes: lairAction.notes
+  } : null), [lairAction]);
+
+  const allCombatants = useMemo(
+    () => [...(party || []), ...partyCompanions, ...enemies, ...(lairActionEntry ? [lairActionEntry] : [])],
+    [party, partyCompanions, enemies, lairActionEntry]
+  );
 
   // If we have a manual order, use it (filtering out any removed combatants)
   // Then append any new combatants not yet in the order
@@ -291,6 +333,14 @@ export default function CombatPage() {
     const byId = new Map(allCombatants.map(c => [c.id, c]));
     return fullOrderIds.map(id => byId.get(id)).filter(Boolean);
   }, [fullOrderIds, allCombatants]);
+
+  // The loaded encounter as the library knows it now (renames show up; a
+  // deleted encounter keeps its stored name but loses the Edit link).
+  const loadedEncounterInfo = useMemo(() => {
+    if (!loadedEncounter) return null;
+    const saved = savedEncounters.find(e => e.id === loadedEncounter.id);
+    return { id: loadedEncounter.id, name: saved?.name || loadedEncounter.name, exists: !!saved };
+  }, [loadedEncounter, savedEncounters]);
 
   const enemyIds = useMemo(() => new Set(enemies.map(e => e.id)), [enemies]);
 
@@ -346,7 +396,28 @@ export default function CombatPage() {
     const id = list[wrapped].id;
     setInterrupt(null);
     setTurn({ index: wrapped, id });
+    setTurnReminder(null);
     if (!refresh) return;
+    // Timed conditions: the outgoing combatant's turn ends, the landed-on
+    // combatant's turn starts (helpers in ./conditions). The reminder is built
+    // from the current snapshot; the setters re-apply the same pure step.
+    const endingId = activeIndexRef.current >= 0 ? list[activeIndexRef.current]?.id : null;
+    const affected = list.filter(c => !c.isCompanion && !c.isLairAction && (c.id === endingId || c.id === id));
+    const expired = affected
+      .map(c => ({ name: c.name, labels: applyTurnChange(c, endingId, id).expired }))
+      .filter(e => e.labels.length);
+    const landed = list[wrapped];
+    const saves = landed.isCompanion || landed.isLairAction
+      ? []
+      : endOfTurnSaveConditions(applyTurnChange(landed, endingId, id).combatant);
+    if (expired.length || saves.length) setTurnReminder({ id, expired, saves });
+    const tick = (prev) => {
+      if (!prev) return prev;
+      const next = prev.map(x => applyTurnChange(x, endingId, id).combatant);
+      return next.some((x, i) => x !== prev[i]) ? next : prev;
+    };
+    setParty(tick);
+    setEnemies(tick);
     setTurnUsage({ id, ...FRESH_USAGE });
     setReactionsUsed(prev => {
       if (!prev[id]) return prev;
@@ -380,6 +451,7 @@ export default function CombatPage() {
     setRound(1);
     setTurn({ index: 0, id: null });
     setTurnUsage(null);
+    setTurnReminder(null);
     clearReactions();
   }, [clearReactions]);
 
@@ -401,6 +473,7 @@ export default function CombatPage() {
 
   const openLegendary = useCallback(() => setShowLegendaryModal(true), []);
   const resumeTurn = useCallback(() => setInterrupt(null), []);
+  const dismissReminder = useCallback(() => setTurnReminder(null), []);
   const startInterrupt = useCallback((creature) => {
     setInterrupt({ id: creature.id, name: creature.name, label: 'Legendary Action' });
     setShowLegendaryModal(false);
@@ -450,6 +523,7 @@ export default function CombatPage() {
   const clearEncounter = () => {
     setEnemies([]);
     setLairAction(null);
+    setLoadedEncounter(null);
     endCombat();
     fetch('/api/encounter', { method: 'DELETE' });
   };
@@ -585,6 +659,8 @@ export default function CombatPage() {
               onPrevTurn={prevTurn}
               onOpenLegendary={openLegendary}
               onResume={resumeTurn}
+              reminder={turnReminder?.id === currentCombatant?.id ? turnReminder : null}
+              onDismissReminder={dismissReminder}
             />
           </div>
 
@@ -637,24 +713,42 @@ export default function CombatPage() {
 
           {showEnemies && (
           <section aria-label="Enemies" className="space-y-4">
-            <div className="flex items-center justify-between gap-2 flex-wrap">
-              <div className="flex items-center gap-4">
-                {isTable && <h2 className="text-lg font-bold text-red-400 flex items-center gap-2"><Icons.Skull />Enemies</h2>}
-                <div className="flex items-center gap-2 text-xs">
-                  <Link href="/encounters" className="text-stone-500 hover:text-stone-300">Manage Encounters →</Link>
-                  {savedEncounters.length > 0 && <>
-                    <span className="text-stone-600">•</span>
-                    <button onClick={() => setShowLoadEncounter(true)} className="text-amber-500 hover:text-amber-400">Load Saved</button>
-                  </>}
-                  {!lairAction && <>
-                    <span className="text-stone-600">•</span>
-                    <button onClick={() => setLairAction({ initiative: 20, notes: '' })} className="text-purple-400 hover:text-purple-300">+ Lair Action</button>
-                  </>}
+            {isTable && <h2 className="text-lg font-bold text-red-400 flex items-center gap-2"><Icons.Skull />Enemies</h2>}
+            {/* Encounter bar: which saved encounter is loaded + real buttons
+                to edit it, load another, add a lair action, clear, add. */}
+            <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border border-stone-800 bg-stone-900/50 px-3 py-2">
+              <div className="flex items-center gap-3 flex-wrap min-w-0">
+                <div className="min-w-0" data-testid="encounter-name">
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Encounter</div>
+                  <div className={`font-semibold truncate max-w-[320px] ${loadedEncounterInfo ? 'text-red-300' : 'text-stone-500 italic'}`}>
+                    {loadedEncounterInfo?.name || (enemies.length || lairAction ? 'Unsaved encounter' : 'None loaded')}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {loadedEncounterInfo?.exists ? (
+                    <Link href={`/encounters?edit=${encodeURIComponent(loadedEncounterInfo.id)}&from=combat`} className={BAR_BUTTON.neutral}>
+                      <Icons.Edit />Edit Encounter
+                    </Link>
+                  ) : (
+                    <Link href="/encounters" className={BAR_BUTTON.neutral}><Icons.BookOpen />Encounters</Link>
+                  )}
+                  <button onClick={() => setShowLoadEncounter(true)} className={BAR_BUTTON.amber}>
+                    <Icons.FolderOpen />{enemies.length ? 'Load Another' : 'Load Encounter'}
+                  </button>
+                  {!lairAction && (
+                    <button onClick={() => setLairAction({ initiative: 20, notes: '' })} className={BAR_BUTTON.purple}>
+                      <Icons.Sparkles />Lair Action
+                    </button>
+                  )}
                 </div>
               </div>
-              <div className="flex gap-2">
-                {(enemies.length > 0 || lairAction) && <button onClick={clearEncounter} title="Clear encounter" aria-label="Clear encounter" className="flex items-center gap-1 px-2 py-1 rounded text-stone-500 hover:text-stone-300 hover:bg-stone-700/50 text-sm"><Icons.Trash /></button>}
-                <button onClick={() => setShowAddEnemy(true)} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-red-800/50 hover:bg-red-700/50 text-red-300 text-sm"><Icons.Plus />Add</button>
+              <div className="flex items-center gap-2">
+                {(enemies.length > 0 || lairAction) && (
+                  <button onClick={clearEncounter} title="Clear encounter" aria-label="Clear encounter" className={BAR_BUTTON.danger}>
+                    <Icons.Trash />Clear
+                  </button>
+                )}
+                <button onClick={() => setShowAddEnemy(true)} className={BAR_BUTTON.red}><Icons.Plus />Add Monster</button>
               </div>
             </div>
             {isTable
@@ -665,6 +759,19 @@ export default function CombatPage() {
                   {enemies.map(e => <CharacterCard key={e.id} character={e} isEnemy={true} onUpdate={updateEnemy} onRemove={removeEnemy} />)}
                 </div>
               )}
+            {/* The lair action also lives here (not only in Manage Order), so
+                adding one visibly lands somewhere: initiative, notes, remove. */}
+            {lairActionEntry && (
+              <div className="max-w-md">
+                <InitiativeItem
+                  character={lairActionEntry}
+                  isLairAction
+                  onUpdateInitiative={updateInitiative}
+                  onUpdateLairNotes={updateLairNotes}
+                  onRemoveLairAction={removeLairAction}
+                />
+              </div>
+            )}
             {!enemies.length && !lairAction && <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No enemies yet. <Link href="/encounters" className="text-amber-500 hover:text-amber-400">Create encounters</Link> to quickly add groups.</div>}
           </section>
           )}
@@ -714,7 +821,7 @@ export default function CombatPage() {
                 <Icons.FolderOpen /> Load Encounter
               </h2>
               <p className="text-sm text-stone-400 mt-1">
-                {enemies.length > 0 ? 'Monsters will be added to your current encounter.' : 'Select an encounter to load.'}
+                {enemies.length > 0 ? 'Add its monsters to the current fight, or replace the current enemies.' : 'Select an encounter to load.'}
               </p>
             </div>
             
@@ -753,6 +860,9 @@ export default function CombatPage() {
                         {encounter.monsters.length > 4 && (
                           <span className="text-xs text-stone-500">+{encounter.monsters.length - 4} more</span>
                         )}
+                        {encounter.lairAction && (
+                          <span className="text-xs bg-purple-900/40 text-purple-300 px-2 py-0.5 rounded">Lair action</span>
+                        )}
                       </div>
                     )}
                   </button>
@@ -772,8 +882,22 @@ export default function CombatPage() {
               >
                 Cancel
               </button>
+              {enemies.length > 0 && (
+                <button
+                  onClick={() => encounterToLoad && loadEncounter(encounterToLoad, 'replace')}
+                  disabled={!encounterToLoad}
+                  title="Remove the current enemies and lair action, then load this encounter"
+                  className={`flex-1 py-2 rounded-lg font-medium ${
+                    encounterToLoad
+                      ? 'bg-red-800/70 hover:bg-red-700/70 text-red-100'
+                      : 'bg-stone-700 text-stone-500 cursor-not-allowed'
+                  }`}
+                >
+                  Replace Enemies
+                </button>
+              )}
               <button
-                onClick={() => encounterToLoad && loadEncounter(encounterToLoad)}
+                onClick={() => encounterToLoad && loadEncounter(encounterToLoad, 'add')}
                 disabled={!encounterToLoad}
                 className={`flex-1 py-2 rounded-lg font-medium ${
                   encounterToLoad 

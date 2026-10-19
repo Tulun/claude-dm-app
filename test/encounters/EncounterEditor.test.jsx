@@ -196,9 +196,10 @@ describe('EncounterEditor', () => {
 
     it('the trash button removes the monster', () => {
       renderEditor();
-      // The remove button is the last button in the row (no accessible name; icon only)
-      const buttons = screen.getAllByRole('button');
-      fireEvent.click(buttons[buttons.length - 1]);
+      // The icon-only remove button is labelled with the monster's name (it
+      // used to be found as the page's last button — the Lair Action panel
+      // now follows the monster list).
+      fireEvent.click(screen.getByLabelText('Remove Goblin'));
       expect(defaultProps.onUpdate).toHaveBeenCalledWith({
         ...baseEncounter,
         monsters: [],
@@ -364,6 +365,34 @@ describe('EncounterEditor', () => {
       // reopening starts with a clean slate
       openAddModal();
       expect(screen.queryByText('1 creature selected')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('lair action', () => {
+    it('adds a default lair action to the saved encounter', () => {
+      renderEditor();
+      expect(screen.getByText(/None\. Loading this encounter/)).toBeInTheDocument();
+      fireEvent.click(screen.getByText('Add Lair Action'));
+      expect(defaultProps.onUpdate).toHaveBeenCalledWith({ ...baseEncounter, lairAction: { initiative: 20, notes: '' } });
+    });
+
+    it('edits initiative and description, and removes it', () => {
+      const encounter = { ...baseEncounter, lairAction: { initiative: 20, notes: 'Rumble' } };
+      renderEditor({ encounter });
+      fireEvent.change(screen.getByLabelText('Lair action initiative'), { target: { value: '15' } });
+      expect(defaultProps.onUpdate).toHaveBeenLastCalledWith({ ...encounter, lairAction: { initiative: 15, notes: 'Rumble' } });
+      fireEvent.change(screen.getByLabelText('Lair action description'), { target: { value: 'Quake' } });
+      expect(defaultProps.onUpdate).toHaveBeenLastCalledWith({ ...encounter, lairAction: { initiative: 20, notes: 'Quake' } });
+      fireEvent.click(screen.getByLabelText('Remove lair action'));
+      expect(defaultProps.onUpdate).toHaveBeenLastCalledWith({ ...encounter, lairAction: null });
+    });
+
+    it('shows Return to Combat only when asked', () => {
+      renderEditor();
+      expect(screen.queryByText('Return to Combat')).not.toBeInTheDocument();
+      cleanup();
+      renderEditor({ returnToCombat: true });
+      expect(screen.getByText('Return to Combat').closest('a')).toHaveAttribute('href', '/combat');
     });
   });
 });

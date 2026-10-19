@@ -8,6 +8,7 @@ import { EditableField, HpBar, Tooltip } from '../../../components/ui';
 import { parseSpellcasting } from './spellcastingParser';
 import CardActionButtons from './CardActionButtons';
 import CardModals from './CardModals';
+import ConditionChips from '../ConditionChips';
 import { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, formatClassList, getActiveWildShapeForm, getCardBaseAC, getCardDisplayAC } from './utils';
 
 const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onToggleExpand, showResources, templates = [], stretch = false }) => {
@@ -78,7 +79,9 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-1">
+          {/* p-1.5 (vs the buttons' default p-2) keeps names from wrapping in
+              the 3-column card grid */}
+          <div className="flex items-center gap-0.5 [&_button]:p-1.5 [&_a]:p-1.5">
             <CardActionButtons character={character} isEnemy={isEnemy} spellcastingInfo={spellcastingInfo} onOpen={setActiveModal} />
             {isEnemy && onRemove && (
               <Tooltip text="Remove from Combat">
@@ -256,10 +259,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                 className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-sm cursor-pointer transition-colors ${tempHp > 0 ? 'bg-cyan-900/40 text-cyan-400 hover:bg-cyan-900/50' : 'bg-stone-800/40 text-stone-500 hover:bg-stone-700/40 hover:text-cyan-400'}`}
                 title="Click to add/edit Temporary HP"
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  <path d="M12 8v4M10 10h4" />
-                </svg>
+                <Icons.TempHeart />
                 {tempHp > 0 ? (
                   <span className="font-mono font-medium">{tempHp}</span>
                 ) : (
@@ -276,7 +276,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
             </div>
           )}
           {/* Combat Notes indicator */}
-          {isEnemy && character.combatNotes && (
+          {character.combatNotes && (
             <div 
               onClick={(e) => { e.stopPropagation(); setActiveModal('notes'); }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-amber-900/30 text-amber-400 cursor-pointer hover:bg-amber-900/40"
@@ -285,6 +285,10 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               <span className="text-xs max-w-[100px] truncate">{character.combatNotes}</span>
             </div>
           )}
+        </div>
+        {/* Conditions: one-click remove, "+" opens the picker */}
+        <div className="mt-2">
+          <ConditionChips character={character} onUpdate={onUpdate} onOpen={setActiveModal} />
         </div>
       </div>
 

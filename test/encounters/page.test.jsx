@@ -218,6 +218,8 @@ describe('EncountersPage', () => {
     it('opens the editor for the new encounter and later POSTs it', async () => {
       const fetchMock = stubFetch();
       await renderPage();
+      // saving arms SAVE_ARM_DELAY_MS (500ms) after load, like every gated page
+      await act(async () => { await new Promise(r => setTimeout(r, 550)); });
       fireEvent.click(screen.getByText('New Encounter'));
       fireEvent.change(
         screen.getByPlaceholderText("e.g., Goblin Ambush, Dragon's Lair..."),
@@ -388,6 +390,62 @@ describe('EncountersPage', () => {
       const body = JSON.parse(posts[0][1].body);
       expect(body).toHaveLength(2);
       expect(body[1].name).toBe('Goblin Ambush (Copy)');
+    });
+  });
+
+  describe('deep link from combat (?edit=<id>&from=combat)', () => {
+    afterEach(() => { window.history.replaceState(null, '', '/'); });
+
+    it('opens that encounter\'s editor with a Return to Combat link; Back drops the query', async () => {
+      window.history.replaceState(null, '', '/encounters?edit=enc-2&from=combat');
+      stubFetch({ encounters: [goblinAmbush, ogreFight] });
+      render(<EncountersPage />);
+      expect(await screen.findByDisplayValue('Ogre Fight')).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: 'Return to Combat' })).toHaveAttribute('href', '/combat');
+      fireEvent.click(screen.getByText('Back'));
+      expect(await screen.findByText('Saved Encounters')).toBeInTheDocument();
+      expect(window.location.search).toBe('');
+    });
+
+    it('an unknown id just shows the list; without from=combat there is no return link', async () => {
+      window.history.replaceState(null, '', '/encounters?edit=nope');
+      stubFetch({ encounters: [goblinAmbush] });
+      await renderPage();
+      window.history.replaceState(null, '', '/encounters?edit=enc-1');
+      cleanup();
+      stubFetch({ encounters: [goblinAmbush] });
+      render(<EncountersPage />);
+      expect(await screen.findByDisplayValue('Goblin Ambush')).toBeInTheDocument();
+      expect(screen.queryByRole('link', { name: 'Return to Combat' })).not.toBeInTheDocument();
+    });
+
+    it('leaving the page inside the save debounce still saves the edit', async () => {
+      vi.useFakeTimers();
+      window.history.replaceState(null, '', '/encounters?edit=enc-1&from=combat');
+      const fetchMock = stubFetch({ encounters: [goblinAmbush] });
+      const { unmount } = render(<EncountersPage />);
+      await act(async () => {
+        await Promise.resolve();
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+      act(() => { vi.advanceTimersByTime(500); }); // arms saving (SAVE_ARM_DELAY_MS)
+      fireEvent.change(screen.getByDisplayValue('Goblin Ambush'), { target: { value: 'Goblin Ambush II' } });
+      act(() => { vi.advanceTimersByTime(300); });
+      expect(postCalls(fetchMock)).toHaveLength(0);
+      unmount(); // e.g. Return to Combat
+      const posts = postCalls(fetchMock);
+      expect(posts).toHaveLength(1);
+      expect(posts[0][1].keepalive).toBe(true);
+      expect(JSON.parse(posts[0][1].body)[0].name).toBe('Goblin Ambush II');
+    });
+
+    it('unmounting with nothing pending does not save', async () => {
+      const fetchMock = stubFetch({ encounters: [goblinAmbush] });
+      const { unmount } = render(<EncountersPage />);
+      await screen.findByText('Saved Encounters');
+      unmount();
+      expect(postCalls(fetchMock)).toHaveLength(0);
     });
   });
 });

@@ -10,6 +10,7 @@ import TurnEconomy from './TurnEconomy';
 import MonsterAbilities from './MonsterAbilities';
 import CardActionButtons from './CharacterCard/CardActionButtons';
 import CardModals from './CharacterCard/CardModals';
+import ConditionChips from './ConditionChips';
 import { parseSpellcasting } from './CharacterCard/spellcastingParser';
 import { getCardDisplayAC } from './CharacterCard/utils';
 
@@ -52,12 +53,35 @@ const VitalsLine = ({ combatant }) => {
   );
 };
 
+// Turn-start reminder from the page's goToTurn: timed conditions that just
+// expired (anyone's) and the current combatant's conditions that usually
+// allow a save at the end of its turn. Dismissible; replaced on every turn.
+const TurnReminder = ({ reminder, name, onDismiss }) => (
+  <div role="status" aria-label="Condition reminder" className="flex items-start justify-between gap-3 rounded-lg border border-amber-700/50 bg-amber-950/30 px-3 py-1.5 text-xs text-amber-200">
+    <div className="space-y-0.5 min-w-0">
+      {reminder.expired.map((e, i) => (
+        <div key={i}>
+          <span className="font-semibold">Expired</span> on {e.name}: {e.labels.join(', ')}
+        </div>
+      ))}
+      {reminder.saves.length > 0 && (
+        <div>
+          <span className="font-semibold">End-of-turn save?</span> {name}: {reminder.saves.join(', ')}
+        </div>
+      )}
+    </div>
+    <button type="button" onClick={onDismiss} aria-label="Dismiss reminder" className="text-amber-400/70 hover:text-amber-200 shrink-0">
+      <Icons.X />
+    </button>
+  </div>
+);
+
 /**
  * The turn bar above the combat columns: whose turn it is right now, who is
- * up next (in the header), the current combatant's action economy (This Turn), the current
- * monster's abilities + limited-use tracker, and the buttons that move the
- * pointer. Full Order and Legendary live as header buttons beside the
- * round/turn info.
+ * up next (in the header), and the current combatant's action economy
+ * (This Turn — which also holds the current monster's abilities + limited-use
+ * tracker). The header carries Full Order / Legendary beside the round/turn
+ * info, and Back / End Turn / End Combat on the right.
  * Legendary actions are an *interrupt* — they overlay the pointer without
  * moving it, so ending the interrupt returns to exactly the same turn.
  */
@@ -90,6 +114,8 @@ const TurnTracker = ({
   onResume,
   onUpdateParty,
   templates,
+  reminder,
+  onDismissReminder,
 }) => {
   // Ending combat throws away the round/turn position, so it two-steps:
   // the header button swaps to an inline confirm.
@@ -182,6 +208,21 @@ const TurnTracker = ({
             })}
           </button>
         </div>
+        <div className="flex items-center gap-2 shrink-0">
+        <button
+          onClick={onPrevTurn}
+          title="Back one turn"
+          className="px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 text-sm"
+        >
+          ← Back
+        </button>
+        <button
+          onClick={onNextTurn}
+          className="px-5 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm"
+        >
+          End Turn →
+        </button>
+        <span className="w-px self-stretch bg-stone-700 mx-1" aria-hidden />
         {confirmingEnd ? (
           <div className="flex items-center gap-2">
             <span className="text-stone-400">End combat and reset the round?</span>
@@ -206,7 +247,12 @@ const TurnTracker = ({
             End Combat
           </button>
         )}
+        </div>
       </div>
+
+      {reminder && (
+        <TurnReminder reminder={reminder} name={combatantName(current)} onDismiss={onDismissReminder} />
+      )}
 
       <div className="flex flex-col lg:flex-row gap-3 lg:items-stretch">
         {interrupt ? (
@@ -269,6 +315,11 @@ const TurnTracker = ({
               )}
               <VitalsLine combatant={current} />
               {showCardButtons && (
+                <div className="mt-1.5">
+                  <ConditionChips character={current} onUpdate={cardUpdate} onOpen={openCardModal} compact />
+                </div>
+              )}
+              {showCardButtons && (
                 <div className="flex items-center gap-0.5 mt-1.5 -ml-2">
                   <CardActionButtons
                     character={current}
@@ -288,40 +339,24 @@ const TurnTracker = ({
                 reactionUsed={!!reactionsUsed?.[current.id]}
                 onUpdate={onUpdateTurnUsage}
                 onToggleReaction={onToggleReaction}
-              />
+              >
+                {currentKind === 'enemy' && (
+                  <MonsterAbilities
+                    key={current.id}
+                    creature={current}
+                    usage={turnUsage}
+                    reactionUsed={!!reactionsUsed?.[current.id]}
+                    onUpdateEnemy={onUpdateEnemy}
+                    onSpendSlot={onSpendSlot}
+                  />
+                )}
+              </TurnEconomy>
             ) : (
               <div className="flex-1" />
             )}
           </>
         )}
-
-        <div className="flex items-center gap-2 shrink-0 lg:self-end">
-          <button
-            onClick={onPrevTurn}
-            title="Back one turn"
-            className="px-3 py-2 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 text-sm"
-          >
-            ← Back
-          </button>
-          <button
-            onClick={onNextTurn}
-            className="flex-1 lg:flex-none px-6 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm"
-          >
-            End Turn →
-          </button>
-        </div>
       </div>
-
-      {!interrupt && currentKind === 'enemy' && current && (
-        <MonsterAbilities
-          key={current.id}
-          creature={current}
-          usage={turnUsage}
-          reactionUsed={!!reactionsUsed?.[current.id]}
-          onUpdateEnemy={onUpdateEnemy}
-          onSpendSlot={onSpendSlot}
-        />
-      )}
     </div>
     {showCardButtons && cardModal?.id === current.id && (
       <CardModals

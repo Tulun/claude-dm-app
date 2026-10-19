@@ -2,6 +2,8 @@ const Icons = {
   Skull: () => <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M12 2C6.48 2 2 6.48 2 12c0 3.69 2.47 6.86 6 8.25V22h8v-1.75c3.53-1.39 6-4.56 6-8.25 0-5.52-4.48-10-10-10zm-2 15h-2v-2h2v2zm6 0h-2v-2h2v2zm-3-5c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>,
   Shield: () => <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>,
   Heart: () => <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>,
+  // Outlined heart + plus: temp HP (distinct from the filled Heart used for real HP)
+  TempHeart: ({ className }) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className || "w-4 h-4"}><path d="M12 20.5l-1.2-1.1C5.9 15 3 12.3 3 8.9 3 6.2 5.1 4 7.7 4c1.6 0 3.2.8 4.3 2.1C13.1 4.8 14.7 4 16.3 4 18.9 4 21 6.2 21 8.9c0 3.4-2.9 6.1-7.8 10.5L12 20.5z"/><path d="M12 9.5v5M9.5 12h5"/></svg>,
   Sword: () => <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M6.92 5H5l8 8-1.41 1.41L3 6h2V4l10 10-1.41 1.41L6.92 5zM19.42 3L21 4.59l-8.92 8.92-1.41-1.41L19.42 3zM5.5 21l-2-2L12 10.5l2 2L5.5 21z"/></svg>,
   Plus: () => <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>,
   Trash: () => <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>,

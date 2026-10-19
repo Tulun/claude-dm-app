@@ -113,8 +113,8 @@ export default function CardActionButtons({ character, isEnemy, spellcastingInfo
           </button>
         </Tooltip>
       )}
-      {/* Notes Button */}
-      {isEnemy && (
+      {/* Notes Button — free-text catch-all (conditions are separate chips) */}
+      {(
         <Tooltip text="Combat Notes">
           <button
             aria-label="Combat Notes"

@@ -28,9 +28,11 @@ const SlotToggle = ({ label, used, onClick }) => (
  * Action/bonus live in the page's `turnUsage` (whoever's turn it is); the
  * reaction is the shared per-round `reactionsUsed` map, so it stays in sync
  * with the order modal's toggles. Party members (`isParty`) also get their
- * spell save DC / spell attack and their equipped weapons + gear.
+ * spell save DC / spell attack and their equipped weapons + gear. `children`
+ * render at the bottom of the box (the tracker passes MonsterAbilities on an
+ * enemy's turn).
  */
-export default function TurnEconomy({ combatant, isParty, usage, reactionUsed, onUpdate, onToggleReaction }) {
+export default function TurnEconomy({ combatant, isParty, usage, reactionUsed, onUpdate, onToggleReaction, children }) {
   const u = usage || FRESH_USAGE;
   const [walk, ...others] = formatSpeeds(combatant.speed);
   const spellDC = isParty ? getSpellSaveDC(combatant) : null;
@@ -63,6 +65,7 @@ export default function TurnEconomy({ combatant, isParty, usage, reactionUsed, o
         )}
       </div>
       {isParty && <PartyLoadout character={combatant} />}
+      {children}
     </div>
   );
 }

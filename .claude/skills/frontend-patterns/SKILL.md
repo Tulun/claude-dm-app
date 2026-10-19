@@ -104,8 +104,12 @@ setEnemies(prev => {
   `isDragging`/`isDragOver` booleans — do not go back to passing four separate
   handler props or a shared `dragOverIndex` (the shared index re-rendered every
   row on hover). `drag` is OPT-IN: only `InitiativeOrderModal` passes it (and
-  supplies `onSelect` for click-to-jump). The main page renders NO
-  `InitiativeItem` rows at all — initiative is a full-width `TurnTracker` bar
+  supplies `onSelect` for click-to-jump). The main page renders exactly ONE
+  `InitiativeItem` outside the modal: the lair action card in the Enemies
+  section (both card and Table tabs; no drag/select; `lairActionEntry` is its
+  own `useMemo` so the memoized row stays stable). Before it existed, "+ Lair
+  Action" appeared to do nothing — the lair action only showed inside Manage
+  Order. No other combatant gets a row on the page — initiative is a full-width `TurnTracker` bar
   ABOVE the combatant tabs (§2.5); the full order lives exclusively in the
   Manage Order modal. Layout: `main.children[0]` = initiative bar (header +
   tracker), `main.children[1]` = the combatant TABS — a `role="tablist"`
@@ -116,8 +120,19 @@ setEnemies(prev => {
   `items-start` — see the no-stretch rule in §2.5); the Table tab shows BOTH
   sections stacked, each as a `CombatantTable`, with section `<h2>`s (the card
   tabs omit them — the tab is the title). Hidden sections are unmounted, so
-  the Enemies-section shortcuts (Load Saved, + Lair Action, Clear encounter)
-  exist only on the Enemies/Table tabs. Page state `viewMode` (`'party' |
+  the Enemies-section **encounter bar** exists only on the Enemies/Table
+  tabs: the loaded encounter's name (`loadedEncounter` `{ id, name }`, shown
+  via the library's current name; "Unsaved encounter" / "None loaded"
+  otherwise, `data-testid="encounter-name"`), then bordered `BAR_BUTTON`
+  buttons — Edit Encounter (link to `/encounters?edit=<id>&from=combat`, only
+  while that id is still in the library; else an "Encounters" link), Load
+  Encounter / Load Another, Lair Action, Clear, Add Monster. The load modal
+  offers **Add to Combat** (append; takes the saved lair action only if none
+  exists; keeps the first loaded name) and, when enemies exist, **Replace
+  Enemies** (swaps enemies + lair action + name; party and turn state kept).
+  `/encounters` opens the editor for `?edit=`, shows Return to Combat for
+  `from=combat`, and flushes a pending debounced save (keepalive POST) on
+  unmount so leaving mid-debounce doesn't lose the edit. Page state `viewMode` (`'party' |
   'enemies' | 'table'`, default party) persists per viewer in
   `localStorage['dm-combat-view-mode']`, read in a mount effect, every access
   in try/catch (the pre-tabs value `'cards'` falls back to party). Tests find
@@ -130,7 +145,7 @@ setEnemies(prev => {
   and the "Party / Enemies / Table tabs" block in `combatPage.test.jsx`.
 - Combatant modals are driven by ONE `activeModal` key (`'delete' | 'actions'
   | 'resources' | 'sheet' | 'inventory' | 'notes' | 'statblock' | 'spells' |
-  'druid' | 'sorcerer'`, `null` = closed) rendered by
+  'druid' | 'sorcerer' | 'conditions'`, `null` = closed) rendered by
   `CharacterCard/CardModals.jsx`; the contextual buttons that open them live
   in `CharacterCard/CardActionButtons.jsx` (`onOpen(key)`, each button has an
   `aria-label` = its tooltip). The card, the Table-view rows and the turn
@@ -139,6 +154,34 @@ setEnemies(prev => {
   `cardModal` `{ id, key }` and renders `CardModals` OUTSIDE its sticky z-10
   bar (a fixed overlay inside that stacking context would sit under the
   navbar). Companions and the lair action get no card buttons.
+- **Conditions vs notes** (canonical). Conditions are structured state on the
+  combatant record — `conditions: [{ name }, { name: 'Exhaustion', level }]`
+  (party → party.json, enemies → the encounter) — defined and manipulated ONLY
+  through `app/combat/conditions.js` (`CONDITIONS` = the 15 core 2024
+  conditions + Concentrating, with short summaries; `getConditions` tolerates
+  missing/legacy-string data; `toggledConditions`, `withoutCondition`,
+  `withExhaustionLevel` return the new array). `ConditionChips.jsx` renders
+  them (× = one-click remove, "+" = `onOpen('conditions')`) on the card, the
+  Table row and the tracker's Now card; `ConditionsModal` applies every toggle
+  immediately via `onUpdate` (no Save step). `combatNotes` is the free-text
+  catch-all — the Notes modal has NO condition quick-add chips anymore, and the
+  Combat Notes button shows for party AND enemies. Don't park conditions in
+  notes text, and don't add a second conditions shape.
+  **Durations** are optional keys on the same entry: `rounds: N` (decremented
+  at the START of the bearer's turn, removed at 0) or `until: 'endOfNextTurn'`
+  (flips to `'endOfThisTurn'` at the bearer's next turn start, removed when
+  that turn ends). Set them only via `withConditionDuration` (the picker's
+  per-condition Duration row; Exhaustion never takes one); the chip shows
+  `durationLabel` ("3r" / "next turn" / "this turn"). `goToTurn` with
+  `refresh = true` runs `applyTurnChange(c, endingId, startingId)` over party
+  and enemies through bail-out setters (untimed entries keep identity → no
+  save), and sets page state `turnReminder` `{ id, expired, saves }` —
+  transient, NOT in the encounter payload, cleared on every pointer move and
+  End Combat, dismissible in the tracker. `saves` = the landed combatant's
+  `SAVE_AT_END_OF_TURN` conditions (a reminder only, never automated). Back
+  (`refresh = false`) never ticks.
+  Tests: `test/combat/conditions.test.js`, `test/combat/conditionDurations.test.js`,
+  `test/combat/conditionsUi.test.jsx`, `test/combat/conditionTimers.test.jsx`.
 
 ## 2.5 The combat turn tracker (canonical)
 
@@ -167,7 +210,9 @@ Three rules keep the pointer honest:
   `acEffect` — see the caller table in **rules-math** (canonical) before
   changing it.
 - **The bar shows ONLY the next combatant**, inline in the tracker HEADER row
-  (Round · Turn · Up Next · Full Order · Legendary), derived inside
+  (Round · Turn · Up Next · Full Order · Legendary on the left; ← Back ·
+  End Turn → · End Combat on the right — the turn buttons live in the header,
+  not under the This Turn panel), derived inside
   `TurnTracker` from `list` + `activeIndex` (cyclic, wraps into next round);
   the name element carries `data-testid="up-next"` and `title` = the
   combatant name (the tests key on this). It is not clickable; the
@@ -180,7 +225,9 @@ Three rules keep the pointer honest:
   clears the landed-on combatant's entry in `reactionsUsed` (page state,
   `{ [id]: true }`, persisted in the encounter — NOT on party/companion
   records) and zeroes that enemy's `legendaryActionsUsed`. Only `prevTurn`
-  passes `refresh = false` (rewinding isn't a new turn). `startCombat` resets
+  passes `refresh = false` (rewinding isn't a new turn). It also ticks timed
+  conditions and raises the turn reminder — see "Conditions vs notes" (§2,
+  canonical). `startCombat` resets
   both for everyone; `endCombat` clears reactions. Reactions are toggled on the
   order-modal rows (`InitiativeItem` `reactionUsed` + stable
   `onToggleReaction(id)`) AND on the tracker's This Turn panel — same map.
@@ -211,7 +258,9 @@ Three rules keep the pointer honest:
   tracker must either portal or render outside the bar. Unequipped items are
   deliberately hidden — the fix for "my weapon isn't showing" is ticking Equip
   on the sheet's inventory.
-- **Monster panel**: on an enemy's turn `MonsterAbilities.jsx` lists
+- **Monster panel**: on an enemy's turn `MonsterAbilities.jsx` renders
+  INSIDE the This Turn box (passed as `TurnEconomy` children, below the
+  economy toggles) and lists
   actions / bonus actions / reactions as chips (click → text + Use, which
   spends the matching economy slot via `onSpendSlot`), and a Limited row:
   X/Day, recharge (with a d6 Roll) and per-rest abilities stored in

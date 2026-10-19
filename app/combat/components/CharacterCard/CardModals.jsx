@@ -10,12 +10,14 @@ import StatBlockModal from './StatBlockModal';
 import SpellsModal from './SpellsModal';
 import DruidFeaturesModal from './DruidFeaturesModal';
 import SorcererFeaturesModal from './SorcererFeaturesModal';
+import ConditionsModal from './ConditionsModal';
 
 /**
  * Every combatant modal, driven by ONE `activeModal` key ('delete' |
  * 'actions' | 'resources' | 'sheet' | 'inventory' | 'notes' | 'statblock' |
- * 'spells' | 'druid' | 'sorcerer'; null = closed). Shared by CharacterCard
- * and the turn tracker's Now card — add new combatant modals here.
+ * 'spells' | 'druid' | 'sorcerer' | 'conditions'; null = closed). Shared by CharacterCard
+ * the Table-view rows and the turn tracker's Now card — add new combatant
+ * modals here.
  */
 export default function CardModals({ activeModal, onClose, character, isEnemy, onUpdate, onRemove, templates, displayAC, spellcastingInfo }) {
   return (
@@ -29,6 +31,7 @@ export default function CardModals({ activeModal, onClose, character, isEnemy, o
       <StatBlockModal isOpen={activeModal === 'statblock'} onClose={onClose} character={character} />
       <SpellsModal isOpen={activeModal === 'spells'} onClose={onClose} character={character} />
       <DruidFeaturesModal isOpen={activeModal === 'druid'} onClose={onClose} character={character} onUpdate={onUpdate} />
+      <ConditionsModal isOpen={activeModal === 'conditions'} onClose={onClose} character={character} onUpdate={onUpdate} />
       <SorcererFeaturesModal isOpen={activeModal === 'sorcerer'} onClose={onClose} character={character} onUpdate={onUpdate} />
     </>
   );

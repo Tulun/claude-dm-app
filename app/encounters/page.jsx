@@ -7,6 +7,7 @@ import EncounterPlanner from './EncounterPlanner';
 import EncounterEditor from './EncounterEditor';
 import EncounterList from './EncounterList';
 import { generateId } from '../utils/generateId';
+import { SAVE_ARM_DELAY_MS } from '../utils/timings';
 
 export default function EncountersPage() {
   const [encounters, setEncounters] = useState([]);
@@ -16,6 +17,12 @@ export default function EncountersPage() {
   // never echoes an unchanged copy back to the API.
   const saveEnabled = useRef(false);
   const [editingEncounter, setEditingEncounter] = useState(null);
+  // Arrived via the combat page's Edit Encounter (?edit=<id>&from=combat):
+  // the editor offers a way straight back.
+  const [fromCombat, setFromCombat] = useState(false);
+  // Latest unsaved list, so leaving the page (e.g. Return to Combat) inside
+  // the save debounce still persists the edit.
+  const pendingSave = useRef(null);
   
   // Daily tracker state - initialize from localStorage
   const [dailyEncounters, setDailyEncounters] = useState([]);
@@ -63,7 +70,15 @@ export default function EncountersPage() {
         
         if (encountersRes.ok) {
           const data = await encountersRes.json();
-          setEncounters(Array.isArray(data) ? data : []);
+          const list = Array.isArray(data) ? data : [];
+          setEncounters(list);
+          // Deep link from /combat: open that encounter's editor directly.
+          const params = new URLSearchParams(window.location.search);
+          const target = params.get('edit') && list.find(e => e.id === params.get('edit'));
+          if (target) {
+            setEditingEncounter(target);
+            setFromCombat(params.get('from') === 'combat');
+          }
         }
         
         if (templatesRes.ok) {
@@ -77,7 +92,9 @@ export default function EncountersPage() {
         setTemplates(defaultEnemyTemplates);
       }
       setIsLoaded(true);
-      setTimeout(() => { saveEnabled.current = true; }, 0);
+      // Same arm delay as every gated page (frontend-patterns §1); a 0ms
+      // timer could fire before the load's effects ran and echo the list back.
+      setTimeout(() => { saveEnabled.current = true; }, SAVE_ARM_DELAY_MS);
     };
     loadData();
   }, []);
@@ -85,7 +102,9 @@ export default function EncountersPage() {
   // Auto-save encounters
   useEffect(() => {
     if (!saveEnabled.current) return;
+    pendingSave.current = encounters;
     const timeout = setTimeout(() => {
+      pendingSave.current = null;
       fetch('/api/encounters', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -94,6 +113,25 @@ export default function EncountersPage() {
     }, 1000);
     return () => clearTimeout(timeout);
   }, [encounters]);
+
+  // Flush a debounced save that hasn't fired yet when the page unmounts.
+  useEffect(() => () => {
+    if (!pendingSave.current) return;
+    fetch('/api/encounters', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pendingSave.current),
+      keepalive: true,
+    }).catch(console.error);
+    pendingSave.current = null;
+  }, []);
+
+  const closeEditor = () => {
+    setEditingEncounter(null);
+    setFromCombat(false);
+    // Drop ?edit= so a reload lands on the list, not back in the editor.
+    if (window.location.search) window.history.replaceState(null, '', window.location.pathname);
+  };
 
   // Calculate encounter stats
   const calculateEncounterStats = (encounter) => {
@@ -168,8 +206,9 @@ export default function EncountersPage() {
         encounter={editingEncounter}
         templates={templates}
         onUpdate={updateEncounter}
-        onClose={() => setEditingEncounter(null)}
+        onClose={closeEditor}
         calculateEncounterStats={calculateEncounterStats}
+        returnToCombat={fromCombat}
       />
     );
   }

@@ -7,6 +7,7 @@ import { Tooltip } from '../../components/ui';
 import { parseSpellcasting } from './CharacterCard/spellcastingParser';
 import CardActionButtons from './CharacterCard/CardActionButtons';
 import CardModals from './CharacterCard/CardModals';
+import ConditionChips from './ConditionChips';
 import { getMod, getSpellSaveDC, formatClassList, getActiveWildShapeForm, getCardBaseAC, getCardDisplayAC } from './CharacterCard/utils';
 import { formatSpeeds } from '../monsterAbilities';
 
@@ -91,6 +92,19 @@ const CombatantRow = ({ character, isEnemy, onUpdate, onRemove, templates }) => 
         </div>
         <div className="text-xs text-stone-400">
           {formatClassList(character) || (character.cr ? `CR ${character.cr}` : '')}
+        </div>
+        {character.combatNotes && (
+          <button
+            type="button"
+            onClick={() => setActiveModal('notes')}
+            title={character.combatNotes}
+            className="block max-w-[180px] truncate text-left text-[11px] text-amber-400/80 hover:text-amber-300"
+          >
+            📝 {character.combatNotes}
+          </button>
+        )}
+        <div className="mt-1">
+          <ConditionChips character={character} onUpdate={onUpdate} onOpen={setActiveModal} compact />
         </div>
       </td>
       <td className="px-1 py-1.5 text-center font-mono text-stone-300">{character.initiative ?? '—'}</td>

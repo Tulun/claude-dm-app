@@ -158,6 +158,38 @@ context costs:
 
 ## Completed log
 
+- [x] /combat Enemies encounter bar: shows the loaded saved encounter's name
+  (`loadedEncounter` in the active encounter), real bordered buttons for Edit
+  Encounter (deep link `/encounters?edit=<id>&from=combat` → editor with
+  Return to Combat), Load Encounter / Load Another (Add to Combat or Replace
+  Enemies), Lair Action, Clear, Add Monster. Saved encounters can carry a lair
+  action (editor panel) that loads with them. Also fixed: the /encounters page
+  armed auto-save with a 0ms timer instead of SAVE_ARM_DELAY_MS (could echo the
+  loaded list), and it now flushes a pending save on unmount — Oct 2026.
+  Not done: editing a saved encounter doesn't change monsters already in the
+  fight (use Load Another → Replace Enemies); fights older than this have no
+  `loadedEncounter` and show "Unsaved encounter".
+- [x] "+ Lair Action" seemed to vanish: the lair action was only rendered
+  inside the Manage Order modal. It now also shows as a card (initiative,
+  notes, remove) in the Enemies section — Oct 2026.
+- [x] Timed combat conditions: an optional duration per condition entry —
+  `rounds: N` (ticks down at the start of the bearer's turn, removed at 0) or
+  `until: 'endOfNextTurn'` (→ `'endOfThisTurn'` at that turn's start, removed
+  when it ends) — set from the conditions picker, remaining time shown on the
+  chip. `goToTurn` (refresh only) applies `applyTurnChange` and shows a
+  dismissible, NOT persisted tracker reminder of what expired plus the new
+  combatant's save-ends conditions (Frightened, Paralyzed, Stunned,
+  Restrained, Charmed, Poisoned) — Oct 2026. Known limits: durations count
+  the BEARER's turns, not the caster's (a "until the start of the caster's
+  next turn" effect has to be timed by hand); jumping to the current
+  combatant from the order modal counts as a new turn and ticks; the
+  reminder disappears on reload; companions have no conditions at all.
+- [x] Combat conditions as structured state: `conditions` array on party
+  members and enemies (`app/combat/conditions.js`), removable chips + "+"
+  picker on cards, table rows and the tracker's Now card (instant toggles,
+  Exhaustion level stepper). Combat Notes is now free text only and available
+  to party members too — Oct 2026. Not done: no custom (non-5e) condition tags (use notes), and
+  old notes text that names conditions is NOT migrated into chips.
 - [x] /combat combatant tabs: Party & Allies (cards) | Enemies (cards) | Table.
   Card tabs use the full width (up to 3 columns). The Table tab renders party
   and enemies as compact rows (`app/combat/components/CombatantTable.jsx`) —

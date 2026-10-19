@@ -161,6 +161,8 @@ const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, 
         {onRemoveLairAction && (
           <button 
             onClick={onRemoveLairAction}
+            aria-label="Remove lair action"
+            title="Remove lair action"
             className="p-1 text-stone-500 hover:text-red-400 transition-colors"
           >
             <Icons.Trash />

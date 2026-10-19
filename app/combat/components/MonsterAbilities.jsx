@@ -76,7 +76,7 @@ export default function MonsterAbilities({ creature, usage, reactionUsed, onUpda
     : null;
 
   return (
-    <div className="rounded-lg border border-red-900/40 bg-red-950/10 p-3 space-y-2">
+    <div className="mt-2 pt-2 border-t border-stone-800 space-y-2">
       <div className="flex flex-wrap items-start gap-x-5 gap-y-2">
         {GROUPS.map(g => abilities[g.key].length > 0 && (
           <div key={g.key} className="flex flex-wrap items-center gap-1.5 min-w-0">

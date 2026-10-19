@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import Icons from '../components/Icons';
 import Modal from '../components/Modal';
 import { crToNumber } from './constants';
@@ -117,6 +118,7 @@ const EncounterEditor = ({
   onUpdate,
   onClose,
   calculateEncounterStats,
+  returnToCombat = false,
 }) => {
   const [showAddMonster, setShowAddMonster] = useState(false);
   const [expandedMonsters, setExpandedMonsters] = useState({});
@@ -234,6 +236,11 @@ const EncounterEditor = ({
     });
   };
 
+  // Optional lair action stored on the saved encounter ({ initiative, notes });
+  // the combat page's Load Encounter brings it in.
+  const lair = encounter.lairAction || null;
+  const setLair = (changes) => onUpdate({ ...encounter, lairAction: changes && { ...(lair || { initiative: 20, notes: '' }), ...changes } });
+
   const selectedCount = Object.values(selectedMonsters).reduce((sum, qty) => sum + qty, 0);
   const selectedTemplateCount = Object.keys(selectedMonsters).length;
   const stats = calculateEncounterStats(encounter);
@@ -260,6 +267,11 @@ const EncounterEditor = ({
           <div className="flex items-center gap-4 text-sm text-stone-400">
             <span>{stats.monsterCount} creatures</span>
             <span className="text-amber-400">{stats.totalXP.toLocaleString()} XP</span>
+            {returnToCombat && (
+              <Link href="/combat" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-amber-700/60 bg-amber-900/30 text-amber-300 hover:border-amber-500 hover:text-amber-200 font-medium">
+                <Icons.Sword />Return to Combat
+              </Link>
+            )}
           </div>
         </div>
       </header>
@@ -352,6 +364,7 @@ const EncounterEditor = ({
                       </div>
                       <button
                         onClick={() => removeMonster(monster.id)}
+                        aria-label={`Remove ${monster.customName || monster.name}`}
                         className="text-red-400 hover:text-red-300 p-1"
                       >
                         <Icons.Trash />
@@ -469,6 +482,58 @@ const EncounterEditor = ({
                 );
               })}
             </div>
+          )}
+        </div>
+
+        {/* Lair Action */}
+        <div className="bg-stone-900/50 border border-purple-800/40 rounded-xl p-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-purple-400 flex items-center gap-2">
+              <Icons.Sparkles /> Lair Action
+            </h2>
+            {lair ? (
+              <button
+                onClick={() => onUpdate({ ...encounter, lairAction: null })}
+                aria-label="Remove lair action"
+                className="text-red-400 hover:text-red-300 p-1"
+              >
+                <Icons.Trash />
+              </button>
+            ) : (
+              <button
+                onClick={() => setLair({})}
+                className="flex items-center gap-1 px-3 py-1 rounded-lg bg-purple-800/50 hover:bg-purple-700/50 text-purple-300 text-sm"
+              >
+                <Icons.Plus /> Add Lair Action
+              </button>
+            )}
+          </div>
+          {lair ? (
+            <div className="mt-3 flex gap-3 items-start">
+              <label className="text-xs text-stone-400 flex flex-col gap-1">
+                Initiative
+                <input
+                  type="number"
+                  aria-label="Lair action initiative"
+                  value={lair.initiative ?? 20}
+                  onChange={(e) => { const n = parseFloat(e.target.value); if (!isNaN(n)) setLair({ initiative: n }); }}
+                  className="w-20 bg-stone-700/50 rounded px-2 py-1 text-sm text-stone-100 font-mono focus:outline-none focus:ring-1 focus:ring-purple-500"
+                />
+              </label>
+              <label className="text-xs text-stone-400 flex flex-col gap-1 flex-1">
+                Description
+                <textarea
+                  aria-label="Lair action description"
+                  value={lair.notes || ''}
+                  onChange={(e) => setLair({ notes: e.target.value })}
+                  rows={2}
+                  placeholder="What happens on initiative count 20…"
+                  className="bg-stone-700/50 rounded px-2 py-1 text-sm text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                />
+              </label>
+            </div>
+          ) : (
+            <p className="mt-2 text-sm text-stone-500">None. Loading this encounter into combat will bring its lair action along.</p>
           )}
         </div>
       </main>

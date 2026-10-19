@@ -15,6 +15,7 @@ const NotesModal = ({ isOpen, character, onUpdate, onClose }) => {
   }, [isOpen, character.combatNotes]);
 
   if (!isOpen) return null;
+  const save = () => { onUpdate({ ...character, combatNotes: notesText.trim() }); onClose(); };
 
   return (
     <Modal onClose={onClose}>
@@ -28,28 +29,20 @@ const NotesModal = ({ isOpen, character, onUpdate, onClose }) => {
               <Icons.X />
             </button>
           </div>
-          <p className="text-xs text-stone-400 mt-1">{character.name} - Conditions, status effects, etc.</p>
+          <p className="text-xs text-stone-400 mt-1">{character.name} — anything ad hoc (conditions have their own chips)</p>
         </div>
         <div className="p-4">
           <textarea
             value={notesText}
             onChange={(e) => setNotesText(e.target.value)}
-            placeholder="Prone, Poisoned, Concentrating on spell, Hidden behind pillar..."
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) save();
+            }}
+            placeholder="Hiding behind the pillar · Hexed by Marshuh (+1d6) · Owes the party a favor…"
             className="w-full h-32 bg-stone-800 border border-stone-700 rounded-lg p-3 text-sm focus:outline-none focus:border-amber-600 resize-none"
             autoFocus
           />
-          <div className="flex flex-wrap gap-2 mt-3">
-            <span className="text-xs text-stone-500">Quick add:</span>
-            {['Prone', 'Poisoned', 'Frightened', 'Stunned', 'Restrained', 'Blinded', 'Concentrating'].map(condition => (
-              <button
-                key={condition}
-                onClick={() => setNotesText(prev => prev ? `${prev}, ${condition}` : condition)}
-                className="text-xs px-2 py-1 rounded bg-stone-800 hover:bg-stone-700 text-stone-400 hover:text-amber-400"
-              >
-                {condition}
-              </button>
-            ))}
-          </div>
+          <p className="text-[11px] text-stone-500 mt-1">⌘/Ctrl + Enter to save</p>
         </div>
         <div className="p-4 border-t border-stone-700 flex justify-between">
           <button 
@@ -63,7 +56,7 @@ const NotesModal = ({ isOpen, character, onUpdate, onClose }) => {
               Cancel
             </button>
             <button 
-              onClick={() => { onUpdate({ ...character, combatNotes: notesText }); onClose(); }}
+              onClick={save}
               className="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-sm"
             >
               Save
