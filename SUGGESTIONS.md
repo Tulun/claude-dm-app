@@ -166,13 +166,15 @@ context costs:
     vault route with the same traversal guard.
 - [ ] **Party card at-a-glance follow-ups** (⋯ menu, resource pips, passives
   and save row shipped Oct 2026):
-  - Fold THP into the HP pill so AC / HP / DC fit one row; thin HP bar
-    (bloodied colouring); shrink "+ Condition" to a small "+".
+  - Thin HP bar (bloodied colouring); shrink "+ Condition" to a small "+".
 
 ---
 
 ## Completed log
 
+- [x] Combat card vitals: temp HP folded into the HP pill (one combined
+  HP/THP editor, separate +THP chip removed) so AC / HP / DC fit one row;
+  AC and DC pills dropped their icons — Oct 2026.
 - [x] Party combat card at-a-glance (`PartyGlance.jsx`): clickable resource
   pips (spell slots first; options pools open the Resources modal), passive
   Perception/Insight/Investigation, speed, advantages chips; ability row leads

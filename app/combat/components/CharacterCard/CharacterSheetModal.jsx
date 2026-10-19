@@ -134,15 +134,15 @@ const CharacterSheetModal = ({ isOpen, character, onClose }) => {
                 <h3 className="text-sm font-semibold text-amber-400 mb-3">Passive Scores</h3>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between px-2 py-1 bg-stone-900/30 rounded">
-                    <span className="text-sm text-stone-300">Passive Perception</span>
+                    <span className="text-sm text-stone-300">Perception</span>
                     <span className="font-mono text-lg text-amber-400">{getPassiveScore('Perception')}</span>
                   </div>
                   <div className="flex items-center justify-between px-2 py-1 bg-stone-900/30 rounded">
-                    <span className="text-sm text-stone-300">Passive Investigation</span>
+                    <span className="text-sm text-stone-300">Investigation</span>
                     <span className="font-mono text-lg text-amber-400">{getPassiveScore('Investigation')}</span>
                   </div>
                   <div className="flex items-center justify-between px-2 py-1 bg-stone-900/30 rounded">
-                    <span className="text-sm text-stone-300">Passive Insight</span>
+                    <span className="text-sm text-stone-300">Insight</span>
                     <span className="font-mono text-lg text-amber-400">{getPassiveScore('Insight')}</span>
                   </div>
                 </div>

@@ -20,12 +20,27 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
   const closeModal = () => setActiveModal(null);
   const [showHpEditor, setShowHpEditor] = useState(false);
   const [hpDelta, setHpDelta] = useState('');
-  const [showTempHpEditor, setShowTempHpEditor] = useState(false);
   const [tempHpDelta, setTempHpDelta] = useState('');
   const [showTempAcEditor, setShowTempAcEditor] = useState(false);
   const [tempAcDelta, setTempAcDelta] = useState('');
   
   const isDead = character.currentHp <= 0;
+
+  // Combined HP / THP editor commit — only fields that parse to a value
+  // >= 0 apply, and nothing is sent when neither changed
+  const commitHpEditor = () => {
+    const hp = parseInt(hpDelta);
+    const thp = parseInt(tempHpDelta);
+    const next = { ...character };
+    if (!isNaN(hp) && hp >= 0) next.currentHp = hp;
+    if (!isNaN(thp) && thp >= 0) next.tempHp = thp;
+    if (next.currentHp !== character.currentHp || (next.tempHp || 0) !== (character.tempHp || 0)) onUpdate(next);
+    setShowHpEditor(false);
+  };
+  const hpEditorKeyDown = (e) => {
+    if (e.key === 'Enter') commitHpEditor();
+    else if (e.key === 'Escape') setShowHpEditor(false);
+  };
   const characterType = character.class ? 'party' : 'template';
   const tempHp = character.tempHp || 0;
   const tempAC = character.tempAC || 0;
@@ -155,7 +170,6 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setShowTempAcEditor(false)} />
                 <div className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm z-50 relative ${tempAC > 0 ? 'bg-amber-900/40' : 'bg-stone-800/60'}`}>
-                  <Icons.Shield />
                   <span className="font-mono text-stone-400">{baseAC}</span>
                   <span className="text-amber-400">+</span>
                   <input
@@ -195,83 +209,43 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                 }`}
                 title={isWildShapeAC ? `Wild Shape: ${activeWildShapeForm?.name} AC` : tempAC > 0 ? `Base ${baseAC} + ${tempAC} temp bonus` : "Click to add temp AC bonus"}
               >
-                <Icons.Shield />
                 <span className="font-mono font-medium">{displayAC}</span>
                 <span className={`text-xs ${isWildShapeAC ? 'text-lime-500' : 'text-stone-500'}`}>{isWildShapeAC ? '🐾' : 'AC'}</span>
               </button>
             )}
           </div>
-          {/* HP Badge - Clickable to edit */}
+          {/* HP pill — shows temp HP inline; click edits HP and THP together.
+              Enter (either field) or clicking away commits, Escape cancels.
+              No commit-on-blur, so Tab moves between the two fields. Each
+              field keeps the Table view's rule: blank/invalid/negative is
+              ignored (type 0 to clear THP). */}
           <div className="relative">
             {showHpEditor ? (
               <>
-                <div className="fixed inset-0 z-40" onClick={() => setShowHpEditor(false)} />
+                <div className="fixed inset-0 z-40" onClick={commitHpEditor} />
                 <div className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm z-50 relative ${isDead ? 'bg-red-900/40' : 'bg-stone-800/60'}`}>
                   <Icons.Heart />
                   <input
                     type="text"
+                    aria-label={`Current HP for ${character.name}`}
                     value={hpDelta}
                     onChange={(e) => setHpDelta(e.target.value)}
-                    onBlur={() => {
-                      const num = parseInt(hpDelta);
-                      if (!isNaN(num) && num >= 0) onUpdate({ ...character, currentHp: num });
-                      setShowHpEditor(false);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        const num = parseInt(hpDelta);
-                        if (!isNaN(num) && num >= 0) onUpdate({ ...character, currentHp: num });
-                        setShowHpEditor(false);
-                      } else if (e.key === 'Escape') setShowHpEditor(false);
-                    }}
+                    onKeyDown={hpEditorKeyDown}
+                    onFocus={(e) => e.target.select()}
                     className="w-12 text-center bg-stone-900 border border-amber-500 rounded px-1 py-0.5 font-mono focus:outline-none"
                     autoFocus
                   />
                   <span className="text-stone-500">/</span>
                   <span className="font-mono text-stone-400">{character.maxHp}</span>
-                  <span className="text-xs text-stone-500">HP</span>
-                </div>
-              </>
-            ) : (
-              <button
-                onClick={(e) => { e.stopPropagation(); setHpDelta(String(character.currentHp)); setShowHpEditor(true); }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm cursor-pointer transition-colors ${isDead ? 'bg-red-900/40 text-red-400 hover:bg-red-900/50' : tempHp > 0 ? 'bg-stone-800/60 text-stone-300 hover:bg-stone-700/60 ring-1 ring-cyan-500/50' : 'bg-stone-800/60 text-stone-300 hover:bg-stone-700/60'}`}
-                title="Click to edit HP"
-              >
-                <Icons.Heart />
-                <span className={`font-mono font-medium ${isDead ? 'text-red-400' : ''}`}>{character.currentHp}</span>
-                {tempHp > 0 && <span className="text-cyan-400 font-mono">+{tempHp}</span>}
-                <span className="text-stone-500">/</span>
-                <span className="font-mono text-stone-400">{character.maxHp}</span>
-                <span className="text-xs text-stone-500">HP</span>
-              </button>
-            )}
-          </div>
-          {/* Temp HP Badge */}
-          <div className="relative">
-            {showTempHpEditor ? (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setShowTempHpEditor(false)} />
-                <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm bg-cyan-900/40 z-50 relative">
-                  <Icons.Shield className="w-4 h-4 text-cyan-400" />
+                  <span className="text-cyan-400 ml-1">+</span>
                   <input
                     type="text"
+                    aria-label={`Temp HP for ${character.name}`}
                     value={tempHpDelta}
                     onChange={(e) => setTempHpDelta(e.target.value)}
-                    onBlur={() => {
-                      const num = parseInt(tempHpDelta);
-                      if (!isNaN(num) && num >= 0) onUpdate({ ...character, tempHp: num });
-                      setShowTempHpEditor(false);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        const num = parseInt(tempHpDelta);
-                        if (!isNaN(num) && num >= 0) onUpdate({ ...character, tempHp: num });
-                        setShowTempHpEditor(false);
-                      } else if (e.key === 'Escape') setShowTempHpEditor(false);
-                    }}
-                    className="w-10 text-center bg-stone-900 border border-cyan-500 rounded px-1 py-0.5 font-mono text-cyan-400 focus:outline-none"
-                    autoFocus
+                    onKeyDown={hpEditorKeyDown}
+                    onFocus={(e) => e.target.select()}
+                    className="w-10 text-center bg-stone-900 border border-cyan-600 rounded px-1 py-0.5 font-mono text-cyan-400 focus:outline-none"
                     placeholder="0"
                   />
                   <span className="text-xs text-cyan-500">THP</span>
@@ -279,16 +253,17 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               </>
             ) : (
               <button
-                onClick={(e) => { e.stopPropagation(); setTempHpDelta(String(tempHp)); setShowTempHpEditor(true); }}
-                className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-sm cursor-pointer transition-colors ${tempHp > 0 ? 'bg-cyan-900/40 text-cyan-400 hover:bg-cyan-900/50' : 'bg-stone-800/40 text-stone-500 hover:bg-stone-700/40 hover:text-cyan-400'}`}
-                title="Click to add/edit Temporary HP"
+                onClick={(e) => { e.stopPropagation(); setHpDelta(String(character.currentHp)); setTempHpDelta(String(tempHp)); setShowHpEditor(true); }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm cursor-pointer transition-colors ${isDead ? 'bg-red-900/40 text-red-400 hover:bg-red-900/50' : tempHp > 0 ? 'bg-stone-800/60 text-stone-300 hover:bg-stone-700/60 ring-1 ring-cyan-500/50' : 'bg-stone-800/60 text-stone-300 hover:bg-stone-700/60'}`}
+                title={tempHp > 0 ? `${tempHp} temp HP — click to edit HP / THP` : 'Click to edit HP / temp HP'}
+                aria-label={`HP for ${character.name}`}
               >
-                <Icons.TempHeart />
-                {tempHp > 0 ? (
-                  <span className="font-mono font-medium">{tempHp}</span>
-                ) : (
-                  <span className="text-xs">+THP</span>
-                )}
+                <Icons.Heart />
+                <span className={`font-mono font-medium ${isDead ? 'text-red-400' : ''}`}>{character.currentHp}</span>
+                {tempHp > 0 && <span className="text-cyan-400 font-mono" data-testid="temp-hp">+{tempHp}</span>}
+                <span className="text-stone-500">/</span>
+                <span className="font-mono text-stone-400">{character.maxHp}</span>
+                <span className="text-xs text-stone-500">HP</span>
               </button>
             )}
           </div>
@@ -299,13 +274,11 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-purple-900/30 text-purple-400 hover:bg-purple-900/50 transition-colors"
               title="Open spellbook"
             >
-              <Icons.Sparkles />
               <span className="font-mono font-medium">{spellDC}</span>
               <span className="text-xs text-purple-500">DC</span>
             </button>
           ) : (
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-purple-900/30 text-purple-400">
-              <Icons.Sparkles />
               <span className="font-mono font-medium">{spellDC}</span>
               <span className="text-xs text-purple-500">DC</span>
             </div>

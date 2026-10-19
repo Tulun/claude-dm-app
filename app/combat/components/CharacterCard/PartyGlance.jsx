@@ -7,11 +7,7 @@ import { getOrdinalSuffix } from '../../../utils/spellFormat';
 // Resources with more uses than this show as "n/max" with −/+ instead of pips
 const MAX_PIPS = 8;
 const SLOT_NAME = /^(\d+)(st|nd|rd|th)[- ]level spell slots?$/i;
-const PASSIVES = [
-  { skill: 'Perception', short: 'PP' },
-  { skill: 'Insight', short: 'Ins' },
-  { skill: 'Investigation', short: 'Inv' },
-];
+const PASSIVES = ['Perception', 'Investigation', 'Insight'];
 
 /**
  * Every spendable pool on a party member, in display order: spell slots
@@ -121,17 +117,30 @@ export default function PartyGlance({ character, wildShapeForm, onUpdate, onOpen
           {pools.map(p => <Pool key={p.id} pool={p} onUpdate={onUpdate} onOpen={onOpen} />)}
         </div>
       )}
-      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-stone-400">
-        {PASSIVES.map(({ skill, short }) => (
-          <span key={skill} title={`Passive ${skill}`} data-testid={`passive-${skill.toLowerCase()}`}>
-            {short} <span className="font-mono text-stone-200">{10 + getSkillBonus(character, SKILLS.find(s => s.name === skill))}</span>
-          </span>
-        ))}
-        <span className="text-stone-600">·</span>
-        <span title="Speed" className={wildShapeForm ? 'text-lime-400' : ''}>{speeds.join(' · ')}</span>
-        {advantages.map(a => (
-          <span key={a} className="px-1.5 py-0.5 rounded bg-emerald-900/30 text-emerald-300 text-[11px]">{a}</span>
-        ))}
+      <div className="flex items-start gap-2">
+        {/* Passive scores — spelled out, one per row */}
+        <div className="w-36 shrink-0 rounded bg-stone-800/50 px-2 py-1" aria-label="Passive scores">
+          <div className="text-[10px] uppercase tracking-wider text-stone-500">Passive</div>
+          {PASSIVES.map(skill => (
+            <div key={skill} className="flex justify-between text-xs" data-testid={`passive-${skill.toLowerCase()}`}>
+              <span className="text-stone-400">{skill}</span>
+              <span className="font-mono font-semibold text-stone-100">{10 + getSkillBonus(character, SKILLS.find(s => s.name === skill))}</span>
+            </div>
+          ))}
+        </div>
+        <div className="min-w-0 space-y-1 text-xs">
+          <div className="rounded bg-stone-800/50 px-2 py-1">
+            <div className="text-[10px] uppercase tracking-wider text-stone-500">Speed</div>
+            <div className={`font-mono ${wildShapeForm ? 'text-lime-400' : 'text-stone-100'}`}>{speeds.join(' · ')}</div>
+          </div>
+          {advantages.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {advantages.map(a => (
+                <span key={a} className="px-1.5 py-0.5 rounded bg-emerald-900/30 text-emerald-300 text-[11px]">{a}</span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -79,9 +79,9 @@ describe('PartyGlance', () => {
 
   it('shows passives (sheet skill math, expertise doubles prof), speed and advantages', () => {
     setup();
-    expect(screen.getByTestId('passive-perception')).toHaveTextContent('PP 13');
-    expect(screen.getByTestId('passive-insight')).toHaveTextContent('Ins 17'); // 10 + 3 + 2×2
-    expect(screen.getByTestId('passive-investigation')).toHaveTextContent('Inv 12');
+    expect(screen.getByTestId('passive-perception')).toHaveTextContent('Perception13');
+    expect(screen.getByTestId('passive-insight')).toHaveTextContent('Insight17'); // 10 + 3 + 2×2
+    expect(screen.getByTestId('passive-investigation')).toHaveTextContent('Investigation12');
     expect(screen.getByText('30 ft')).toBeInTheDocument();
     expect(screen.getByText('Adv. vs Poisoned')).toBeInTheDocument();
   });

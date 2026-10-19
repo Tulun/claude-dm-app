@@ -141,7 +141,13 @@ setEnemies(prev => {
   tab doesn't leak between tests. `CombatantTable` takes the same
   `onUpdate`/`onRemove`/`templates` props as the cards and its inline
   HP/THP/temp-AC edits mirror the card badges' commit rules — keep them in
-  sync if a badge's validation changes. Tests: `test/combat/combatantTable.test.jsx`
+  sync if a badge's validation changes. On the CARD, HP and THP share ONE
+  pill (no separate THP chip; THP shows as cyan `+N`): clicking it opens a
+  combined HP + THP editor that commits on Enter or backdrop click (NOT on
+  blur, so Tab moves between fields), Escape cancels, each field applies
+  only if it parses to >= 0, and no `onUpdate` fires when nothing changed.
+  The AC / DC pills carry no icon — the "AC" / "DC" label is enough. Tests:
+  `test/combat/combatantTable.test.jsx`, `test/combat/hpPill.test.jsx`
   and the "Party / Enemies / Table tabs" block in `combatPage.test.jsx`.
 - Combatant modals are driven by ONE `activeModal` key (`'delete' | 'actions'
   | 'resources' | 'sheet' | 'inventory' | 'notes' | 'statblock' | 'spells' |
@@ -169,8 +175,9 @@ setEnemies(prev => {
   spends one, an empty pip restores one, pools over 8 show `n/max` with −/+,
   and a pool with `options` (Spirit Totem) opens the Resources modal instead
   of spending (the picker applies side effects like Bear Spirit temp HP).
-  Below it: passive Perception / Insight / Investigation, speed (wild-shape
-  form's when shaped) and `advantages` chips. The party ability row leads
+  Below it: a "Passive" box (Perception / Investigation / Insight, spelled
+  out one per row — the earlier "PP 13 · Ins 13" line read as unclear), a
+  Speed box (wild-shape form's speed when shaped) and `advantages` chips. The party ability row leads
   with the modifier, shows the score beside the label and a `save ±N` line
   (proficient saves emerald + ringed; wild shape uses beast STR/DEX/CON with
   the druid's proficiencies). Enemy rows are unchanged. Skill/save math: see
