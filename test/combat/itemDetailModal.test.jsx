@@ -17,6 +17,32 @@ describe('ItemDetailModal armor', () => {
     expect(screen.queryByText('No description.')).not.toBeInTheDocument();
   });
 
+  it('shows the wearer\'s AC as base + DEX when given a character', () => {
+    render(
+      <ItemDetailModal
+        item={{ id: 1, name: 'Leather Armour', itemType: 'armor', baseAC: '11', armorType: 'Light' }}
+        character={{ dex: 16 }}
+        stats={null}
+        onClose={vi.fn()}
+      />
+    );
+    expect(screen.getByText('14')).toBeInTheDocument();
+    expect(screen.getByText('11 AC + Dex Modifier (+3)')).toBeInTheDocument();
+  });
+
+  it('caps DEX at +2 for medium armor', () => {
+    render(
+      <ItemDetailModal
+        item={{ id: 4, name: 'Breastplate', itemType: 'armor', baseAC: '14', armorType: 'Medium' }}
+        character={{ dex: 18 }}
+        stats={null}
+        onClose={vi.fn()}
+      />
+    );
+    expect(screen.getByText('16')).toBeInTheDocument();
+    expect(screen.getByText('14 AC + Dex Modifier (+2)')).toBeInTheDocument();
+  });
+
   it('falls back to the armor table when the item has no baseAC', () => {
     render(<ItemDetailModal item={{ id: 2, name: 'Chain Mail', itemType: 'armor', stealthDisadv: true }} stats={null} onClose={vi.fn()} />);
     expect(screen.getByText('16')).toBeInTheDocument();

@@ -82,6 +82,7 @@ export default function PartyLoadout({ character }) {
       {openItem && (
         <ItemDetailModal
           item={openItem}
+          character={character}
           stats={isWeaponItem(openItem) ? weaponStats(openItem, character) : null}
           onClose={() => setOpenId(null)}
         />

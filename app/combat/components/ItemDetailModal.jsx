@@ -3,7 +3,7 @@
 import { createPortal } from 'react-dom';
 import Icons from '../../components/Icons';
 import Modal from '../../components/Modal';
-import { formatMod } from '../../utils/rules';
+import { formatMod, getModNum } from '../../utils/rules';
 import { getArmorData } from '../../utils/acCalculation';
 import { ARMOR_DESC, MASTERY_DESC, PROPERTY_DESC } from './CharacterCard/utils';
 
@@ -11,14 +11,15 @@ import { ARMOR_DESC, MASTERY_DESC, PROPERTY_DESC } from './CharacterCard/utils';
  * What an equipped item does, opened from the turn tracker's loadout chips.
  * Weapons get the attack / damage breakdown (ability + proficiency + magic,
  * from `getWeaponStatsFor`) plus property and mastery explanations; armor
- * gets base AC, how DEX applies, and stealth / STR notes. Every item shows
+ * gets the wearer's AC (base + capped DEX, when `character` is passed), how
+ * DEX applies, and stealth / STR notes. Every item shows
  * its description as plain text ("No description." only when nothing else
  * is shown).
  *
  * Portaled to <body>: the tracker is a sticky z-10 bar, and a fixed overlay
  * inside that stacking context would sit underneath the navbar.
  */
-export default function ItemDetailModal({ item, stats, onClose }) {
+export default function ItemDetailModal({ item, stats, character, onClose }) {
   if (!item || typeof document === 'undefined') return null;
 
   const props = stats?.properties || [];
@@ -37,6 +38,13 @@ export default function ItemDetailModal({ item, stats, onClose }) {
   const baseAC = item.baseAC || tableArmor?.baseAC || '';
   const isShield = armorType === 'Shield';
   const hasArmorInfo = isArmor && (baseAC || armorType);
+  // Wearer's AC from this armor alone — same DEX caps as getEquipmentAC.
+  // Shields are a flat bonus, so there's nothing to modify.
+  const dexMod = character ? getModNum(character.dex) : null;
+  const dexBonus = dexMod === null || isShield || armorType === 'Heavy'
+    ? null
+    : armorType === 'Medium' ? Math.min(2, dexMod) : dexMod;
+  const wornAC = baseAC && dexBonus !== null ? Number(baseAC) + dexBonus : null;
 
   const dmgParts = stats
     ? [
@@ -103,8 +111,9 @@ export default function ItemDetailModal({ item, stats, onClose }) {
           {hasArmorInfo && (
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-lg bg-stone-800/60 p-3">
-                <div className="text-[10px] font-bold uppercase tracking-widest text-stone-500">{isShield ? 'AC Bonus' : 'Base AC'}</div>
-                <div className="text-2xl font-bold font-mono text-sky-300">{baseAC ? (isShield ? `+${baseAC}` : baseAC) : '—'}</div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-stone-500">{isShield ? 'AC Bonus' : wornAC !== null ? 'AC' : 'Base AC'}</div>
+                <div className="text-2xl font-bold font-mono text-sky-300">{wornAC ?? (baseAC ? (isShield ? `+${baseAC}` : baseAC) : '—')}</div>
+                {wornAC !== null && <div className="text-xs text-stone-400">{baseAC} AC + Dex Modifier ({formatMod(dexBonus)})</div>}
                 {armorType && <div className="text-xs text-stone-400">{ARMOR_DESC[armorType] || `${armorType} armor`}</div>}
               </div>
               <div className="rounded-lg bg-stone-800/60 p-3 text-xs text-stone-400 space-y-1">
