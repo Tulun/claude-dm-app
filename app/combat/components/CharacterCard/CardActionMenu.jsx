@@ -12,12 +12,13 @@ const MENU_WIDTH = 208;
  * The combat card's ⋯ overflow menu (party AND enemy cards): the same
  * `getCardActions` list as the icon row, plus Details (opens the combat
  * page's detail drawer), an Edit Character link (party, `editHref`) and
- * Duplicate (`onDuplicate`, enemies) and Remove from Combat (`onRemove`
+ * Separate / Rejoin group initiative (`onToggleOwnInit`, enemies with a
+ * same-named groupmate), Duplicate (`onDuplicate`, enemies) and Remove from Combat (`onRemove`
  * present → opens the 'delete' confirm). The menu PORTALS to <body> with
  * fixed positioning because the card is `overflow-hidden` (an absolute
  * dropdown would be clipped). Closes on pick, outside click, scroll and Escape.
  */
-export default function CardActionMenu({ character, isEnemy = false, spellcastingInfo, onOpen, editHref, onInspect, onDuplicate, onRemove }) {
+export default function CardActionMenu({ character, isEnemy = false, spellcastingInfo, onOpen, editHref, onInspect, onDuplicate, ownInit = false, onToggleOwnInit, onRemove }) {
   const [pos, setPos] = useState(null);
   const triggerRef = useRef(null);
   const open = pos !== null;
@@ -94,7 +95,17 @@ export default function CardActionMenu({ character, isEnemy = false, spellcastin
                 {label}
               </button>
             ))}
-            {(onDuplicate || onRemove) && <div className="my-1 border-t border-stone-700/60" />}
+            {(onDuplicate || onRemove || onToggleOwnInit) && <div className="my-1 border-t border-stone-700/60" />}
+            {onToggleOwnInit && (
+              <button
+                role="menuitem"
+                onClick={(e) => { e.stopPropagation(); close(); onToggleOwnInit(character.id); }}
+                className={itemClass}
+              >
+                <span className="inline-flex w-5 justify-center text-amber-400"><Icons.Link /></span>
+                {ownInit ? 'Rejoin Group Initiative' : 'Separate Initiative'}
+              </button>
+            )}
             {onDuplicate && (
               <button
                 role="menuitem"

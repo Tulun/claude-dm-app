@@ -6,6 +6,7 @@ import Icons from '../../../components/Icons';
 import { parseSpellcasting } from './spellcastingParser';
 import CardActionMenu from './CardActionMenu';
 import CardModals from './CardModals';
+import InitChip from './InitChip';
 import ConditionChips from '../ConditionChips';
 import PartyGlance from './PartyGlance';
 import EnemyGlance from './EnemyGlance';
@@ -15,7 +16,7 @@ import { getSaveBonus } from '../../../character/components/constants';
 import { formatMod } from '../../../utils/rules';
 import { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, formatClassList, getActiveWildShapeForm, getCardBaseAC, getCardDisplayAC } from './utils';
 
-const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, onDuplicate, onInspect, showResources, templates = [], stretch = false }) => {
+const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, onDuplicate, onInspect, onUpdateInitiative, onToggleOwnInit, initFamilySize = 1, initSharedWith = 0, showResources, templates = [], stretch = false }) => {
   // One modal open at a time — a single key replaces the old 10 showX booleans
   const [activeModal, setActiveModal] = useState(null);
   const closeModal = () => setActiveModal(null);
@@ -146,13 +147,16 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, onDuplicate, on
               editHref={isEnemy ? undefined : `/character?id=${character.id}&type=${characterType}`}
               onInspect={onInspect}
               onDuplicate={isEnemy ? onDuplicate : undefined}
+              ownInit={!!character.ownInit}
+              onToggleOwnInit={isEnemy && initFamilySize > 1 ? onToggleOwnInit : undefined}
               onRemove={isEnemy ? onRemove : undefined}
             />
           </div>
         </div>
         
-        {/* Stats row: AC, HP, Spell DC */}
+        {/* Stats row: Init, AC, HP, Spell DC */}
         <div className="flex items-center gap-2 flex-wrap">
+          {onUpdateInitiative && <InitChip character={character} onUpdateInitiative={onUpdateInitiative} sharedWith={initSharedWith} />}
           {/* AC Badge - Clickable to edit temp AC */}
           <div className="relative">
             {showTempAcEditor ? (

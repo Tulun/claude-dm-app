@@ -107,9 +107,9 @@ describe('CombatPage — loading and layout', () => {
     expect(enemiesCol).toBeNull(); // Party tab is the default
     showTab('Enemies');
     expect(within(getColumns().enemiesCol).getByText('Ogre')).toBeInTheDocument();
-    // the order (incl. companions) lives in the Manage Order modal;
+    // the order (incl. companions) lives in the Current Order modal;
     // active + inCombat companion joins initiative, benched companion does not
-    fireEvent.click(screen.getByText('Manage Order'));
+    fireEvent.click(screen.getByText('Current Order'));
     expect(screen.getByText('Wolfy')).toBeInTheDocument();
     expect(screen.queryByText('Benchwarmer')).not.toBeInTheDocument();
     fireEvent.click(screen.getByText('Done'));
@@ -156,9 +156,9 @@ describe('CombatPage — initiative', () => {
     render(<CombatPage />);
     await settle();
 
-    // The order only renders inside the Manage Order modal; the main column
+    // The order only renders inside the Current Order modal; the main column
     // is the turn tracker.
-    fireEvent.click(screen.getByText('Manage Order'));
+    fireEvent.click(screen.getByText('Current Order'));
     fireEvent.click(screen.getByText('Sort by Init'));
 
     const modal = screen.getByText('Initiative Order').closest('.fixed');
@@ -176,10 +176,10 @@ describe('CombatPage — initiative', () => {
     showTab('Enemies'); // the lair-action shortcut lives in the Enemies section
     fireEvent.click(screen.getByRole('button', { name: 'Add Lair Action' }));
     // it shows up right there in the Enemies section (it used to vanish into
-    // the Manage Order modal only)
+    // the Current Order modal only)
     const enemiesSection = screen.getByRole('region', { name: 'Enemies' });
     expect(within(enemiesSection).getByText('Lair Action')).toBeInTheDocument();
-    fireEvent.click(screen.getByText('Manage Order'));
+    fireEvent.click(screen.getByText('Current Order'));
     const modal = screen.getByText('Initiative Order').closest('.fixed');
     expect(within(modal).getByText('Lair Action')).toBeInTheDocument();
     fireEvent.click(screen.getByText('Done'));
@@ -489,6 +489,70 @@ describe('CombatPage — enemy numbering', () => {
     await act(async () => { vi.advanceTimersByTime(1100); });
     const body = JSON.parse(postCalls(fetchMock, '/api/encounter').at(-1)[1].body);
     expect(body.enemies.map(e => e.name)).toEqual(['Goblin 1', 'Goblin 2', 'Goblin 3', 'Goblin 4']);
+  });
+});
+
+describe('CombatPage — group initiative and the card init chip', () => {
+  const bosses = {
+    enemies: [
+      { id: 'enemy-1', name: 'Goblin Boss 1', currentHp: 21, maxHp: 21, initiative: 12 },
+      { id: 'enemy-2', name: 'Goblin Boss 2', currentHp: 21, maxHp: 21, initiative: 7 },
+      { id: 'enemy-3', name: 'Ogre', currentHp: 59, maxHp: 59, initiative: 9 },
+    ],
+  };
+  const editInit = (name, value) => {
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(`^Initiative .* for ${name}`) }));
+    const input = screen.getByLabelText(`Initiative for ${name}`);
+    fireEvent.change(input, { target: { value } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+  };
+  const savedInits = async (fetchMock) => {
+    await act(async () => { vi.advanceTimersByTime(1100); });
+    return JSON.parse(postCalls(fetchMock, '/api/encounter').at(-1)[1].body).enemies.map(e => [e.name, e.initiative]);
+  };
+
+  it('same-named enemies share one initiative from load; a card edit moves the group', async () => {
+    const fetchMock = mockFetch({ '/api/encounter': jsonResponse(bosses) });
+    render(<CombatPage />);
+    await settle();
+    showTab('Enemies');
+    expect(screen.getByRole('button', { name: 'Initiative 12 for Goblin Boss 2 (shared)' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Initiative 9 for Ogre' })).toBeInTheDocument();
+    fetchMock.mockClear();
+    editInit('Goblin Boss 2', '18');
+    expect(await savedInits(fetchMock)).toEqual([['Goblin Boss 1', 18], ['Goblin Boss 2', 18], ['Ogre', 9]]);
+  });
+
+  it('Separate Initiative splits one off; Rejoin puts it back on the group value', async () => {
+    const fetchMock = mockFetch({ '/api/encounter': jsonResponse(bosses) });
+    render(<CombatPage />);
+    await settle();
+    showTab('Enemies');
+    // lone Ogre has no group to split from
+    fireEvent.click(screen.getByLabelText('More actions for Ogre'));
+    expect(screen.queryByRole('menuitem', { name: 'Separate Initiative' })).not.toBeInTheDocument();
+    fireEvent.keyDown(window, { key: 'Escape' });
+
+    fireEvent.click(screen.getByLabelText('More actions for Goblin Boss 2'));
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Separate Initiative' }));
+    fetchMock.mockClear();
+    editInit('Goblin Boss 2', '4');
+    expect(await savedInits(fetchMock)).toEqual([['Goblin Boss 1', 12], ['Goblin Boss 2', 4], ['Ogre', 9]]);
+
+    fireEvent.click(screen.getByLabelText('More actions for Goblin Boss 2'));
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Rejoin Group Initiative' }));
+    expect(await savedInits(fetchMock)).toEqual([['Goblin Boss 1', 12], ['Goblin Boss 2', 12], ['Ogre', 9]]);
+  });
+
+  it('party cards get the init chip too (no group link)', async () => {
+    const fetchMock = mockFetch();
+    render(<CombatPage />);
+    await settle();
+    fetchMock.mockClear();
+    editInit('Theren', '21');
+    await act(async () => { vi.advanceTimersByTime(1100); });
+    const body = JSON.parse(postCalls(fetchMock, '/api/party').at(-1)[1].body);
+    expect(body.find(p => p.name === 'Theren').initiative).toBe(21);
   });
 });
 

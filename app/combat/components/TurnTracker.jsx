@@ -80,7 +80,7 @@ const TurnReminder = ({ reminder, name, onDismiss }) => (
  * The turn bar above the combat columns: whose turn it is right now, who is
  * up next (in the header), and the current combatant's action economy
  * (This Turn — which also holds the current monster's abilities + limited-use
- * tracker). The header carries Full Order / Legendary beside the round/turn
+ * tracker). The header carries Legendary beside the round/turn
  * info, and Back / End Turn / End Combat on the right.
  * Legendary actions are an *interrupt* — they overlay the pointer without
  * moving it, so ending the interrupt returns to exactly the same turn.
@@ -95,7 +95,6 @@ const TurnTracker = ({
   list,
   activeIndex,
   kindOf,
-  onOpenOrder,
   legendaryCreatures,
   onSetLegendaryUsed,
   turnUsage,
@@ -151,7 +150,7 @@ const TurnTracker = ({
   const style = styleFor(currentKind);
 
   // Only the next combatant shows here (wrapping into the next round); the
-  // full order is one click away in the order modal.
+  // full order is one click away (Current Order, above the tracker).
   const n = list?.length || 0;
   const next = n > 1 ? list[(activeIndex + 1) % n] : null;
   const nextKind = next ? styleFor(kindOf ? kindOf(next) : 'party') : null;
@@ -175,7 +174,7 @@ const TurnTracker = ({
         <div className="flex flex-wrap items-center gap-3 min-w-0">
           <span className="font-bold uppercase tracking-widest text-amber-400">Round {round}</span>
           <span className="text-stone-500">Turn {turnNumber} / {turnCount}</span>
-          {/* Just the next combatant — Full Order opens the rest. */}
+          {/* Just the next combatant — Current Order opens the rest. */}
           {next && (
             <span className="flex items-center gap-1.5 min-w-0 pl-3 border-l border-stone-700">
               <span className="font-bold uppercase tracking-widest text-stone-500">Up Next</span>
@@ -193,13 +192,6 @@ const TurnTracker = ({
               </button>
             </span>
           )}
-          <button
-            onClick={onOpenOrder}
-            title="Show the full initiative order"
-            className="flex items-center gap-1 px-2.5 py-1 rounded border border-amber-800/60 bg-amber-950/40 text-amber-300 hover:border-amber-600 hover:text-amber-200 font-medium"
-          >
-            <Icons.GripVertical />Full Order
-          </button>
           <button
             onClick={onOpenLegendary}
             title="Slot in a legendary action"

@@ -193,6 +193,13 @@ context costs:
   (`app/combat/enemyNames.js`) now runs on every add path and on load, so
   existing collisions in `data/encounter.json` fix themselves — Oct 2026.
   Not done: renaming an enemy by hand can still create a duplicate name.
+- [x] Group initiative + quick init edit: same-named enemies share one
+  initiative value (`app/combat/initGroups.js`; ⋯ menu Separate / Rejoin via
+  `ownInit`); every party and enemy card has an Init chip for inline edits;
+  "Manage Order" renamed **Current Order** and the tracker's duplicate "Full
+  Order" button removed — Oct 2026.
+  Not done: grouped enemies still take separate turns (shared number only);
+  the Table view's Init column is read-only.
 
 - [x] Enemy card glowup (mirrors the party cards): ⋯ menu instead of the
   icon row (Remove from Combat lives there), "size type · CR" subtitle,

@@ -13,7 +13,7 @@ const getCalculatedAC = (character) => getEquipmentAC(character, { parseArmorNam
 // onDragOver, onDrop, onDragEnd }); isDragging/isDragOver are per-row booleans
 // so only the affected rows re-render during a drag. Rows are only draggable
 // where `drag` is supplied — the main initiative column omits it (reordering
-// lives in the Manage Order modal) and passes `onSelect` instead, which makes
+// lives in the Current Order modal) and passes `onSelect` instead, which makes
 // the row a click target for "jump the turn pointer here". `onToggleReaction`
 // (stable, receives the id) adds the per-round reaction toggle; `onInspect`
 // (stable, receives the id) adds a Details button that opens the drawer.
@@ -77,7 +77,7 @@ const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, 
     }
   };
 
-  // Drag is opt-in (Manage Order modal); the main column gets click-to-jump instead.
+  // Drag is opt-in (Current Order modal); the main column gets click-to-jump instead.
   const canDrag = !!drag && !editing && !editingHp && !editingNotes;
   const dragProps = drag
     ? {

@@ -85,13 +85,13 @@ const settle = async () => {
 // party/enemies grid is main.children[1].
 const initBar = () => document.querySelector('main').children[0];
 const tracker = () => initBar().children[1];
-// The order only renders inside the Manage Order modal now
+// The order only renders inside the Current Order modal now
 const orderModal = () => screen.getByText('Initiative Order').closest('.fixed');
 
 const click = (el) => act(() => { fireEvent.click(el); });
 
 const openOrderModal = async () => {
-  click(screen.getByText('Manage Order'));
+  click(screen.getByText('Current Order'));
   await act(async () => {});
   return orderModal();
 };
@@ -148,13 +148,14 @@ describe('CombatPage — turn tracker', () => {
     expect(within(tracker()).queryByText('Wolfy')).not.toBeInTheDocument();
   });
 
-  it('the Full Order button beside the turn info opens the full initiative order', async () => {
+  it('the order opens only from Current Order above the tracker (no duplicate Full Order button)', async () => {
     mockFetch();
     render(<CombatPage />);
     await settle();
     await startCombat();
 
-    click(within(tracker()).getByRole('button', { name: /Full Order/ }));
+    expect(within(tracker()).queryByRole('button', { name: /Full Order/ })).not.toBeInTheDocument();
+    click(screen.getByRole('button', { name: /Current Order/ }));
     await flush();
     const modal = orderModal();
     for (const name of ['Theren', 'Mira', 'Wolfy', 'Ogre']) {
@@ -299,7 +300,7 @@ describe('CombatPage — turn tracker', () => {
     await flush();
     expect(nowName()).toBe('Mira');
 
-    click(screen.getByText('Manage Order'));
+    click(screen.getByText('Current Order'));
     click(screen.getByText('Sort by Init'));
     await flush();
     click(screen.getByText('Done'));

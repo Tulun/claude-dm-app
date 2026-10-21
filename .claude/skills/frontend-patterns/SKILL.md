@@ -112,9 +112,13 @@ setEnemies(prev => {
   action, both card and Table tabs; no drag/select; `lairActionEntries` is its
   own `useMemo` so the memoized rows stay stable; their notes/remove callbacks
   take the lair id). Before they existed, "+ Lair Action" appeared to do
-  nothing — the lair action only showed inside Manage Order. No other combatant gets a row on the page — initiative is a full-width `TurnTracker` bar
+  nothing — the lair action only showed inside the order modal. No other combatant gets a row on the page — initiative is a full-width `TurnTracker` bar
   ABOVE the combatant tabs (§2.5); the full order lives exclusively in the
-  Manage Order modal. Layout: `main.children[0]` = initiative bar (header +
+  order modal, opened ONLY by the **Current Order** button above the tracker
+  (formerly "Manage Order"; the tracker's duplicate "Full Order" button was
+  removed). Quick init edits happen on the cards instead: every party/enemy
+  card's stats row starts with an `InitChip` (click → inline edit, calls the
+  page's stable `updateInitiative(id, n)`). Layout: `main.children[0]` = initiative bar (header +
   tracker), `main.children[1]` = the combatant TABS — a `role="tablist"`
   (Party & Allies | Enemies | Table, each with a count badge) above the
   matching `<section aria-label="Party & Allies">` / `<section
@@ -140,7 +144,17 @@ setEnemies(prev => {
   pass the list through `numberEnemies` (`app/combat/enemyNames.js`) — a name
   family with 2+ members gets every member numbered, keeping numbers already
   held. Removing an enemy never renumbers the rest (names are how the DM
-  tracks them). New add paths must call it too. The load modal
+  tracks them). New add paths must call it too — the page wraps it as
+  `normalizeEnemies` = `numberEnemies` then `shareGroupInitiative`.
+  **Group initiative** (`app/combat/initGroups.js`): a name family shares one
+  initiative value — `updateInitiative` on an enemy goes through
+  `setEnemyInitiative`, so editing any member (card chip, order modal) moves
+  the group; newcomers take the family's first member's value. Each member is
+  still its own combatant/turn (only the number is shared; equal values +
+  stable sort keep them adjacent). The ⋯ menu's Separate Initiative sets
+  `ownInit: true` (own value, edits stop spreading); Rejoin Group Initiative
+  drops it and takes the group's value. The menu item only shows when the
+  family has 2+ members; the init chip shows a link icon while shared. The load modal
   offers **Add to Combat** (append monsters AND lair actions; keeps the first
   loaded name) and, when enemies exist, **Replace Enemies** (swaps enemies +
   lair actions + name; party and turn state kept). Loaded lair actions get
@@ -285,14 +299,14 @@ Three rules keep the pointer honest:
   `acEffect` — see the caller table in **rules-math** (canonical) before
   changing it.
 - **The bar shows ONLY the next combatant**, inline in the tracker HEADER row
-  (Round · Turn · Up Next · Full Order · Legendary on the left; ← Back ·
+  (Round · Turn · Up Next · Legendary on the left; ← Back ·
   End Turn → · End Combat on the right — the turn buttons live in the header,
   not under the This Turn panel), derived inside
   `TurnTracker` from `list` + `activeIndex` (cyclic, wraps into next round);
   the name element (a button) carries `data-testid="up-next"` and `title` = the
   combatant name (the tests key on this). Clicking it opens the detail drawer
   pinned to that combatant — it does NOT move the turn pointer; the
-  "Full Order" header button opens the order modal (`onOpenOrder`) — the tracker no longer jumps the pointer;
+  tracker has no order button (Current Order above it opens the modal) and no longer jumps the pointer;
   jumping happens from modal rows. **End Combat two-steps**: the header
   button swaps to an inline confirm (local `confirmingEnd` state) because
   ending combat discards the round/turn position — keep destructive tracker
@@ -308,7 +322,7 @@ Three rules keep the pointer honest:
   order-modal rows (`InitiativeItem` `reactionUsed` + stable
   `onToggleReaction(id)`) AND on the tracker's This Turn panel — same map.
   Legendary budgets are NOT a panel on the bar (too much space): the header's
-  **Legendary** button (beside Full Order; replaces the old ⚡ control) shows
+  **Legendary** button (beside Up Next; replaces the old ⚡ control) shows
   mini dots per living legendary enemy and opens `LegendaryActionModal`, whose
   rows carry clickable `LegendaryPips`; the interrupt panel also shows pips and
   clicking an action spends its parsed cost. Budget/cost math lives in

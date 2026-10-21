@@ -25,7 +25,11 @@ import { useToast } from '../hooks/useToast';
 import { SAVE_ARM_DELAY_MS, SAVE_DEBOUNCE_MS } from '../utils/timings';
 import { applyTurnChange, endOfTurnSaveConditions } from './conditions';
 import { duplicateEnemy } from './duplicate';
-import { numberEnemies } from './enemyNames';
+import { numberEnemies, baseName } from './enemyNames';
+import { shareGroupInitiative, setEnemyInitiative, setOwnInitiative, initGroupOf } from './initGroups';
+
+// Every add path and the initial load: unique names, then group initiative.
+const normalizeEnemies = (list) => shareGroupInitiative(numberEnemies(list));
 
 const EMPTY_TEMPLATES = [];
 // Enemies encounter-bar buttons: bordered so they read as buttons, colored
@@ -119,7 +123,7 @@ export default function CombatPage() {
         if (encounterRes.ok) {
           const encounterData = await encounterRes.json();
           if (encounterData && Array.isArray(encounterData.enemies) && encounterData.enemies.length > 0) {
-            setEnemies(numberEnemies(encounterData.enemies));
+            setEnemies(normalizeEnemies(encounterData.enemies));
           }
           const savedLairs = readLairActions(encounterData);
           if (savedLairs.length) setLairActions(savedLairs);
@@ -277,11 +281,11 @@ export default function CombatPage() {
     // Fresh ids: loading the same encounter twice must not collide.
     const savedLairs = readLairActions(encounter).map(l => ({ ...l, id: newLairAction().id }));
     if (replacing) {
-      setEnemies(numberEnemies(newEnemies));
+      setEnemies(normalizeEnemies(newEnemies));
       setLairActions(savedLairs);
       setLoadedEncounter({ id: encounter.id, name: encounter.name });
     } else {
-      setEnemies(prev => numberEnemies([...prev, ...newEnemies]));
+      setEnemies(prev => normalizeEnemies([...prev, ...newEnemies]));
       if (savedLairs.length) setLairActions(prev => [...prev, ...savedLairs]);
       setLoadedEncounter(prev => prev || { id: encounter.id, name: encounter.name });
     }
@@ -566,7 +570,7 @@ export default function CombatPage() {
     setEnemies(prev => {
       const i = prev.findIndex(x => x.id === id);
       if (i < 0 || prev.some(x => x.id === copyId)) return prev;
-      return numberEnemies([...prev.slice(0, i + 1), duplicateEnemy(prev[i], copyId), ...prev.slice(i + 1)]);
+      return normalizeEnemies([...prev.slice(0, i + 1), duplicateEnemy(prev[i], copyId), ...prev.slice(i + 1)]);
     });
     setInitiativeOrder(prev => {
       const i = prev.indexOf(id);
@@ -574,7 +578,21 @@ export default function CombatPage() {
       return [...prev.slice(0, i + 1), copyId, ...prev.slice(i + 1)];
     });
   }, []);
-  const addEnemy = useCallback((e) => setEnemies(prev => numberEnemies([...prev, e])), []);
+  const toggleOwnInit = useCallback((id) => setEnemies(prev => {
+    const enemy = prev.find(x => x.id === id);
+    return enemy ? setOwnInitiative(prev, id, !enemy.ownInit) : prev;
+  }), []);
+  // Per enemy: family size (same base name) and how many others share its
+  // initiative — plain numbers so the memoized cards stay cheap to compare.
+  const initGroupInfo = useMemo(() => {
+    const families = new Map();
+    enemies.forEach(e => families.set(baseName(e.name), (families.get(baseName(e.name)) || 0) + 1));
+    return new Map(enemies.map(e => [e.id, {
+      familySize: families.get(baseName(e.name)),
+      sharedWith: initGroupOf(enemies, e).length - 1,
+    }]));
+  }, [enemies]);
+  const addEnemy = useCallback((e) => setEnemies(prev => normalizeEnemies([...prev, e])), []);
   const addPartyMember = useCallback((m) => setParty(prev => [...(prev || []), m]), []);
 
   const updateCompanion = useCallback((companionId, changes) => {
@@ -605,10 +623,8 @@ export default function CombatPage() {
       const next = prev.map(p => p.id === id ? { ...p, initiative: newInit } : p);
       return next.some((p, i) => p !== prev[i]) ? next : prev;
     });
-    setEnemies(prev => {
-      const next = prev.map(x => x.id === id ? { ...x, initiative: newInit } : x);
-      return next.some((x, i) => x !== prev[i]) ? next : prev;
-    });
+    // Enemies share initiative with their same-named group (./initGroups)
+    setEnemies(prev => setEnemyInitiative(prev, id, newInit));
     updateLair(id, { initiative: newInit });
   }, [updateCompanion, updateLair]);
 
@@ -674,12 +690,12 @@ export default function CombatPage() {
 
       <main className="relative max-w-7xl mx-auto p-4 space-y-4">
           {/* Initiative bar: full-width tracker above the columns. The full
-              order lives in the Manage Order modal so the table view stays
+              order lives in the Current Order modal so the table view stays
               uncluttered. */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-amber-400 flex items-center gap-2"><Icons.Sword />Initiative</h2>
-              <button onClick={openOrder} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.GripVertical />Manage Order</button>
+              <button onClick={openOrder} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.GripVertical />Current Order</button>
             </div>
 
             <TurnTracker
@@ -692,7 +708,6 @@ export default function CombatPage() {
               list={fullInitiativeList}
               activeIndex={activeIndex}
               kindOf={kindOf}
-              onOpenOrder={openOrder}
               legendaryCreatures={legendaryCreatures}
               onSetLegendaryUsed={setLegendaryUsed}
               turnUsage={turnUsage?.id === currentCombatant?.id ? turnUsage : null}
@@ -756,7 +771,7 @@ export default function CombatPage() {
               // Full-width tab: up to three card columns; rows stretch so
               // side-by-side cards line up (`stretch` pins their stat bars).
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {party.map(m => <CharacterCard key={m.id} character={m} isEnemy={false} onUpdate={updatePartyMember} onRemove={removePartyMember} onInspect={inspectCombatant} showResources templates={templates || EMPTY_TEMPLATES} stretch />)}
+                {party.map(m => <CharacterCard key={m.id} character={m} isEnemy={false} onUpdate={updatePartyMember} onRemove={removePartyMember} onInspect={inspectCombatant} onUpdateInitiative={updateInitiative} showResources templates={templates || EMPTY_TEMPLATES} stretch />)}
               </div>
               )
             ) : (
@@ -812,10 +827,24 @@ export default function CombatPage() {
               : enemies.length > 0 && (
                 // items-start: enemy cards must NOT stretch (frontend-patterns §2.5)
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
-                  {enemies.map(e => <CharacterCard key={e.id} character={e} isEnemy={true} onUpdate={updateEnemy} onRemove={removeEnemy} onDuplicate={duplicateEnemyById} onInspect={inspectCombatant} />)}
+                  {enemies.map(e => (
+                    <CharacterCard
+                      key={e.id}
+                      character={e}
+                      isEnemy={true}
+                      onUpdate={updateEnemy}
+                      onRemove={removeEnemy}
+                      onDuplicate={duplicateEnemyById}
+                      onInspect={inspectCombatant}
+                      onUpdateInitiative={updateInitiative}
+                      onToggleOwnInit={toggleOwnInit}
+                      initFamilySize={initGroupInfo.get(e.id)?.familySize}
+                      initSharedWith={initGroupInfo.get(e.id)?.sharedWith}
+                    />
+                  ))}
                 </div>
               )}
-            {/* Lair actions also live here (not only in Manage Order), so
+            {/* Lair actions also live here (not only in Current Order), so
                 adding one visibly lands somewhere: initiative, notes, remove. */}
             {lairActionEntries.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 items-start">

@@ -218,7 +218,7 @@ describe('CombatPage — combatant detail drawer', () => {
     mockFetch();
     render(<CombatPage />);
     await settle();
-    click(screen.getByText('Manage Order'));
+    click(screen.getByText('Current Order'));
     await flush();
     click(screen.getByRole('button', { name: 'Details for Ogre' }));
 

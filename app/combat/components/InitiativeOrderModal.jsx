@@ -5,8 +5,8 @@ import Modal from '../../components/Modal';
 import InitiativeItem from './InitiativeItem';
 
 /**
- * The full initiative order (opened from Manage Order or the tracker's Up Next
- * card): sort by rolled initiative, drag to rearrange, edit initiative values /
+ * The full initiative order (opened from the Current Order button above the
+ * tracker): sort by rolled initiative, drag to rearrange, edit initiative values /
  * companion HP / lair notes, and tick off each combatant's reaction for the
  * round (it refreshes automatically when their turn comes back around). The
  * main view stays a compact turn display so the DM can't knock the order

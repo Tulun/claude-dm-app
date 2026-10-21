@@ -45,11 +45,11 @@
       "notes": "Half Plate",
       "source": "mm",
       "currentHp": 39,
-      "initiative": 0
+      "initiative": 20
     },
     {
       "id": "enemy-1792607321609-t9yufmpam",
-      "name": "Goblin Boss",
+      "name": "Goblin Boss 1",
       "size": "Small",
       "creatureType": "Humanoid",
       "ac": 17,
@@ -98,11 +98,11 @@
       "notes": "Chain Shirt, Shield",
       "source": "mm",
       "currentHp": 21,
-      "initiative": 0
+      "initiative": 15
     },
     {
       "id": "enemy-1792608275361-gm1lrzxcp",
-      "name": "Goblin Boss",
+      "name": "Goblin Boss 2",
       "size": "Small",
       "creatureType": "Humanoid",
       "ac": 17,
@@ -151,10 +151,10 @@
       "notes": "Chain Shirt, Shield",
       "source": "mm",
       "currentHp": 21,
-      "initiative": 11
+      "initiative": 15
     }
   ],
-  "lairAction": null,
+  "lairActions": [],
   "loadedEncounter": {
     "id": "encounter-1783729554504-6m0fsvm9j",
     "name": "Goblins"
