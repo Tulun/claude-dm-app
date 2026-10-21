@@ -3,6 +3,8 @@
 import {
   CONDITION_TONES, conditionLabel, durationLabel, durationTitle, getConditionInfo, getConditions, withoutCondition,
 } from '../conditions';
+import { Tooltip } from '../../components/ui';
+import { TOOLTIP_DELAY_MS } from '../../utils/timings';
 
 /**
  * A combatant's active conditions as removable chips plus a "+" that opens
@@ -24,10 +26,11 @@ export default function ConditionChips({ character, onUpdate, onOpen, compact = 
         const label = conditionLabel(c);
         const info = getConditionInfo(c.name);
         const remaining = durationLabel(c);
+        // Shared Tooltip (not a native title), delayed so it only shows
+        // when the pointer lingers on the chip
         return (
+          <Tooltip key={c.name} delay={TOOLTIP_DELAY_MS} text={[info?.summary, durationTitle(c)].filter(Boolean).join(' — ')}>
           <span
-            key={c.name}
-            title={[info?.summary, durationTitle(c)].filter(Boolean).join(' — ') || undefined}
             className={`inline-flex items-stretch rounded-full border overflow-hidden leading-none ${text} ${CONDITION_TONES[info?.tone] || CONDITION_TONES.debuff}`}
           >
             <button
@@ -47,17 +50,19 @@ export default function ConditionChips({ character, onUpdate, onOpen, compact = 
               ×
             </button>
           </span>
+          </Tooltip>
         );
       })}
-      <button
-        type="button"
-        aria-label={`Add condition to ${character.name}`}
-        title="Add or remove conditions"
-        onClick={(e) => { e.stopPropagation(); onOpen('conditions'); }}
-        className={`rounded-full border border-dashed border-stone-600 text-stone-500 hover:text-amber-300 hover:border-amber-600 leading-none ${text} ${removePad}`}
-      >
-        {conditions.length || compact ? '+' : '+ Condition'}
-      </button>
+      <Tooltip text="Add or remove conditions" delay={TOOLTIP_DELAY_MS}>
+        <button
+          type="button"
+          aria-label={`Add condition to ${character.name}`}
+          onClick={(e) => { e.stopPropagation(); onOpen('conditions'); }}
+          className={`rounded-full border border-dashed border-stone-600 text-stone-500 hover:text-amber-300 hover:border-amber-600 leading-none ${text} ${removePad}`}
+        >
+          {conditions.length || compact ? '+' : '+ Condition'}
+        </button>
+      </Tooltip>
     </div>
   );
 }

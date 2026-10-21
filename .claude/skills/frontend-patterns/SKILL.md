@@ -421,8 +421,15 @@ anything AC-related on this card.
   PORTALS to <body>: a `position: fixed` child of a transformed / filtered /
   `backdrop-blur` ancestor (the combat detail drawer) is positioned against
   that ancestor — tooltips there rendered ~600px off-target before (Oct
-  2026). Don't un-portal it. Test: the tooltip case in
-  `test/combat/combatantDrawer.test.jsx`.
+  2026). Don't un-portal it. It shows INSTANTLY by default (icon-row
+  labels like Character Sheet / Inventory — the user wants those
+  immediate); only the condition chips and their "+" pass
+  `delay={TOOLTIP_DELAY_MS}` (`app/utils/timings.js`, 400ms) so a rules
+  summary appears only when the pointer lingers. Leaving or pressing
+  cancels a pending one. Prefer it over native `title=` for hover help
+  (native titles take ~1s+). Tests: instant case in
+  `test/combat/combatantDrawer.test.jsx`; delayed case (fake timers) in
+  `conditionsUi.test.jsx`.
 - Toast pattern: `const [saveStatus, showToast] = useToast()`
   (`app/hooks/useToast.js`), then `showToast('Party saved')` — auto-clears
   after `TOAST_DURATION_MS`; pass `TOAST_ERROR_DURATION_MS` for errors or

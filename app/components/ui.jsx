@@ -3,14 +3,25 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
-// Shared Tooltip component - uses fixed positioning to avoid container clipping
-export const Tooltip = ({ text, children, maxWidth = '280px' }) => {
+// Shared Tooltip component - uses fixed positioning to avoid container clipping.
+// Shows instantly by default; pass `delay` (ms, e.g. TOOLTIP_DELAY_MS) for
+// targets where the label should wait until the pointer lingers. Leaving or
+// pressing cancels a pending one.
+export const Tooltip = ({ text, children, maxWidth = '280px', delay = 0 }) => {
   const [show, setShow] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const triggerRef = useRef(null);
+  const timerRef = useRef(null);
   const maxW = parseInt(maxWidth) || 280;
 
-  const handleMouseEnter = () => {
+  const cancel = () => {
+    clearTimeout(timerRef.current);
+    timerRef.current = null;
+    setShow(false);
+  };
+  useEffect(() => () => clearTimeout(timerRef.current), []);
+
+  const reveal = () => {
     if (triggerRef.current && text) {
       const rect = triggerRef.current.getBoundingClientRect();
       
@@ -33,6 +44,12 @@ export const Tooltip = ({ text, children, maxWidth = '280px' }) => {
     }
   };
 
+  const handleMouseEnter = () => {
+    clearTimeout(timerRef.current);
+    if (delay > 0) timerRef.current = setTimeout(reveal, delay);
+    else reveal();
+  };
+
   // Truncate very long text
   const displayText = text && text.length > 500 ? text.substring(0, 500) + '...' : text;
 
@@ -41,7 +58,8 @@ export const Tooltip = ({ text, children, maxWidth = '280px' }) => {
       ref={triggerRef}
       className="inline-block"
       onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setShow(false)}
+      onMouseLeave={cancel}
+      onMouseDown={cancel}
     >
       {children}
       {/* Portaled: a fixed element inside a transformed / filtered /

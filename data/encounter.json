@@ -1,206 +1,111 @@
 {
   "enemies": [
     {
-      "id": "enemy-1783005663015-js8ua6mq0",
-      "name": "Shambling Mound",
-      "size": "Large",
-      "creatureType": "Plant",
-      "ac": 15,
-      "maxHp": 136,
-      "hitDice": "16d10+48",
-      "speed": "20, swim 20",
-      "cr": "5",
-      "xp": 1800,
-      "profBonus": 3,
-      "str": 18,
-      "dex": 8,
-      "con": 16,
-      "int": 5,
-      "wis": 10,
-      "cha": 5,
-      "skills": "Stealth +2",
-      "resistances": "Cold, Fire",
-      "immunities": "Lightning; Blinded, Deafened, Exhaustion",
-      "senses": "Blindsight 60 ft. (blind beyond), Passive Perception 10",
-      "languages": "—",
-      "isNpc": false,
-      "traits": [
-        {
-          "name": "Lightning Absorption",
-          "description": "No damage from Lightning; regains HP equal to Lightning damage dealt."
-        }
-      ],
-      "actions": [
-        {
-          "name": "Multiattack",
-          "description": "Two Slam attacks. If both hit Medium or smaller creature, target Grappled (escape DC 14), and can use Engulf."
-        },
-        {
-          "name": "Slam",
-          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 13 (2d8+4) Bludgeoning damage."
-        },
-        {
-          "name": "Engulf",
-          "description": "One Medium or smaller Grappled creature: Engulfed (Blinded, Restrained, can't breathe). 13 (2d8+4) Bludgeoning at start of each mound's turns. If mound moves, engulfed creature moves with it. Can have one creature engulfed at a time."
-        }
-      ],
-      "notes": "Natural Armor",
-      "source": "mm",
-      "currentHp": 136,
-      "initiative": 18,
-      "combatNotes": "",
-      "tempAC": 0,
-      "conditions": []
-    },
-    {
-      "id": "enemy-1783005663016-fv78oaazc",
-      "name": "Topiary Golem Ornamental",
+      "id": "enemy-1792607321609-6n5zr6ya1",
+      "name": "Hobgoblin Captain",
       "size": "Medium",
-      "creatureType": "Construct",
-      "ac": 14,
-      "maxHp": 117,
-      "hitDice": "18d8+36",
-      "speed": "40 ft.",
+      "creatureType": "Humanoid",
+      "ac": 17,
+      "maxHp": 39,
+      "hitDice": "6d8+12",
+      "speed": 30,
       "cr": "3",
       "xp": 700,
       "profBonus": 2,
-      "str": 17,
-      "dex": 16,
+      "str": 15,
+      "dex": 14,
       "con": 14,
-      "int": 3,
-      "wis": 11,
-      "cha": 1,
-      "savingThrows": "Str +3, Dex +3, Con +2, Int -4, Wis +0, Cha -5",
-      "skills": "",
-      "vulnerabilities": "Fire, Slashing",
-      "resistances": "",
-      "immunities": "Psychic; Charmed, Exhaustion, Frightened, Paralyzed, Petrified, Poisoned",
-      "senses": "Passive Perception 10",
-      "languages": "Understands the languages of its creator but can't speak",
+      "int": 12,
+      "wis": 10,
+      "cha": 13,
+      "savingThrows": "Con +4, Int +3",
+      "senses": "Darkvision 60 ft., Passive Perception 10",
+      "languages": "Common, Goblin",
+      "isNpc": false,
       "traits": [
         {
-          "name": "Hedgeblend",
-          "description": "The golem can move through hedges or other dense foliage without impediment, and can occupy their space."
-        },
-        {
-          "name": "Golemcraft Ward (1/Day)",
-          "description": "When the golem fails a saving throw that would alter its form or incapacitate it, it can choose to succeed instead. The golem adds +3 to its saving throws against spells and magical effects for each use of this ability it has remaining."
+          "name": "Martial Advantage",
+          "description": "Once per turn, +10 (3d6) damage if ally within 5 ft of target."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "The golem makes two attacks with its Manicured Slash."
+          "description": "Two Greatsword attacks."
         },
         {
-          "name": "Manicured Slash",
-          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 13 (3d6 + 3) Slashing damage. If the golem is Bloodied, this attack deals an additional 3 (1d6) Slashing damage on a hit."
-        }
-      ],
-      "bonusActions": [
+          "name": "Greatsword",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 9 (2d6+2) Slashing damage."
+        },
         {
-          "name": "Extend Roots",
-          "description": "The golem drives its roots into the ground, becoming utterly immobile and gaining Tremorsense to a range of 90 feet until it ends this effect as a Bonus Action. While in this state, the golem is indistinguishable from an ordinary topiary."
+          "name": "Javelin",
+          "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 30/120 ft. Hit: 5 (1d6+2) Piercing damage."
         }
       ],
-      "reactions": [],
-      "legendaryActions": [],
-      "notes": "Natural Armor. Challenge Rating 3. Initiative +3. 5 ft. tall. Plant construct type. Obeys commands and drives based on Obedience.",
-      "isNpc": false,
-      "source": "custom",
-      "currentHp": 117,
-      "initiative": 10,
-      "abilityUses": {
-        "Golemcraft Ward (1/Day)": 0
-      }
+      "notes": "Half Plate",
+      "source": "mm",
+      "currentHp": 39,
+      "initiative": 0
     },
     {
-      "id": "enemy-1791137377523-0w4wx79mb",
-      "name": "Ancient Brass Dragon",
-      "size": "Gargantuan",
-      "creatureType": "Dragon",
-      "ac": 20,
-      "maxHp": 297,
-      "hitDice": "17d20+119",
-      "speed": "40, burrow 40, fly 80",
-      "cr": "20",
-      "xp": 25000,
-      "profBonus": 6,
-      "str": 27,
-      "dex": 10,
-      "con": 25,
-      "int": 16,
-      "wis": 15,
-      "cha": 19,
-      "savingThrows": "Dex +6, Con +13, Wis +8, Cha +10",
-      "skills": "History +9, Perception +14, Persuasion +10, Stealth +6",
-      "immunities": "Fire",
-      "senses": "Blindsight 60 ft., Darkvision 120 ft., Passive Perception 24",
-      "languages": "Common, Draconic",
+      "id": "enemy-1792607321609-t9yufmpam",
+      "name": "Goblin Boss",
+      "size": "Small",
+      "creatureType": "Humanoid",
+      "ac": 17,
+      "maxHp": 21,
+      "hitDice": "6d6",
+      "speed": 30,
+      "cr": "1",
+      "xp": 200,
+      "profBonus": 2,
+      "str": 10,
+      "dex": 14,
+      "con": 10,
+      "int": 10,
+      "wis": 8,
+      "cha": 10,
+      "skills": "Stealth +6",
+      "senses": "Darkvision 60 ft., Passive Perception 9",
+      "languages": "Common, Goblin",
       "isNpc": false,
       "traits": [
         {
-          "name": "Legendary Resistance (3/Day)",
-          "description": "If fails a save, can choose to succeed instead."
+          "name": "Nimble Escape",
+          "description": "Can Disengage or Hide as Bonus Action."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Uses Frightful Presence, then three attacks: one Bite and two Claws."
+          "description": "Makes two Scimitar attacks."
         },
         {
-          "name": "Bite",
-          "description": "Melee Attack Roll: +14, reach 15 ft. Hit: 19 (2d10+8) Piercing damage."
+          "name": "Scimitar",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Slashing damage."
         },
         {
-          "name": "Claw",
-          "description": "Melee Attack Roll: +14, reach 10 ft. Hit: 15 (2d6+8) Slashing damage."
-        },
-        {
-          "name": "Tail",
-          "description": "Melee Attack Roll: +14, reach 20 ft. Hit: 17 (2d8+8) Bludgeoning damage."
-        },
-        {
-          "name": "Frightful Presence",
-          "description": "Creatures within 120 ft: DC 18 WIS or Frightened 1 min (save ends). Success = immune 24 hrs."
-        },
-        {
-          "name": "Breath Weapons (Recharge 5-6)",
-          "description": "Fire Breath: 90-ft Line. DC 21 DEX, 56 (16d6) Fire (half on save). Sleep Breath: 90-ft Cone. DC 21 CON or unconscious 10 min (ends if takes damage or shaken awake)."
-        },
-        {
-          "name": "Change Shape",
-          "description": "Polymorphs into humanoid or beast with CR equal to or less than its own, or back."
+          "name": "Javelin",
+          "description": "Melee or Ranged Attack Roll: +4, range 30/120 ft. Hit: 5 (1d6+2) Piercing damage."
         }
       ],
-      "legendaryActions": [
+      "reactions": [
         {
-          "name": "Detect",
-          "description": "Makes Perception check."
-        },
-        {
-          "name": "Tail Attack",
-          "description": "Makes Tail attack."
-        },
-        {
-          "name": "Wing Attack (2 Actions)",
-          "description": "DC 22 DEX or 15 (2d6+8) Bludgeoning and Prone. Dragon can fly half speed."
+          "name": "Redirect Attack",
+          "description": "When missed by attack, if another goblin within 5 ft, attacker rerolls against that goblin."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "notes": "Chain Shirt, Shield",
       "source": "mm",
-      "currentHp": 297,
-      "initiative": 5,
-      "abilityUses": {
-        "Breath Weapons (Recharge 5-6)": 1,
-        "Legendary Resistance (3/Day)": 0
-      },
-      "tempHp": 0
+      "currentHp": 21,
+      "initiative": 0
     }
   ],
   "lairAction": null,
-  "loadedEncounter": null,
+  "loadedEncounter": {
+    "id": "encounter-1783729554504-6m0fsvm9j",
+    "name": "Goblins"
+  },
   "initiativeOrder": [
     "enemy-1783005663015-js8ua6mq0",
     "party-1770431961400",

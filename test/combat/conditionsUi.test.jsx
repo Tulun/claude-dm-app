@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { useState } from 'react';
 
 vi.mock('next/link', () => ({
@@ -7,6 +7,7 @@ vi.mock('next/link', () => ({
 }));
 
 import CharacterCard from '../../app/combat/components/CharacterCard';
+import { TOOLTIP_DELAY_MS } from '../../app/utils/timings.js';
 import CombatantTable from '../../app/combat/components/CombatantTable.jsx';
 
 const goblin = { id: 'e1', name: 'Goblin', cr: '1/4', currentHp: 7, maxHp: 7, ac: 15, conditions: [{ name: 'Prone' }] };
@@ -22,6 +23,35 @@ function Harness({ initial, isEnemy, table = false, spy }) {
 }
 
 describe('condition chips + picker', () => {
+  it('the + button and chips use the shared Tooltip (short hover delay), not a native title', () => {
+    vi.useFakeTimers();
+    try {
+      render(<Harness initial={goblin} isEnemy />);
+      const add = screen.getByLabelText('Add condition to Goblin');
+      expect(add).not.toHaveAttribute('title');
+      fireEvent.mouseEnter(add.parentElement);
+      act(() => { vi.advanceTimersByTime(TOOLTIP_DELAY_MS - 1); });
+      expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+      act(() => { vi.advanceTimersByTime(1); });
+      expect(screen.getByRole('tooltip')).toHaveTextContent('Add or remove conditions');
+      fireEvent.mouseLeave(add.parentElement);
+      expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+
+      // leaving before the delay cancels it
+      const chip = screen.getByText('Prone').closest('span');
+      expect(chip).not.toHaveAttribute('title');
+      fireEvent.mouseEnter(chip.parentElement);
+      fireEvent.mouseLeave(chip.parentElement);
+      act(() => { vi.advanceTimersByTime(TOOLTIP_DELAY_MS); });
+      expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+      fireEvent.mouseEnter(chip.parentElement);
+      act(() => { vi.advanceTimersByTime(TOOLTIP_DELAY_MS); });
+      expect(screen.getByRole('tooltip').textContent.length).toBeGreaterThan(10);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('shows active conditions on the card and removes one with a single click', () => {
     const spy = vi.fn();
     render(<Harness initial={goblin} isEnemy spy={spy} />);

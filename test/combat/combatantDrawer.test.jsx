@@ -151,6 +151,7 @@ describe('CombatPage — combatant detail drawer', () => {
     click(screen.getByRole('button', { name: 'Details for Ogre' }));
 
     const btn = within(drawer()).getByRole('button', { name: 'View Stat Block' });
+    // icon-row labels show instantly (only condition chips are delayed)
     act(() => { fireEvent.mouseEnter(btn.parentElement); });
     const tip = screen.getByRole('tooltip');
     expect(tip).toHaveTextContent('View Stat Block');

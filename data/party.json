@@ -1002,7 +1002,8 @@
         "itemType": "weapon",
         "magicItemId": "dagger-venom",
         "rarity": "Rare",
-        "attunement": false
+        "attunement": false,
+        "equipped": true
       },
       {
         "id": 1770433222146,
@@ -1019,7 +1020,7 @@
         "damageType": "Piercing",
         "weaponProperties": [],
         "mastery": "",
-        "equipped": false
+        "equipped": true
       },
       {
         "id": 1770433345695,
@@ -1079,7 +1080,8 @@
       }
     ],
     "tempAC": 0,
-    "tempHp": 0
+    "tempHp": 0,
+    "conditions": []
   },
   {
     "name": "Marshuh",

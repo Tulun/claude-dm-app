@@ -4,13 +4,16 @@ import { createPortal } from 'react-dom';
 import Icons from '../../components/Icons';
 import Modal from '../../components/Modal';
 import { formatMod } from '../../utils/rules';
-import { MASTERY_DESC, PROPERTY_DESC } from './CharacterCard/utils';
+import { getArmorData } from '../../utils/acCalculation';
+import { ARMOR_DESC, MASTERY_DESC, PROPERTY_DESC } from './CharacterCard/utils';
 
 /**
  * What an equipped item does, opened from the turn tracker's loadout chips.
  * Weapons get the attack / damage breakdown (ability + proficiency + magic,
- * from `getWeaponStatsFor`) plus property and mastery explanations; every
- * item shows its description as plain text.
+ * from `getWeaponStatsFor`) plus property and mastery explanations; armor
+ * gets base AC, how DEX applies, and stealth / STR notes. Every item shows
+ * its description as plain text ("No description." only when nothing else
+ * is shown).
  *
  * Portaled to <body>: the tracker is a sticky z-10 bar, and a fixed overlay
  * inside that stacking context would sit underneath the navbar.
@@ -26,6 +29,15 @@ export default function ItemDetailModal({ item, stats, onClose }) {
         ...(stats.magicBonus ? [`Magic ${formatMod(stats.magicBonus)}`] : []),
       ]
     : [];
+  // Armor stats come from the item's own fields, falling back to the
+  // canonical armor table when the item only has a recognisable name.
+  const isArmor = item.itemType === 'armor' || !!item.armorType;
+  const tableArmor = isArmor ? getArmorData(item) : null;
+  const armorType = item.armorType || tableArmor?.armorType || '';
+  const baseAC = item.baseAC || tableArmor?.baseAC || '';
+  const isShield = armorType === 'Shield';
+  const hasArmorInfo = isArmor && (baseAC || armorType);
+
   const dmgParts = stats
     ? [
         `${stats.ability} ${formatMod(stats.abilityMod)}`,
@@ -88,9 +100,24 @@ export default function ItemDetailModal({ item, stats, onClose }) {
             </div>
           )}
 
+          {hasArmorInfo && (
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-lg bg-stone-800/60 p-3">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-stone-500">{isShield ? 'AC Bonus' : 'Base AC'}</div>
+                <div className="text-2xl font-bold font-mono text-sky-300">{baseAC ? (isShield ? `+${baseAC}` : baseAC) : '—'}</div>
+                {armorType && <div className="text-xs text-stone-400">{ARMOR_DESC[armorType] || `${armorType} armor`}</div>}
+              </div>
+              <div className="rounded-lg bg-stone-800/60 p-3 text-xs text-stone-400 space-y-1">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Wearing</div>
+                <div>{item.stealthDisadv ? 'Disadvantage on Stealth checks' : 'No Stealth penalty'}</div>
+                {item.strRequired && <div>Requires STR {item.strRequired} (else −10 ft speed)</div>}
+              </div>
+            </div>
+          )}
+
           {item.description ? (
             <p className="text-sm text-stone-300 whitespace-pre-line leading-relaxed">{item.description}</p>
-          ) : (
+          ) : hasArmorInfo || stats ? null : (
             <p className="text-sm text-stone-500 italic">No description.</p>
           )}
         </div>
