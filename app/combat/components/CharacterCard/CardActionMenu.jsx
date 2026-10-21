@@ -9,13 +9,14 @@ import { getCardActions } from './CardActionButtons';
 const MENU_WIDTH = 208;
 
 /**
- * The party card's ⋯ overflow menu: the same `getCardActions` list as the
- * icon row, plus Details (opens the combat page's detail drawer) and an
- * Edit Character link. The menu PORTALS to <body> with
+ * The combat card's ⋯ overflow menu (party AND enemy cards): the same
+ * `getCardActions` list as the icon row, plus Details (opens the combat
+ * page's detail drawer), an Edit Character link (party, `editHref`) and
+ * Remove from Combat (`onRemove` present → opens the 'delete' confirm). The menu PORTALS to <body> with
  * fixed positioning because the card is `overflow-hidden` (an absolute
  * dropdown would be clipped). Closes on pick, outside click, scroll and Escape.
  */
-export default function CardActionMenu({ character, spellcastingInfo, onOpen, editHref, onInspect }) {
+export default function CardActionMenu({ character, isEnemy = false, spellcastingInfo, onOpen, editHref, onInspect, onRemove }) {
   const [pos, setPos] = useState(null);
   const triggerRef = useRef(null);
   const open = pos !== null;
@@ -42,7 +43,7 @@ export default function CardActionMenu({ character, spellcastingInfo, onOpen, ed
     setPos({ top: rect.bottom + 4, left });
   };
 
-  const actions = getCardActions(character, false, spellcastingInfo);
+  const actions = getCardActions(character, isEnemy, spellcastingInfo);
   const itemClass = 'w-full flex items-center gap-3 px-3 py-2 text-sm text-stone-200 hover:bg-stone-800 transition-colors text-left';
 
   return (
@@ -92,6 +93,19 @@ export default function CardActionMenu({ character, spellcastingInfo, onOpen, ed
                 {label}
               </button>
             ))}
+            {onRemove && (
+              <>
+                <div className="my-1 border-t border-stone-700/60" />
+                <button
+                  role="menuitem"
+                  onClick={(e) => { e.stopPropagation(); close(); onOpen('delete'); }}
+                  className={`${itemClass} hover:text-red-300`}
+                >
+                  <span className="inline-flex w-5 justify-center text-red-400"><Icons.Trash /></span>
+                  Remove from Combat
+                </button>
+              </>
+            )}
             {editHref && (
               <>
                 <div className="my-1 border-t border-stone-700/60" />

@@ -3,13 +3,13 @@
 import React from 'react';
 import { useState } from 'react';
 import Icons from '../../../components/Icons';
-import { Tooltip } from '../../../components/ui';
 import { parseSpellcasting } from './spellcastingParser';
-import CardActionButtons from './CardActionButtons';
 import CardActionMenu from './CardActionMenu';
 import CardModals from './CardModals';
 import ConditionChips from '../ConditionChips';
 import PartyGlance from './PartyGlance';
+import EnemyGlance from './EnemyGlance';
+import { abilityLabel, parseSavingThrows } from '../../monsterAbilities';
 import { applyDamage, applyHealing } from '../../hp';
 import { getSaveBonus } from '../../../character/components/constants';
 import { formatMod } from '../../../utils/rules';
@@ -64,6 +64,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, onInspect, show
   const isWildShapeAC = !!activeWildShapeForm;
   
   const spellcastingInfo = parseSpellcasting(character);
+  const enemySaves = isEnemy ? parseSavingThrows(character.savingThrows) : null;
   const isNpc = character.isNpc;
 
 
@@ -126,34 +127,26 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, onInspect, show
                 )}
               </h3>
               <p className="text-xs text-stone-400">
-                {formatClassList(character) || (character.cr ? `CR ${character.cr}` : '')}
+                {isEnemy
+                  ? [[character.size, character.creatureType].filter(Boolean).join(' '), character.cr != null && character.cr !== '' && `CR ${character.cr}`].filter(Boolean).join(' · ')
+                  : formatClassList(character)}
               </p>
             </div>
           </div>
           {/* p-1.5 (vs the buttons' default p-2) keeps names from wrapping in
               the 3-column card grid */}
           <div className="flex items-center gap-0.5 [&_button]:p-1.5 [&_a]:p-1.5">
-            {isEnemy ? (
-              <CardActionButtons character={character} isEnemy spellcastingInfo={spellcastingInfo} onOpen={setActiveModal} />
-            ) : (
-              <CardActionMenu
-                character={character}
-                spellcastingInfo={spellcastingInfo}
-                onOpen={setActiveModal}
-                editHref={`/character?id=${character.id}&type=${characterType}`}
-                onInspect={onInspect}
-              />
-            )}
-            {isEnemy && onRemove && (
-              <Tooltip text="Remove from Combat">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setActiveModal('delete'); }}
-                  className="p-2 rounded-lg text-stone-500 hover:text-red-400 hover:bg-red-900/30 transition-colors"
-                >
-                  <Icons.Trash />
-                </button>
-              </Tooltip>
-            )}
+            {/* Party and enemies share the ⋯ menu (the old enemy icon row
+                wrapped long monster names) */}
+            <CardActionMenu
+              character={character}
+              isEnemy={isEnemy}
+              spellcastingInfo={spellcastingInfo}
+              onOpen={setActiveModal}
+              editHref={isEnemy ? undefined : `/character?id=${character.id}&type=${characterType}`}
+              onInspect={onInspect}
+              onRemove={isEnemy ? onRemove : undefined}
+            />
           </div>
         </div>
         
@@ -292,6 +285,18 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, onInspect, show
               </button>
             )}
           </div>
+          {/* Monster spellcasting DC (parsed from the stat block) — opens Quick
+              Actions, where its spells and slots live */}
+          {isEnemy && !spellDC && spellcastingInfo.dc && (
+            <button
+              onClick={(e) => { e.stopPropagation(); setActiveModal('actions'); }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-purple-900/30 text-purple-400 hover:bg-purple-900/50 transition-colors"
+              title={`Spellcasting${spellcastingInfo.attack ? ` · ${spellcastingInfo.attack} to hit` : ''} — open spells`}
+            >
+              <span className="font-mono font-medium">{spellcastingInfo.dc}</span>
+              <span className="text-xs text-purple-500">DC</span>
+            </button>
+          )}
           {/* Spell DC — opens the spellbook when there is one */}
           {spellDC && (!isEnemy && character.spells?.length > 0 ? (
             <button
@@ -327,6 +332,10 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, onInspect, show
         {!isEnemy && showResources && (
           <PartyGlance character={character} wildShapeForm={activeWildShapeForm} onUpdate={onUpdate} onOpen={setActiveModal} />
         )}
+        {/* Enemies: limited-use pips + senses / speed / defenses */}
+        {isEnemy && (
+          <EnemyGlance character={character} spellcastingInfo={spellcastingInfo} onUpdate={onUpdate} />
+        )}
       </div>
 
       {/* Quick stats bar (mt-auto pins it to the card bottom when the card
@@ -341,13 +350,27 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, onInspect, show
             const statValue = usesBeastStat ? (activeWildShapeForm[key] || 10) : (character[key] || 10);
             const scoreClass = usesBeastStat ? 'text-lime-500' : 'text-stone-500';
 
-            // Enemies: score + modifier, as before
+            // Enemies: same layout as party; saves come from the stat
+            // block's "Saving Throws" line (unlisted = plain modifier). A
+            // listed save above the modifier is a proficient one (some
+            // stat blocks list all six).
             if (isEnemy) {
+              const mod = getModNum(statValue);
+              const listed = enemySaves[key];
+              const save = listed ?? mod;
+              const prof = listed != null && listed > mod;
               return (
-                <div key={label} className="rounded p-1 bg-stone-800/50">
-                  <div className="text-[10px] text-stone-500">{label}</div>
-                  <div className="text-sm font-bold">{statValue}</div>
-                  <div className="text-xs text-stone-400">{getMod(statValue)}</div>
+                <div
+                  key={label}
+                  className={`rounded p-1 bg-stone-800/50 ${prof ? 'ring-1 ring-amber-600/50' : ''}`}
+                  title={`${label} ${statValue} · save ${formatMod(save)}${prof ? ' (proficient)' : ''}`}
+                  data-testid={`ability-${key}`}
+                >
+                  <div className="text-[10px] text-stone-500">{label} <span className="font-mono text-stone-500">{statValue}</span></div>
+                  <div className="text-base font-bold leading-tight">{getMod(statValue)}</div>
+                  <div className={`text-[10px] ${prof ? 'text-amber-400 font-semibold' : 'text-stone-500'}`} data-testid={`save-${key}`}>
+                    save {formatMod(save)}
+                  </div>
                 </div>
               );
             }
@@ -386,7 +409,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, onInspect, show
                 className="bg-red-900/30 text-red-300 px-2 py-1 rounded cursor-pointer hover:bg-red-800/40 transition-colors"
                 title={action.description}
               >
-                {action.name}
+                {abilityLabel(action.name)}
               </button>
             ))}
             {spellcastingInfo.found && (

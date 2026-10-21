@@ -110,10 +110,12 @@ describe('CharacterCard ability row', () => {
     expect(screen.getByText('40 ft')).toBeInTheDocument();
   });
 
-  it('enemies keep the score-first row and get no glance block', () => {
+  it('enemies get their own glance block (EnemyGlance), never the party one', () => {
     render(<CharacterCard character={{ id: 'e1', name: 'Goblin', cr: '1/4', currentHp: 7, maxHp: 7, ac: 15, dex: 14 }} isEnemy onUpdate={vi.fn()} showResources />);
-    expect(screen.queryByTestId('ability-dex')).not.toBeInTheDocument();
+    // modifier-led ability row, same as party (see enemyGlance.test.jsx)
+    expect(screen.getByTestId('ability-dex')).toHaveTextContent('+2');
     expect(screen.queryByTestId('passive-perception')).not.toBeInTheDocument();
+    expect(screen.getByTestId('enemy-passive-perception')).toBeInTheDocument();
   });
 
   it('the glance block only shows with showResources', () => {

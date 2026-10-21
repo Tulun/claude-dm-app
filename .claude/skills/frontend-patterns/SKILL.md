@@ -164,10 +164,13 @@ setEnemies(prev => {
   ONE descriptor list, `getCardActions(character, isEnemy, spellcastingInfo)`
   in `CharacterCard/CardActionButtons.jsx`, rendered two ways:
   `CardActionButtons` (icon row, `onOpen(key)`, each button's `aria-label` =
-  its tooltip) on the Table-view rows, the turn tracker's Now card and ENEMY
-  cards; and `CardActionMenu` (`CharacterCard/CardActionMenu.jsx`) — the
-  PARTY card's single ⋯ button (`aria-label` "More actions for <name>",
-  items are `role="menuitem"`, plus an Edit Character link). The menu portals
+  its tooltip) on the Table-view rows, the turn tracker's Now card and the
+  detail drawer; and `CardActionMenu` (`CharacterCard/CardActionMenu.jsx`) —
+  the single ⋯ button on BOTH party and enemy cards (`aria-label` "More
+  actions for <name>", items are `role="menuitem"`: Details first, then the
+  descriptors, then Edit Character (party, `editHref`) or Remove from Combat
+  (enemy, `onRemove` → the 'delete' confirm). Enemy cards dropped their icon
+  row + trash in Oct 2026 — it wrapped long monster names). The menu portals
   to <body> with fixed positioning because the card is `overflow-hidden`.
   On party AND enemy cards the name opens the detail drawer (§2.5, via
   `onInspect`; plain text when no `onInspect` is passed) — NOT the sheet,
@@ -191,8 +194,26 @@ setEnemies(prev => {
   Speed box (wild-shape form's speed when shaped) and `advantages` chips. The party ability row leads
   with the modifier, shows the score beside the label and a `save ±N` line
   (proficient saves emerald + ringed; wild shape uses beast STR/DEX/CON with
-  the druid's proficiencies). Enemy rows are unchanged. Skill/save math: see
-  **rules-math**. Tests: `test/combat/partyGlance.test.jsx`. The tracker keeps its own
+  the druid's proficiencies). Skill/save math: see
+  **rules-math**. Tests: `test/combat/partyGlance.test.jsx`.
+- **Enemy card glance block** (`CharacterCard/EnemyGlance.jsx`, every enemy
+  card): limited-use pips from `getLimitedPools(creature, spellcastingInfo,
+  { legendary: true })` (`app/combat/limitedUses.js`) rendered by the shared
+  `LimitedUses.jsx` — the SAME pools/markup as the tracker's Limited row
+  (Monster panel, §2.5), plus a Legendary pool on `legendaryActionsUsed`
+  (pip titles "Legendary actions: use N"). Below: a Senses box (passive
+  Perception pulled out by `parseSenses`, other senses listed), a Speed box
+  (`formatSpeeds`), and Vuln / Resist / Immune chips (`splitDefenses`:
+  ';' separates 2024 damage vs condition groups; a clause with
+  from/that/and stays whole). The enemy ability row now matches the party
+  layout: modifier first, score by the label, a `save ±N` line from the
+  stat block's "Saving Throws" text (`parseSavingThrows`; unlisted = plain
+  modifier; listed AND above the modifier = proficient, amber + ringed —
+  some stat blocks list all six). Subtitle = "<size> <type> · CR N"; a
+  parsed spellcasting DC gets a purple DC pill that opens Quick Actions;
+  action chips show `abilityLabel` (usage parenthetical dropped — the pips
+  carry it). Tests: `test/combat/enemyGlance.test.jsx`, parsers/pools in
+  `test/combat/monsterAbilities.test.js`. The tracker keeps its own
   `cardModal` `{ id, key }` and renders `CardModals` OUTSIDE its sticky z-10
   bar (a fixed overlay inside that stacking context would sit under the
   navbar). Companions and the lair action get no card buttons.
@@ -313,7 +334,11 @@ Three rules keep the pointer honest:
   ability's Recharge button, to restore; ability chips never grey out —
   the pips show what's spent), plus spell slots / per-day spells via the shared
   `parseSpellcasting` and the card's existing `spellSlots<level>Used` /
-  `perDay<N>Used` fields. Parsing lives in `app/combat/monsterAbilities.js`.
+  `perDay<N>Used` fields. Parsing lives in `app/combat/monsterAbilities.js`;
+  the Limited row's pools come from `getLimitedPools`
+  (`app/combat/limitedUses.js`, WITHOUT the legendary pool — the header's
+  Legendary button covers it) rendered by `LimitedUses.jsx`, shared with
+  the enemy card glance block (§2). Change pool logic there, not per view.
 - **Detail drawer** (`CombatantDrawer.jsx`, canonical). A right-side
   slide-over (`<aside role="complementary" aria-label="Details: <name>">`,
   fixed, z-40: above the sticky z-10 tracker, below `Modal`'s z-50; its top is

@@ -98,10 +98,15 @@ describe('party card ⋯ menu', () => {
     expect(screen.getByLabelText('Innate Sorcery active')).toBeInTheDocument();
   });
 
-  it('enemy cards keep their icon row (no menu)', () => {
-    renderCard(goblin, true);
-    expect(screen.getByRole('button', { name: 'View Stat Block' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Combat Notes' })).toBeInTheDocument();
-    expect(screen.queryByLabelText('More actions for Goblin')).not.toBeInTheDocument();
+  it('enemy cards use the ⋯ menu too, with Remove from Combat instead of Edit', () => {
+    const onRemove = vi.fn();
+    render(<CharacterCard character={goblin} isEnemy onUpdate={vi.fn()} onRemove={onRemove} onInspect={vi.fn()} />);
+    expect(screen.queryByRole('button', { name: 'View Stat Block' })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByLabelText('More actions for Goblin'));
+    expect(within(screen.getByRole('menu')).getAllByRole('menuitem').map(i => i.textContent.replace(/[^\w ]/gu, '').trim())).toEqual([
+      'Details', 'View Stat Block', 'Combat Notes', 'Remove from Combat',
+    ]);
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Remove from Combat' }));
+    expect(screen.getByText('Kill Goblin?')).toBeInTheDocument();
   });
 });

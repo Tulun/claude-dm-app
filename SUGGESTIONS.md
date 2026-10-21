@@ -174,6 +174,13 @@ context costs:
 
 ## Completed log
 
+- [x] Enemy card glowup (mirrors the party cards): ⋯ menu instead of the
+  icon row (Remove from Combat lives there), "size type · CR" subtitle,
+  parsed spellcasting DC pill, `EnemyGlance` (limited-use pips incl.
+  legendary actions, senses with passive Perception, speeds, defenses
+  chips), modifier-led ability row with stat-block saves, short action
+  chip labels. Limited pools extracted to `app/combat/limitedUses.js` +
+  `LimitedUses.jsx`, shared with the tracker's Limited row — Oct 2026.
 - [x] Combat detail drawer (`app/combat/components/CombatantDrawer.jsx`):
   a slide-over showing one combatant in full (HP damage/heal + THP, AC /
   init / prof / spell DC, speeds, conditions, card modals, abilities + party

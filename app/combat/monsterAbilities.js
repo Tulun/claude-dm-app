@@ -58,3 +58,39 @@ export const formatSpeeds = (speed) => {
   if (!parts.length) return ['30 ft'];
   return parts.map(p => p.replace(/(\d+)\s*(?:ft\.?|feet)?/i, '$1 ft').replace(/\s+/g, ' ').trim());
 };
+
+// "Dex +6, Con +13" → { dex: 6, con: 13 }. Unlisted abilities are absent
+// (the caller falls back to the plain modifier).
+const SAVE_KEYS = { str: 'str', dex: 'dex', con: 'con', int: 'int', wis: 'wis', cha: 'cha' };
+export const parseSavingThrows = (text) => {
+  const out = {};
+  for (const m of String(text ?? '').matchAll(/\b(str|dex|con|int|wis|cha)\w*\s*([+\-−]\s*\d+)/gi)) {
+    out[SAVE_KEYS[m[1].toLowerCase()]] = Number(m[2].replace('−', '-').replace(/\s/g, ''));
+  }
+  return out;
+};
+
+// "Blindsight 60 ft. (blind beyond), Darkvision 120 ft., Passive Perception 24"
+// → { passive: 24, senses: ['Blindsight 60 ft. (blind beyond)', 'Darkvision 120 ft.'] }
+export const parseSenses = (text) => {
+  const parts = String(text ?? '').split(',').map(s => s.trim()).filter(Boolean);
+  let passive = null;
+  const senses = [];
+  for (const p of parts) {
+    const m = /passive\s+perception\s+(\d+)/i.exec(p);
+    if (m) passive = Number(m[1]);
+    else senses.push(p);
+  }
+  return { passive, senses };
+};
+
+// A defenses line as chips. 2024 stat blocks fold condition immunities into
+// `immunities` after a semicolon ("Fire; Charmed, Frightened"), so ';'
+// separates groups; within a group, commas separate entries unless the group
+// reads as one clause ("…from nonmagical attacks"), which stays whole.
+export const splitDefenses = (text) =>
+  String(text ?? '')
+    .split(';')
+    .map(g => g.trim())
+    .filter(Boolean)
+    .flatMap(g => (/\b(?:from|that|and)\b/i.test(g) ? [g] : g.split(',').map(s => s.trim()).filter(Boolean)));
