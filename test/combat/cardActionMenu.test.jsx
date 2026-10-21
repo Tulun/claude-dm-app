@@ -17,7 +17,7 @@ const druid = {
 const goblin = { id: 'e1', name: 'Goblin', cr: '1/4', currentHp: 7, maxHp: 7, ac: 15 };
 
 const renderCard = (c, isEnemy = false) =>
-  render(<CharacterCard character={c} isEnemy={isEnemy} onUpdate={vi.fn()} onRemove={vi.fn()} onToggleExpand={vi.fn()} />);
+  render(<CharacterCard character={c} isEnemy={isEnemy} onUpdate={vi.fn()} onRemove={vi.fn()} />);
 
 describe('party card ⋯ menu', () => {
   it('collapses the header icons into one menu button', () => {
@@ -49,16 +49,40 @@ describe('party card ⋯ menu', () => {
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 
-  it('the name opens the character sheet; the DC chip opens the spellbook', () => {
-    renderCard(druid);
+  it('the name opens the detail drawer (not the sheet); the DC chip opens the spellbook', () => {
+    const onInspect = vi.fn();
+    render(<CharacterCard character={druid} isEnemy={false} onUpdate={vi.fn()} onInspect={onInspect} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Details for Efa' }));
+    expect(onInspect).toHaveBeenCalledWith('p1');
     expect(screen.queryByText('Saving Throws')).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Efa' }));
+    cleanup();
+    // the sheet is still one click away in the ⋯ menu
+    renderCard(druid);
+    fireEvent.click(screen.getByLabelText('More actions for Efa'));
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Character Sheet' }));
     expect(screen.getByText('Saving Throws')).toBeInTheDocument();
     cleanup();
     renderCard(druid);
     expect(screen.queryByText('Cure Wounds')).not.toBeInTheDocument();
     fireEvent.click(screen.getByTitle('Open spellbook'));
     expect(screen.getAllByText('Cure Wounds').length).toBeGreaterThan(0);
+  });
+
+  it('enemy names open the drawer too; no separate details button', () => {
+    const onInspect = vi.fn();
+    render(<CharacterCard character={goblin} isEnemy onUpdate={vi.fn()} onRemove={vi.fn()} onInspect={onInspect} />);
+    const details = screen.getAllByRole('button', { name: 'Details for Goblin' });
+    expect(details).toHaveLength(1);
+    expect(details[0]).toHaveTextContent('Goblin');
+    fireEvent.click(details[0]);
+    expect(onInspect).toHaveBeenCalledWith('e1');
+  });
+
+  it('without a drawer (onInspect) the name is plain text', () => {
+    renderCard(goblin, true);
+    expect(screen.queryByRole('button', { name: 'Details for Goblin' })).not.toBeInTheDocument();
+    expect(screen.getByText('Goblin').tagName).toBe('H3');
+    expect(screen.getByText('Goblin')).toBeInTheDocument();
   });
 
   it('DC chip is a plain badge when the caster has no spellbook', () => {

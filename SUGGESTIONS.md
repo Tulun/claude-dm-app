@@ -174,6 +174,17 @@ context costs:
 
 ## Completed log
 
+- [x] Combat detail drawer (`app/combat/components/CombatantDrawer.jsx`):
+  a slide-over showing one combatant in full (HP damage/heal + THP, AC /
+  init / prof / spell DC, speeds, conditions, card modals, abilities + party
+  saves, defenses & senses, traits → legendary actions with pips, monster
+  spellcasting, party resources / loadout / features, combat notes). Follows
+  the turn or pins one creature. Opened from the Now card name, Up Next,
+  order-modal rows, any card's name (party names used to open the sheet —
+  still in ⋯), party ⋯ → Details. Replaced the
+  unreachable enemy-card expanded block (the page never passed `expanded`
+  to enemies) and its `expandedCards` state — Oct 2026. Not wired: Table-view
+  rows.
 - [x] Combat card HP editor: Damage / Heal amount (Enter = Damage) with temp
   HP absorbing damage first (`app/combat/hp.js`), so "20 damage with 10 THP"
   is one entry instead of editing two fields — Oct 2026.

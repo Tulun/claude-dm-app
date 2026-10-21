@@ -15,8 +15,9 @@ const getCalculatedAC = (character) => getEquipmentAC(character, { parseArmorNam
 // where `drag` is supplied — the main initiative column omits it (reordering
 // lives in the Manage Order modal) and passes `onSelect` instead, which makes
 // the row a click target for "jump the turn pointer here". `onToggleReaction`
-// (stable, receives the id) adds the per-round reaction toggle.
-const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, drag, isDragging, isDragOver, isActive, isNext, onSelect, onUpdateInitiative, onUpdateHp, onUpdateLairNotes, onRemoveLairAction, reactionUsed, onToggleReaction }) => {
+// (stable, receives the id) adds the per-round reaction toggle; `onInspect`
+// (stable, receives the id) adds a Details button that opens the drawer.
+const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, drag, isDragging, isDragOver, isActive, isNext, onSelect, onUpdateInitiative, onUpdateHp, onUpdateLairNotes, onRemoveLairAction, reactionUsed, onToggleReaction, onInspect }) => {
   const isDead = !isLairAction && character.currentHp <= 0;
   const [editing, setEditing] = useState(false);
   const [editingHp, setEditingHp] = useState(false);
@@ -239,6 +240,16 @@ const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, 
         </div>
       </div>
       {turnBadge}
+      {onInspect && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onInspect(character.id); }}
+          aria-label={`Details for ${character.name}`}
+          title="Show full details"
+          className="p-1 rounded text-stone-500 hover:text-amber-300 hover:bg-stone-800 shrink-0"
+        >
+          <Icons.Info />
+        </button>
+      )}
       {onToggleReaction && (
         <button
           onClick={(e) => { e.stopPropagation(); onToggleReaction(character.id); }}

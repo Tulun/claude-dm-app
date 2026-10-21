@@ -10,11 +10,12 @@ const MENU_WIDTH = 208;
 
 /**
  * The party card's ⋯ overflow menu: the same `getCardActions` list as the
- * icon row, plus an Edit Character link. The menu PORTALS to <body> with
+ * icon row, plus Details (opens the combat page's detail drawer) and an
+ * Edit Character link. The menu PORTALS to <body> with
  * fixed positioning because the card is `overflow-hidden` (an absolute
  * dropdown would be clipped). Closes on pick, outside click, scroll and Escape.
  */
-export default function CardActionMenu({ character, spellcastingInfo, onOpen, editHref }) {
+export default function CardActionMenu({ character, spellcastingInfo, onOpen, editHref, onInspect }) {
   const [pos, setPos] = useState(null);
   const triggerRef = useRef(null);
   const open = pos !== null;
@@ -67,6 +68,16 @@ export default function CardActionMenu({ character, spellcastingInfo, onOpen, ed
             className="fixed z-50 py-1 bg-stone-900 border border-stone-700 rounded-lg shadow-xl"
             style={{ top: pos.top, left: pos.left, width: MENU_WIDTH }}
           >
+            {onInspect && (
+              <button
+                role="menuitem"
+                onClick={(e) => { e.stopPropagation(); close(); onInspect(character.id); }}
+                className={itemClass}
+              >
+                <span className="inline-flex w-5 justify-center text-amber-400"><Icons.Info /></span>
+                Details
+              </button>
+            )}
             {actions.map(({ key, label, icon: Icon, className }) => (
               <button
                 key={key}

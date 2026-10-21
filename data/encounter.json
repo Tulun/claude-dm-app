@@ -195,7 +195,8 @@
       "abilityUses": {
         "Breath Weapons (Recharge 5-6)": 1,
         "Legendary Resistance (3/Day)": 0
-      }
+      },
+      "tempHp": 0
     }
   ],
   "lairAction": null,
@@ -212,8 +213,8 @@
   ],
   "combatActive": true,
   "round": 2,
-  "turnIndex": 6,
-  "turnId": "enemy-1791137377523-0w4wx79mb",
+  "turnIndex": 5,
+  "turnId": "party-1770417737904",
   "interrupt": null,
   "reactionsUsed": {},
   "turnUsage": {

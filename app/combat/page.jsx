@@ -11,6 +11,7 @@ import CharacterCard from './components/CharacterCard';
 import CombatantTable from './components/CombatantTable';
 import TurnTracker from './components/TurnTracker';
 import InitiativeItem from './components/InitiativeItem';
+import CombatantDrawer from './components/CombatantDrawer';
 import InitiativeOrderModal from './components/InitiativeOrderModal';
 import LegendaryActionModal from './components/LegendaryActionModal';
 import { FRESH_USAGE } from './components/TurnEconomy';
@@ -44,7 +45,9 @@ export default function CombatPage() {
   const [enemies, setEnemies] = useState([]);
   const [lairAction, setLairAction] = useState(null); // { initiative: 20, notes: '' }
   const [templates, setTemplates] = useState(null); // Start with null to detect loading
-  const [expandedCards, setExpandedCards] = useState({});
+  // Detail drawer: null = closed; { follow: true } tracks whoever's turn it
+  // is, { id, follow: false } is pinned to one combatant. Transient — not saved.
+  const [inspect, setInspect] = useState(null);
   const [viewMode, setViewMode] = useState('party'); // 'party' | 'enemies' | 'table'
   const [showAddEnemy, setShowAddEnemy] = useState(false);
   const [showAddParty, setShowAddParty] = useState(false);
@@ -452,6 +455,8 @@ export default function CombatPage() {
     setTurn({ index: 0, id: null });
     setTurnUsage(null);
     setTurnReminder(null);
+    // A drawer following the turn has nothing left to follow; pinned stays.
+    setInspect(prev => (prev?.follow ? null : prev));
     clearReactions();
   }, [clearReactions]);
 
@@ -552,7 +557,6 @@ export default function CombatPage() {
     return next.some((x, i) => x !== prev[i]) ? next : prev;
   }), []);
   const removeEnemy = useCallback((id) => setEnemies(prev => prev.filter(x => x.id !== id)), []);
-  const toggleExpand = useCallback((id) => setExpandedCards(prev => ({ ...prev, [id]: !prev[id] })), []);
   const addEnemy = useCallback((e) => setEnemies(prev => [...prev, e]), []);
   const addPartyMember = useCallback((m) => setParty(prev => [...(prev || []), m]), []);
 
@@ -590,8 +594,37 @@ export default function CombatPage() {
   }, [updateCompanion]);
 
   const updateCompanionHp = useCallback((id, hp) => updateCompanion(id, { currentHp: hp }), [updateCompanion]);
+  // The drawer edits a whole (derived) companion object; only HP fields go
+  // back to the owner's record — ownerName / composite id must not.
+  const updateCompanionVitals = useCallback((c) => updateCompanion(c.id, { currentHp: c.currentHp, tempHp: c.tempHp || 0 }), [updateCompanion]);
+
+  // Detail drawer openers (all stable — they're props on memoized cards/rows)
+  const inspectCombatant = useCallback((id) => setInspect({ id, follow: false }), []);
+  const inspectCurrent = useCallback(() => setInspect({ id: null, follow: true }), []);
+  const inspectFromOrder = useCallback((id) => { setShowOrderModal(false); setInspect({ id, follow: false }); }, []);
+  const closeInspect = useCallback(() => setInspect(null), []);
+  // Pin = lock onto whoever is current right now; Follow = track the turn.
+  const toggleInspectFollow = useCallback(() => setInspect(prev => {
+    if (!prev) return prev;
+    if (!prev.follow) return { id: null, follow: true };
+    const current = listRef.current[activeIndexRef.current];
+    return current ? { id: current.id, follow: false } : prev;
+  }), []);
   const updateLairNotes = useCallback((notes) => setLairAction(prev => ({ ...prev, notes })), []);
   const removeLairAction = useCallback(() => setLairAction(null), []);
+
+  // Who the detail drawer shows: the current combatant while following,
+  // else the pinned id (gone from the fight → the drawer hides).
+  const inspected = useMemo(() => {
+    if (!inspect) return null;
+    if (inspect.follow) return currentCombatant;
+    return allCombatants.find(c => c.id === inspect.id) || null;
+  }, [inspect, currentCombatant, allCombatants]);
+  const inspectedKind = kindOf(inspected);
+  const inspectedUpdate = inspectedKind === 'party' ? updatePartyMember
+    : inspectedKind === 'enemy' ? updateEnemy
+    : inspectedKind === 'companion' ? updateCompanionVitals
+    : null;
 
   // Restore the viewer's tab after mount (localStorage is unavailable during
   // SSR and can throw in private windows). 'cards' is the pre-tabs value.
@@ -661,6 +694,8 @@ export default function CombatPage() {
               onResume={resumeTurn}
               reminder={turnReminder?.id === currentCombatant?.id ? turnReminder : null}
               onDismissReminder={dismissReminder}
+              onInspect={inspectCombatant}
+              onInspectCurrent={inspectCurrent}
             />
           </div>
 
@@ -702,7 +737,7 @@ export default function CombatPage() {
               // Full-width tab: up to three card columns; rows stretch so
               // side-by-side cards line up (`stretch` pins their stat bars).
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {party.map(m => <CharacterCard key={m.id} character={m} isEnemy={false} onUpdate={updatePartyMember} onRemove={removePartyMember} expanded={expandedCards[m.id]} onToggleExpand={toggleExpand} showResources templates={templates || EMPTY_TEMPLATES} stretch />)}
+                {party.map(m => <CharacterCard key={m.id} character={m} isEnemy={false} onUpdate={updatePartyMember} onRemove={removePartyMember} onInspect={inspectCombatant} showResources templates={templates || EMPTY_TEMPLATES} stretch />)}
               </div>
               )
             ) : (
@@ -756,7 +791,7 @@ export default function CombatPage() {
               : enemies.length > 0 && (
                 // items-start: enemy cards must NOT stretch (frontend-patterns §2.5)
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
-                  {enemies.map(e => <CharacterCard key={e.id} character={e} isEnemy={true} onUpdate={updateEnemy} onRemove={removeEnemy} />)}
+                  {enemies.map(e => <CharacterCard key={e.id} character={e} isEnemy={true} onUpdate={updateEnemy} onRemove={removeEnemy} onInspect={inspectCombatant} />)}
                 </div>
               )}
             {/* The lair action also lives here (not only in Manage Order), so
@@ -802,6 +837,21 @@ export default function CombatPage() {
         round={round}
         reactionsUsed={reactionsUsed}
         onToggleReaction={toggleReaction}
+        onInspect={inspectFromOrder}
+      />
+
+      <CombatantDrawer
+        key={inspected?.id || 'none'}
+        combatant={inspected}
+        kind={inspectedKind}
+        isCurrent={!!inspected && inspected.id === currentCombatant?.id}
+        following={!!inspect?.follow}
+        canFollow={combatActive}
+        onToggleFollow={toggleInspectFollow}
+        onClose={closeInspect}
+        onUpdate={inspectedUpdate}
+        onSetLegendaryUsed={setLegendaryUsed}
+        templates={templates || EMPTY_TEMPLATES}
       />
 
       <LegendaryActionModal

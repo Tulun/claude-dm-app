@@ -650,7 +650,8 @@ describe('CombatPage — turn tracker', () => {
     await flush();
     expect(nowName()).toBe('Wolfy');
     const nowCard = within(tracker()).getByText('Now').parentElement;
-    expect(within(nowCard).queryByRole('button')).not.toBeInTheDocument();
+    // the name (opens the detail drawer) is the only button
+    expect(within(nowCard).getAllByRole('button').map(b => b.title)).toEqual(['Show full details']);
   });
 
   it('party members show spell DC / to-hit and their equipped weapons and gear', async () => {

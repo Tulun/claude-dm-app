@@ -116,6 +116,8 @@ const TurnTracker = ({
   templates,
   reminder,
   onDismissReminder,
+  onInspect,
+  onInspectCurrent,
 }) => {
   // Ending combat throws away the round/turn position, so it two-steps:
   // the header button swaps to an inline confirm.
@@ -177,10 +179,18 @@ const TurnTracker = ({
           {next && (
             <span className="flex items-center gap-1.5 min-w-0 pl-3 border-l border-stone-700">
               <span className="font-bold uppercase tracking-widest text-stone-500">Up Next</span>
-              <span data-testid="up-next" title={combatantName(next)} className={`flex items-center gap-1.5 min-w-0 ${nextDead ? 'opacity-40' : ''}`}>
+              {/* Clicking the name opens the detail drawer pinned to them */}
+              <button
+                type="button"
+                data-testid="up-next"
+                title={combatantName(next)}
+                aria-label={`Details for ${combatantName(next)}`}
+                onClick={onInspect ? () => onInspect(next.id) : undefined}
+                className={`flex items-center gap-1.5 min-w-0 rounded hover:bg-stone-800/70 pr-1 ${nextDead ? 'opacity-40' : ''}`}
+              >
                 <span className={`px-1.5 py-0.5 rounded border ${nextKind.border} ${nextKind.bg} font-bold`}>{formatInit(next.initiative)}</span>
                 <span className={`text-sm font-semibold truncate max-w-[240px] ${nextKind.text} ${nextDead ? 'line-through' : ''}`}>{combatantName(next)}</span>
-              </span>
+              </button>
             </span>
           )}
           <button
@@ -306,7 +316,17 @@ const TurnTracker = ({
           <>
             <div className={`lg:w-72 shrink-0 rounded-lg border-2 ${style.border} ${style.bg} p-3`}>
               <div className="text-xs font-bold uppercase tracking-widest text-amber-400">Now</div>
-              <div className={`text-2xl font-bold truncate ${style.text}`}>{combatantName(current)}</div>
+              {/* The name opens the detail drawer, following the turn */}
+              <div className={`text-2xl font-bold truncate ${style.text}`}>
+                <button
+                  type="button"
+                  onClick={onInspectCurrent}
+                  title="Show full details"
+                  className="max-w-full truncate text-left hover:underline decoration-2 underline-offset-4"
+                >
+                  {combatantName(current)}
+                </button>
+              </div>
               {current?.isCompanion && current.ownerName && (
                 <div className="text-xs text-purple-400">{current.ownerName}&apos;s {current.form || 'companion'}</div>
               )}

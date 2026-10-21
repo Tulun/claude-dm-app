@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 // Shared Tooltip component - uses fixed positioning to avoid container clipping
 export const Tooltip = ({ text, children, maxWidth = '280px' }) => {
@@ -43,8 +44,12 @@ export const Tooltip = ({ text, children, maxWidth = '280px' }) => {
       onMouseLeave={() => setShow(false)}
     >
       {children}
-      {show && text && (
-        <span 
+      {/* Portaled: a fixed element inside a transformed / filtered /
+          backdrop-blurred ancestor (e.g. the combat detail drawer) is
+          positioned against that ancestor, not the viewport. */}
+      {show && text && createPortal(
+        <span
+          role="tooltip"
           className="fixed px-3 py-2 bg-stone-900 border border-stone-600 rounded-lg text-xs text-stone-200 shadow-xl pointer-events-none leading-relaxed"
           style={{ 
             zIndex: 99999, 
@@ -55,7 +60,8 @@ export const Tooltip = ({ text, children, maxWidth = '280px' }) => {
           }}
         >
           {displayText}
-        </span>
+        </span>,
+        document.body
       )}
     </span>
   );

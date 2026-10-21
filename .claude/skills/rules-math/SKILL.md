@@ -82,7 +82,7 @@ update this section (only) when the behavior changes:
 | `app/characters/page.jsx` | full defaults (temp AC in, name parsing on) | `character.ac \|\| 10` via `getCalculatedAC` |
 | `app/combat/components/InitiativeItem.jsx` | `{ parseArmorNames: false }` | local wrapper |
 | `app/combat/components/TurnTracker.jsx` (Now card) | `{ parseArmorNames: false }` — must match InitiativeItem's view | `character.ac \|\| 10` |
-| `app/combat/components/CharacterCard/utils.js` (`getCalculatedAC`) | `{ includeTempAC: false, parseArmorNames: false }` | `getCardBaseAC` = `character.acOverride \|\| calculatedAC \|\| character.ac \|\| 10`; `getCardDisplayAC` adds temp AC / swaps in wild shape (used by the card, the /combat Table-view rows in `CombatantTable.jsx`, AND the tracker's Now-card modals) |
+| `app/combat/components/CharacterCard/utils.js` (`getCalculatedAC`) | `{ includeTempAC: false, parseArmorNames: false }` | `getCardBaseAC` = `character.acOverride \|\| calculatedAC \|\| character.ac \|\| 10`; `getCardDisplayAC` adds temp AC / swaps in wild shape (used by the card, the /combat Table-view rows in `CombatantTable.jsx`, the tracker's Now-card modals, AND the detail drawer `CombatantDrawer.jsx` for party/enemies — companions there show stored `ac \|\| 10`) |
 
 ### THE TEMP-AC TRAP (a past audit got this wrong)
 

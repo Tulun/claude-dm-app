@@ -95,9 +95,12 @@ setEnemies(prev => {
 - `const EMPTY_TEMPLATES = [];` is module-level so the `templates` fallback
   prop (`templates || EMPTY_TEMPLATES`) keeps a stable identity. Never inline
   `templates || []` as a prop to a memoized component.
-- `onToggleExpand` receives the character id: the card calls
-  `onToggleExpand(character.id)`; the page handler is
-  `useCallback((id) => setExpandedCards(prev => ({ ...prev, [id]: !prev[id] })), [])`.
+- `onInspect` receives the combatant id (cards, order-modal rows, the
+  tracker's Up Next) and opens the detail drawer (§2.5); the page handler is
+  `useCallback((id) => setInspect({ id, follow: false }), [])`. Cards have NO
+  in-place expanded mode any more — the enemy card's old expanded block was
+  unreachable (the page never passed `expanded` to enemies) and was replaced
+  by the drawer in Oct 2026. Don't bring back `expanded`/`onToggleExpand`.
 - Initiative drag-reorder state lives in the `useDragReorder` hook
   (`app/combat/useDragReorder.js`), not on the page. An `InitiativeItem` that
   is meant to be draggable gets ONE `drag` handlers-bundle prop plus per-row
@@ -166,7 +169,10 @@ setEnemies(prev => {
   PARTY card's single ⋯ button (`aria-label` "More actions for <name>",
   items are `role="menuitem"`, plus an Edit Character link). The menu portals
   to <body> with fixed positioning because the card is `overflow-hidden`.
-  On party cards the name opens the sheet, the Spell DC chip opens the
+  On party AND enemy cards the name opens the detail drawer (§2.5, via
+  `onInspect`; plain text when no `onInspect` is passed) — NOT the sheet,
+  which stays in the ⋯ menu (Oct 2026: the drawer doesn't block the
+  tracker; the sheet modal did). On party cards the Spell DC chip opens the
   spellbook (when there are spells), and an active Innate Sorcery shows a
   flame beside the name (its lit header icon is now in the menu). Add new
   combatant modals/actions to `getCardActions` + CardModals (not as a
@@ -250,8 +256,9 @@ Three rules keep the pointer honest:
   End Turn → · End Combat on the right — the turn buttons live in the header,
   not under the This Turn panel), derived inside
   `TurnTracker` from `list` + `activeIndex` (cyclic, wraps into next round);
-  the name element carries `data-testid="up-next"` and `title` = the
-  combatant name (the tests key on this). It is not clickable; the
+  the name element (a button) carries `data-testid="up-next"` and `title` = the
+  combatant name (the tests key on this). Clicking it opens the detail drawer
+  pinned to that combatant — it does NOT move the turn pointer; the
   "Full Order" header button opens the order modal (`onOpenOrder`) — the tracker no longer jumps the pointer;
   jumping happens from modal rows. **End Combat two-steps**: the header
   button swaps to an inline confirm (local `confirmingEnd` state) because
@@ -307,6 +314,29 @@ Three rules keep the pointer honest:
   the pips show what's spent), plus spell slots / per-day spells via the shared
   `parseSpellcasting` and the card's existing `spellSlots<level>Used` /
   `perDay<N>Used` fields. Parsing lives in `app/combat/monsterAbilities.js`.
+- **Detail drawer** (`CombatantDrawer.jsx`, canonical). A right-side
+  slide-over (`<aside role="complementary" aria-label="Details: <name>">`,
+  fixed, z-40: above the sticky z-10 tracker, below `Modal`'s z-50; its top is
+  the measured bottom of the sticky z-50 Navbar, which would otherwise hide
+  its header) with NO
+  backdrop, so End Turn / the This Turn panel stay usable while it's open.
+  Page state `inspect`: `null` (closed) | `{ follow: true }` (shows
+  `currentCombatant`, moves with the turn) | `{ id, follow: false }`
+  (pinned; the drawer hides if that id leaves the fight). Transient — NOT in
+  the encounter payload. Openers: the Now card's name → follow; Up Next,
+  any card's NAME (party and enemy), party ⋯ → Details, and the order-modal rows' ⓘ
+  (closes the modal first) → pinned. The header's Pin locks onto whoever
+  is current (read via `listRef`/`activeIndexRef`); Follow turn (only while
+  combat is active) resumes tracking. `endCombat` closes a following drawer,
+  keeps a pinned one. The page renders it with `key={inspected.id}` so
+  switching combatant resets its inputs and its own `CardModals` state
+  (`{ id, key }`, like the tracker's). `onUpdate` per kind: party →
+  `updatePartyMember`, enemy → `updateEnemy`, companion →
+  `updateCompanionVitals` (writes ONLY `currentHp`/`tempHp` back — the
+  derived companion carries `ownerName` and a composite id that must never
+  reach party.json). HP uses `applyDamage`/`applyHealing` (Enter = Damage);
+  the THP field commits on Enter/blur, ignoring blank/negative. Not wired to
+  Table-view rows. Tests: `test/combat/combatantDrawer.test.jsx`.
 - **Party cards stretch; enemy cards must NOT.** `CharacterCard` takes a
   `stretch` prop (party grid only): `h-full flex flex-col` + `mt-auto` on the
   collapsed stat bar so side-by-side cards line up. Never apply `h-full`
@@ -362,6 +392,12 @@ anything AC-related on this card.
   an `onClose`-less modal still blocks Escape from reaching the one beneath;
   an inner handler can `e.preventDefault()` to keep Escape for itself. Tests:
   `test/components/modal.test.jsx`.
+- Hover labels use the shared `Tooltip` (`app/components/ui.jsx`). It
+  PORTALS to <body>: a `position: fixed` child of a transformed / filtered /
+  `backdrop-blur` ancestor (the combat detail drawer) is positioned against
+  that ancestor — tooltips there rendered ~600px off-target before (Oct
+  2026). Don't un-portal it. Test: the tooltip case in
+  `test/combat/combatantDrawer.test.jsx`.
 - Toast pattern: `const [saveStatus, showToast] = useToast()`
   (`app/hooks/useToast.js`), then `showToast('Party saved')` — auto-clears
   after `TOAST_DURATION_MS`; pass `TOAST_ERROR_DURATION_MS` for errors or

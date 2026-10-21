@@ -3,7 +3,7 @@
 import React from 'react';
 import { useState } from 'react';
 import Icons from '../../../components/Icons';
-import { EditableField, HpBar, Tooltip } from '../../../components/ui';
+import { Tooltip } from '../../../components/ui';
 import { parseSpellcasting } from './spellcastingParser';
 import CardActionButtons from './CardActionButtons';
 import CardActionMenu from './CardActionMenu';
@@ -15,7 +15,7 @@ import { getSaveBonus } from '../../../character/components/constants';
 import { formatMod } from '../../../utils/rules';
 import { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, formatClassList, getActiveWildShapeForm, getCardBaseAC, getCardDisplayAC } from './utils';
 
-const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onToggleExpand, showResources, templates = [], stretch = false }) => {
+const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, onInspect, showResources, templates = [], stretch = false }) => {
   // One modal open at a time — a single key replaces the old 10 showX booleans
   const [activeModal, setActiveModal] = useState(null);
   const closeModal = () => setActiveModal(null);
@@ -94,17 +94,19 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
             </div>
             <div>
               <h3 className={`font-bold text-lg ${isDead ? 'line-through text-stone-500' : ''}`}>
-                {/* Party: the name opens the character sheet (its header
-                    button moved into the ⋯ menu) */}
-                {isEnemy ? character.name : (
+                {/* The name opens the page's detail drawer (party and
+                    enemies alike); the sheet / stat block stay in the ⋯ menu
+                    and icon row. Plain text where there's no drawer. */}
+                {onInspect ? (
                   <button
-                    onClick={(e) => { e.stopPropagation(); setActiveModal('sheet'); }}
-                    className="text-left hover:text-emerald-300 transition-colors"
-                    title="Open character sheet"
+                    onClick={(e) => { e.stopPropagation(); onInspect(character.id); }}
+                    className={`text-left transition-colors ${isEnemy ? 'hover:text-red-300' : 'hover:text-emerald-300'}`}
+                    title="Show full details"
+                    aria-label={`Details for ${character.name}`}
                   >
                     {character.name}
                   </button>
-                )}
+                ) : character.name}
                 {activeWildShapeForm && (
                   <span className="ml-2 text-sm font-normal text-lime-400">
                     🐾 {activeWildShapeForm.name}
@@ -139,6 +141,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                 spellcastingInfo={spellcastingInfo}
                 onOpen={setActiveModal}
                 editHref={`/character?id=${character.id}&type=${characterType}`}
+                onInspect={onInspect}
               />
             )}
             {isEnemy && onRemove && (
@@ -150,23 +153,6 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                   <Icons.Trash />
                 </button>
               </Tooltip>
-            )}
-            {/* Expand/Collapse for enemies (party Edit lives in the ⋯ menu) */}
-            {isEnemy && (
-              onToggleExpand && (
-                <Tooltip text={expanded ? "Collapse" : "Expand"}>
-                  <button 
-                    onClick={() => onToggleExpand(character.id)} 
-                    className="p-2 rounded-lg transition-colors hover:bg-red-900/30"
-                  >
-                    {expanded ? (
-                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6 1.41 1.41z"/></svg>
-                    ) : (
-                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
-                    )}
-                  </button>
-                </Tooltip>
-              )
             )}
           </div>
         </div>
@@ -343,9 +329,9 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
         )}
       </div>
 
-      {/* Quick stats bar - collapsed (mt-auto pins it to the card bottom
-          when the card is stretched in the party grid) */}
-      {!expanded && (
+      {/* Quick stats bar (mt-auto pins it to the card bottom when the card
+          is stretched in the party grid) */}
+      {(
         <div className="mt-auto px-3 pb-2 grid grid-cols-6 gap-1 text-center border-t border-stone-700/30 pt-2">
           {['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'].map(label => {
             const key = label.toLowerCase();
@@ -389,8 +375,8 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
         </div>
       )}
 
-      {/* Quick actions preview - collapsed */}
-      {!expanded && character.actions?.length > 0 && (
+      {/* Quick actions preview */}
+      {character.actions?.length > 0 && (
         <div className="px-3 pb-3 text-xs">
           <div className="flex flex-wrap gap-1.5">
             {character.actions.map((action, i) => (
@@ -412,166 +398,6 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, expanded, onTog
                 <Icons.Sparkles /> Spells
               </button>
             )}
-          </div>
-        </div>
-      )}
-
-      {/* Expanded content - only for enemies */}
-      {expanded && isEnemy && (
-        <div className="border-t border-stone-700/50">
-          <div className="p-4 space-y-4 max-h-[400px] overflow-y-auto">
-            <div>
-              <label className="text-xs text-stone-400 mb-2 block">Hit Points</label>
-              <div className="flex items-center gap-3">
-                <div className="flex-1">
-                  <HpBar current={character.currentHp} max={character.maxHp} onChange={(curr, max) => onUpdate({ ...character, currentHp: curr, maxHp: max })} />
-                </div>
-                <div className="flex flex-col items-center gap-1">
-                  <label className="text-[10px] text-cyan-400">Temp HP</label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={tempHp || ''}
-                    onChange={(e) => {
-                      const val = parseInt(e.target.value);
-                      onUpdate({ ...character, tempHp: isNaN(val) ? 0 : Math.max(0, val) });
-                    }}
-                    placeholder="0"
-                    className="w-14 bg-cyan-900/30 border border-cyan-700/50 rounded px-2 py-1 text-center text-sm font-mono text-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-                  />
-                </div>
-              </div>
-            </div>
-            
-            {/* Stat block */}
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div>
-                <label className="text-xs text-stone-400">Name</label>
-                <div className="bg-stone-800/30 rounded px-2 py-1">{character.name}</div>
-              </div>
-              <div>
-                <label className="text-xs text-stone-400">AC</label>
-                <div className="flex items-center gap-2">
-                  <div className={`bg-stone-700/50 rounded px-2 py-1 font-mono flex-1 ${tempAC > 0 ? 'text-amber-400' : character.acEffect ? 'text-cyan-400' : ''}`}>
-                    {baseAC}{tempAC > 0 && <span className="text-amber-400"> +{tempAC}</span>}
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <label className="text-[10px] text-amber-400">+AC</label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={character.tempAC || ''}
-                      onChange={(e) => onUpdate({ ...character, tempAC: e.target.value })}
-                      placeholder="0"
-                      className="w-12 bg-amber-900/30 border border-amber-700/50 rounded px-1 py-1 text-center text-sm font-mono text-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-500"
-                      title="Temporary AC bonus (Shield, Cover, etc.)"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div>
-                <label className="text-xs text-stone-400">Initiative</label>
-                <EditableField value={character.initiative} onChange={(v) => onUpdate({ ...character, initiative: v })} type="number" className="block w-full" />
-              </div>
-              <div>
-                <label className="text-xs text-stone-400">Speed</label>
-                <div className="flex items-center gap-1 bg-stone-800/30 rounded px-2 py-1">
-                  <Icons.Boot />
-                  <span>{character.speed}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Ability Scores */}
-            <div className="bg-stone-800/30 rounded-lg p-2">
-              <div className="grid grid-cols-6 gap-1 text-center text-xs">
-                {['str', 'dex', 'con', 'int', 'wis', 'cha'].map(stat => (
-                  <div key={stat}>
-                    <div className="text-stone-500 uppercase">{stat}</div>
-                    <div className="text-stone-200 font-mono text-sm">{character[stat] || 10}</div>
-                    <div className="text-amber-400 text-[10px]">{getMod(character[stat])}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Misc info */}
-            {(character.senses || character.languages) && (
-              <div className="text-xs space-y-1">
-                {character.senses && <div><span className="text-stone-400">Senses:</span> <span className="text-stone-300">{character.senses}</span></div>}
-                {character.languages && <div><span className="text-stone-400">Languages:</span> <span className="text-stone-300">{character.languages}</span></div>}
-              </div>
-            )}
-
-            {/* Traits */}
-            {(character.traits || []).length > 0 && (
-              <div className="space-y-2">
-                <label className="text-xs text-stone-400 font-bold">Traits</label>
-                {character.traits.map((t, i) => (
-                  <div key={i} className="text-xs bg-stone-800/50 rounded p-2">
-                    <span className="text-amber-400 font-semibold italic">{t.name}.</span> <span className="text-stone-300">{t.description}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Actions */}
-            {(character.actions || []).length > 0 && (
-              <div className="space-y-2">
-                <label className="text-xs text-red-400 font-bold flex items-center gap-1"><Icons.Sword /> Actions</label>
-                {character.actions.map((a, i) => (
-                  <div key={i} className="text-xs bg-red-950/30 border border-red-900/30 rounded p-2">
-                    <span className="text-red-300 font-semibold italic">{a.name}.</span> <span className="text-stone-300">{a.description}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Bonus Actions */}
-            {(character.bonusActions || []).length > 0 && (
-              <div className="space-y-2">
-                <label className="text-xs text-orange-400 font-bold">Bonus Actions</label>
-                {character.bonusActions.map((a, i) => (
-                  <div key={i} className="text-xs bg-orange-950/30 border border-orange-900/30 rounded p-2">
-                    <span className="text-orange-300 font-semibold italic">{a.name}.</span> <span className="text-stone-300">{a.description}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Reactions */}
-            {(character.reactions || []).length > 0 && (
-              <div className="space-y-2">
-                <label className="text-xs text-cyan-400 font-bold">Reactions</label>
-                {character.reactions.map((r, i) => (
-                  <div key={i} className="text-xs bg-cyan-950/30 border border-cyan-900/30 rounded p-2">
-                    <span className="text-cyan-300 font-semibold italic">{r.name}.</span> <span className="text-stone-300">{r.description}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Legendary Actions */}
-            {(character.legendaryActions || []).length > 0 && (
-              <div className="space-y-2">
-                <label className="text-xs text-purple-400 font-bold">★ Legendary Actions</label>
-                {character.legendaryActions.map((a, i) => (
-                  <div key={i} className="text-xs bg-purple-950/30 border border-purple-900/30 rounded p-2">
-                    <span className="text-purple-300 font-semibold italic">{a.name}.</span> <span className="text-stone-300">{a.description}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          
-          {/* Footer */}
-          <div className="flex justify-between items-center p-4 pt-2 border-t border-stone-700/30">
-            <button onClick={() => setActiveModal('actions')} className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-red-900/30 hover:bg-red-800/50 text-red-400">
-              <Icons.Sword /> Actions & Spells
-            </button>
-            <button onClick={() => setActiveModal('delete')} className="flex items-center gap-1 px-3 py-1 rounded text-sm bg-red-900/30 hover:bg-red-800/50 text-red-400">
-              <Icons.Trash /> Kill
-            </button>
           </div>
         </div>
       )}

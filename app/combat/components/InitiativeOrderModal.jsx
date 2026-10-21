@@ -32,6 +32,7 @@ export default function InitiativeOrderModal({
   round,
   reactionsUsed,
   onToggleReaction,
+  onInspect,
 }) {
   if (!isOpen) return null;
 
@@ -77,6 +78,7 @@ export default function InitiativeOrderModal({
               onRemoveLairAction={c.isLairAction ? onRemoveLairAction : undefined}
               reactionUsed={!!reactionsUsed?.[c.id]}
               onToggleReaction={c.isLairAction ? undefined : onToggleReaction}
+              onInspect={c.isLairAction ? undefined : onInspect}
             />
           ))}
           {!list.length && (
