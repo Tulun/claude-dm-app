@@ -109,4 +109,21 @@ describe('party card ⋯ menu', () => {
     fireEvent.click(screen.getByRole('menuitem', { name: 'Remove from Combat' }));
     expect(screen.getByText('Kill Goblin?')).toBeInTheDocument();
   });
+
+  it('enemy cards offer Duplicate when the host passes onDuplicate (party cards never do)', () => {
+    const onDuplicate = vi.fn();
+    render(<CharacterCard character={goblin} isEnemy onUpdate={vi.fn()} onRemove={vi.fn()} onDuplicate={onDuplicate} />);
+    fireEvent.click(screen.getByLabelText('More actions for Goblin'));
+    expect(within(screen.getByRole('menu')).getAllByRole('menuitem').map(i => i.textContent.replace(/[^\w ]/gu, '').trim())).toEqual([
+      'View Stat Block', 'Combat Notes', 'Duplicate', 'Remove from Combat',
+    ]);
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Duplicate' }));
+    expect(onDuplicate).toHaveBeenCalledWith('e1');
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    cleanup();
+
+    render(<CharacterCard character={druid} isEnemy={false} onUpdate={vi.fn()} onDuplicate={onDuplicate} />);
+    fireEvent.click(screen.getByLabelText('More actions for Efa'));
+    expect(screen.queryByRole('menuitem', { name: 'Duplicate' })).not.toBeInTheDocument();
+  });
 });

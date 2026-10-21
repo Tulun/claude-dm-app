@@ -68,7 +68,7 @@ Check in this order:
 
 The mirror image of "edits are not saving": extra renders or saves instead of missing
 ones. The combat page's save effects key on array IDENTITY (`[party]`, `[templates]`,
-`[enemies, lairAction]` in `app/combat/page.jsx`), and `CharacterCard`/`InitiativeItem`
+`[enemies, lairActions]` in `app/combat/page.jsx`), and `CharacterCard`/`InitiativeItem`
 are `React.memo`'d — so this class of bug is almost always a broken identity. Check:
 1. An inline closure or inline `|| []` fallback passed as a prop, silently defeating
    `React.memo` (this is why the memoization contract in frontend-patterns §2 exists;

@@ -15,7 +15,7 @@ import { getSaveBonus } from '../../../character/components/constants';
 import { formatMod } from '../../../utils/rules';
 import { getMod, getModNum, getProfBonus, getSpellSaveDC, getSpellAttackBonus, formatClassList, getActiveWildShapeForm, getCardBaseAC, getCardDisplayAC } from './utils';
 
-const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, onInspect, showResources, templates = [], stretch = false }) => {
+const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, onDuplicate, onInspect, showResources, templates = [], stretch = false }) => {
   // One modal open at a time — a single key replaces the old 10 showX booleans
   const [activeModal, setActiveModal] = useState(null);
   const closeModal = () => setActiveModal(null);
@@ -145,6 +145,7 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, onInspect, show
               onOpen={setActiveModal}
               editHref={isEnemy ? undefined : `/character?id=${character.id}&type=${characterType}`}
               onInspect={onInspect}
+              onDuplicate={isEnemy ? onDuplicate : undefined}
               onRemove={isEnemy ? onRemove : undefined}
             />
           </div>

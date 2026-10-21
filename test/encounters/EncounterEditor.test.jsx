@@ -368,23 +368,45 @@ describe('EncounterEditor', () => {
     });
   });
 
-  describe('lair action', () => {
+  describe('lair actions', () => {
+    const lair = (id, initiative, notes) => ({ id, initiative, notes });
+
     it('adds a default lair action to the saved encounter', () => {
       renderEditor();
       expect(screen.getByText(/None\. Loading this encounter/)).toBeInTheDocument();
       fireEvent.click(screen.getByText('Add Lair Action'));
-      expect(defaultProps.onUpdate).toHaveBeenCalledWith({ ...baseEncounter, lairAction: { initiative: 20, notes: '' } });
+      expect(defaultProps.onUpdate).toHaveBeenCalledWith({
+        ...baseEncounter,
+        lairActions: [{ id: expect.stringMatching(/^lair-/), initiative: 20, notes: '' }],
+      });
     });
 
-    it('edits initiative and description, and removes it', () => {
+    it('adds a second lair action next to an existing one', () => {
+      const encounter = { ...baseEncounter, lairActions: [lair('l1', 20, 'Rumble')] };
+      renderEditor({ encounter });
+      fireEvent.click(screen.getByText('Add Lair Action'));
+      expect(defaultProps.onUpdate).toHaveBeenLastCalledWith({
+        ...encounter,
+        lairActions: [lair('l1', 20, 'Rumble'), { id: expect.stringMatching(/^lair-/), initiative: 20, notes: '' }],
+      });
+    });
+
+    it('edits each lair action by its own id, and removes one', () => {
+      const encounter = { ...baseEncounter, lairActions: [lair('l1', 20, 'Rumble'), lair('l2', 10, 'Gas')] };
+      renderEditor({ encounter });
+      fireEvent.change(screen.getByLabelText('Lair Action 2 initiative'), { target: { value: '15' } });
+      expect(defaultProps.onUpdate).toHaveBeenLastCalledWith({ ...encounter, lairActions: [lair('l1', 20, 'Rumble'), lair('l2', 15, 'Gas')] });
+      fireEvent.change(screen.getByLabelText('Lair Action 1 description'), { target: { value: 'Quake' } });
+      expect(defaultProps.onUpdate).toHaveBeenLastCalledWith({ ...encounter, lairActions: [lair('l1', 20, 'Quake'), lair('l2', 10, 'Gas')] });
+      fireEvent.click(screen.getByLabelText('Remove Lair Action 1'));
+      expect(defaultProps.onUpdate).toHaveBeenLastCalledWith({ ...encounter, lairActions: [lair('l2', 10, 'Gas')] });
+    });
+
+    it('upgrades a legacy single lairAction on the first edit (legacy key dropped)', () => {
       const encounter = { ...baseEncounter, lairAction: { initiative: 20, notes: 'Rumble' } };
       renderEditor({ encounter });
-      fireEvent.change(screen.getByLabelText('Lair action initiative'), { target: { value: '15' } });
-      expect(defaultProps.onUpdate).toHaveBeenLastCalledWith({ ...encounter, lairAction: { initiative: 15, notes: 'Rumble' } });
-      fireEvent.change(screen.getByLabelText('Lair action description'), { target: { value: 'Quake' } });
-      expect(defaultProps.onUpdate).toHaveBeenLastCalledWith({ ...encounter, lairAction: { initiative: 20, notes: 'Quake' } });
-      fireEvent.click(screen.getByLabelText('Remove lair action'));
-      expect(defaultProps.onUpdate).toHaveBeenLastCalledWith({ ...encounter, lairAction: null });
+      fireEvent.change(screen.getByLabelText('Lair Action description'), { target: { value: 'Quake' } });
+      expect(defaultProps.onUpdate).toHaveBeenLastCalledWith({ ...baseEncounter, lairActions: [lair('lair-action', 20, 'Quake')] });
     });
 
     it('shows Return to Combat only when asked', () => {

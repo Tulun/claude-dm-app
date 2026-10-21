@@ -174,6 +174,26 @@ context costs:
 
 ## Completed log
 
+- [x] /combat encounter bar tidy: Edit Encounter button removed (the encounter
+  name is now the edit link), "Load Another" always reads "Load Encounter"
+  and sits alone on the encounter bar; Clear / Add Lair Action / Add Monster
+  moved to a second "Encounter actions" bar — Oct 2026.
+- [x] Multiple lair actions: combat state and saved encounters store
+  `lairActions: [{ id, initiative, notes }]` (`app/utils/lairActions.js`);
+  legacy single `lairAction` files read back as a one-item list (id
+  `'lair-action'`, so saved orders still match) and are rewritten on the next
+  save — no route/version migration (both routes are pass-through). Add to
+  Combat now appends a saved encounter's lair actions instead of ignoring them
+  when one existed. Encounter editor edits a list. Also: enemy card ⋯ menu
+  gained Duplicate (fresh copy after the original) — Oct 2026.
+  Not done: the Table view's enemy rows have no Duplicate.
+- [x] Same-named enemies are numbered for tracking: Add Monster / Load
+  Encounter only numbered within one batch, so a second "Goblin Boss" (or a
+  quantity-1 encounter added twice) collided. `numberEnemies`
+  (`app/combat/enemyNames.js`) now runs on every add path and on load, so
+  existing collisions in `data/encounter.json` fix themselves — Oct 2026.
+  Not done: renaming an enemy by hand can still create a duplicate name.
+
 - [x] Enemy card glowup (mirrors the party cards): ⋯ menu instead of the
   icon row (Remove from Combat lives there), "size type · CR" subtitle,
   parsed spellcasting DC pill, `EnemyGlance` (limited-use pips incl.

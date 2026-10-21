@@ -133,10 +133,10 @@ describe('/api/encounter (active combat state)', () => {
     expect(await res.json()).toEqual({ enemies: [], round: 1, turnIndex: 0 });
   });
 
-  it('round-trips enemies and lair action', async () => {
+  it('round-trips enemies and lair actions', async () => {
     const state = {
       enemies: [{ id: 'enemy-1', name: 'Goblin 1', currentHp: 7, maxHp: 7, initiative: 12 }],
-      lairAction: { initiative: 20, notes: 'Rocks fall' },
+      lairActions: [{ id: 'lair-1', initiative: 20, notes: 'Rocks fall' }],
     };
     await route.POST(postRequest(state));
     expect(await (await route.GET()).json()).toEqual(state);

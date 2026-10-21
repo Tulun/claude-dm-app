@@ -25,7 +25,7 @@ const KIND_STYLES = {
 
 const styleFor = (kind) => KIND_STYLES[kind] || KIND_STYLES.party;
 
-const combatantName = (c) => (c ? (c.isLairAction ? 'Lair Action' : c.name) : '—');
+const combatantName = (c) => (c ? c.name : '—');
 
 const formatInit = (init) => {
   if (init === undefined || init === null) return '—';

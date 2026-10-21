@@ -73,7 +73,7 @@ const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, 
   const handleNotesBlur = () => {
     setEditingNotes(false);
     if (onUpdateLairNotes) {
-      onUpdateLairNotes(notesValue);
+      onUpdateLairNotes(character.id, notesValue);
     }
   };
 
@@ -136,7 +136,7 @@ const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, 
         </div>
         <div className="flex-1 min-w-0">
           <div className="font-medium text-purple-300 flex items-center gap-2">
-            <Icons.Sparkles /> Lair Action
+            <Icons.Sparkles /> {character.name}
           </div>
           {editingNotes ? (
             <input
@@ -161,9 +161,9 @@ const InitiativeItem = ({ character, isEnemy, isCompanion, isLairAction, index, 
         {turnBadge}
         {onRemoveLairAction && (
           <button 
-            onClick={onRemoveLairAction}
-            aria-label="Remove lair action"
-            title="Remove lair action"
+            onClick={(e) => { e.stopPropagation(); onRemoveLairAction(character.id); }}
+            aria-label={`Remove ${character.name}`}
+            title={`Remove ${character.name}`}
             className="p-1 text-stone-500 hover:text-red-400 transition-colors"
           >
             <Icons.Trash />

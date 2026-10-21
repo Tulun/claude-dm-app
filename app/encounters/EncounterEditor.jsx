@@ -7,6 +7,7 @@ import Modal from '../components/Modal';
 import { crToNumber } from './constants';
 import { getMod } from '../utils/rules';
 import { generateId } from '../utils/generateId';
+import { readLairActions, withLairActions, newLairAction, lairActionName } from '../utils/lairActions';
 
 // CR values for filtering
 const CR_OPTIONS = [
@@ -236,10 +237,11 @@ const EncounterEditor = ({
     });
   };
 
-  // Optional lair action stored on the saved encounter ({ initiative, notes });
-  // the combat page's Load Encounter brings it in.
-  const lair = encounter.lairAction || null;
-  const setLair = (changes) => onUpdate({ ...encounter, lairAction: changes && { ...(lair || { initiative: 20, notes: '' }), ...changes } });
+  // Optional lair actions stored on the saved encounter (see
+  // app/utils/lairActions.js); the combat page's Load Encounter brings them in.
+  const lairs = readLairActions(encounter);
+  const setLairs = (list) => onUpdate(withLairActions(encounter, list));
+  const updateLair = (id, changes) => setLairs(lairs.map(l => (l.id === id ? { ...l, ...changes } : l)));
 
   const selectedCount = Object.values(selectedMonsters).reduce((sum, qty) => sum + qty, 0);
   const selectedTemplateCount = Object.keys(selectedMonsters).length;
@@ -485,55 +487,59 @@ const EncounterEditor = ({
           )}
         </div>
 
-        {/* Lair Action */}
+        {/* Lair Actions */}
         <div className="bg-stone-900/50 border border-purple-800/40 rounded-xl p-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold text-purple-400 flex items-center gap-2">
-              <Icons.Sparkles /> Lair Action
+              <Icons.Sparkles /> Lair Actions
             </h2>
-            {lair ? (
-              <button
-                onClick={() => onUpdate({ ...encounter, lairAction: null })}
-                aria-label="Remove lair action"
-                className="text-red-400 hover:text-red-300 p-1"
-              >
-                <Icons.Trash />
-              </button>
-            ) : (
-              <button
-                onClick={() => setLair({})}
-                className="flex items-center gap-1 px-3 py-1 rounded-lg bg-purple-800/50 hover:bg-purple-700/50 text-purple-300 text-sm"
-              >
-                <Icons.Plus /> Add Lair Action
-              </button>
-            )}
+            <button
+              onClick={() => setLairs([...lairs, newLairAction()])}
+              className="flex items-center gap-1 px-3 py-1 rounded-lg bg-purple-800/50 hover:bg-purple-700/50 text-purple-300 text-sm"
+            >
+              <Icons.Plus /> Add Lair Action
+            </button>
           </div>
-          {lair ? (
-            <div className="mt-3 flex gap-3 items-start">
-              <label className="text-xs text-stone-400 flex flex-col gap-1">
-                Initiative
-                <input
-                  type="number"
-                  aria-label="Lair action initiative"
-                  value={lair.initiative ?? 20}
-                  onChange={(e) => { const n = parseFloat(e.target.value); if (!isNaN(n)) setLair({ initiative: n }); }}
-                  className="w-20 bg-stone-700/50 rounded px-2 py-1 text-sm text-stone-100 font-mono focus:outline-none focus:ring-1 focus:ring-purple-500"
-                />
-              </label>
-              <label className="text-xs text-stone-400 flex flex-col gap-1 flex-1">
-                Description
-                <textarea
-                  aria-label="Lair action description"
-                  value={lair.notes || ''}
-                  onChange={(e) => setLair({ notes: e.target.value })}
-                  rows={2}
-                  placeholder="What happens on initiative count 20…"
-                  className="bg-stone-700/50 rounded px-2 py-1 text-sm text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
-                />
-              </label>
+          {lairs.length > 0 ? (
+            <div className="mt-3 space-y-3">
+              {lairs.map((lair, i) => {
+                const name = lairActionName(i, lairs.length);
+                return (
+                  <div key={lair.id} className="flex gap-3 items-start">
+                    <label className="text-xs text-stone-400 flex flex-col gap-1">
+                      Initiative
+                      <input
+                        type="number"
+                        aria-label={`${name} initiative`}
+                        value={lair.initiative ?? 20}
+                        onChange={(e) => { const n = parseFloat(e.target.value); if (!isNaN(n)) updateLair(lair.id, { initiative: n }); }}
+                        className="w-20 bg-stone-700/50 rounded px-2 py-1 text-sm text-stone-100 font-mono focus:outline-none focus:ring-1 focus:ring-purple-500"
+                      />
+                    </label>
+                    <label className="text-xs text-stone-400 flex flex-col gap-1 flex-1">
+                      {lairs.length > 1 ? name : 'Description'}
+                      <textarea
+                        aria-label={`${name} description`}
+                        value={lair.notes || ''}
+                        onChange={(e) => updateLair(lair.id, { notes: e.target.value })}
+                        rows={2}
+                        placeholder="What happens on initiative count 20…"
+                        className="bg-stone-700/50 rounded px-2 py-1 text-sm text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                      />
+                    </label>
+                    <button
+                      onClick={() => setLairs(lairs.filter(l => l.id !== lair.id))}
+                      aria-label={`Remove ${name}`}
+                      className="text-red-400 hover:text-red-300 p-1 mt-5"
+                    >
+                      <Icons.Trash />
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           ) : (
-            <p className="mt-2 text-sm text-stone-500">None. Loading this encounter into combat will bring its lair action along.</p>
+            <p className="mt-2 text-sm text-stone-500">None. Loading this encounter into combat will bring its lair actions along.</p>
           )}
         </div>
       </main>

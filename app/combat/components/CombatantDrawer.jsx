@@ -224,7 +224,7 @@ const CombatantDrawer = ({ combatant, kind, isCurrent, following, canFollow, onT
     <>
       <aside
         role="complementary"
-        aria-label={`Details: ${isLair ? 'Lair Action' : combatant.name}`}
+        aria-label={`Details: ${combatant.name}`}
         style={{ top }}
         className={`fixed bottom-0 right-0 z-40 w-full sm:w-[26rem] flex flex-col border-l-2 ${style.border} bg-stone-950/95 backdrop-blur-sm shadow-2xl shadow-black/60`}
       >
@@ -236,7 +236,7 @@ const CombatantDrawer = ({ combatant, kind, isCurrent, following, canFollow, onT
                 <span className="text-stone-500">{following ? 'Following turn' : 'Pinned'}</span>
               </div>
               <h2 className={`text-2xl font-bold truncate ${style.text}`}>
-                {isLair ? 'Lair Action' : combatant.name}
+                {combatant.name}
                 {wildShapeForm && <span className="ml-2 text-sm font-normal text-lime-400">🐾 {wildShapeForm.name}</span>}
               </h2>
               {subtitle && <div className="text-xs text-stone-400">{subtitle}</div>}

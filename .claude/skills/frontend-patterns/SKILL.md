@@ -107,12 +107,12 @@ setEnemies(prev => {
   `isDragging`/`isDragOver` booleans — do not go back to passing four separate
   handler props or a shared `dragOverIndex` (the shared index re-rendered every
   row on hover). `drag` is OPT-IN: only `InitiativeOrderModal` passes it (and
-  supplies `onSelect` for click-to-jump). The main page renders exactly ONE
-  `InitiativeItem` outside the modal: the lair action card in the Enemies
-  section (both card and Table tabs; no drag/select; `lairActionEntry` is its
-  own `useMemo` so the memoized row stays stable). Before it existed, "+ Lair
-  Action" appeared to do nothing — the lair action only showed inside Manage
-  Order. No other combatant gets a row on the page — initiative is a full-width `TurnTracker` bar
+  supplies `onSelect` for click-to-jump). The only `InitiativeItem`s outside
+  the modal are the lair action cards in the Enemies section (one per lair
+  action, both card and Table tabs; no drag/select; `lairActionEntries` is its
+  own `useMemo` so the memoized rows stay stable; their notes/remove callbacks
+  take the lair id). Before they existed, "+ Lair Action" appeared to do
+  nothing — the lair action only showed inside Manage Order. No other combatant gets a row on the page — initiative is a full-width `TurnTracker` bar
   ABOVE the combatant tabs (§2.5); the full order lives exclusively in the
   Manage Order modal. Layout: `main.children[0]` = initiative bar (header +
   tracker), `main.children[1]` = the combatant TABS — a `role="tablist"`
@@ -126,13 +126,25 @@ setEnemies(prev => {
   the Enemies-section **encounter bar** exists only on the Enemies/Table
   tabs: the loaded encounter's name (`loadedEncounter` `{ id, name }`, shown
   via the library's current name; "Unsaved encounter" / "None loaded"
-  otherwise, `data-testid="encounter-name"`), then bordered `BAR_BUTTON`
-  buttons — Edit Encounter (link to `/encounters?edit=<id>&from=combat`, only
-  while that id is still in the library; else an "Encounters" link), Load
-  Encounter / Load Another, Lair Action, Clear, Add Monster. The load modal
-  offers **Add to Combat** (append; takes the saved lair action only if none
-  exists; keeps the first loaded name) and, when enemies exist, **Replace
-  Enemies** (swaps enemies + lair action + name; party and turn state kept).
+  otherwise, `data-testid="encounter-name"`; the name itself links to
+  `/encounters?edit=<id>&from=combat` only while that id is still in the
+  library) with a bordered `BAR_BUTTON` Load Encounter on the right. Below it
+  an **actions bar** (`role="toolbar"`, "Encounter actions"): Clear on the
+  left (only when there are enemies or lair actions), Add Lair Action (always
+  shown — any number, named "Lair Action" / "Lair Action N") and Add Monster
+  on the right. Enemy cards' ⋯ menu has **Duplicate** (`duplicateEnemy` in
+  `app/combat/duplicate.js`: same stat block + initiative, per-fight state
+  reset; lands right after the original in the cards and in a manual
+  initiative order). **Enemy names are unique within a fight:** every add path
+  (Add Monster, Load Encounter add/replace, Duplicate) and the initial load
+  pass the list through `numberEnemies` (`app/combat/enemyNames.js`) — a name
+  family with 2+ members gets every member numbered, keeping numbers already
+  held. Removing an enemy never renumbers the rest (names are how the DM
+  tracks them). New add paths must call it too. The load modal
+  offers **Add to Combat** (append monsters AND lair actions; keeps the first
+  loaded name) and, when enemies exist, **Replace Enemies** (swaps enemies +
+  lair actions + name; party and turn state kept). Loaded lair actions get
+  fresh ids.
   `/encounters` opens the editor for `?edit=`, shows Return to Combat for
   `from=combat`, and flushes a pending debounced save (keepalive POST) on
   unmount so leaving mid-debounce doesn't lose the edit. Page state `viewMode` (`'party' |

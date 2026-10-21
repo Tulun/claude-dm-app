@@ -114,8 +114,8 @@ describe('CombatPage — loading and layout', () => {
     expect(screen.queryByText('Benchwarmer')).not.toBeInTheDocument();
     fireEvent.click(screen.getByText('Done'));
     // the Enemies encounter bar: real buttons, labelled for an existing fight
-    expect(screen.getByRole('button', { name: 'Load Another' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Lair Action' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Load Encounter' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add Lair Action' })).toBeInTheDocument();
   });
 
   it('falls back to default party and templates when every fetch fails', async () => {
@@ -168,13 +168,13 @@ describe('CombatPage — initiative', () => {
     expect(names).toEqual(['Theren', 'Ogre', 'Wolfy', 'Mira']); // 15, 9, 8, 5
   });
 
-  it('adding a lair action puts it in the initiative order', async () => {
+  it('adding lair actions puts them in the initiative order; several get numbered', async () => {
     mockFetch();
     render(<CombatPage />);
     await settle();
 
     showTab('Enemies'); // the lair-action shortcut lives in the Enemies section
-    fireEvent.click(screen.getByRole('button', { name: 'Lair Action' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add Lair Action' }));
     // it shows up right there in the Enemies section (it used to vanish into
     // the Manage Order modal only)
     const enemiesSection = screen.getByRole('region', { name: 'Enemies' });
@@ -183,8 +183,29 @@ describe('CombatPage — initiative', () => {
     const modal = screen.getByText('Initiative Order').closest('.fixed');
     expect(within(modal).getByText('Lair Action')).toBeInTheDocument();
     fireEvent.click(screen.getByText('Done'));
-    // the option disappears once one exists
-    expect(screen.queryByRole('button', { name: 'Lair Action' })).not.toBeInTheDocument();
+    // the option stays: an encounter can hold several lair actions
+    fireEvent.click(screen.getByRole('button', { name: 'Add Lair Action' }));
+    expect(within(enemiesSection).getByText('Lair Action 1')).toBeInTheDocument();
+    expect(within(enemiesSection).getByText('Lair Action 2')).toBeInTheDocument();
+    expect(within(enemiesSection).queryByText('Lair Action')).not.toBeInTheDocument();
+  });
+
+  it('reads a legacy single lairAction from the saved fight and saves it back as lairActions', async () => {
+    const fetchMock = mockFetch({
+      '/api/encounter': jsonResponse({ ...activeEncounter, lairAction: { initiative: 20, notes: 'Old style' } }),
+    });
+    render(<CombatPage />);
+    await settle();
+    showTab('Enemies');
+    expect(within(screen.getByRole('region', { name: 'Enemies' })).getByText('Old style')).toBeInTheDocument();
+    fetchMock.mockClear();
+    fireEvent.click(screen.getByRole('button', { name: 'Add Lair Action' }));
+    await act(async () => { vi.advanceTimersByTime(1100); });
+    const body = JSON.parse(postCalls(fetchMock, '/api/encounter').at(-1)[1].body);
+    expect(body.lairAction).toBeUndefined();
+    expect(body.lairActions).toHaveLength(2);
+    // keeps the old fixed initiative id so a saved order still finds it
+    expect(body.lairActions[0]).toEqual({ id: 'lair-action', initiative: 20, notes: 'Old style' });
   });
 
   it('the Enemies section lair card edits notes and initiative, and removes it', async () => {
@@ -194,7 +215,7 @@ describe('CombatPage — initiative', () => {
     fetchMock.mockClear();
 
     showTab('Enemies');
-    fireEvent.click(screen.getByRole('button', { name: 'Lair Action' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add Lair Action' }));
     const section = () => screen.getByRole('region', { name: 'Enemies' });
     fireEvent.click(within(section()).getByText('Click to add description...'));
     const notes = within(section()).getByPlaceholderText('Describe the lair action...');
@@ -206,11 +227,11 @@ describe('CombatPage — initiative', () => {
     fireEvent.blur(init);
     await act(async () => { vi.advanceTimersByTime(1100); });
     const body = JSON.parse(postCalls(fetchMock, '/api/encounter').at(-1)[1].body);
-    expect(body.lairAction).toEqual({ initiative: 18, notes: 'Magma erupts' });
+    expect(body.lairActions).toEqual([{ id: expect.stringMatching(/^lair-/), initiative: 18, notes: 'Magma erupts' }]);
 
-    fireEvent.click(within(section()).getByLabelText('Remove lair action'));
-    expect(within(section()).queryByLabelText('Remove lair action')).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Lair Action' })).toBeInTheDocument();
+    fireEvent.click(within(section()).getByLabelText('Remove Lair Action'));
+    expect(within(section()).queryByLabelText('Remove Lair Action')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add Lair Action' })).toBeInTheDocument();
   });
 });
 
@@ -255,7 +276,7 @@ describe('CombatPage — enemies and encounters', () => {
     fetchMock.mockClear();
 
     showTab('Enemies');
-    fireEvent.click(screen.getByText('Load Another'));
+    fireEvent.click(screen.getByText('Load Encounter'));
     fireEvent.click(screen.getByText('Goblin Ambush'));
     fireEvent.click(screen.getByText('Add to Combat')); // label because enemies already exist
 
@@ -409,51 +430,125 @@ describe('CombatPage — conditions', () => {
   });
 });
 
+describe('CombatPage — duplicate enemy', () => {
+  it('Duplicate adds a fresh copy right after the original, in the cards and a manual order, and saves', async () => {
+    const fetchMock = mockFetch({
+      '/api/encounter': jsonResponse({
+        enemies: [
+          { id: 'enemy-1', name: 'Ogre', currentHp: 20, maxHp: 59, initiative: 9, cr: '2', conditions: [{ name: 'Prone' }] },
+          { id: 'enemy-2', name: 'Goblin', currentHp: 7, maxHp: 7, initiative: 14 },
+        ],
+        initiativeOrder: ['enemy-2', 'enemy-1'],
+      }),
+    });
+    render(<CombatPage />);
+    await settle();
+    fetchMock.mockClear();
+    showTab('Enemies');
+    fireEvent.click(screen.getByLabelText('More actions for Ogre'));
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Duplicate' }));
+    expect(screen.getByLabelText('More actions for Ogre 2')).toBeInTheDocument();
+
+    await act(async () => { vi.advanceTimersByTime(1100); });
+    const body = JSON.parse(postCalls(fetchMock, '/api/encounter').at(-1)[1].body);
+    expect(body.enemies.map(e => e.name)).toEqual(['Ogre 1', 'Ogre 2', 'Goblin']);
+    const copy = body.enemies[1];
+    expect(copy).toMatchObject({ currentHp: 59, maxHp: 59, initiative: 9 });
+    expect(copy.conditions).toBeUndefined();
+    expect(body.initiativeOrder).toEqual(['enemy-2', 'enemy-1', copy.id]);
+  });
+});
+
+describe('CombatPage — enemy numbering', () => {
+  it('numbers same-named enemies already in the saved fight', async () => {
+    mockFetch({
+      '/api/encounter': jsonResponse({ enemies: [
+        { id: 'enemy-1', name: 'Goblin Boss', currentHp: 21, maxHp: 21 },
+        { id: 'enemy-2', name: 'Goblin Boss', currentHp: 21, maxHp: 21 },
+      ] }),
+    });
+    render(<CombatPage />);
+    await settle();
+    showTab('Enemies');
+    expect(screen.getByLabelText('More actions for Goblin Boss 1')).toBeInTheDocument();
+    expect(screen.getByLabelText('More actions for Goblin Boss 2')).toBeInTheDocument();
+  });
+
+  it('Add to Combat numbers new monsters past the ones already fighting', async () => {
+    const fetchMock = mockFetch({ '/api/encounter': jsonResponse({ enemies: [] }) });
+    render(<CombatPage />);
+    await settle();
+    showTab('Enemies');
+    for (const confirm of ['Load Encounter', 'Add to Combat']) {
+      fireEvent.click(screen.getByRole('button', { name: 'Load Encounter' }));
+      fireEvent.click(screen.getByText('Goblin Ambush', { selector: 'span' }));
+      // the modal's confirm button is the last one with that name
+      fireEvent.click(screen.getAllByRole('button', { name: confirm }).at(-1));
+    }
+    fetchMock.mockClear();
+    await act(async () => { vi.advanceTimersByTime(1100); });
+    const body = JSON.parse(postCalls(fetchMock, '/api/encounter').at(-1)[1].body);
+    expect(body.enemies.map(e => e.name)).toEqual(['Goblin 1', 'Goblin 2', 'Goblin 3', 'Goblin 4']);
+  });
+});
+
 describe('CombatPage — encounter bar', () => {
+  it('splits into the encounter bar (name + Load Encounter) and an actions bar (Clear, Add Lair Action, Add Monster)', async () => {
+    mockFetch();
+    render(<CombatPage />);
+    await settle();
+    showTab('Enemies');
+    const bar = screen.getByTestId('encounter-name').parentElement;
+    expect(within(bar).getByRole('button', { name: 'Load Encounter' })).toBeInTheDocument();
+    expect(within(bar).queryByRole('button', { name: 'Add Monster' })).not.toBeInTheDocument();
+    const actions = screen.getByRole('toolbar', { name: 'Encounter actions' });
+    expect(within(actions).getAllByRole('button').map(b => b.textContent)).toEqual(['Clear', 'Add Lair Action', 'Add Monster']);
+  });
+
   const lairEncounter = {
     id: 'enc-2', name: 'Dragon Lair',
     monsters: [{ id: 'm2', templateId: 't-ogre', name: 'Ogre', quantity: 1 }],
-    lairAction: { initiative: 20, notes: 'The ceiling collapses' },
+    lairActions: [{ id: 'lair-saved', initiative: 20, notes: 'The ceiling collapses' }],
   };
   const encounterName = () => screen.getByTestId('encounter-name').textContent;
 
-  it('names an existing fight with no saved source "Unsaved encounter" and links to the library', async () => {
+  it('names an existing fight with no saved source "Unsaved encounter" (not a link)', async () => {
     mockFetch();
     render(<CombatPage />);
     await settle();
     showTab('Enemies');
     expect(encounterName()).toBe('EncounterUnsaved encounter');
-    const section = screen.getByRole('region', { name: 'Enemies' });
-    expect(within(section).getByRole('link', { name: 'Encounters' })).toHaveAttribute('href', '/encounters');
+    expect(within(screen.getByTestId('encounter-name')).queryByRole('link')).not.toBeInTheDocument();
   });
 
-  it('Replace Enemies swaps in a saved encounter with its lair action, names it, links to edit it, and saves', async () => {
+  it('Replace Enemies swaps in a saved encounter with its lair action, names it (the name links to its editor), and saves', async () => {
     const fetchMock = mockFetch({ '/api/encounters': jsonResponse([...savedEncounters, lairEncounter]) });
     render(<CombatPage />);
     await settle();
     fetchMock.mockClear();
 
     showTab('Enemies');
-    fireEvent.click(screen.getByText('Load Another'));
+    fireEvent.click(screen.getByText('Load Encounter'));
     expect(screen.getByText('Lair action')).toBeInTheDocument(); // chip in the picker
     fireEvent.click(screen.getByText('Dragon Lair'));
     fireEvent.click(screen.getByText('Replace Enemies'));
 
     expect(encounterName()).toBe('EncounterDragon Lair');
-    expect(screen.getByRole('link', { name: 'Edit Encounter' })).toHaveAttribute('href', '/encounters?edit=enc-2&from=combat');
+    expect(screen.getByRole('link', { name: 'Dragon Lair' })).toHaveAttribute('href', '/encounters?edit=enc-2&from=combat');
     const section = screen.getByRole('region', { name: 'Enemies' });
     expect(within(section).getByText('The ceiling collapses')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Lair Action' })).not.toBeInTheDocument();
 
     await act(async () => { vi.advanceTimersByTime(1100); });
     const body = JSON.parse(postCalls(fetchMock, '/api/encounter').at(-1)[1].body);
     expect(body.enemies.map(e => e.name)).toEqual(['Ogre']);
     expect(body.enemies[0].id).not.toBe('enemy-1'); // the old Ogre is gone
-    expect(body.lairAction).toEqual({ initiative: 20, notes: 'The ceiling collapses' });
+    // fresh id per load, so loading the same encounter twice can't collide
+    expect(body.lairActions).toEqual([{ id: expect.stringMatching(/^lair-/), initiative: 20, notes: 'The ceiling collapses' }]);
+    expect(body.lairActions[0].id).not.toBe('lair-saved');
     expect(body.loadedEncounter).toEqual({ id: 'enc-2', name: 'Dragon Lair' });
   });
 
-  it('Add to Combat keeps an existing lair action and the first loaded name', async () => {
+  it('Add to Combat appends its lair actions to the existing ones and keeps the first loaded name', async () => {
     mockFetch({
       '/api/encounter': jsonResponse({ ...activeEncounter, lairAction: { initiative: 10, notes: 'Mine' }, loadedEncounter: { id: 'enc-1', name: 'Goblin Ambush' } }),
       '/api/encounters': jsonResponse([...savedEncounters, lairEncounter]),
@@ -462,16 +557,16 @@ describe('CombatPage — encounter bar', () => {
     await settle();
     showTab('Enemies');
     expect(encounterName()).toBe('EncounterGoblin Ambush');
-    fireEvent.click(screen.getByText('Load Another'));
+    fireEvent.click(screen.getByText('Load Encounter'));
     fireEvent.click(screen.getByText('Dragon Lair'));
     fireEvent.click(screen.getByText('Add to Combat'));
     const section = screen.getByRole('region', { name: 'Enemies' });
     expect(within(section).getByText('Mine')).toBeInTheDocument();
-    expect(within(section).queryByText('The ceiling collapses')).not.toBeInTheDocument();
+    expect(within(section).getByText('The ceiling collapses')).toBeInTheDocument();
     expect(encounterName()).toBe('EncounterGoblin Ambush');
   });
 
-  it('shows the library\'s current name; a deleted source keeps its stored name but loses Edit', async () => {
+  it('shows the library\'s current name; a deleted source keeps its stored name but is no longer an edit link', async () => {
     mockFetch({
       '/api/encounter': jsonResponse({ ...activeEncounter, loadedEncounter: { id: 'enc-1', name: 'Old Name' } }),
     });
@@ -487,7 +582,7 @@ describe('CombatPage — encounter bar', () => {
     render(<CombatPage />);
     await settle();
     expect(encounterName()).toBe('EncounterOld Name');
-    expect(screen.queryByRole('link', { name: 'Edit Encounter' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Old Name' })).not.toBeInTheDocument();
   });
 
   it('Clear resets the bar to "None loaded"', async () => {
