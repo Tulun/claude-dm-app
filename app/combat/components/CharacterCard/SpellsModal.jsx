@@ -3,16 +3,9 @@
 import { useState, useMemo } from 'react';
 import Icons from '../../../components/Icons';
 import Modal from '../../../components/Modal';
-import { getModNum, getProfBonus, getAllClasses } from './utils';
+import { getModNum, getProfBonus } from './utils';
+import { getPreparedCasterInfo } from '../../partyAbilities';
 import { abbreviateCastTime, getLevelLabel } from '../../../utils/spellFormat';
-
-// Classes that prepare spells (vs known spells)
-const PREPARED_CASTER_CLASSES = ['Cleric', 'Druid', 'Paladin', 'Wizard'];
-
-// Check if character is a prepared caster and get their caster class info
-function getPreparedCasterInfo(character) {
-  return getAllClasses(character).find(c => PREPARED_CASTER_CLASSES.includes(c.name)) || null;
-}
 
 // Calculate max prepared spells
 function calculateMaxPrepared(character, casterInfo) {

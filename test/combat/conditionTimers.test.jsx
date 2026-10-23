@@ -49,7 +49,7 @@ const settle = async () => {
   await flush();
 };
 const click = (el) => act(() => { fireEvent.click(el); });
-const tracker = () => document.querySelector('main').children[0].children[1];
+const tracker = () => document.querySelector('[data-testid="initiative-bar"]').children[1];
 const reminder = () => within(tracker()).queryByRole('status', { name: 'Condition reminder' });
 const endTurn = () => click(screen.getByText('End Turn →'));
 const postCalls = (fetchMock, url) =>

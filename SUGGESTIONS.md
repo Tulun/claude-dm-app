@@ -167,12 +167,26 @@ context costs:
 - [ ] **Party card at-a-glance follow-ups** (⋯ menu, resource pips, passives
   and save row shipped Oct 2026):
   - Thin HP bar (bloodied colouring); shrink "+ Condition" to a small "+".
-  - Damage / Heal (`app/combat/hp.js`) is card-only so far — the Table view
-    rows and the tracker's Now card still edit HP and THP as raw numbers.
+  - Damage / Heal (`app/combat/hp.js`) is card-only so far — the Initiative
+    tab's table rows and the tracker's Now card still edit HP and THP as raw numbers.
+- [ ] **Expanded party panel follow-ups** (`PartyAbilities.jsx`, Oct 2026):
+  wild-shaped druids still show their own weapons/spells rather than the
+  form's attacks; Cast always spends the lowest usable slot (deliberate
+  upcasts are fixed on the pips); features without a resource pool (e.g.
+  Sneak Attack, Extra Attack) aren't listed.
 
 ---
 
 ## Completed log
+
+- [x] /combat tabs moved to the top: Initiative (default; tracker + both
+  combatant tables, replacing the Table tab) | Party & Allies | Enemies (cards
+  only). Saved `'table'` maps to Initiative. Plus an Expand toggle on the
+  tracker's monster panel showing every ability/trait in full with highlighted
+  to-hit / damage / DCs and per-row Use buttons — Oct 2026.
+- [x] Expanded This Turn panel for party members (`PartyAbilities.jsx`):
+  attacks, castable spells by casting time with slot pips + Cast, and
+  resource pools with feature text; shares the monster panel's toggle — Oct 2026.
 
 - [x] /combat encounter bar tidy: Edit Encounter button removed (the encounter
   name is now the edit link), "Load Another" always reads "Load Encounter"

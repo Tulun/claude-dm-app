@@ -22,12 +22,13 @@ const chipDamage = (stats) => {
  * equipped gear (armor, shields, wondrous items) as chips. Clicking any chip
  * opens ItemDetailModal (attack/damage breakdown, properties, description).
  * Only `equipped` items show — tick "Equip" on the sheet's inventory to add
- * one here.
+ * one here. `only="gear"` drops the weapons (the expanded PartyAbilities
+ * panel lists them as attack rows).
  */
-export default function PartyLoadout({ character }) {
+export default function PartyLoadout({ character, only }) {
   const [openId, setOpenId] = useState(null);
   const equipped = (character.inventory || []).filter(item => item?.equipped);
-  const weapons = equipped.filter(isWeaponItem);
+  const weapons = only === 'gear' ? [] : equipped.filter(isWeaponItem);
   const gear = equipped.filter(item => !isWeaponItem(item));
   const openItem = openId != null ? equipped.find(item => item.id === openId) : null;
   if (!weapons.length && !gear.length) return null;

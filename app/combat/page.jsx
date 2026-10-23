@@ -10,6 +10,7 @@ import { defaultPartyData, defaultEnemyTemplates } from '../components/defaultDa
 import CharacterCard from './components/CharacterCard';
 import CombatantTable from './components/CombatantTable';
 import TurnTracker from './components/TurnTracker';
+import useNavbarBottom from '../hooks/useNavbarBottom';
 import InitiativeItem from './components/InitiativeItem';
 import CombatantDrawer from './components/CombatantDrawer';
 import InitiativeOrderModal from './components/InitiativeOrderModal';
@@ -42,7 +43,7 @@ const BAR_BUTTON = {
   red: `${BAR_BASE} border-red-700/60 bg-red-800/50 text-red-200 hover:bg-red-700/50`,
   danger: `${BAR_BASE} border-stone-700 bg-transparent text-stone-400 hover:border-red-700 hover:text-red-300`,
 };
-// Per-viewer UI preference (Party / Enemies / Table tab) — browser-local, never persisted
+// Per-viewer UI preference (Initiative / Party / Enemies tab) — browser-local, never persisted
 // to the encounter.
 const VIEW_MODE_KEY = 'dm-combat-view-mode';
 
@@ -55,7 +56,8 @@ export default function CombatPage() {
   // Detail drawer: null = closed; { follow: true } tracks whoever's turn it
   // is, { id, follow: false } is pinned to one combatant. Transient — not saved.
   const [inspect, setInspect] = useState(null);
-  const [viewMode, setViewMode] = useState('party'); // 'party' | 'enemies' | 'table'
+  const navbarBottom = useNavbarBottom(); // the sticky initiative bar pins under the navbar
+  const [viewMode, setViewMode] = useState('initiative'); // 'initiative' | 'party' | 'enemies'
   const [showAddEnemy, setShowAddEnemy] = useState(false);
   const [showAddParty, setShowAddParty] = useState(false);
   const [saveStatus, showToast] = useToast();
@@ -662,24 +664,27 @@ export default function CombatPage() {
     : null;
 
   // Restore the viewer's tab after mount (localStorage is unavailable during
-  // SSR and can throw in private windows). 'cards' is the pre-tabs value.
+  // SSR and can throw in private windows). 'table' (the old Table tab) is now
+  // the Initiative tab; anything unknown (e.g. pre-tabs 'cards') keeps the default.
   useEffect(() => {
     try {
       const saved = localStorage.getItem(VIEW_MODE_KEY);
-      if (saved === 'enemies' || saved === 'table') setViewMode(saved);
+      if (saved === 'party' || saved === 'enemies') setViewMode(saved);
     } catch { /* storage blocked — keep the default */ }
   }, []);
   const changeViewMode = useCallback((mode) => {
     setViewMode(mode);
     try { localStorage.setItem(VIEW_MODE_KEY, mode); } catch { /* storage blocked */ }
   }, []);
-  const isTable = viewMode === 'table';
+  // The Initiative tab is the turn tracker with both combatant tables under
+  // it; Party / Enemies are the full cards.
+  const isInitiative = viewMode === 'initiative';
   const showParty = viewMode !== 'enemies';
   const showEnemies = viewMode !== 'party';
   const viewTabs = [
+    { id: 'initiative', label: 'Initiative', icon: <Icons.Sword />, active: 'text-amber-400 border-amber-500' },
     { id: 'party', label: 'Party & Allies', icon: <Icons.Shield />, count: party?.length, active: 'text-emerald-400 border-emerald-500' },
     { id: 'enemies', label: 'Enemies', icon: <Icons.Skull />, count: enemies.length, active: 'text-red-400 border-red-500' },
-    { id: 'table', label: 'Table', icon: <Icons.Filter />, active: 'text-amber-400 border-amber-500' },
   ];
 
   return (
@@ -689,15 +694,36 @@ export default function CombatPage() {
       <Navbar saveStatus={saveStatus} />
 
       <main className="relative max-w-7xl mx-auto p-4 space-y-4">
-          {/* Initiative bar: full-width tracker above the columns. The full
-              order lives in the Current Order modal so the table view stays
-              uncluttered. */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-amber-400 flex items-center gap-2"><Icons.Sword />Initiative</h2>
+          {/* Tabs: Initiative (tracker + tables, default) | Party & Allies
+              cards | Enemies cards. Choice is per-viewer localStorage. */}
+          <div role="tablist" aria-label="Combatant view" className="flex gap-1 border-b border-stone-800">
+            {viewTabs.map(tab => (
+              <button
+                key={tab.id}
+                role="tab"
+                aria-selected={viewMode === tab.id}
+                onClick={() => changeViewMode(tab.id)}
+                className={`flex items-center gap-2 px-4 py-2 -mb-px border-b-2 text-sm font-semibold transition-colors ${viewMode === tab.id ? tab.active : 'border-transparent text-stone-500 hover:text-stone-300'}`}
+              >
+                {tab.icon}{tab.label}
+                {tab.count > 0 && <span className="text-xs font-mono px-1.5 rounded bg-stone-800 text-stone-400">{tab.count}</span>}
+              </button>
+            ))}
+          </div>
+          {/* Initiative tab: the turn tracker, with both combatant tables
+              below it. Only the (opaque) tracker card is sticky — flush under
+              the measured navbar (`useNavbarBottom`) — so the tables scroll
+              beneath a floating card, with no full-width backing. The wrapper
+              is `contents` (no box) so the card's sticky range is all of
+              <main>, not just this wrapper. The full order lives in the
+              Current Order modal (its button scrolls away normally). */}
+          {isInitiative && (
+          <div className="contents" data-testid="initiative-bar">
+            <div className="flex items-center justify-end">
               <button onClick={openOrder} className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.GripVertical />Current Order</button>
             </div>
 
+            <div className="sticky z-10 !mt-2" style={{ top: navbarBottom }}>
             <TurnTracker
               combatActive={combatActive}
               round={round}
@@ -731,31 +757,16 @@ export default function CombatPage() {
               onInspect={inspectCombatant}
               onInspectCurrent={inspectCurrent}
             />
+            </div>
           </div>
-
-          {/* Combatant tabs: Party & Allies cards | Enemies cards | Table
-              (both tables stacked full width). Choice is per-viewer
-              localStorage. */}
-          <div>
-          <div role="tablist" aria-label="Combatant view" className="flex gap-1 border-b border-stone-800 mb-4">
-            {viewTabs.map(tab => (
-              <button
-                key={tab.id}
-                role="tab"
-                aria-selected={viewMode === tab.id}
-                onClick={() => changeViewMode(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2 -mb-px border-b-2 text-sm font-semibold transition-colors ${viewMode === tab.id ? tab.active : 'border-transparent text-stone-500 hover:text-stone-300'}`}
-              >
-                {tab.icon}{tab.label}
-                {tab.count > 0 && <span className="text-xs font-mono px-1.5 rounded bg-stone-800 text-stone-400">{tab.count}</span>}
-              </button>
-            ))}
-          </div>
+          )}
+          {/* Extra breathing room between the tracker and the tables below */}
+          <div className={isInitiative ? 'pt-6' : undefined}>
           <div className="space-y-6">
           {showParty && (
           <section aria-label="Party & Allies" className="space-y-4">
             <div className="flex items-center justify-between">
-              {isTable ? <h2 className="text-lg font-bold text-emerald-400 flex items-center gap-2"><Icons.Shield />Party & Allies</h2> : <span />}
+              {isInitiative ? <h2 className="text-lg font-bold text-emerald-400 flex items-center gap-2"><Icons.Shield />Party & Allies</h2> : <span />}
               <div className="flex gap-2">
                 <button onClick={reloadParty} className="flex items-center gap-1 px-2 py-1 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-xs"><Icons.Refresh />Reload</button>
                 <button onClick={() => setParty(prev => (prev || []).map(p => ({ ...p, resources: (p.resources || []).map(r => ({ ...r, current: r.max })) })))} className="flex items-center gap-1 px-2 py-1 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-xs"><Icons.Refresh />Rest</button>
@@ -765,7 +776,7 @@ export default function CombatPage() {
             {!party ? (
               <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg animate-pulse">Loading party...</div>
             ) : party.length > 0 ? (
-              isTable ? (
+              isInitiative ? (
                 <CombatantTable combatants={party} isEnemy={false} onUpdate={updatePartyMember} onRemove={removePartyMember} templates={templates || EMPTY_TEMPLATES} />
               ) : (
               // Full-width tab: up to three card columns; rows stretch so
@@ -782,7 +793,7 @@ export default function CombatPage() {
 
           {showEnemies && (
           <section aria-label="Enemies" className="space-y-4">
-            {isTable && <h2 className="text-lg font-bold text-red-400 flex items-center gap-2"><Icons.Skull />Enemies</h2>}
+            {isInitiative && <h2 className="text-lg font-bold text-red-400 flex items-center gap-2"><Icons.Skull />Enemies</h2>}
             {/* Encounter bar: which saved encounter is loaded (the name links
                 to its editor) + Load Encounter. */}
             <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border border-stone-800 bg-stone-900/50 px-3 py-2">
@@ -822,7 +833,7 @@ export default function CombatPage() {
                 <button onClick={() => setShowAddEnemy(true)} className={BAR_BUTTON.red}><Icons.Plus />Add Monster</button>
               </div>
             </div>
-            {isTable
+            {isInitiative
               ? enemies.length > 0 && <CombatantTable combatants={enemies} isEnemy onUpdate={updateEnemy} onRemove={removeEnemy} templates={templates || EMPTY_TEMPLATES} />
               : enemies.length > 0 && (
                 // items-start: enemy cards must NOT stretch (frontend-patterns §2.5)

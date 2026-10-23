@@ -109,26 +109,32 @@ setEnemies(prev => {
   row on hover). `drag` is OPT-IN: only `InitiativeOrderModal` passes it (and
   supplies `onSelect` for click-to-jump). The only `InitiativeItem`s outside
   the modal are the lair action cards in the Enemies section (one per lair
-  action, both card and Table tabs; no drag/select; `lairActionEntries` is its
+  action, on the Initiative and Enemies tabs; no drag/select; `lairActionEntries` is its
   own `useMemo` so the memoized rows stay stable; their notes/remove callbacks
   take the lair id). Before they existed, "+ Lair Action" appeared to do
   nothing — the lair action only showed inside the order modal. No other combatant gets a row on the page — initiative is a full-width `TurnTracker` bar
-  ABOVE the combatant tabs (§2.5); the full order lives exclusively in the
+  on the Initiative tab, above the combatant tables (§2.5); the full order lives exclusively in the
   order modal, opened ONLY by the **Current Order** button above the tracker
   (formerly "Manage Order"; the tracker's duplicate "Full Order" button was
   removed). Quick init edits happen on the cards instead: every party/enemy
   card's stats row starts with an `InitChip` (click → inline edit, calls the
-  page's stable `updateInitiative(id, n)`). Layout: `main.children[0]` = initiative bar (header +
-  tracker), `main.children[1]` = the combatant TABS — a `role="tablist"`
-  (Party & Allies | Enemies | Table, each with a count badge) above the
-  matching `<section aria-label="Party & Allies">` / `<section
-  aria-label="Enemies">`. Party and Enemies tabs show only their own cards,
+  page's stable `updateInitiative(id, n)`). Layout: `main.children[0]` = the
+  TABS — a `role="tablist"` at the very top (Initiative | Party & Allies |
+  Enemies; the last two carry count badges). The **Initiative** tab (default)
+  renders the initiative bar (`data-testid="initiative-bar"`: Current Order
+  button + tracker; the wrapper is `display: contents` and ONLY the opaque
+  tracker card's wrapper is STICKY flush at `top: useNavbarBottom()` (app/hooks; an 8px gap let table rows peek through),
+  z-10, so the tables scroll under a floating card — a full-width dark
+  backing was tried and looked like a black slab over the tables, Oct 2026; the tracker's own card
+  modals portal to <body> to escape that z-10 stacking context) and under it BOTH sections stacked, each as a
+  `CombatantTable`, with section `<h2>`s — the old Table tab, merged in Oct
+  2026 so turn-time detail sits on one screen and the cards/drawer are the
+  dig-down. Party and Enemies tabs show only their own cards (no tracker),
   full width in a `md:grid-cols-2 xl:grid-cols-3` grid (enemy grid uses
-  `items-start` — see the no-stretch rule in §2.5); the Table tab shows BOTH
-  sections stacked, each as a `CombatantTable`, with section `<h2>`s (the card
-  tabs omit them — the tab is the title). Hidden sections are unmounted, so
-  the Enemies-section **encounter bar** exists only on the Enemies/Table
-  tabs: the loaded encounter's name (`loadedEncounter` `{ id, name }`, shown
+  `items-start` — see the no-stretch rule in §2.5); the card tabs omit the
+  section `<h2>`s — the tab is the title. Hidden sections are unmounted, so
+  the Enemies-section **encounter bar** exists only on the Initiative/Enemies
+  tabs, and the tracker (and its modals) only on Initiative: the loaded encounter's name (`loadedEncounter` `{ id, name }`, shown
   via the library's current name; "Unsaved encounter" / "None loaded"
   otherwise, `data-testid="encounter-name"`; the name itself links to
   `/encounters?edit=<id>&from=combat` only while that id is still in the
@@ -161,10 +167,11 @@ setEnemies(prev => {
   fresh ids.
   `/encounters` opens the editor for `?edit=`, shows Return to Combat for
   `from=combat`, and flushes a pending debounced save (keepalive POST) on
-  unmount so leaving mid-debounce doesn't lose the edit. Page state `viewMode` (`'party' |
-  'enemies' | 'table'`, default party) persists per viewer in
+  unmount so leaving mid-debounce doesn't lose the edit. Page state `viewMode` (`'initiative' |
+  'party' | 'enemies'`, default initiative) persists per viewer in
   `localStorage['dm-combat-view-mode']`, read in a mount effect, every access
-  in try/catch (the pre-tabs value `'cards'` falls back to party). Tests find
+  in try/catch (legacy `'table'` and pre-tabs `'cards'` fall back to
+  initiative). Tests find
   sections via the `getColumns` helper and switch with `showTab(name)`; both
   combat page test files `localStorage.clear()` in `beforeEach` so the saved
   tab doesn't leak between tests. `CombatantTable` takes the same
@@ -182,7 +189,7 @@ setEnemies(prev => {
   Tests: `test/combat/hp.test.js` (+ the pill tests below).
   The AC / DC pills carry no icon — the "AC" / "DC" label is enough. Tests:
   `test/combat/combatantTable.test.jsx`, `test/combat/hpPill.test.jsx`
-  and the "Party / Enemies / Table tabs" block in `combatPage.test.jsx`.
+  and the "Initiative / Party / Enemies tabs" block in `combatPage.test.jsx`.
 - Combatant modals are driven by ONE `activeModal` key (`'delete' | 'actions'
   | 'resources' | 'sheet' | 'inventory' | 'notes' | 'statblock' | 'spells' |
   'druid' | 'sorcerer' | 'conditions'`, `null` = closed) rendered by
@@ -240,9 +247,9 @@ setEnemies(prev => {
   action chips show `abilityLabel` (usage parenthetical dropped — the pips
   carry it). Tests: `test/combat/enemyGlance.test.jsx`, parsers/pools in
   `test/combat/monsterAbilities.test.js`. The tracker keeps its own
-  `cardModal` `{ id, key }` and renders `CardModals` OUTSIDE its sticky z-10
-  bar (a fixed overlay inside that stacking context would sit under the
-  navbar). Companions and the lair action get no card buttons.
+  `cardModal` `{ id, key }` and PORTALS `CardModals` to <body> (the page's
+  sticky z-10 initiative bar is a stacking context; a fixed overlay inside
+  it would sit under the navbar). Companions and the lair action get no card buttons.
 - **Conditions vs notes** (canonical). Conditions are structured state on the
   combatant record — `conditions: [{ name }, { name: 'Exhaustion', level }]`
   (party → party.json, enemies → the encounter) — defined and manipulated ONLY
@@ -339,7 +346,8 @@ Three rules keep the pointer honest:
   Dash toggle, were both tried and dropped as awkward (Oct 2026). Don't
   re-add a movement tracker without the user asking. Party members
   (`isParty`) also get a Spells line (`getSpellSaveDC` / `getSpellAttackBonus`
-  from rules.js — only when `spellStat` is set) and `PartyLoadout.jsx`:
+  from rules.js — only when `spellStat` is set) and, via the tracker's
+  `PartyAbilities.jsx` child (collapsed state), `PartyLoadout.jsx`:
   EQUIPPED weapons with the sheet's attack/damage (`getWeaponStatsFor`) and
   equipped gear chips; clicking any chip opens `ItemDetailModal.jsx` (to-hit /
   damage breakdown from `getWeaponStatsFor`'s `ability`/`abilityMod`/
@@ -365,6 +373,34 @@ Three rules keep the pointer honest:
   (`app/combat/limitedUses.js`, WITHOUT the legendary pool — the header's
   Legendary button covers it) rendered by `LimitedUses.jsx`, shared with
   the enemy card glance block (§2). Change pool logic there, not per view.
+  An **Expand / Collapse** toggle (`ExpandToggle.jsx` + `useExpandedPref`:
+  `aria-expanded`; per-viewer `localStorage['dm-combat-abilities-expanded']`
+  = `'1'`/`'0'`, try/catch, read in a mount effect — ONE key shared with the
+  party panel below) swaps the chips for `data-testid="abilities-expanded"`:
+  every action / bonus / reaction plus ALL traits (passive ones too — they
+  change the turn, e.g. Martial Advantage) as full-text rows, each with its
+  own Use/Spent/Recharge button (passive traits get none), inside a
+  `max-h-[40vh]` scroll box so the (sticky) tracker height stays put and
+  leaves room for the tables scrolling under it. To-hit / damage /
+  save DCs are highlighted via `splitStatText` (monsterAbilities.js) →
+  segments rendered as React text nodes — NOT an HTML sink (§3). The
+  exported `StatText` is the one renderer for that; reuse it.
+- **Party panel** (`PartyAbilities.jsx`, a `TurnEconomy` child on a party
+  turn): collapsed = `PartyLoadout` chips + the same toggle; expanded =
+  `data-testid="party-expanded"`, a `max-h-[40vh]` scroll box with regions
+  **Attacks** (equipped weapons, `getWeaponStatsFor` numbers + properties,
+  name → `ItemDetailModal`, Attack spends the Action), **Spells** (slot pips
+  via PartyGlance's exported `getResourcePools` + `Pool`, then
+  `getTurnSpells` grouped by casting time — prepared casters only see
+  prepared/always-prepared spells, cantrips always, minute/hour casts never;
+  Cast spends the economy slot and the LOWEST slot that can cast it,
+  `pickSlotPool`; "No slots" disables a leveled spell only when the
+  character has slot pools at all) and **Resources** (the non-slot pools as
+  `Pool` pips — options pools open the Resources modal — with a same-named
+  feature's text). Gear stays as chips (`PartyLoadout only="gear"`). Helpers
+  live in `app/combat/partyAbilities.js` (also home of
+  `getPreparedCasterInfo`, shared with SpellsModal). Wild shape forms are
+  not reflected yet.
 - **Detail drawer** (`CombatantDrawer.jsx`, canonical). A right-side
   slide-over (`<aside role="complementary" aria-label="Details: <name>">`,
   fixed, z-40: above the sticky z-10 tracker, below `Modal`'s z-50; its top is

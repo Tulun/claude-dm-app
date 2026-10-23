@@ -1,6 +1,7 @@
 'use client';
 
-import { memo, useLayoutEffect, useState } from 'react';
+import { memo, useState } from 'react';
+import useNavbarBottom from '../../hooks/useNavbarBottom';
 import Icons from '../../components/Icons';
 import { applyDamage, applyHealing } from '../hp';
 import { formatSpeeds } from '../monsterAbilities';
@@ -180,17 +181,7 @@ const AbilityGrid = ({ combatant, isParty, wildShapeForm }) => (
  */
 // The sticky Navbar is z-50 (same layer as Modal), so the drawer starts
 // below it instead of out-ranking it — card modals opened from the drawer
-// must still cover the drawer.
-const useNavbarBottom = () => {
-  const [top, setTop] = useState(0);
-  useLayoutEffect(() => {
-    const measure = () => setTop(Math.max(0, document.querySelector('nav')?.getBoundingClientRect().bottom || 0));
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, []);
-  return top;
-};
+// must still cover the drawer (`useNavbarBottom`).
 
 const CombatantDrawer = ({ combatant, kind, isCurrent, following, canFollow, onToggleFollow, onClose, onUpdate, onSetLegendaryUsed, templates }) => {
   const [modal, setModal] = useState(null); // { id, key }

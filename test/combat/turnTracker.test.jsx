@@ -56,9 +56,9 @@ const ogre = {
 
 const jsonResponse = (data) => ({ ok: true, json: async () => data });
 
-function mockFetch(encounter = { enemies: [ogre] }) {
+function mockFetch(encounter = { enemies: [ogre] }, partyData = party) {
   const routes = {
-    '/api/party': jsonResponse(party),
+    '/api/party': jsonResponse(partyData),
     '/api/templates': jsonResponse(templates),
     '/api/encounter': jsonResponse(encounter),
     '/api/encounters': jsonResponse([]),
@@ -81,9 +81,9 @@ const settle = async () => {
   await flush();
 };
 
-// The initiative bar (header + TurnTracker) is main.children[0]; the
-// party/enemies grid is main.children[1].
-const initBar = () => document.querySelector('main').children[0];
+// The initiative bar (Current Order button + TurnTracker) only renders on the
+// Initiative tab (the default), above the combatant tables.
+const initBar = () => document.querySelector('[data-testid="initiative-bar"]');
 const tracker = () => initBar().children[1];
 // The order only renders inside the Current Order modal now
 const orderModal = () => screen.getByText('Initiative Order').closest('.fixed');
@@ -324,7 +324,7 @@ describe('CombatPage — turn tracker', () => {
     await flush();
     expect(nowName()).toBe('Ogre');
 
-    click(screen.getByRole('tab', { name: /^Enemies/ }));
+    // the Initiative tab carries the Enemies section (as a table) under the tracker
     const enemiesCol = document.querySelector('main section[aria-label="Enemies"]');
     click(within(enemiesCol).getByTitle('Clear encounter'));
     await flush();
@@ -502,6 +502,54 @@ describe('CombatPage — turn tracker', () => {
     expect(body.enemies[0].spellSlots1stUsed).toBe(1);
   });
 
+  it('Expand shows every ability in full with its own Use button, and the choice sticks', async () => {
+    mockFetch();
+    render(<CombatPage />);
+    await settle();
+    await startCombat();
+    click(screen.getByText('← Back')); // Ogre
+    await flush();
+
+    expect(within(tracker()).queryByTestId('abilities-expanded')).not.toBeInTheDocument();
+    click(within(tracker()).getByRole('button', { name: /Expand/ }));
+    await flush();
+    const panel = within(tracker()).getByTestId('abilities-expanded');
+    expect(localStorage.getItem('dm-combat-abilities-expanded')).toBe('1');
+
+    // full text without clicking, numbers highlighted
+    expect(within(panel).getByText('+6 to hit')).toHaveClass('text-amber-300');
+    expect(within(panel).getByText('13 (2d8+4)')).toHaveClass('text-red-300');
+    expect(within(panel).getByText(/Hurls a boulder/)).toBeInTheDocument();
+    // traits too — passive ones (no Use) and limited ones (Use, uses left)
+    const traits = within(panel).getByRole('region', { name: 'Traits' });
+    expect(within(traits).getByText(/Advantage on smell checks/)).toBeInTheDocument();
+    expect(within(traits).getByText('3/3 left')).toBeInTheDocument();
+    expect(within(traits).getAllByRole('button')).toHaveLength(1);
+
+    // a row's Use spends its economy slot
+    const parryRow = within(panel).getByText(/against one melee attack/).closest('li');
+    click(within(parryRow).getByText('Use (Reaction)'));
+    await flush();
+    expect(within(economy()).getByText('Reaction')).toHaveAttribute('aria-pressed', 'true');
+
+    click(within(tracker()).getByRole('button', { name: /Collapse/ }));
+    await flush();
+    expect(within(tracker()).queryByTestId('abilities-expanded')).not.toBeInTheDocument();
+    expect(localStorage.getItem('dm-combat-abilities-expanded')).toBe('0');
+  });
+
+  it('restores the expanded abilities view from localStorage', async () => {
+    localStorage.setItem('dm-combat-abilities-expanded', '1');
+    mockFetch();
+    render(<CombatPage />);
+    await settle();
+    await startCombat();
+    click(screen.getByText('← Back')); // Ogre
+    await flush();
+    expect(within(tracker()).getByTestId('abilities-expanded')).toBeInTheDocument();
+    expect(within(tracker()).getByRole('button', { name: /Collapse/ })).toHaveAttribute('aria-expanded', 'true');
+  });
+
   it('spending a legendary action from the interrupt charges its cost', async () => {
     mockFetch();
     render(<CombatPage />);
@@ -674,6 +722,82 @@ describe('CombatPage — turn tracker', () => {
     expect(mace).toHaveTextContent('Mace+3 to hit1d6 bludgeoning');
     expect(within(economy()).getByTitle('Spellcasting focus.')).toHaveTextContent('Holy Symbol');
     expect(within(economy()).queryByText('Dagger')).not.toBeInTheDocument();
+  });
+
+  it('Expand on a party turn lists attacks, castable spells with slots, and resources', async () => {
+    // Mira as a prepared caster with slots, spells and a resource
+    const caster = {
+      ...party[1],
+      resources: [
+        { id: 'r1', name: '1st Level Spell Slots', current: 1, max: 2 },
+        { id: 'r2', name: '2nd Level Spell Slots', current: 1, max: 1 },
+        { id: 'r3', name: 'Channel Divinity', current: 2, max: 2 },
+      ],
+      features: [{ id: 'f1', name: 'Channel Divinity', description: 'Turn Undead or Divine Spark.' }],
+      spells: [
+        { id: 's1', name: 'Sacred Flame', level: 0, castTime: 'Action', range: '60 feet', description: 'DC Dexterity save or 1d8 radiant damage.' },
+        { id: 's2', name: 'Healing Word', level: 1, castTime: 'Bonus Action', range: '60 feet', prepared: true, description: 'Regain 2d4 hit points.' },
+        { id: 's3', name: 'Spiritual Weapon', level: 2, castTime: 'Bonus Action', range: '60 feet', prepared: true, concentration: true, description: 'Deals 1d8 force damage.' },
+        { id: 's4', name: 'Bless', level: 1, castTime: 'Action', prepared: false, description: 'Not prepared today.' },
+        { id: 's5', name: 'Shield of Faith', level: 1, castTime: 'Bonus Action', prepared: true, description: '+2 AC.' },
+        { id: 's6', name: 'Ceremony', level: 1, castTime: '1 hour', prepared: true, description: 'Out of combat.' },
+      ],
+    };
+    const fetchMock = mockFetch(undefined, [party[0], caster]);
+    render(<CombatPage />);
+    await settle();
+    await startCombat();
+    click(screen.getByText('End Turn →')); // Mira
+    await flush();
+
+    // collapsed: the kit chips as before, plus the toggle
+    expect(within(economy()).getByTitle('A flanged mace.')).toBeInTheDocument();
+    click(within(economy()).getByRole('button', { name: /Expand/ }));
+    await flush();
+    const panel = within(tracker()).getByTestId('party-expanded');
+
+    // attacks: sheet math, Attack spends the Action
+    const attacks = within(panel).getByRole('region', { name: 'Attacks' });
+    expect(within(attacks).getByText('+3 to hit')).toBeInTheDocument();
+    expect(within(attacks).getByText('1d6+0 bludgeoning')).toBeInTheDocument();
+    click(within(attacks).getByText('Attack (Action)'));
+    await flush();
+    expect(within(economy()).getByRole('button', { name: 'Action' })).toHaveAttribute('aria-pressed', 'true');
+
+    // spells: unprepared and long-cast spells are left out; grouped by economy
+    const spellsBox = within(panel).getByRole('region', { name: 'Spells' });
+    expect(within(spellsBox).getByText('Sacred Flame')).toBeInTheDocument();
+    expect(within(spellsBox).queryByText('Bless')).not.toBeInTheDocument();
+    expect(within(spellsBox).queryByText('Ceremony')).not.toBeInTheDocument();
+    expect(within(spellsBox).getByText('1d8 force damage')).toHaveClass('text-red-300');
+
+    // Cast a 1st-level spell: spends the bonus action and the last 1st slot
+    fetchMock.mockClear();
+    const healRow = within(spellsBox).getByText('Healing Word').closest('li');
+    click(within(healRow).getByText('Cast (Bonus Action)'));
+    await flush();
+    expect(within(economy()).getByRole('button', { name: 'Bonus' })).toHaveAttribute('aria-pressed', 'true');
+    await act(async () => { vi.advanceTimersByTime(1100); });
+    let saved = JSON.parse(postCalls(fetchMock, '/api/party').at(-1)[1].body).find(p => p.id === 'p2');
+    expect(saved.resources.find(r => r.id === 'r1').current).toBe(0);
+
+    // the next 1st-level cast upcasts into the 2nd-level slot; then no slots left
+    const shieldRow = within(spellsBox).getByText('Shield of Faith').closest('li');
+    click(within(shieldRow).getByText('Cast (Bonus Action)'));
+    await act(async () => { vi.advanceTimersByTime(1100); });
+    saved = JSON.parse(postCalls(fetchMock, '/api/party').at(-1)[1].body).find(p => p.id === 'p2');
+    expect(saved.resources.find(r => r.id === 'r2').current).toBe(0);
+    expect(within(shieldRow).getByText('No slots')).toBeDisabled();
+    // cantrips never need a slot
+    expect(within(within(spellsBox).getByText('Sacred Flame').closest('li')).getByText('Cast (Action)')).not.toBeDisabled();
+
+    // other resources as pips with the matching feature text
+    const resources = within(panel).getByRole('region', { name: 'Resources' });
+    expect(within(resources).getAllByRole('button', { name: 'Spend Channel Divinity' })).toHaveLength(2);
+    expect(within(resources).getByText('Turn Undead or Divine Spark.')).toBeInTheDocument();
+    // gear stays as a chip; the weapon isn't repeated as one
+    expect(within(panel).getByTitle('Spellcasting focus.')).toBeInTheDocument();
+    expect(within(panel).queryByTitle('A flanged mace.')).not.toBeInTheDocument();
   });
 
   it('clicking a weapon opens what it does, with the to-hit breakdown; Escape closes it', async () => {

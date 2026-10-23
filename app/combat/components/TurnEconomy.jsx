@@ -2,7 +2,6 @@
 
 import { formatSpeeds } from '../monsterAbilities';
 import { getSpellSaveDC, getSpellAttackBonus } from '../../utils/rules';
-import PartyLoadout from './PartyLoadout';
 
 export const FRESH_USAGE = { action: false, bonus: false };
 
@@ -28,9 +27,9 @@ const SlotToggle = ({ label, used, onClick }) => (
  * Action/bonus live in the page's `turnUsage` (whoever's turn it is); the
  * reaction is the shared per-round `reactionsUsed` map, so it stays in sync
  * with the order modal's toggles. Party members (`isParty`) also get their
- * spell save DC / spell attack and their equipped weapons + gear. `children`
- * render at the bottom of the box (the tracker passes MonsterAbilities on an
- * enemy's turn).
+ * spell save DC / spell attack. `children` render at the bottom of the box
+ * (the tracker passes MonsterAbilities on an enemy's turn, PartyAbilities —
+ * equipped kit, or everything they can do when expanded — on a party turn).
  */
 export default function TurnEconomy({ combatant, isParty, usage, reactionUsed, onUpdate, onToggleReaction, children }) {
   const u = usage || FRESH_USAGE;
@@ -64,7 +63,6 @@ export default function TurnEconomy({ combatant, isParty, usage, reactionUsed, o
           </div>
         )}
       </div>
-      {isParty && <PartyLoadout character={combatant} />}
       {children}
     </div>
   );

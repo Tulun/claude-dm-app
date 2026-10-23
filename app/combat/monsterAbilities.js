@@ -94,3 +94,24 @@ export const splitDefenses = (text) =>
     .map(g => g.trim())
     .filter(Boolean)
     .flatMap(g => (/\b(?:from|that|and)\b/i.test(g) ? [g] : g.split(',').map(s => s.trim()).filter(Boolean)));
+
+// Splits stat-block text into plain and highlightable segments so the turn
+// panel can make the numbers stand out without injecting HTML:
+// "Attack Roll: +4 … Hit: 9 (2d6+2) Slashing damage" →
+// [..., { text: '+4', kind: 'hit' }, ..., { text: '9 (2d6+2) Slashing damage', kind: 'damage' }].
+// Spell-style "3d6 fire damage" counts as damage too. kind is 'hit' |
+// 'damage' | 'dc', or null for plain text.
+const STAT_RE = /(?<dc>DC\s*\d+(?:\s+[A-Za-z]+\s+saving throw)?)|(?<damage>\+?\d+\s*\(\d+d\d+(?:\s*[+\-−]\s*\d+)?\)(?:\s+(?:[A-Za-z]+\s+)?damage)?|\b\d+d\d+(?:\s*[+\-−]\s*\d+)?\s+(?:[A-Za-z]+\s+)?damage)|(?<hit>[+\-−]\d+\s+to hit|(?<=Attack(?: Roll)?:\s*)[+\-−]\d+)/g;
+export const splitStatText = (text) => {
+  const str = String(text ?? '');
+  const out = [];
+  let last = 0;
+  for (const m of str.matchAll(STAT_RE)) {
+    if (m.index > last) out.push({ text: str.slice(last, m.index), kind: null });
+    const kind = m.groups.dc ? 'dc' : m.groups.damage ? 'damage' : 'hit';
+    out.push({ text: m[0], kind });
+    last = m.index + m[0].length;
+  }
+  if (last < str.length) out.push({ text: str.slice(last), kind: null });
+  return out;
+};

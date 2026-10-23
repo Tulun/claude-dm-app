@@ -60,7 +60,8 @@ export function getResourcePools(character) {
     .map(({ p }) => p);
 }
 
-function Pool({ pool, onUpdate, onOpen }) {
+// Also used by the tracker's expanded party panel (PartyAbilities).
+export function Pool({ pool, onUpdate, onOpen }) {
   const { name, label, current, max, isSlot } = pool;
   const change = (delta) => onUpdate(pool.set(Math.max(0, Math.min(max, current + delta))));
   // Spending a pool with options (e.g. Spirit Totem) needs the picker, which

@@ -59,7 +59,7 @@ const settle = async () => {
   await flush();
 };
 const click = (el) => act(() => { fireEvent.click(el); });
-const tracker = () => document.querySelector('main').children[0].children[1];
+const tracker = () => document.querySelector('[data-testid="initiative-bar"]').children[1];
 const drawer = () => screen.queryByRole('complementary', { name: /^Details:/ });
 const drawerName = () => within(drawer()).getByRole('heading', { level: 2 }).textContent;
 const lastPost = (fetchMock, url) =>
@@ -187,6 +187,7 @@ describe('CombatPage — combatant detail drawer', () => {
     mockFetch();
     render(<CombatPage />);
     await settle();
+    click(screen.getByRole('tab', { name: /^Party & Allies/ })); // the ⋯ menu is on the cards
     click(screen.getByRole('button', { name: 'More actions for Theren' }));
     click(screen.getByRole('menuitem', { name: 'Details' }));
 

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   parseUsage, abilityLabel, getMonsterAbilities, formatSpeeds,
-  parseSavingThrows, parseSenses, splitDefenses,
+  parseSavingThrows, parseSenses, splitDefenses, splitStatText,
 } from '../../app/combat/monsterAbilities.js';
 import { getLimitedPools } from '../../app/combat/limitedUses.js';
 
@@ -126,5 +126,30 @@ describe('getLimitedPools', () => {
     expect(breath.set(1).abilityUses['Fire Breath (Recharge 5-6)']).toBe(1);
     expect(perDay.set(1).perDay1Used).toBe(1);
     expect(slot.set(2).spellSlots1stUsed).toBe(2);
+  });
+});
+
+describe('splitStatText', () => {
+  const marked = (text) => splitStatText(text).filter(s => s.kind).map(s => [s.kind, s.text]);
+
+  it('picks out to-hit, damage and save DCs (2014 and 2024 wording)', () => {
+    expect(marked('Melee Attack Roll: +4, reach 5 ft. Hit: 9 (2d6+2) Slashing damage.')).toEqual([
+      ['hit', '+4'], ['damage', '9 (2d6+2) Slashing damage'],
+    ]);
+    expect(marked('Melee Weapon Attack: +6 to hit. Hit: 13 (2d8 + 4) bludgeoning damage.')).toEqual([
+      ['hit', '+6 to hit'], ['damage', '13 (2d8 + 4) bludgeoning damage'],
+    ]);
+    expect(marked('Each creature must make a DC 13 Dexterity saving throw.')).toEqual([['dc', 'DC 13 Dexterity saving throw']]);
+    expect(marked('Once per turn, +10 (3d6) damage if an ally is near.')).toEqual([['damage', '+10 (3d6) damage']]);
+    // spell-style dice
+    expect(marked('Each creature takes 8d6 fire damage, or half as much.')).toEqual([['damage', '8d6 fire damage']]);
+  });
+
+  it('round-trips the text and leaves plain prose alone', () => {
+    const text = 'Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing damage. DC 12.';
+    expect(splitStatText(text).map(s => s.text).join('')).toBe(text);
+    expect(splitStatText('Two Greatsword attacks.')).toEqual([{ text: 'Two Greatsword attacks.', kind: null }]);
+    expect(splitStatText('+2 AC against one melee attack.')).toEqual([{ text: '+2 AC against one melee attack.', kind: null }]);
+    expect(splitStatText(undefined)).toEqual([]);
   });
 });

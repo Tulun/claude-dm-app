@@ -1,6 +1,7 @@
 'use client';
 
 import { memo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Icons from '../../components/Icons';
 import { getEquipmentAC } from '../../utils/acCalculation';
 import { getMod } from '../../utils/rules';
@@ -8,6 +9,7 @@ import { LEGENDARY_ACTIONS_PER_ROUND, getLegendaryCost } from '../legendary';
 import LegendaryPips from './LegendaryPips';
 import TurnEconomy from './TurnEconomy';
 import MonsterAbilities from './MonsterAbilities';
+import PartyAbilities from './PartyAbilities';
 import CardActionButtons from './CharacterCard/CardActionButtons';
 import CardModals from './CharacterCard/CardModals';
 import ConditionChips from './ConditionChips';
@@ -165,11 +167,12 @@ const TurnTracker = ({
   const openCardModal = (key) => setCardModal({ id: current.id, key });
   const closeCardModal = () => setCardModal(null);
 
-  // The modals render OUTSIDE the sticky bar: its z-10 stacking context would
-  // otherwise trap their fixed overlay underneath the navbar.
+  // The card modals PORTAL to <body>: the page's sticky initiative bar (z-10)
+  // is a stacking context that would otherwise trap their fixed overlay
+  // underneath the navbar.
   return (
     <>
-    <div className="rounded-xl border border-amber-800/50 bg-stone-900/70 p-3 space-y-3 sticky top-2 z-10 shadow-lg shadow-black/40">
+    <div className="rounded-xl border border-amber-800/50 bg-stone-900 p-3 space-y-3 shadow-lg shadow-black/40">
       <div className="flex items-center justify-between gap-3 text-xs">
         <div className="flex flex-wrap items-center gap-3 min-w-0">
           <span className="font-bold uppercase tracking-widest text-amber-400">Round {round}</span>
@@ -362,6 +365,17 @@ const TurnTracker = ({
                     onSpendSlot={onSpendSlot}
                   />
                 )}
+                {currentKind === 'party' && (
+                  <PartyAbilities
+                    key={current.id}
+                    character={current}
+                    usage={turnUsage}
+                    reactionUsed={!!reactionsUsed?.[current.id]}
+                    onUpdate={onUpdateParty}
+                    onSpendSlot={onSpendSlot}
+                    onOpen={openCardModal}
+                  />
+                )}
               </TurnEconomy>
             ) : (
               <div className="flex-1" />
@@ -370,7 +384,7 @@ const TurnTracker = ({
         )}
       </div>
     </div>
-    {showCardButtons && cardModal?.id === current.id && (
+    {showCardButtons && cardModal?.id === current.id && createPortal(
       <CardModals
         activeModal={cardModal.key}
         onClose={closeCardModal}
@@ -380,7 +394,8 @@ const TurnTracker = ({
         templates={templates}
         displayAC={getCardDisplayAC(current)}
         spellcastingInfo={spellcastingInfo}
-      />
+      />,
+      document.body
     )}
     </>
   );
