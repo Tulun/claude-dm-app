@@ -189,6 +189,14 @@ context costs:
 
 ## Completed log
 
+- [x] Fixed: image import 404'd (`claude-sonnet-4-20250514` retired). Both
+  parse routes now use `lib/claudeVision.js` (model `claude-opus-5-5`, low
+  effort, refusal fallback, text found past thinking blocks, refusal/cut-off
+  reported) — Nov 2026.
+- [x] Import-from-image takes multiple screenshots for one stat block (e.g.
+  beholder): modal holds an ordered, reorderable list (max 6);
+  `/api/parse-monster` accepts `{ images: [...] }` (legacy `{ image }` still
+  works) and sends them in one call with a merge-these-pieces prompt — Nov 2026.
 - [x] Built-in monsters moved to 2024 stat blocks: 329 SRD 5.2.1 creatures
   (292 updated in place, 37 new) in `app/data/defaultEnemyTemplates.js`;
   templates migration v13 swaps a saved built-in only when its fingerprint

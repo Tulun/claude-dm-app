@@ -50,7 +50,7 @@ Eight fs-backed JSON CRUD routes persisting to `data/*.json` — seven via `lib/
 - `/api/templates` → `data/templates.json` + lazy Conflux loading (see below)
 - `/api/dm` → `data/dm.json` (world + session notes)
 
-Two Anthropic-vision parser routes: `/api/parse-monster` and `/api/parse-spell`. Both require `ANTHROPIC_API_KEY` in `.env.local` and return a helpful error if it is missing.
+Two Anthropic-vision parser routes: `/api/parse-monster` and `/api/parse-spell`. Both require `ANTHROPIC_API_KEY` in `.env.local` and return a helpful error if it is missing. `/api/parse-monster` takes `{ images: [{ data, mediaType }] }` (1–6 screenshots of ONE stat block, in reading order; the legacy single `{ image, mediaType }` body is still accepted) — `MAX_IMAGES` is duplicated in `ImportMonsterModal.jsx`, keep them in sync. Both routes take the model id, request settings and response-text extraction from `lib/claudeVision.js` (canonical home for the model id — never hard-code one in a route; responses can lead with a thinking block, so never read `content[0]`).
 
 One vault route: `/api/vault` serves the user's Obsidian vault (path from `OBSIDIAN_VAULT_PATH` in `.env.local`) via `lib/vaultStore.js` for the /dm Campaign tab. It is **GET-only and traversal-guarded by design** — never add write endpoints; the vault is never modified by this app.
 

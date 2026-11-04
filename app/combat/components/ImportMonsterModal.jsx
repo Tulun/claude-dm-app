@@ -5,10 +5,16 @@ import Icons from '../../components/Icons';
 import Modal from '../../components/Modal';
 import { getMod } from '../../utils/rules';
 
+// Must match MAX_IMAGES in app/api/parse-monster/route.js
+const MAX_IMAGES = 6;
+
+let nextImageId = 0;
+
 const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [] }) => {
   const [isDragging, setIsDragging] = useState(false);
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  // Ordered screenshots that together form ONE stat block:
+  // [{ id, data (base64, no prefix), mediaType, preview (data URL) }]
+  const [images, setImages] = useState([]);
   const [isParsing, setIsParsing] = useState(false);
   const [parsedMonster, setParsedMonster] = useState(null);
   const [error, setError] = useState(null);
@@ -37,35 +43,66 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      processImage(file);
-    }
+    addFiles(e.dataTransfer.files);
   };
 
   const handleFileSelect = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      processImage(file);
-    }
+    addFiles(e.target.files);
+    // Reset so selecting the same file again still fires onChange
+    e.target.value = '';
   };
 
-  const processImage = (file) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const base64 = e.target.result;
-      setImagePreview(base64);
-      // Extract just the base64 data without the data URL prefix
-      const base64Data = base64.split(',')[1];
-      setImage({ data: base64Data, mediaType: file.type });
+  // Appends files (in the order given) to the screenshot list.
+  const addFiles = (fileList) => {
+    const files = Array.from(fileList || []).filter(f => f.type.startsWith('image/'));
+    if (files.length === 0) return;
+    const slots = MAX_IMAGES - images.length;
+    if (files.length > slots) {
+      setError(`You can add at most ${MAX_IMAGES} screenshots — only the first ${Math.max(slots, 0)} were added.`);
+    } else {
       setError(null);
-      setParsedMonster(null);
-    };
-    reader.readAsDataURL(file);
+    }
+    files.slice(0, Math.max(slots, 0)).forEach((file) => {
+      const id = ++nextImageId;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        setImages(prev => {
+          if (prev.length >= MAX_IMAGES) return prev;
+          // Keep selection order even if readers finish out of order
+          const next = [...prev, {
+            id,
+            data: dataUrl.split(',')[1],
+            mediaType: file.type,
+            preview: dataUrl,
+          }];
+          return next.sort((a, b) => a.id - b.id);
+        });
+        setParsedMonster(null);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const removeImage = (id) => {
+    setImages(prev => prev.filter(img => img.id !== id));
+    setError(null);
+  };
+
+  // Swap a screenshot with its neighbor (dir = -1 left, +1 right). Order
+  // matters: the parser reads image 1 first.
+  const moveImage = (index, dir) => {
+    setImages(prev => {
+      const target = index + dir;
+      if (target < 0 || target >= prev.length) return prev;
+      const next = [...prev];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
   };
 
   const handleParse = async () => {
-    if (!image) return;
+    if (images.length === 0) return;
     
     setIsParsing(true);
     setError(null);
@@ -74,7 +111,9 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
       const response = await fetch('/api/parse-monster', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: image.data, mediaType: image.mediaType }),
+        body: JSON.stringify({
+          images: images.map(({ data, mediaType }) => ({ data, mediaType })),
+        }),
       });
       
       const data = await response.json();
@@ -108,8 +147,7 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
   };
 
   const handleClose = () => {
-    setImage(null);
-    setImagePreview(null);
+    setImages([]);
     setParsedMonster(null);
     setError(null);
     setEditMode(false);
@@ -141,55 +179,106 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
           {!parsedMonster ? (
             // Upload/Parse Stage
             <div className="space-y-4">
+              {/* Selected screenshots, in parse order */}
+              {images.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-green-400 text-sm">
+                    {images.length === 1
+                      ? 'Screenshot loaded. Add more if the stat block continues, or click "Parse Image".'
+                      : `${images.length} screenshots will be combined into one stat block, in this order.`}
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    {images.map((img, i) => (
+                      <div
+                        key={img.id}
+                        data-testid="import-screenshot"
+                        className="relative bg-stone-800 border border-stone-700 rounded-lg p-2 w-40"
+                      >
+                        <span className="absolute top-1 left-1 bg-amber-600 text-white text-xs font-bold rounded px-1.5">
+                          {i + 1}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => removeImage(img.id)}
+                          aria-label={`Remove screenshot ${i + 1}`}
+                          className="absolute top-1 right-1 bg-stone-900/80 rounded text-stone-400 hover:text-red-400"
+                        >
+                          <Icons.X />
+                        </button>
+                        <img
+                          src={img.preview}
+                          alt={`Stat block screenshot ${i + 1}`}
+                          className="h-32 w-full object-contain rounded"
+                        />
+                        {images.length > 1 && (
+                          <div className="flex justify-between mt-1 text-xs">
+                            <button
+                              type="button"
+                              onClick={() => moveImage(i, -1)}
+                              disabled={i === 0}
+                              aria-label={`Move screenshot ${i + 1} earlier`}
+                              className="px-2 rounded bg-stone-700 hover:bg-stone-600 disabled:opacity-30 disabled:hover:bg-stone-700"
+                            >
+                              ←
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => moveImage(i, 1)}
+                              disabled={i === images.length - 1}
+                              aria-label={`Move screenshot ${i + 1} later`}
+                              className="px-2 rounded bg-stone-700 hover:bg-stone-600 disabled:opacity-30 disabled:hover:bg-stone-700"
+                            >
+                              →
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Drop Zone */}
-              <div
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
-                className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
-                  isDragging 
-                    ? 'border-amber-500 bg-amber-900/20' 
-                    : imagePreview 
-                      ? 'border-green-600 bg-green-900/10' 
+              {images.length < MAX_IMAGES && (
+                <div
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`border-2 border-dashed rounded-xl text-center cursor-pointer transition-colors ${
+                    images.length > 0 ? 'p-4' : 'p-8'
+                  } ${
+                    isDragging
+                      ? 'border-amber-500 bg-amber-900/20'
                       : 'border-stone-600 hover:border-stone-500 hover:bg-stone-800/50'
-                }`}
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                />
-                
-                {imagePreview ? (
-                  <div className="space-y-4">
-                    <img 
-                      src={imagePreview} 
-                      alt="Monster stat block" 
-                      className="max-h-64 mx-auto rounded-lg shadow-lg"
-                    />
-                    <p className="text-green-400 text-sm">Image loaded! Click "Parse Image" to extract the stat block.</p>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setImage(null); setImagePreview(null); }}
-                      className="text-xs text-stone-400 hover:text-red-400"
-                    >
-                      Remove and upload different image
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    <Icons.Upload className="w-12 h-12 mx-auto text-stone-500" />
-                    <p className="text-stone-400">
-                      Drag and drop a stat block screenshot here, or click to browse
+                  }`}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleFileSelect}
+                    className="hidden"
+                    data-testid="import-file-input"
+                  />
+                  {images.length > 0 ? (
+                    <p className="text-stone-400 text-sm flex items-center justify-center gap-2">
+                      <Icons.Plus /> Add another screenshot (drop or click)
                     </p>
-                    <p className="text-xs text-stone-500">
-                      Supports PNG, JPG, WebP images
-                    </p>
-                  </div>
-                )}
-              </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <Icons.Upload className="w-12 h-12 mx-auto text-stone-500" />
+                      <p className="text-stone-400">
+                        Drag and drop stat block screenshots here, or click to browse
+                      </p>
+                      <p className="text-xs text-stone-500">
+                        Supports PNG, JPG, WebP. Big stat block? Add up to {MAX_IMAGES} screenshots and they&apos;ll be combined.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Error Display */}
               {error && (
@@ -199,7 +288,7 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
               )}
 
               {/* Parse Button */}
-              {imagePreview && (
+              {images.length > 0 && (
                 <button
                   onClick={handleParse}
                   disabled={isParsing}
@@ -216,7 +305,7 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
                     </>
                   ) : (
                     <>
-                      <Icons.Wand /> Parse Image
+                      <Icons.Wand /> {images.length > 1 ? `Parse ${images.length} Images` : 'Parse Image'}
                     </>
                   )}
                 </button>
@@ -227,7 +316,7 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
                 <h3 className="font-medium text-amber-400 mb-2">Tips for best results:</h3>
                 <ul className="text-stone-400 space-y-1 list-disc list-inside">
                   <li>Use clear, high-resolution screenshots</li>
-                  <li>Include the entire stat block in the image</li>
+                  <li>Include the entire stat block — split tall ones across several screenshots, top to bottom</li>
                   <li>Works best with official D&D formatted stat blocks</li>
                   <li>You can edit the parsed data before importing</li>
                 </ul>
@@ -434,7 +523,7 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
                 onClick={() => { setParsedMonster(null); setError(null); }}
                 className="text-sm text-stone-400 hover:text-stone-200"
               >
-                ← Upload a different image
+                ← Back to screenshots
               </button>
             </div>
           )}

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { visionRequest, extractText } from '../../../lib/claudeVision';
 
 const PARSE_PROMPT = `You are a D&D 5th Edition spell parser. Analyze this image of a spell description and extract all information into a structured JSON format.
 
@@ -62,40 +63,33 @@ export async function POST(request) {
 
     const anthropic = new Anthropic({ apiKey });
 
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 4096,
-      messages: [
+    const response = await anthropic.beta.messages.create(visionRequest({
+      content: [
         {
-          role: 'user',
-          content: [
-            {
-              type: 'image',
-              source: {
-                type: 'base64',
-                media_type: mediaType || 'image/png',
-                data: image,
-              },
-            },
-            {
-              type: 'text',
-              text: PARSE_PROMPT,
-            },
-          ],
+          type: 'image',
+          source: {
+            type: 'base64',
+            media_type: mediaType || 'image/png',
+            data: image,
+          },
+        },
+        {
+          type: 'text',
+          text: PARSE_PROMPT,
         },
       ],
-    });
+    }));
 
-    const content = response.content[0];
-    if (content.type !== 'text') {
-      return NextResponse.json({ error: 'Unexpected response type' }, { status: 500 });
+    const { text: responseText, error: responseError } = extractText(response);
+    if (responseError) {
+      return NextResponse.json({ error: responseError }, { status: 502 });
     }
 
     // Try to parse the JSON response
     let spellData;
     try {
       // Clean up the response - remove any markdown code blocks if present
-      let jsonText = content.text.trim();
+      let jsonText = responseText.trim();
       if (jsonText.startsWith('```json')) {
         jsonText = jsonText.slice(7);
       } else if (jsonText.startsWith('```')) {
@@ -110,7 +104,7 @@ export async function POST(request) {
     } catch (parseError) {
       return NextResponse.json({ 
         error: 'Failed to parse spell data from image',
-        raw: content.text
+        raw: responseText
       }, { status: 500 });
     }
 

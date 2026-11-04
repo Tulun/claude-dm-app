@@ -1,4 +1,9 @@
 import { NextResponse } from 'next/server';
+import { visionRequest, extractText } from '../../../lib/claudeVision';
+
+// Upper bound on screenshots per request. Big creatures (beholder, dragons)
+// rarely need more than 2-3; the cap keeps request size sane.
+const MAX_IMAGES = 6;
 
 const PARSE_PROMPT = `You are a D&D 5th Edition stat block parser. Analyze this image of a monster stat block and extract all information into a structured JSON format.
 
@@ -61,12 +66,44 @@ Important parsing rules:
 
 Parse the image now and return only the JSON:`;
 
+// When a stat block is split across several screenshots, tell the model the
+// images are consecutive pieces of ONE creature, in order, so it merges them
+// instead of describing only the first image.
+const multiImagePreamble = (count) => `The following ${count} images are consecutive screenshots of a SINGLE monster stat block that was too large for one screenshot. They are in reading order (image 1 first). Treat them as one continuous stat block: merge every section into one monster, continue any section or description that is cut off at the end of one image and resumes at the top of the next, and do not duplicate entries that appear in an overlapping region of two images.
+
+`;
+
+const buildPrompt = (count) =>
+  count > 1
+    ? multiImagePreamble(count) + PARSE_PROMPT.replace('Analyze this image', 'Analyze these images').replace('Parse the image now', 'Parse the images now')
+    : PARSE_PROMPT;
+
+// Accepts { images: [{ data, mediaType }] } or the legacy single-image
+// { image, mediaType } body. Returns a cleaned array (possibly empty).
+const normalizeImages = (body) => {
+  if (Array.isArray(body?.images)) {
+    return body.images
+      .filter(img => img && typeof img.data === 'string' && img.data.length > 0)
+      .map(img => ({ data: img.data, mediaType: img.mediaType || 'image/png' }));
+  }
+  if (typeof body?.image === 'string' && body.image.length > 0) {
+    return [{ data: body.image, mediaType: body.mediaType || 'image/png' }];
+  }
+  return [];
+};
+
 export async function POST(request) {
   try {
-    const { image, mediaType } = await request.json();
-    
-    if (!image) {
+    const images = normalizeImages(await request.json());
+
+    if (images.length === 0) {
       return NextResponse.json({ error: 'No image provided' }, { status: 400 });
+    }
+    if (images.length > MAX_IMAGES) {
+      return NextResponse.json(
+        { error: `Too many images (max ${MAX_IMAGES})` },
+        { status: 400 }
+      );
     }
 
     // Dynamically import Anthropic SDK
@@ -92,41 +129,36 @@ export async function POST(request) {
     const client = new Anthropic();
 
     // Call Claude API with vision
-    const response = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 4096,
-      messages: [
+    const response = await client.beta.messages.create(visionRequest({
+      content: [
+        ...images.flatMap((img, i) => [
+          ...(images.length > 1 ? [{ type: 'text', text: `Image ${i + 1} of ${images.length}:` }] : []),
+          {
+            type: 'image',
+            source: {
+              type: 'base64',
+              media_type: img.mediaType,
+              data: img.data,
+            },
+          },
+        ]),
         {
-          role: 'user',
-          content: [
-            {
-              type: 'image',
-              source: {
-                type: 'base64',
-                media_type: mediaType || 'image/png',
-                data: image,
-              },
-            },
-            {
-              type: 'text',
-              text: PARSE_PROMPT,
-            },
-          ],
+          type: 'text',
+          text: buildPrompt(images.length),
         },
       ],
-    });
+    }));
 
-    // Extract the text response
-    const textContent = response.content.find(c => c.type === 'text');
-    if (!textContent) {
-      return NextResponse.json({ error: 'No response from AI' }, { status: 500 });
+    const { text: responseText, error: responseError } = extractText(response);
+    if (responseError) {
+      return NextResponse.json({ error: responseError }, { status: 502 });
     }
 
     // Parse the JSON response
     let monsterData;
     try {
       // Clean up potential markdown code blocks
-      let jsonText = textContent.text.trim();
+      let jsonText = responseText.trim();
       if (jsonText.startsWith('```json')) {
         jsonText = jsonText.slice(7);
       } else if (jsonText.startsWith('```')) {
@@ -140,10 +172,10 @@ export async function POST(request) {
       monsterData = JSON.parse(jsonText);
     } catch (parseError) {
       console.error('JSON parse error:', parseError);
-      console.error('Raw response:', textContent.text);
+      console.error('Raw response:', responseText);
       return NextResponse.json({ 
         error: 'Failed to parse monster data', 
-        raw: textContent.text 
+        raw: responseText 
       }, { status: 500 });
     }
 
