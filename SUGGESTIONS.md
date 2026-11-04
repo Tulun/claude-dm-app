@@ -137,7 +137,7 @@ context costs:
 
 - [ ] **Character sheet page** (`app/character/page.jsx` + `TabContent.jsx`, the
   largest untested surface) — no page tests; it edits party.json data directly.
-- [ ] **Spellbook, magic-items, dm, classes, templates pages** — no page tests.
+- [ ] **Spellbook, magic-items, dm, classes pages** — no page tests.
 - [ ] **CI** — no automated runner; a GitHub Action doing `npm test` + `npm run build`
   on push would lock in the suite mechanically.
 - [ ] **jsdom form quirk** — jsdom lacks named-property access on forms
@@ -188,6 +188,18 @@ context costs:
 ---
 
 ## Completed log
+- [x] Monster detail page `/templates/[id]` (`app/templates/[id]/page.jsx`):
+  full stat block (vitals, abilities with proficient saves, skills / senses /
+  defenses chips, numbered multi-option abilities like Eye Rays as lists,
+  to-hit / damage / DC highlights) and an edit mode — form beside a live
+  preview, sticky Save bar, reorderable ability entries, CR → XP / PB hints.
+  `/templates/new` creates; Conflux creatures save edits as a Custom copy;
+  Duplicate / Delete on the page. Library rows now link there (inline
+  expand / edit / create removed from `TemplateEditor`); library filters
+  persist per tab in sessionStorage. Library page now saves explicitly per
+  action (it used to auto-save un-gated, echoing a POST on every load) and
+  never saves the offline fallback list. `formatSpeeds` keeps the space in
+  "fly 40 ft (hover)" — Nov 2026.
 
 - [x] Fixed: image import 404'd (`claude-sonnet-4-20250514` retired). Both
   parse routes now use `lib/claudeVision.js` (model `claude-opus-5-5`, low

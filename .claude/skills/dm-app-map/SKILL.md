@@ -30,7 +30,8 @@ Follow this pattern for new pages. Do not introduce Redux/Zustand/Context.
 | `/spellbook` | `app/spellbook/page.jsx` | Global spell library, plus AI spell parsing |
 | `/magic-items` | `app/magic-items/page.jsx` | Magic item library |
 | `/classes` | `app/classes/page.jsx` | Static class reference (`classData.js`, `classDetails.js`) |
-| `/templates` | `app/templates/page.jsx` | Monster template library |
+| `/templates` | `app/templates/page.jsx` | Monster template library (list + filters via `app/combat/components/TemplateEditor.jsx`; rows link to the detail page) |
+| `/templates/[id]` | `app/templates/[id]/page.jsx` | One monster: formatted stat block + edit mode (form beside live preview). `new` = create; `?edit=1` opens the editor; `cc-*` (Conflux) ids are read-only — edits save as a Custom copy. Display/form helpers in `app/templates/statBlock.js`, components in `app/templates/components/` |
 | `/dm` | `app/dm/page.jsx` | Tabs: session notes, world notes, DM characters, NPC generator, Campaign (read-only Obsidian vault dashboard, `app/dm/components/VaultTab.jsx`) |
 
 Character-sheet tab panels live in `app/character/components/tabs/` (ResourcesTab, InventoryTab, SpellsTab, FeaturesTab, BackgroundTab, NotesTab, CompanionsTab, WildShapeTab). FeaturesTab covers class features, subclass features, AND feats (all in `character.features`; the short-lived separate FeatsTab and its `character.feats` field were merged away in July 2026 — the sheet folds any legacy `feats` array into `features` at load). Two tabs are conditional: WildShapeTab shows only for druid 2+, and CompanionsTab is opt-in (shown when `character.companions` is non-empty or `character.companionsEnabled` is set — the "+ Companions" tab-strip button toggles it). The legacy `TabContent.jsx` mega-component was deleted in July 2026 — the tabs/ split is complete; add new sheet functionality to `tabs/`.

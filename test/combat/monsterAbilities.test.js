@@ -58,6 +58,8 @@ describe('formatSpeeds', () => {
     expect(formatSpeeds('40, burrow 40, fly 80')).toEqual(['40 ft', 'burrow 40 ft', 'fly 80 ft']);
     expect(formatSpeeds('20 ft., swim 20 ft.')).toEqual(['20 ft', 'swim 20 ft']);
     expect(formatSpeeds('0, fly 50 ft. (hover)')).toEqual(['0 ft', 'fly 50 ft (hover)']);
+    // No unit before the parenthetical keeps its space (was "fly 40 ft(hover)").
+    expect(formatSpeeds('5, fly 40 (hover)')).toEqual(['5 ft', 'fly 40 ft (hover)']);
   });
 
   it('defaults to 30 ft', () => {

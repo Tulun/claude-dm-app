@@ -6,40 +6,45 @@ import Navbar from '../components/Navbar';
 import { defaultEnemyTemplates } from '../components/defaultData';
 import TemplateEditor from '../combat/components/TemplateEditor';
 import { useToast } from '../hooks/useToast';
+import { TOAST_ERROR_DURATION_MS } from '../utils/timings';
 
 export default function TemplatesPage() {
   const [templates, setTemplates] = useState(null);
   const [saveStatus, showToast] = useToast();
+  const [loadFailed, setLoadFailed] = useState(false);
 
   useEffect(() => {
     fetch('/api/templates').then(r => r.ok ? r.json() : null).then(data => {
-      setTemplates(data && Array.isArray(data) && data.length > 0 ? data : defaultEnemyTemplates);
-    }).catch(() => setTemplates(defaultEnemyTemplates));
+      if (Array.isArray(data)) setTemplates(data.length > 0 ? data : defaultEnemyTemplates);
+      else { setLoadFailed(true); setTemplates(defaultEnemyTemplates); }
+    }).catch(() => { setLoadFailed(true); setTemplates(defaultEnemyTemplates); });
   }, []);
 
-  useEffect(() => {
-    if (!templates) return;
-    const timeout = setTimeout(() => {
-      fetch('/api/templates', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(templates) })
-        .then(() => { showToast('Saved'); })
-        .catch(console.error);
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, [templates]);
+  // Explicit per-action saves (delete / import) — the library never
+  // auto-saves, so loading it can't echo a POST back. While the load failed
+  // (we're showing the built-in fallback list) nothing is saved, so the
+  // fallback can't overwrite the user's real templates file.
+  const persist = (update) => {
+    const next = update(templates);
+    setTemplates(next);
+    if (loadFailed) { showToast('Library failed to load — not saved', TOAST_ERROR_DURATION_MS); return; }
+    fetch('/api/templates', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(next) })
+      .then(r => (r.ok ? showToast('Saved') : showToast('Save failed', TOAST_ERROR_DURATION_MS)))
+      .catch(() => showToast('Save failed', TOAST_ERROR_DURATION_MS));
+  };
 
   const reloadTemplates = async () => {
     const res = await fetch('/api/templates');
     if (res.ok) {
       const data = await res.json();
-      setTemplates(data && Array.isArray(data) ? data : defaultEnemyTemplates);
-      showToast('Reloaded');
+      if (Array.isArray(data)) { setTemplates(data); setLoadFailed(false); showToast('Reloaded'); }
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100">
       <Navbar />
-      <main className="relative max-w-4xl mx-auto p-4">
+      <main className="relative max-w-5xl mx-auto p-4">
         <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2"><Icons.Book /> Enemy & NPC Templates</h2>
@@ -50,10 +55,9 @@ export default function TemplatesPage() {
           ) : (
             <TemplateEditor 
               templates={templates} 
-              onUpdate={(u) => setTemplates(prev => prev.map(t => t.id === u.id ? u : t))} 
-              onDelete={(id) => setTemplates(prev => prev.filter(t => t.id !== id))} 
-              onCreate={(t) => setTemplates(prev => [...prev, t])} 
-              onImport={(t) => setTemplates(prev => [...prev, t])} 
+              onUpdate={(u) => persist(prev => prev.map(t => t.id === u.id ? u : t))}
+              onDelete={(id) => persist(prev => prev.filter(t => t.id !== id))}
+              onImport={(t) => persist(prev => [...prev, t])}
             />
           )}
         </div>

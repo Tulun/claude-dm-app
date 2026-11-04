@@ -56,12 +56,12 @@ export const sizeMatches = (size, selectedSizes) =>
 
 // Every movement mode as display strings: 30 → ['30 ft'];
 // "40, burrow 40, fly 80" → ['40 ft', 'burrow 40 ft', 'fly 80 ft'];
-// "0, fly 50 ft. (hover)" → ['0 ft', 'fly 50 ft (hover)']. Missing → ['30 ft'].
+// "0, fly 50 ft. (hover)" / "5, fly 40 (hover)" → [..., 'fly 40 ft (hover)']. Missing → ['30 ft'].
 export const formatSpeeds = (speed) => {
   if (typeof speed === 'number') return [`${speed} ft`];
   const parts = String(speed ?? '').split(',').map(p => p.trim()).filter(Boolean);
   if (!parts.length) return ['30 ft'];
-  return parts.map(p => p.replace(/(\d+)\s*(?:ft\.?|feet)?/i, '$1 ft').replace(/\s+/g, ' ').trim());
+  return parts.map(p => p.replace(/(\d+)(?:\s*(?:ft\.?|feet))?/i, '$1 ft').replace(/\s+/g, ' ').trim());
 };
 
 // "Dex +6, Con +13" → { dex: 6, con: 13 }. Unlisted abilities are absent

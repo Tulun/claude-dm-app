@@ -1,0 +1,172 @@
+// Pure helpers for the monster detail page (/templates/[id]): reading a
+// template's stat block for display, and converting it to / from the edit
+// form. Display-only parsing — nothing here changes how combat reads a
+// template. Ability math comes from app/utils/rules.js (never a local getMod).
+import { getModNum } from '../utils/rules';
+
+export const ABILITY_KEYS = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+
+export const SIZE_OPTIONS = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
+
+// Stat-block sections in display order. `color` keys into the view/form palettes.
+export const SECTIONS = [
+  { key: 'traits', label: 'Traits', singular: 'Trait', color: 'amber' },
+  { key: 'actions', label: 'Actions', singular: 'Action', color: 'red' },
+  { key: 'bonusActions', label: 'Bonus Actions', singular: 'Bonus Action', color: 'orange' },
+  { key: 'reactions', label: 'Reactions', singular: 'Reaction', color: 'cyan' },
+  { key: 'legendaryActions', label: 'Legendary Actions', singular: 'Legendary Action', color: 'purple' },
+];
+
+// Conflux creatures live in a separate 5.4 MB file served by
+// GET /api/templates?source=conflux; their ids carry this prefix.
+export const isConfluxId = (id) => String(id ?? '').startsWith('cc-');
+
+// Built-in, Conflux or user-made — for the header badge.
+export const sourceLabel = (t) => {
+  if (isConfluxId(t?.id) || t?.source === 'conflux') return 'Conflux';
+  if (t?.source === 'custom' || (t?.id && !String(t.id).startsWith('mm-'))) return 'Custom';
+  return 'Monster Manual';
+};
+
+// "Alignment: Lawful Evil. Initiative +12 (22). …" → "Lawful Evil".
+export const parseAlignment = (notes) => {
+  const m = /Alignment:\s*([^.]+)\./i.exec(String(notes ?? ''));
+  return m ? m[1].trim() : null;
+};
+
+// Initiative modifier: the 2024 `initiativeBonus` when present, else the
+// "Initiative +12 (22)" line imported stat blocks keep in their notes, else
+// the DEX mod.
+export const getInitiativeBonus = (t) => {
+  if (typeof t?.initiativeBonus === 'number') return t.initiativeBonus;
+  const m = /Initiative\s*([+\-−]\s*\d+)/i.exec(String(t?.notes ?? ''));
+  if (m) return Number(m[1].replace('−', '-').replace(/\s/g, ''));
+  return getModNum(t?.dex ?? 10);
+};
+
+// Legendary action uses per round: the stored `legendaryActionUses`, else
+// "Legendary Action Uses: 3 (4 in Lair)" from the notes, else 3 when the
+// creature has legendary actions at all. Returns { uses, lair } or null.
+export const getLegendaryUses = (t) => {
+  if (!t?.legendaryActions?.length) return null;
+  const m = /Legendary Action Uses:\s*(\d+)(?:\s*\((\d+)\s+in\s+lair\))?/i.exec(String(t.notes ?? ''));
+  const lair = m?.[2] ? Number(m[2]) : null;
+  if (typeof t.legendaryActionUses === 'number') return { uses: t.legendaryActionUses, lair };
+  if (m) return { uses: Number(m[1]), lair };
+  return { uses: 3, lair: null };
+};
+
+// Breaks an ability description into blocks for display. Newlines separate
+// paragraphs; a line like "3. Fear Ray. Wisdom Saving Throw…" becomes a
+// numbered list item with its own bold name, so long multi-option abilities
+// (Eye Rays, Breath Weapons) read as a list instead of a wall of text.
+// → [{ kind: 'p', text }] | [{ kind: 'item', marker: '3', name: 'Fear Ray', text }]
+export const splitDescription = (text) =>
+  String(text ?? '')
+    .split(/\n+/)
+    .map(line => line.trim())
+    .filter(Boolean)
+    .map(line => {
+      const item = /^(\d+|[•\-*])[.)]?\s+([^.:]{1,40})[.:]\s*(.*)$/.exec(line);
+      if (item && /^\d+$/.test(item[1])) return { kind: 'item', marker: item[1], name: item[2].trim(), text: item[3] };
+      const bullet = /^[•\-*]\s+(.*)$/.exec(line);
+      if (bullet) return { kind: 'item', marker: '•', name: null, text: bullet[1] };
+      return { kind: 'p', text: line };
+    });
+
+// "Perception +12, Stealth +6" → ['Perception +12', 'Stealth +6'].
+export const splitList = (text) =>
+  String(text ?? '').split(',').map(s => s.trim()).filter(Boolean);
+
+const CR_XP = {
+  '0': 10, '1/8': 25, '1/4': 50, '1/2': 100, '1': 200, '2': 450, '3': 700, '4': 1100, '5': 1800,
+  '6': 2300, '7': 2900, '8': 3900, '9': 5000, '10': 5900, '11': 7200, '12': 8400, '13': 10000,
+  '14': 11500, '15': 13000, '16': 15000, '17': 18000, '18': 20000, '19': 22000, '20': 25000,
+  '21': 33000, '22': 41000, '23': 50000, '24': 62000, '25': 75000, '26': 90000, '27': 105000,
+  '28': 120000, '29': 135000, '30': 155000,
+};
+// Standard XP for a CR (for the form's auto-fill), or null for unknown CRs.
+export const xpForCr = (cr) => CR_XP[String(cr ?? '').trim()] ?? null;
+
+// Proficiency bonus by CR (5e table): CR 0–4 → +2 … CR 29–30 → +9.
+export const profForCr = (cr) => {
+  const s = String(cr ?? '').trim();
+  const n = s.includes('/') ? 0 : Number(s);
+  if (!Number.isFinite(n)) return null;
+  return Math.max(2, Math.floor((Math.max(n, 1) - 1) / 4) + 2);
+};
+
+export const BLANK_TEMPLATE = {
+  name: '', size: 'Medium', creatureType: 'Humanoid', isNpc: false,
+  ac: 10, maxHp: 10, hitDice: '1d8', speed: 30, cr: '1', xp: 200, profBonus: 2,
+  str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10,
+  savingThrows: '', skills: '', senses: '', languages: '',
+  vulnerabilities: '', resistances: '', immunities: '', notes: '',
+  traits: [], actions: [], bonusActions: [], reactions: [], legendaryActions: [],
+};
+
+const STRING_FIELDS = ['name', 'size', 'creatureType', 'hitDice', 'cr', 'savingThrows', 'skills', 'senses',
+  'languages', 'vulnerabilities', 'resistances', 'immunities', 'notes'];
+
+// Template → edit form. Every input is a string (so a half-typed "-" or ""
+// is representable); lists are copied so editing never mutates the original.
+export const toEditForm = (t) => {
+  const form = { ...t };
+  for (const k of STRING_FIELDS) form[k] = t[k] == null ? '' : String(t[k]);
+  for (const k of ['ac', 'maxHp', 'speed', 'xp', 'profBonus', 'initiativeBonus', 'legendaryActionUses', ...ABILITY_KEYS]) {
+    form[k] = t[k] == null ? '' : String(t[k]);
+  }
+  for (const { key } of SECTIONS) form[key] = (t[key] || []).map(a => ({ name: a?.name ?? '', description: a?.description ?? '' }));
+  form.isNpc = !!t.isNpc;
+  return form;
+};
+
+const intOr = (val, fallback) => {
+  const n = parseInt(String(val ?? '').replace(/[,\s]/g, ''), 10);
+  return Number.isNaN(n) ? fallback : n;
+};
+
+// Edit form → template, merged over `original` (so fields the form doesn't
+// know about survive). Numbers are coerced back; optional numbers left blank
+// are removed. A field that is empty ('' / []) and was absent on the original
+// stays absent — so opening and saving a built-in without changes keeps it
+// byte-identical (the templates migration fingerprints unedited built-ins;
+// see lib/templateFingerprint.js).
+export const fromEditForm = (form, original = {}) => {
+  const out = { ...original, ...form };
+  for (const k of STRING_FIELDS) out[k] = String(form[k] ?? '').trim();
+  out.ac = intOr(form.ac, 10);
+  out.maxHp = intOr(form.maxHp, 10);
+  out.profBonus = intOr(form.profBonus, 2);
+  for (const k of ABILITY_KEYS) out[k] = intOr(form[k], 10);
+  const xp = intOr(form.xp, null);
+  out.xp = xp ?? String(form.xp ?? '').trim();
+  const speed = String(form.speed ?? '').trim();
+  out.speed = /^\d+$/.test(speed) ? Number(speed) : speed;
+  for (const k of ['initiativeBonus', 'legendaryActionUses']) {
+    const n = intOr(String(form[k] ?? '').replace('+', ''), null);
+    if (n === null) delete out[k]; else out[k] = n;
+  }
+  for (const { key } of SECTIONS) {
+    out[key] = (form[key] || [])
+      .map(a => ({ name: String(a.name ?? '').trim(), description: String(a.description ?? '').trim() }))
+      .filter(a => a.name || a.description);
+  }
+  out.isNpc = !!form.isNpc;
+  for (const k of Object.keys(out)) {
+    const v = out[k];
+    const empty = v === '' || (Array.isArray(v) && v.length === 0);
+    if (empty && original[k] === undefined) delete out[k];
+  }
+  return out;
+};
+
+// Deep-ish equality for "did the edit change anything?" (key order ignored).
+const stable = (v) => {
+  if (Array.isArray(v)) return `[${v.map(stable).join(',')}]`;
+  if (v && typeof v === 'object') {
+    return `{${Object.keys(v).filter(k => v[k] !== undefined).sort().map(k => `${JSON.stringify(k)}:${stable(v[k])}`).join(',')}}`;
+  }
+  return JSON.stringify(v);
+};
+export const sameTemplate = (a, b) => stable(a) === stable(b);

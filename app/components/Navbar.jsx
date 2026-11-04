@@ -29,7 +29,7 @@ export default function Navbar({ saveStatus }) {
     if (pathname === '/characters') return 'characters';
     if (pathname === '/character') return 'characters';
     if (pathname === '/encounters') return 'encounters';
-    if (pathname === '/templates') return 'templates';
+    if (pathname === '/templates' || pathname?.startsWith('/templates/')) return 'templates';
     if (pathname === '/spellbook') return 'spellbook';
     if (pathname === '/magic-items') return 'magic-items';
     if (pathname === '/dm') return 'dm';
