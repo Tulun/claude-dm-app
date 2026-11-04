@@ -5,6 +5,7 @@ import Icons from '../../components/Icons';
 import Modal from '../../components/Modal';
 import { getMod } from '../../utils/rules';
 import { generateId } from '../../utils/generateId';
+import { sizeMatches } from '../monsterAbilities';
 
 // CR values for filtering - expanded range
 const CR_OPTIONS = [
@@ -140,10 +141,7 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
     return selectedCRs.includes(String(templateCR));
   };
 
-  const matchesSize = (templateSize) => {
-    if (selectedSizes.length === 0) return true;
-    return selectedSizes.includes(templateSize);
-  };
+  const matchesSize = (templateSize) => sizeMatches(templateSize, selectedSizes);
 
   const matchesCreatureType = (templateCreatureType) => {
     if (selectedCreatureTypes.length === 0) return true;
@@ -376,6 +374,7 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
                     <div className="flex items-center gap-2">
                       {t.isNpc ? <Icons.Shield /> : <Icons.Skull />}
                       <span className="font-medium">{t.name}</span>
+                      {t.edition === '2024' && <span className="text-[10px] text-sky-300 bg-sky-900/30 px-1 rounded" title="2024 stat block (SRD 5.2.1)">2024</span>}
                       {isSelected && <span className="ml-auto text-xs bg-green-900/50 text-green-300 px-1.5 py-0.5 rounded">✓</span>}
                     </div>
                     <div className="text-xs text-stone-400 mt-1">

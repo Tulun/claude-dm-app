@@ -77,7 +77,7 @@ Each versioned file carries a version stamp written on every save:
 |---|---|---|---|
 | `app/api/spells/route.js` | `SPELLS_VERSION` (4) | `version` | `spells` |
 | `app/api/magic-items/route.js` | `ITEMS_VERSION` (3) | `version` | `items` |
-| `app/api/templates/route.js` | `TEMPLATES_VERSION` (12) | `_version` | `templates` |
+| `app/api/templates/route.js` | `TEMPLATES_VERSION` (13) | `_version` | `templates` |
 | `app/api/dm/route.js` | `DM_VERSION` (1) | `version` | (whole object) |
 
 **Bump the const whenever you add default content or default fields.** On load, if
@@ -106,7 +106,21 @@ const newDefaults = defaultMagicItems.filter(i => !existingIds.has(i.id));
 
 Default datasets live at `app/data/defaultSpells.js` (`defaultSpells`),
 `app/magic-items/magicItems.js` (`defaultMagicItems`), and
-`app/components/defaultData.js` (`defaultEnemyTemplates`).
+`app/data/defaultEnemyTemplates.js` (`defaultEnemyTemplates`, re-exported from
+`app/components/defaultData.js`; generated — see `MONSTERS.md`).
+
+**Templates exception — replacing a default's content (CANONICAL).** Step 1's
+"saved wins" means a plain default update can never reach a user's saved copy.
+So the templates migration first asks whether the saved `mm-*` entry is an
+*unedited* earlier default: `templateFingerprint(saved)` (`lib/templateFingerprint.js`,
+key-order- and `source`-insensitive) is looked up in
+`PRIOR_DEFAULT_FINGERPRINTS[id]` (`app/data/templateFingerprints.js`). Match →
+take the new default outright. No match (user edited it) → if the default moved
+to a new `edition`, keep the saved entry **verbatim** (no `{ ...def, ...saved }`,
+which would graft 2024-only fields onto an older stat block); otherwise merge as
+in step 1. When you change built-in template content: append each outgoing
+entry's fingerprint to its array (never delete old ones), then bump the version.
+Pinned by the "v12 → v13" block in `test/api/templatesRoute.test.js`.
 
 ## 4. Side effects to know
 

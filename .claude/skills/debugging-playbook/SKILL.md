@@ -91,10 +91,10 @@ Fix: restart the dev server. This is intentional (see `SUGGESTIONS.md` §1); do 
 
 This is the templates version-migration class of bug. `GET /api/templates` re-runs a
 migration whenever `_version` in `data/templates.json` is missing or below
-`TEMPLATES_VERSION` in `app/api/templates/route.js` (currently 12). The migration
-layers saved edits over the 441 `defaultEnemyTemplates` (from
-`app/components/defaultData.js`) by id: `{ ...def, ...saved }`, and carries non-default
-ids over untouched.
+`TEMPLATES_VERSION` in `app/api/templates/route.js`. The migration rules (unedited
+built-ins replaced via fingerprints, edited ones kept, `{ ...def, ...saved }`
+otherwise, non-default ids carried over untouched) are canonical in
+**api-route-conventions** §3 — read that rather than this summary.
 
 Debug steps:
 1. Compare `_version` in `data/templates.json` against `TEMPLATES_VERSION`.

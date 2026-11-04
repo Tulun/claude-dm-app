@@ -49,6 +49,11 @@ export const getMonsterAbilities = (creature) => {
 
 export const getAbilityUsed = (creature, name) => creature?.abilityUses?.[name] || 0;
 
+// Size filter match. 2024 stat blocks can list a choice ("Medium or Small"),
+// which matches when either size is selected. No selection matches everything.
+export const sizeMatches = (size, selectedSizes) =>
+  !selectedSizes?.length || String(size ?? '').split(/\s+or\s+/i).some(s => selectedSizes.includes(s.trim()));
+
 // Every movement mode as display strings: 30 → ['30 ft'];
 // "40, burrow 40, fly 80" → ['40 ft', 'burrow 40 ft', 'fly 80 ft'];
 // "0, fly 50 ft. (hover)" → ['0 ft', 'fly 50 ft (hover)']. Missing → ['30 ft'].

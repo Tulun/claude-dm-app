@@ -120,8 +120,9 @@ context costs:
   ~440KB on every page mount with no Cache-Control/ETag; tab-switching re-downloads
   everything. If adding caching, invalidate on POST (ETag + 304 is the safe shape) —
   do NOT blanket-cache mutable data like `/api/party`.
-- [ ] **Slim the fetch-failure fallback** — `defaultData.js` (508 lines) ships in the
-  combat/characters/encounters/templates bundles purely as an offline fallback.
+- [ ] **Slim the fetch-failure fallback** — `defaultEnemyTemplates` (now
+  `app/data/defaultEnemyTemplates.js`, ~565KB after the Nov 2026 SRD 5.2.1 import)
+  ships in the combat/encounters/templates bundles purely as an offline fallback.
   Consider a minimal fallback (empty party + a handful of templates) if bundle size
   starts to matter.
 - [ ] **`classData.js` (863 lines)** — only loads on `/classes`, so low priority;
@@ -145,6 +146,15 @@ context costs:
 
 ## 5. Bigger ideas (feature-adjacent)
 
+- [ ] **128 built-in monsters still on older stats** — not in SRD 5.2.1; full
+  list in `MONSTERS.md`. Update case by case via Import Monster (screenshot from
+  the user's own Monster Manual). Possible polish: have Import Monster set
+  `edition: '2024'` when it updates an existing template.
+- [ ] **Use 2024 initiative bonuses** — SRD templates now carry `initiativeBonus`
+  (e.g. Hobgoblin Captain +4 vs DEX +2) but enemy initiative still rolls off DEX.
+- [ ] **Per-monster legendary action uses** — SRD templates carry
+  `legendaryActionUses` (and notes say "3 (4 in Lair)"); `legendary.js` still uses
+  the flat `LEGENDARY_ACTIONS_PER_ROUND = 3`.
 - [ ] **Rolling backups / export** — a "download my data" button and/or keeping the
   last N copies of each data file on write; pairs well with the atomic-write item.
 - [ ] **SWR or React Query** — replace fetch-on-mount + manual debounced auto-save
@@ -178,6 +188,15 @@ context costs:
 ---
 
 ## Completed log
+
+- [x] Built-in monsters moved to 2024 stat blocks: 329 SRD 5.2.1 creatures
+  (292 updated in place, 37 new) in `app/data/defaultEnemyTemplates.js`;
+  templates migration v13 swaps a saved built-in only when its fingerprint
+  matches a previously shipped default (`app/data/templateFingerprints.js`), so
+  user edits are kept verbatim. Size filters understand "Medium or Small"; 2024
+  badge in template lists. Reference + missing list: `MONSTERS.md` — Nov 2026.
+- [x] Pointer cursor restored on all enabled buttons (Tailwind v4 dropped it;
+  base-layer rule in `app/globals.css`) — Nov 2026.
 
 - [x] /combat tabs moved to the top: Initiative (default; tracker + both
   combatant tables, replacing the Table tab) | Party & Allies | Enemies (cards

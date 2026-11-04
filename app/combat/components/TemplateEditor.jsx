@@ -5,6 +5,7 @@ import Icons from '../../components/Icons';
 import ImportMonsterModal from './ImportMonsterModal';
 import { getMod } from '../../utils/rules';
 import { generateId } from '../../utils/generateId';
+import { sizeMatches } from '../monsterAbilities';
 
 // CR ordered list for range filter
 const CR_LIST = ['0', '1/8', '1/4', '1/2', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
@@ -362,7 +363,7 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
       }
       
       // Size filter
-      if (selectedSizes.length > 0 && !selectedSizes.includes(t.size)) return false;
+      if (!sizeMatches(t.size, selectedSizes)) return false;
       
       // Creature type filter
       if (selectedCreatureTypes.length > 0) {
@@ -654,6 +655,7 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onCreate, onImport }) =
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
+                    {t.edition === '2024' && <span className="text-xs text-sky-300 bg-sky-900/30 px-1.5 py-0.5 rounded" title="2024 stat block (SRD 5.2.1)">2024</span>}
                     {t.legendaryActions?.length > 0 && <span className="text-xs text-purple-400 bg-purple-900/30 px-1.5 py-0.5 rounded">Legendary</span>}
                     {t.traits?.length > 0 && <span className="text-xs text-amber-400">{t.traits.length} trait{t.traits.length > 1 ? 's' : ''}</span>}
                     {t.actions?.length > 0 && <span className="text-xs text-red-400">{t.actions.length} action{t.actions.length > 1 ? 's' : ''}</span>}

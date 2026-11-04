@@ -19,6 +19,16 @@
   }
 }
 
+/* Tailwind v4 dropped Preflight's `cursor: pointer` on buttons. Restore it
+   app-wide; per-element utilities (cursor-default, cursor-not-allowed, …)
+   still win because they live in the later `utilities` layer. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

@@ -45,7 +45,8 @@
       "notes": "Half Plate",
       "source": "mm",
       "currentHp": 39,
-      "initiative": 20
+      "initiative": 20,
+      "tempHp": 5
     },
     {
       "id": "enemy-1792607321609-t9yufmpam",

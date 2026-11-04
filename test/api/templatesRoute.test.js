@@ -65,7 +65,7 @@ const customTemplate = {
 };
 
 describe('GET /api/templates', () => {
-  it('seeds data/templates.json with the defaults (version 12) when no file exists and tags mm- ids with source', async () => {
+  it('seeds data/templates.json with the defaults (version 13) when no file exists and tags mm- ids with source', async () => {
     const res = await route.GET(getRequest());
     expect(res.status).toBe(200);
     const templates = await res.json();
@@ -74,7 +74,7 @@ describe('GET /api/templates', () => {
     expect(templates.every(t => t.source === 'mm')).toBe(true);
 
     const onDisk = JSON.parse(fs.readFileSync(TEMPLATES_FILE(), 'utf8'));
-    expect(onDisk._version).toBe(12);
+    expect(onDisk._version).toBe(13);
     expect(onDisk.templates).toHaveLength(defaultEnemyTemplates.length);
     // NOTE: the source tag is applied on read, not persisted to disk
     expect(onDisk.templates[0].source).toBeUndefined();
@@ -82,7 +82,7 @@ describe('GET /api/templates', () => {
 
   it('returns saved templates as-is when the file is at the current version', async () => {
     fs.writeFileSync(TEMPLATES_FILE(), JSON.stringify({
-      _version: 12,
+      _version: 13,
       templates: [customTemplate],
     }));
     const templates = await (await route.GET(getRequest())).json();
@@ -109,7 +109,56 @@ describe('GET /api/templates', () => {
     expect(templates.find(t => t.id === 'custom-test-ogre')).toMatchObject(customTemplate);
 
     const onDisk = JSON.parse(fs.readFileSync(TEMPLATES_FILE(), 'utf8'));
-    expect(onDisk._version).toBe(12);
+    expect(onDisk._version).toBe(13);
+  });
+
+  describe('v12 → v13: SRD 5.2.1 (2024) built-ins', () => {
+    // Exactly as mm-hobgoblin-captain shipped in version 12 (2014 stats).
+    const v12HobgoblinCaptain = {"id":"mm-hobgoblin-captain","name":"Hobgoblin Captain","size":"Medium","creatureType":"Humanoid","ac":17,"maxHp":39,"hitDice":"6d8+12","speed":30,"cr":"3","xp":700,"profBonus":2,"str":15,"dex":14,"con":14,"int":12,"wis":10,"cha":13,"savingThrows":"Con +4, Int +3","senses":"Darkvision 60 ft., Passive Perception 10","languages":"Common, Goblin","isNpc":false,"traits":[{"name":"Martial Advantage","description":"Once per turn, +10 (3d6) damage if ally within 5 ft of target."}],"actions":[{"name":"Multiattack","description":"Two Greatsword attacks."},{"name":"Greatsword","description":"Melee Attack Roll: +4, reach 5 ft. Hit: 9 (2d6+2) Slashing damage."},{"name":"Javelin","description":"Melee or Ranged Attack Roll: +4, reach 5 ft. or range 30/120 ft. Hit: 5 (1d6+2) Piercing damage."}],"notes":"Half Plate"};
+    const new2024 = () => defaultEnemyTemplates.find(t => t.id === 'mm-hobgoblin-captain');
+
+    const migrate = async (templates) => {
+      fs.writeFileSync(TEMPLATES_FILE(), JSON.stringify({ _version: 12, templates }));
+      return (await route.GET(getRequest())).json();
+    };
+
+    it('an untouched v12 built-in is replaced by its 2024 version', async () => {
+      const templates = await migrate([v12HobgoblinCaptain]);
+      const hc = templates.find(t => t.id === 'mm-hobgoblin-captain');
+      expect(hc).toEqual({ ...new2024(), source: 'mm' });
+      expect(hc.edition).toBe('2024');
+      expect(hc.maxHp).toBe(58);
+      expect(hc.actions.map(a => a.name)).toEqual(['Multiattack', 'Greatsword', 'Longbow']);
+    });
+
+    it('still counts as untouched after a client round-trip added source and reordered keys', async () => {
+      const { id, ...rest } = v12HobgoblinCaptain;
+      const roundTripped = { source: 'mm', ...Object.fromEntries(Object.entries(rest).reverse()), id };
+      const templates = await migrate([roundTripped]);
+      expect(templates.find(t => t.id === 'mm-hobgoblin-captain').edition).toBe('2024');
+    });
+
+    it('a user-edited v12 built-in is kept exactly as saved — no 2024 fields grafted on', async () => {
+      const edited = { ...v12HobgoblinCaptain, maxHp: 45, notes: 'Our campaign version' };
+      const templates = await migrate([edited]);
+      const hc = templates.find(t => t.id === 'mm-hobgoblin-captain');
+      expect(hc).toEqual({ ...edited, source: 'mm' });
+      expect(hc.edition).toBeUndefined();
+      expect(hc.initiativeBonus).toBeUndefined();
+
+      const onDisk = JSON.parse(fs.readFileSync(TEMPLATES_FILE(), 'utf8'));
+      expect(onDisk.templates.find(t => t.id === 'mm-hobgoblin-captain')).toEqual(edited);
+    });
+
+    it('adds the new 2024-only built-ins and keeps older built-ins that are not in the SRD', async () => {
+      const templates = await migrate([v12HobgoblinCaptain, customTemplate]);
+      const ids = new Set(templates.map(t => t.id));
+      expect(ids.has('mm-goblin-warrior')).toBe(true);   // new 2024 name
+      expect(ids.has('mm-goblin')).toBe(true);           // 2014 Goblin kept for old encounters
+      expect(ids.has('mm-beholder')).toBe(true);         // not in SRD 5.2.1, unchanged
+      expect(templates.find(t => t.id === 'custom-test-ogre')).toMatchObject(customTemplate);
+      expect(templates).toHaveLength(defaultEnemyTemplates.length + 1);
+    });
   });
 
   it('migrates a legacy bare-array file (no _version wrapper)', async () => {
@@ -117,13 +166,13 @@ describe('GET /api/templates', () => {
     const templates = await (await route.GET(getRequest())).json();
     expect(templates).toHaveLength(defaultEnemyTemplates.length + 1);
     const onDisk = JSON.parse(fs.readFileSync(TEMPLATES_FILE(), 'utf8'));
-    expect(onDisk._version).toBe(12);
+    expect(onDisk._version).toBe(13);
   });
 
   it('a current-version file is left alone even when templates lack a size field', async () => {
     const sizeless = { id: 'custom-no-size', name: 'No Size', ac: 10, maxHp: 5 };
     fs.writeFileSync(TEMPLATES_FILE(), JSON.stringify({
-      _version: 12,
+      _version: 13,
       templates: [sizeless],
     }));
     const templates = await (await route.GET(getRequest())).json();
@@ -132,7 +181,7 @@ describe('GET /api/templates', () => {
 
   it('filters by source=mm and source=custom', async () => {
     fs.writeFileSync(TEMPLATES_FILE(), JSON.stringify({
-      _version: 12,
+      _version: 13,
       templates: [
         { ...defaultEnemyTemplates[0] }, // mm- id, size present so no upgrade
         customTemplate,
@@ -211,7 +260,7 @@ describe('POST /api/templates', () => {
     expect(await res.json()).toEqual({ success: true });
 
     const onDisk = JSON.parse(fs.readFileSync(TEMPLATES_FILE(), 'utf8'));
-    expect(onDisk).toEqual({ _version: 12, templates: body });
+    expect(onDisk).toEqual({ _version: 13, templates: body });
 
     // Round-trip: GET returns the posted list (source-tagged)
     const templates = await (await route.GET(getRequest())).json();

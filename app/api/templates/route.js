@@ -2,11 +2,16 @@ import { NextResponse } from 'next/server';
 import fs from 'node:fs';
 import path from 'node:path';
 import { defaultEnemyTemplates } from '../../components/defaultData';
+import { PRIOR_DEFAULT_FINGERPRINTS } from '../../data/templateFingerprints';
+import { templateFingerprint } from '../../../lib/templateFingerprint';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const TEMPLATES_FILE = path.join(DATA_DIR, 'templates.json');
 const CONFLUX_FILE = path.join(process.cwd(), 'public', 'data', 'conflux-creatures.json');
-const TEMPLATES_VERSION = 12; // Added Conflux source support
+const TEMPLATES_VERSION = 13; // 13: built-ins replaced by SRD 5.2.1 (2024) stat blocks
+
+const isUneditedPriorDefault = (saved) =>
+  (PRIOR_DEFAULT_FINGERPRINTS[saved.id] || []).includes(templateFingerprint(saved));
 
 // Cache conflux data in memory after first load
 let confluxCache = null;
@@ -48,11 +53,22 @@ export async function GET(request) {
         // customized mm-* template keeps its changes (same merge strategy as
         // the spells and magic-items migrations). Anything not in the default
         // set (custom creations, stray ids) is carried over untouched.
+        //
+        // A saved copy that still matches a previously shipped default
+        // byte-for-byte (fingerprint) was never edited, so it is swapped for
+        // the new default outright — that's how untouched 2014-era templates
+        // become their SRD 5.2.1 versions. An EDITED copy whose default moved
+        // to a new edition is kept exactly as saved: layering it over the 2024
+        // default would graft 2024-only fields (bonus actions, edition tag)
+        // onto the user's older stat block.
         const existingById = new Map(existingTemplates.map(t => [t.id, t]));
         const defaultIds = new Set(defaultEnemyTemplates.map(t => t.id));
         const mergedDefaults = defaultEnemyTemplates.map(def => {
           const saved = existingById.get(def.id);
-          return saved ? { ...def, ...saved } : def;
+          if (!saved) return def;
+          if (isUneditedPriorDefault(saved)) return saved.source ? { ...def, source: saved.source } : def;
+          if (def.edition && saved.edition !== def.edition) return saved;
+          return { ...def, ...saved };
         });
         const nonDefault = existingTemplates.filter(t => !defaultIds.has(t.id));
         const mergedTemplates = [...mergedDefaults, ...nonDefault];
