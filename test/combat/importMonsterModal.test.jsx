@@ -4,7 +4,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import ImportMonsterModal from '../../app/combat/components/ImportMonsterModal.jsx';
+import ImportMonsterModal, { withBook } from '../../app/combat/components/ImportMonsterModal.jsx';
 
 const png = (name, body = name) => new File([body], name, { type: 'image/png' });
 
@@ -24,7 +24,7 @@ beforeEach(() => {
   });
   vi.stubGlobal('fetch', fetchMock);
 });
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => { vi.unstubAllGlobals(); localStorage.clear(); });
 
 describe('ImportMonsterModal — multiple screenshots', () => {
   it('accepts several files at once and keeps selection order', async () => {
@@ -89,5 +89,39 @@ describe('ImportMonsterModal — multiple screenshots', () => {
     renderModal();
     addFiles([new File(['x'], 'notes.txt', { type: 'text/plain' }), png('top')]);
     await waitFor(() => expect(shots()).toHaveLength(1));
+  });
+});
+
+describe('ImportMonsterModal — source book tag', () => {
+  const parseOne = async (props) => {
+    renderModal(props);
+    addFiles([png('top')]);
+    await waitFor(() => expect(shots()).toHaveLength(1));
+    fireEvent.click(screen.getByRole('button', { name: /Parse Image/ }));
+    await screen.findByText(/Monster Parsed Successfully/);
+  };
+
+  it('tags the imported monster with the chosen book and remembers it', async () => {
+    const onImport = vi.fn();
+    await parseOne({ onImport });
+    fireEvent.change(screen.getByLabelText(/Source book/), { target: { value: '  MM 2014 ' } });
+    fireEvent.click(screen.getByRole('button', { name: /Import Monster/ }));
+    expect(onImport).toHaveBeenCalledWith(expect.objectContaining({ name: 'Beholder', book: 'MM 2014' }));
+    expect(localStorage.getItem('import-monster-book')).toBe('MM 2014');
+  });
+
+  it('prefills the last book and leaves the tag off when cleared', async () => {
+    localStorage.setItem('import-monster-book', 'VGtM');
+    const onImport = vi.fn();
+    await parseOne({ onImport });
+    expect(screen.getByLabelText(/Source book/)).toHaveValue('VGtM');
+    fireEvent.change(screen.getByLabelText(/Source book/), { target: { value: '' } });
+    fireEvent.click(screen.getByRole('button', { name: /Import Monster/ }));
+    expect('book' in onImport.mock.calls[0][0]).toBe(false);
+  });
+
+  it('withBook trims, sets, or drops the tag', () => {
+    expect(withBook({ name: 'X' }, ' MM 2024 ')).toEqual({ name: 'X', book: 'MM 2024' });
+    expect(withBook({ name: 'X', book: 'Old' }, '')).toEqual({ name: 'X' });
   });
 });

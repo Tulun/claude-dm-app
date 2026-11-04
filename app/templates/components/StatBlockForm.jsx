@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import Icons from '../../components/Icons';
 import { getModNum, formatMod } from '../../utils/rules';
-import { ABILITY_KEYS, SECTIONS, SIZE_OPTIONS, xpForCr, profForCr, getInitiativeBonus } from '../statBlock';
+import { ABILITY_KEYS, SECTIONS, SIZE_OPTIONS, BOOK_OPTIONS, xpForCr, profForCr, getInitiativeBonus, defaultBook } from '../statBlock';
 
 const CREATURE_TYPES = ['Aberration', 'Beast', 'Celestial', 'Construct', 'Dragon', 'Elemental', 'Fey', 'Fiend',
   'Giant', 'Humanoid', 'Monstrosity', 'Ooze', 'Plant', 'Undead'];
@@ -119,7 +119,9 @@ const AbilityListEditor = ({ section, items, onChange, extra }) => {
 };
 
 /** The full-width monster editor. Controlled: `form` is a toEditForm() shape. */
-export default function StatBlockForm({ form, setForm }) {
+export default function StatBlockForm({ form, setForm, bookOptions = [] }) {
+  // Standard abbreviations first, then any other books already in the library.
+  const books = [...new Set([...BOOK_OPTIONS, ...bookOptions])];
   const set = (key) => (e) => setForm(f => ({ ...f, [key]: e.target.value }));
   const setList = (key) => (items) => setForm(f => ({ ...f, [key]: items }));
 
@@ -142,12 +144,19 @@ export default function StatBlockForm({ form, setForm }) {
             <datalist id="type-options">{CREATURE_TYPES.map(s => <option key={s} value={s} />)}</datalist>
           </Field>
         </div>
-        <div className="flex items-center gap-2 mt-3">
+        <div className="flex flex-wrap items-end gap-x-6 gap-y-3 mt-3">
+          <Field label="Source book" className="w-full sm:w-64">
+            <input value={form.book} onChange={set('book')} list="book-options" className={INPUT}
+              placeholder={defaultBook(form) ? `${defaultBook(form)} (auto)` : 'e.g. MM 2024, VGtM, Homebrew'} />
+            <datalist id="book-options">{books.map(b => <option key={b} value={b} />)}</datalist>
+          </Field>
+        <div className="flex items-center gap-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-stone-400 mr-1">Role</span>
           <button type="button" onClick={() => setForm(f => ({ ...f, isNpc: false }))} aria-pressed={!form.isNpc}
             className={`px-3 py-1.5 rounded-md text-sm flex items-center gap-1 ${!form.isNpc ? 'bg-red-800 text-red-50' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'}`}><Icons.Skull /> Enemy</button>
           <button type="button" onClick={() => setForm(f => ({ ...f, isNpc: true }))} aria-pressed={form.isNpc}
             className={`px-3 py-1.5 rounded-md text-sm flex items-center gap-1 ${form.isNpc ? 'bg-emerald-800 text-emerald-50' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'}`}><Icons.Shield /> NPC</button>
+        </div>
         </div>
       </Card>
 

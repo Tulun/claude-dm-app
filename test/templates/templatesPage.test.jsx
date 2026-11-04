@@ -14,6 +14,8 @@ import TemplatesPage from '../../app/templates/page.jsx';
 
 const templates = [
   { id: 'mm-beholder', name: 'Beholder', source: 'mm', size: 'Large', creatureType: 'Aberration', cr: '13', ac: 18, maxHp: 190, speed: 5, traits: [], actions: [] },
+  { id: 'mm-aboleth', name: 'Aboleth', source: 'mm', edition: '2024', size: 'Large', creatureType: 'Aberration', cr: '10', ac: 17, maxHp: 150, speed: 10, traits: [], actions: [] },
+  { id: 'mm-kobold', name: 'Kobold Scale', source: 'mm', book: 'VGtM', size: 'Small', creatureType: 'Dragon', cr: '1', ac: 15, maxHp: 27, speed: 30, traits: [], actions: [] },
   { id: 'tpl-goblin', name: 'Goblin Boss', source: 'custom', size: 'Small', creatureType: 'Humanoid', cr: '1', ac: 15, maxHp: 21, speed: 30, traits: [], actions: [] },
 ];
 
@@ -63,7 +65,7 @@ describe('Templates library page', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Delete Goblin Boss' }));
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Delete' })); });
     expect(posts(fetchMock)).toHaveLength(1);
-    expect(JSON.parse(posts(fetchMock)[0][1].body).map(t => t.id)).toEqual(['mm-beholder']);
+    expect(JSON.parse(posts(fetchMock)[0][1].body).map(t => t.id)).toEqual(['mm-beholder', 'mm-aboleth', 'mm-kobold']);
   });
 
   it('never saves the built-in fallback over the real file after a failed load', async () => {
@@ -74,6 +76,21 @@ describe('Templates library page', () => {
     fireEvent.click(del);
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Delete' })); });
     expect(posts(fetchMock)).toHaveLength(0);
+  });
+
+  it('labels rows with their source book and filters by it', async () => {
+    mockFetch();
+    render(<TemplatesPage />);
+    await settle();
+    const rowText = () => screen.getAllByTestId('template-row').map(r => r.textContent);
+    expect(rowText().find(t => t.includes('Beholder'))).toContain('MM 2014');
+    expect(rowText().find(t => t.includes('Aboleth'))).toContain('MM 2024');
+    expect(rowText().find(t => t.includes('Kobold Scale'))).toContain('VGtM');
+
+    fireEvent.click(screen.getByRole('button', { name: /^Book/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'VGtM' }));
+    expect(screen.getAllByTestId('template-row')).toHaveLength(1);
+    expect(screen.getByText('Kobold Scale')).toBeInTheDocument();
   });
 
   it('remembers the search when coming back from a monster page', async () => {

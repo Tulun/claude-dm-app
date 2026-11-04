@@ -188,6 +188,14 @@ context costs:
 ---
 
 ## Completed log
+- [x] Source-book tag on templates: free-text `book` field ("MM 2014",
+  "MM 2024", "VGtM", …) editable on `/templates/[id]`, set in the
+  image-import modal (last value remembered in localStorage), shown as a row
+  badge and filterable ("Book" dropdown) in the library. Untagged built-ins
+  display a derived book without writing it (`edition: '2024'` or 2024
+  markers like an Initiative line → MM 2024, else MM 2014) (`bookLabel` /
+  `defaultBook` in `app/templates/statBlock.js`). Separate from `source` —
+  Nov 2026.
 - [x] Monster detail page `/templates/[id]` (`app/templates/[id]/page.jsx`):
   full stat block (vitals, abilities with proficient saves, skills / senses /
   defenses chips, numbered multi-option abilities like Eye Rays as lists,

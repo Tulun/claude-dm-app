@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   parseAlignment, getInitiativeBonus, getLegendaryUses, splitDescription, splitList, xpForCr, profForCr,
-  toEditForm, fromEditForm, sameTemplate, sourceLabel, isConfluxId,
+  toEditForm, fromEditForm, sameTemplate, sourceLabel, isConfluxId, bookLabel, defaultBook,
 } from '../../app/templates/statBlock.js';
 
 const beholder = {
@@ -51,6 +51,18 @@ describe('stat block display helpers', () => {
     expect(isConfluxId('mm-aboleth')).toBe(false);
   });
 
+  it('labels the source book: stored tag first, then the built-in edition', () => {
+    // Beholder: untagged edition, but its notes are a 2024 stat block's.
+    expect(bookLabel(beholder)).toBe('MM 2024');
+    expect(bookLabel({ id: 'mm-orc', source: 'mm', notes: '' })).toBe('MM 2014');
+    expect(bookLabel({ id: 'mm-orc', source: 'mm', initiativeBonus: 1 })).toBe('MM 2024');
+    expect(bookLabel({ ...beholder, edition: '2024' })).toBe('MM 2024');
+    expect(bookLabel({ ...beholder, book: ' VGtM ' })).toBe('VGtM');
+    expect(bookLabel({ id: 'tpl-1', source: 'custom' })).toBeNull();
+    expect(bookLabel({ id: 'tpl-1', source: 'custom', book: 'Homebrew' })).toBe('Homebrew');
+    expect(defaultBook({ id: 'cc-aboleth', source: 'conflux' })).toBeNull();
+  });
+
   it('knows standard XP and proficiency by CR', () => {
     expect(xpForCr('13')).toBe(10000);
     expect(xpForCr('1/4')).toBe(50);
@@ -69,6 +81,13 @@ describe('edit form round trip', () => {
     expect(sameTemplate(saved, beholder)).toBe(true);
     expect('bonusActions' in saved).toBe(false);
     expect('initiativeBonus' in saved).toBe(false);
+    expect('book' in saved).toBe(false);
+  });
+
+  it('stores an edited book and drops a cleared one', () => {
+    expect(fromEditForm({ ...toEditForm(beholder), book: ' MM 2024 ' }, beholder).book).toBe('MM 2024');
+    const tagged = { ...beholder, book: 'MM 2014' };
+    expect(fromEditForm({ ...toEditForm(tagged), book: '' }, tagged).book).toBe('');
   });
 
   it('coerces numbers back and drops blank optional numbers', () => {

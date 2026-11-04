@@ -136,6 +136,24 @@ describe('Monster detail page — editing', () => {
     expect(screen.getByTestId('vital-ac')).toHaveTextContent('19');
   });
 
+  it('shows and edits the source book', async () => {
+    const fetchMock = mockFetch();
+    render(<MonsterDetailPage />);
+    await settle();
+    expect(screen.getByTestId('book-badge')).toHaveTextContent('MM 2024');
+
+    fireEvent.click(screen.getByRole('button', { name: /Edit/ }));
+    const book = screen.getByLabelText(/Source book/);
+    expect(book).toHaveValue('');
+    expect(book).toHaveAttribute('placeholder', 'MM 2024 (auto)');
+    fireEvent.change(book, { target: { value: 'VGtM' } });
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /^Save$/ })); });
+    await flush();
+
+    expect(postedBody(fetchMock)[0]).toMatchObject({ id: 'mm-beholder', book: 'VGtM' });
+    expect(screen.getByTestId('book-badge')).toHaveTextContent('VGtM');
+  });
+
   it('adds, reorders and removes ability entries', async () => {
     const fetchMock = mockFetch();
     render(<MonsterDetailPage />);

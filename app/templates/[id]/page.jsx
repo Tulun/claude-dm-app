@@ -11,7 +11,7 @@ import { generateId } from '../../utils/generateId';
 import { TOAST_ERROR_DURATION_MS } from '../../utils/timings';
 import StatBlockView from '../components/StatBlockView';
 import StatBlockForm from '../components/StatBlockForm';
-import { BLANK_TEMPLATE, fromEditForm, isConfluxId, sameTemplate, sourceLabel, toEditForm } from '../statBlock';
+import { BLANK_TEMPLATE, bookLabel, fromEditForm, isConfluxId, sameTemplate, sourceLabel, toEditForm } from '../statBlock';
 
 const PAGE_BG = 'min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100';
 
@@ -81,6 +81,10 @@ function MonsterDetail() {
     if (isNew) return null;
     return templates.find(t => String(t.id) === id) || conflux || null;
   }, [templates, conflux, id, isNew]);
+  const bookOptions = useMemo(
+    () => [...new Set((templates || []).map(t => String(t.book ?? '').trim()).filter(Boolean))].sort(),
+    [templates],
+  );
   const fromConflux = !!template && isConfluxId(template.id) && !templates?.some(t => t.id === template.id);
 
   const startEdit = (t) => {
@@ -210,7 +214,7 @@ function MonsterDetail() {
           </button>
         </div>
         <div className="grid gap-6 xl:grid-cols-2 items-start">
-          <div className={showPreview ? 'hidden xl:block' : ''}><StatBlockForm form={form} setForm={setForm} /></div>
+          <div className={showPreview ? 'hidden xl:block' : ''}><StatBlockForm form={form} setForm={setForm} bookOptions={bookOptions} /></div>
           <div className={`${showPreview ? '' : 'hidden'} xl:block xl:sticky rounded-xl border border-stone-800 bg-stone-900/40 p-5 xl:overflow-y-auto`}
             style={{ top: navTop + 88, maxHeight: `calc(100vh - ${navTop + 104}px)` }} data-testid="live-preview">
             <div className="text-[11px] uppercase tracking-wider text-stone-500 font-semibold mb-3">Live preview</div>
@@ -228,7 +232,7 @@ function MonsterDetail() {
             {t.isNpc ? <><Icons.Shield /> NPC</> : <><Icons.Skull /> Enemy</>}
           </span>
           <span className="px-2 py-0.5 rounded text-xs bg-stone-800 text-stone-300">{sourceLabel(t)}</span>
-          {t.edition === '2024' && <span className="px-2 py-0.5 rounded text-xs bg-sky-900/40 text-sky-300" title="2024 stat block (SRD 5.2.1)">2024</span>}
+          {bookLabel(t) && <span data-testid="book-badge" className="px-2 py-0.5 rounded text-xs bg-sky-900/40 text-sky-300" title="Source book">{bookLabel(t)}</span>}
           {t.legendaryActions?.length > 0 && <span className="px-2 py-0.5 rounded text-xs bg-purple-900/40 text-purple-300">Legendary</span>}
           <div className="flex-1" />
           <button type="button" onClick={() => startEdit(t)} className="px-4 py-2 rounded-lg bg-amber-700 hover:bg-amber-600 text-sm font-semibold flex items-center gap-1.5"><Icons.Edit /> Edit</button>

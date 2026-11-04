@@ -28,6 +28,28 @@ export const sourceLabel = (t) => {
   return 'Monster Manual';
 };
 
+// Which book a stat block comes from ("MM 2014", "MM 2024", "VGtM", …) —
+// stored as free text in `book`, separate from `source` (which only says
+// built-in / Conflux / custom and drives the library's source tabs and the
+// built-in migration). Untagged built-ins fall back to their edition (or 2024
+// markers) so the library labels them without writing anything to disk.
+export const BOOK_OPTIONS = ['MM 2014', 'MM 2024', 'MPMM', 'VGtM', 'MToF', 'FToD', 'BGG', 'Homebrew'];
+
+export const defaultBook = (t) => {
+  if (!t || isConfluxId(t.id) || t.source === 'conflux') return null;
+  if (!String(t.id ?? '').startsWith('mm-') || t.source === 'custom') return null;
+  return t.edition === '2024' || has2024Markers(t) ? 'MM 2024' : 'MM 2014';
+};
+
+// A built-in updated by hand / image import from the 2024 Monster Manual has
+// no `edition` tag, but 2024 stat blocks carry an Initiative line and
+// legendary-action uses that 2014 ones never had.
+const has2024Markers = (t) =>
+  t.initiativeBonus != null || t.legendaryActionUses != null ||
+  /\b(Initiative [+-−]\d|Legendary Action Uses:)/i.test(String(t.notes ?? ''));
+
+export const bookLabel = (t) => String(t?.book ?? '').trim() || defaultBook(t);
+
 // "Alignment: Lawful Evil. Initiative +12 (22). …" → "Lawful Evil".
 export const parseAlignment = (notes) => {
   const m = /Alignment:\s*([^.]+)\./i.exec(String(notes ?? ''));
@@ -105,7 +127,7 @@ export const BLANK_TEMPLATE = {
   traits: [], actions: [], bonusActions: [], reactions: [], legendaryActions: [],
 };
 
-const STRING_FIELDS = ['name', 'size', 'creatureType', 'hitDice', 'cr', 'savingThrows', 'skills', 'senses',
+const STRING_FIELDS = ['name', 'book', 'size', 'creatureType', 'hitDice', 'cr', 'savingThrows', 'skills', 'senses',
   'languages', 'vulnerabilities', 'resistances', 'immunities', 'notes'];
 
 // Template → edit form. Every input is a string (so a half-typed "-" or ""

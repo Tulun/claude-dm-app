@@ -4,11 +4,26 @@ import { useState, useRef, useMemo } from 'react';
 import Icons from '../../components/Icons';
 import Modal from '../../components/Modal';
 import { getMod } from '../../utils/rules';
+import { BOOK_OPTIONS } from '../../templates/statBlock';
 
 // Must match MAX_IMAGES in app/api/parse-monster/route.js
 const MAX_IMAGES = 6;
 
 let nextImageId = 0;
+
+// Last source book used for an import, so a batch from one book is tagged once.
+// Per-browser convenience only — the tag itself is saved on the template.
+const BOOK_STORAGE_KEY = 'import-monster-book';
+const readLastBook = () => {
+  try { return localStorage.getItem(BOOK_STORAGE_KEY) || ''; } catch { return ''; }
+};
+
+// Template with the import's source book applied (blank = untagged).
+export const withBook = (monster, book) => {
+  const { book: _drop, ...rest } = monster;
+  const trimmed = String(book ?? '').trim();
+  return trimmed ? { ...rest, book: trimmed } : rest;
+};
 
 const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [] }) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -19,10 +34,16 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
   const [parsedMonster, setParsedMonster] = useState(null);
   const [error, setError] = useState(null);
   const [editMode, setEditMode] = useState(false);
+  const [book, setBook] = useState(readLastBook);
   const fileInputRef = useRef(null);
 
   // Existing monster with the same name, if any (derived — this used to be
   // state written from inside a useMemo)
+  const bookOptions = useMemo(
+    () => [...new Set([...BOOK_OPTIONS, ...templates.map(t => String(t.book ?? '').trim()).filter(Boolean)])],
+    [templates],
+  );
+
   const existingMatch = useMemo(() => {
     if (!parsedMonster || templates.length === 0) return null;
     return templates.find(t =>
@@ -135,12 +156,14 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
 
   const handleImport = (updateExisting = false) => {
     if (parsedMonster) {
+      try { localStorage.setItem(BOOK_STORAGE_KEY, book.trim()); } catch { /* storage unavailable */ }
+      const monster = withBook(parsedMonster, book);
       if (updateExisting && existingMatch && onUpdate) {
         // Update existing monster, keeping the original ID
-        onUpdate({ ...parsedMonster, id: existingMatch.id });
+        onUpdate({ ...monster, id: existingMatch.id });
       } else {
         // Create new monster
-        onImport(parsedMonster);
+        onImport(monster);
       }
       handleClose();
     }
@@ -334,6 +357,20 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
                   {editMode ? 'Preview' : 'Edit'}
                 </button>
               </div>
+
+              <label className="flex flex-wrap items-center gap-3 bg-stone-800/50 rounded-lg px-4 py-3">
+                <span className="text-sm font-medium text-sky-300">Source book</span>
+                <input
+                  type="text"
+                  value={book}
+                  onChange={(e) => setBook(e.target.value)}
+                  list="import-book-options"
+                  placeholder="e.g. MM 2024, VGtM, Homebrew"
+                  className="flex-1 min-w-[12rem] bg-stone-900 border border-stone-600 rounded px-3 py-1.5 text-sm"
+                />
+                <datalist id="import-book-options">{bookOptions.map(b => <option key={b} value={b} />)}</datalist>
+                <span className="text-xs text-stone-500 w-full">Optional — tags where this stat block comes from. Remembered for your next import.</span>
+              </label>
 
               {editMode ? (
                 // Edit Form

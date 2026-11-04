@@ -5,6 +5,9 @@ import Link from 'next/link';
 import Icons from '../../components/Icons';
 import ImportMonsterModal from './ImportMonsterModal';
 import { sizeMatches } from '../monsterAbilities';
+import { bookLabel } from '../../templates/statBlock';
+
+const NO_BOOK = 'No book';
 
 // CR ordered list for range filter
 const CR_LIST = ['0', '1/8', '1/4', '1/2', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
@@ -35,6 +38,7 @@ const FilterDropdown = ({ label, options, selected, onToggle, onClear, colorClas
     purple: { bg: 'bg-purple-700', badge: 'bg-purple-900', button: 'bg-purple-600' },
     blue: { bg: 'bg-blue-700', badge: 'bg-blue-900', button: 'bg-blue-600' },
     green: { bg: 'bg-emerald-700', badge: 'bg-emerald-900', button: 'bg-emerald-600' },
+    sky: { bg: 'bg-sky-700', badge: 'bg-sky-900', button: 'bg-sky-600' },
   };
   const c = colors[colorClass] || colors.purple;
 
@@ -232,6 +236,7 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onImport }) => {
   const [crMax, setCrMax] = useState(saved.crMax ?? null);
   const [selectedSizes, setSelectedSizes] = useState(Array.isArray(saved.selectedSizes) ? saved.selectedSizes : []);
   const [selectedCreatureTypes, setSelectedCreatureTypes] = useState(Array.isArray(saved.selectedCreatureTypes) ? saved.selectedCreatureTypes : []);
+  const [selectedBooks, setSelectedBooks] = useState(Array.isArray(saved.selectedBooks) ? saved.selectedBooks : []);
 
   // Load Conflux creatures on demand
   const loadConflux = () => {
@@ -261,9 +266,9 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onImport }) => {
   }, []);
   useEffect(() => {
     try {
-      sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({ searchQuery, filter, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes }));
+      sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({ searchQuery, filter, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks }));
     } catch { /* storage unavailable — filters just won't persist */ }
-  }, [searchQuery, filter, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes]);
+  }, [searchQuery, filter, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks]);
 
   // Get the active template list based on source filter
   const activeTemplates = sourceFilter === 'conflux' ? confluxTemplates : templates;
@@ -278,6 +283,12 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onImport }) => {
       }
     });
     return CREATURE_TYPE_OPTIONS.filter(ct => types.has(ct));
+  }, [activeTemplates]);
+
+  // Books present in the active list ("MM 2014", "MM 2024", …); "No book" for untagged.
+  const availableBooks = useMemo(() => {
+    const books = new Set((activeTemplates || []).map(t => bookLabel(t) || NO_BOOK));
+    return [...books].sort((a, b) => (a === NO_BOOK) - (b === NO_BOOK) || a.localeCompare(b));
   }, [activeTemplates]);
 
   const toggleFilter = (setter) => (value) => {
@@ -316,9 +327,12 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onImport }) => {
         if (!matches) return false;
       }
       
+      // Source book filter
+      if (selectedBooks.length > 0 && !selectedBooks.includes(bookLabel(t) || NO_BOOK)) return false;
+
       return true;
     });
-  }, [activeTemplates, filter, sourceFilter, searchQuery, crMin, crMax, selectedSizes, selectedCreatureTypes]);
+  }, [activeTemplates, filter, sourceFilter, searchQuery, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks]);
 
   const clearAllFilters = () => {
     setSearchQuery('');
@@ -326,11 +340,12 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onImport }) => {
     setCrMax(null);
     setSelectedSizes([]);
     setSelectedCreatureTypes([]);
+    setSelectedBooks([]);
     setFilter('all');
     setSourceFilter('default');
   };
 
-  const hasFilters = searchQuery || crMin !== null || crMax !== null || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || filter !== 'all' || sourceFilter !== 'default';
+  const hasFilters = searchQuery || crMin !== null || crMax !== null || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || selectedBooks.length > 0 || filter !== 'all' || sourceFilter !== 'default';
 
   return (
     <div className="space-y-4">
@@ -406,6 +421,18 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onImport }) => {
           colorClass="green"
         />
 
+        {/* Source Book Filter */}
+        {availableBooks.length > 1 && (
+          <FilterDropdown
+            label="Book"
+            options={availableBooks}
+            selected={selectedBooks}
+            onToggle={toggleFilter(setSelectedBooks)}
+            onClear={() => setSelectedBooks([])}
+            colorClass="sky"
+          />
+        )}
+
         {hasFilters && (
           <button 
             onClick={clearAllFilters}
@@ -443,6 +470,12 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onImport }) => {
               <button onClick={() => toggleFilter(setSelectedSizes)(size)} className="hover:text-white">×</button>
             </span>
           ))}
+          {selectedBooks.map(b => (
+            <span key={`book-${b}`} className="px-2 py-0.5 bg-sky-900/50 text-sky-300 rounded text-xs flex items-center gap-1">
+              {b}
+              <button onClick={() => toggleFilter(setSelectedBooks)(b)} className="hover:text-white">×</button>
+            </span>
+          ))}
           {selectedCreatureTypes.map(ct => (
             <span key={`ct-${ct}`} className="px-2 py-0.5 bg-emerald-900/50 text-emerald-300 rounded text-xs flex items-center gap-1">
               {ct}
@@ -471,7 +504,7 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onImport }) => {
               </div>
             </Link>
             <div className="flex shrink-0 items-center gap-2">
-              {t.edition === '2024' && <span className="text-xs text-sky-300 bg-sky-900/30 px-1.5 py-0.5 rounded" title="2024 stat block (SRD 5.2.1)">2024</span>}
+              {bookLabel(t) && <span className="text-xs text-sky-300 bg-sky-900/30 px-1.5 py-0.5 rounded" title="Source book">{bookLabel(t)}</span>}
               {t.legendaryActions?.length > 0 && <span className="text-xs text-purple-400 bg-purple-900/30 px-1.5 py-0.5 rounded">Legendary</span>}
               {sourceFilter !== 'conflux' && (
                 <>
