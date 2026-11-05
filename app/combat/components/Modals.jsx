@@ -159,7 +159,7 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
       if (typeFilter === 'npcs' && !t.isNpc) return false;
       
       // Search filter
-      if (searchQuery && !t.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      if (searchQuery.trim() && !t.name.toLowerCase().includes(searchQuery.trim().toLowerCase())) return false;
       
       // CR filter
       if (!matchesCR(t.cr)) return false;

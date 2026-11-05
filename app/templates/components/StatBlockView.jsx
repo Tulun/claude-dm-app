@@ -25,10 +25,10 @@ const usageBadge = (name) => {
 };
 
 const VitalTile = ({ label, value, sub, testId }) => (
-  <div className="rounded-lg bg-stone-950/50 border border-stone-700/60 px-3 py-2 min-w-0" data-testid={testId}>
-    <div className="text-[10px] uppercase tracking-wider text-stone-500 font-semibold">{label}</div>
-    <div className="text-xl font-bold text-stone-100 leading-tight truncate">{value}</div>
-    {sub && <div className="text-xs text-stone-400 truncate">{sub}</div>}
+  <div className="rounded-lg bg-stone-950/50 border border-stone-700/60 text-center px-2 py-2 min-w-0" data-testid={testId}>
+    <div className="text-xs uppercase tracking-wider text-stone-500 font-bold truncate">{label}</div>
+    <div className="text-2xl font-bold text-stone-50 leading-tight truncate">{value}</div>
+    {sub && <div className="text-xs text-stone-500 truncate">{sub}</div>}
   </div>
 );
 
@@ -201,11 +201,14 @@ export default function StatBlockView({ template: t, compact = false, stickyTop 
           return (
             <div key={k} className="rounded-lg bg-stone-950/50 border border-stone-700/60 text-center py-2" data-testid={`ability-${k}`}>
               <div className="text-xs uppercase tracking-wider text-stone-500 font-bold">{k}</div>
-              <div className="text-2xl font-bold text-stone-50 leading-tight">{formatMod(mod)}</div>
-              <div className="text-xs text-stone-500 font-mono">{t[k] ?? 10}</div>
-              <div className={`mt-1 mx-2 rounded text-[11px] py-0.5 ${prof ? 'bg-emerald-950/60 text-emerald-300 font-semibold' : 'text-stone-500'}`}>
-                save {formatMod(prof ? save : mod)}
-              </div>
+              <div className="text-2xl font-bold text-stone-50 leading-tight">{t[k] ?? 10}</div>
+              <div className="text-sm text-stone-400 font-mono">{formatMod(mod)}</div>
+              {/* A non-proficient save equals the modifier, so only proficient ones are shown. */}
+              {prof && (
+                <div className="mt-1 mx-2 rounded text-[11px] py-0.5 bg-emerald-950/60 text-emerald-300 font-semibold">
+                  save {formatMod(save)}
+                </div>
+              )}
             </div>
           );
         })}

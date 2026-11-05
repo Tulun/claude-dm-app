@@ -120,11 +120,15 @@ to a new `edition`, keep the saved entry **verbatim** (no `{ ...def, ...saved }`
 which would graft 2024-only fields onto an older stat block); otherwise merge as
 in step 1. When you change built-in template content: append each outgoing
 entry's fingerprint to its array (never delete old ones), then bump the version.
-**Removing a built-in**: delete it from the defaults AND list its id (→ its
-replacement) in `RETIRED_DEFAULT_IDS` (`app/data/retiredTemplates.js`) — without
-that, step 3 carries the saved copy over forever. The migration drops a saved
-retired id only on a fingerprint match; an edited copy carries over like a
-custom template. Pinned by the "v12 → v13" and "v13 → v14" blocks in
+**Removing a built-in**: delete it from the defaults AND list its id (→ the
+2024 name replacing it) in `RETIRED_DEFAULT_IDS` (`app/data/retiredTemplates.js`)
+— without that, step 3 carries the saved copy over forever, and a user who
+deleted it in the UI gets it back on the next version bump. No version bump is
+needed: `withoutRetired` runs on EVERY GET and POST, not only in the migration,
+because a tab loaded before an update POSTs the old list back and POST stamps
+the current version (this actually happened with v14). It drops a retired id
+only on a fingerprint match; an edited copy carries over like a custom
+template. Pinned by the "v12 → v13" and "v13 → v14" blocks in
 `test/api/templatesRoute.test.js`.
 
 ## 4. Side effects to know

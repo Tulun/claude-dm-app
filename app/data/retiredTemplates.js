@@ -1,31 +1,43 @@
-// Built-in templates that were removed from defaultEnemyTemplates.js, mapped to
-// the built-in that replaces them. The templates-route migration drops a saved
-// copy of a retired id only when it is an UNEDITED earlier default (fingerprint
-// match in templateFingerprints.js); a copy the user edited is kept as-is.
+// Built-in templates removed from defaultEnemyTemplates.js, mapped to the name
+// of the 2024 monster that replaces them. Rule: when a monster was renamed in
+// 2024 and the app has it under the 2024 name (built in OR imported), the 2014
+// built-in is retired. See "Renamed in 2024: 2014 version removed" in MONSTERS.md.
 //
-// Version 14: 2014 monsters whose renamed 2024 version is also built in
-// (see "Renamed in 2024" in MONSTERS.md).
+// app/api/templates/route.js drops a saved copy of a retired id on every read
+// and write, but only when it is an UNEDITED earlier default (fingerprint match
+// in templateFingerprints.js); a copy the user edited is kept as-is.
 export const RETIRED_DEFAULT_IDS = {
-  'mm-acolyte': 'mm-priest-acolyte',
-  'mm-azer': 'mm-azer-sentinel',
-  'mm-bugbear': 'mm-bugbear-warrior',
-  'mm-centaur': 'mm-centaur-trooper',
-  'mm-cult-fanatic': 'mm-cultist-fanatic',
-  'mm-flying-sword': 'mm-animated-flying-sword',
-  'mm-giant-poisonous-snake': 'mm-giant-venomous-snake',
-  'mm-gnoll': 'mm-gnoll-warrior',
-  'mm-goblin': 'mm-goblin-warrior',
-  'mm-gynosphinx': 'mm-sphinx-of-lore',
-  'mm-hobgoblin': 'mm-hobgoblin-warrior',
-  'mm-kobold': 'mm-kobold-warrior',
-  'mm-minotaur': 'mm-minotaur-of-baphomet',
-  'mm-quipper': 'mm-piranha',
-  'mm-rug-of-smothering': 'mm-animated-rug-of-smothering',
-  'mm-sahuagin': 'mm-sahuagin-warrior',
-  'mm-shrieker': 'mm-shrieker-fungus',
-  'mm-swarm-of-poisonous-snakes': 'mm-swarm-of-venomous-snakes',
-  'mm-swarm-of-quippers': 'mm-swarm-of-piranhas',
-  'mm-thug': 'mm-tough',
-  'mm-veteran': 'mm-warrior-veteran',
-  'mm-half-red-dragon-veteran': 'mm-half-dragon',
+  // Replaced by a built-in 2024 (SRD 5.2.1) template
+  'mm-acolyte': 'Priest Acolyte',
+  'mm-azer': 'Azer Sentinel',
+  'mm-bugbear': 'Bugbear Warrior',
+  'mm-centaur': 'Centaur Trooper',
+  'mm-cult-fanatic': 'Cultist Fanatic',
+  'mm-flying-sword': 'Animated Flying Sword',
+  'mm-giant-poisonous-snake': 'Giant Venomous Snake',
+  'mm-gnoll': 'Gnoll Warrior',
+  'mm-goblin': 'Goblin Warrior',
+  'mm-gynosphinx': 'Sphinx of Lore',
+  'mm-hobgoblin': 'Hobgoblin Warrior',
+  'mm-kobold': 'Kobold Warrior',
+  'mm-minotaur': 'Minotaur of Baphomet',
+  'mm-quipper': 'Piranha',
+  'mm-rug-of-smothering': 'Animated Rug of Smothering',
+  'mm-sahuagin': 'Sahuagin Warrior',
+  'mm-shrieker': 'Shrieker Fungus',
+  'mm-swarm-of-poisonous-snakes': 'Swarm of Venomous Snakes',
+  'mm-swarm-of-quippers': 'Swarm of Piranhas',
+  'mm-thug': 'Tough',
+  'mm-veteran': 'Warrior Veteran',
+  'mm-half-red-dragon-veteran': 'Half-Dragon',
+  // Replaced by the user's own import of the 2024 Monster Manual block
+  'mm-bullywug': 'Bullywug Warrior',
+  'mm-modron-duodrone': 'Modron Duodrone',
+  'mm-modron-tridrone': 'Modron Tridrone',
+  'mm-modron-quadrone': 'Modron Quadrone',
+  'mm-modron-pentadrone': 'Modron Pentadrone',
+  'mm-gas-spore': 'Gas Spore Fungus',
+  'mm-faerie-dragon-youth': 'Faerie Dragon Youth',
+  'mm-faerie-dragon-adult': 'Faerie Dragon Adult',
+  'mm-fire-snake': 'Salamander Fire Snake',
 };

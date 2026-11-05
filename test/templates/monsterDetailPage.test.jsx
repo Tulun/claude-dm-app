@@ -77,9 +77,10 @@ describe('Monster detail page — view', () => {
     expect(screen.getByText('Large Aberration, Lawful Evil')).toBeInTheDocument();
     expect(screen.getByTestId('vital-ac')).toHaveTextContent('18');
     expect(screen.getByTestId('vital-speed')).toHaveTextContent('fly 40 ft (hover)');
-    // Proficient saves come from the savingThrows text; the rest are plain mods.
-    expect(screen.getByTestId('ability-con')).toHaveTextContent('save +9');
-    expect(screen.getByTestId('ability-str')).toHaveTextContent('save +3');
+    // Score first, then modifier. Proficient saves come from the savingThrows
+    // text; a non-proficient save would just repeat the modifier, so it's hidden.
+    expect(screen.getByTestId('ability-con')).toHaveTextContent(/^con18\+4save \+9$/i);
+    expect(screen.getByTestId('ability-str')).toHaveTextContent(/^str16\+3$/i);
     expect(screen.getByText('Passive Perception 22')).toBeInTheDocument();
     expect(screen.getByText('3 per round (4 in lair)')).toBeInTheDocument();
     // Numbered eye-ray lines render as their own named list items.

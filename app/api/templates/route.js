@@ -16,6 +16,14 @@ const TEMPLATES_VERSION = 14;
 const isUneditedPriorDefault = (saved) =>
   (PRIOR_DEFAULT_FINGERPRINTS[saved.id] || []).includes(templateFingerprint(saved));
 
+// A retired built-in (app/data/retiredTemplates.js) goes only if the user never
+// edited it; an edited copy carries over like a custom one. Applied on EVERY
+// read and write, not just in the version migration: a page loaded before an
+// update can POST the old list back, and POST stamps the current version, so a
+// migration-only cleanup would never run.
+const isRetired = (t) => t.id in RETIRED_DEFAULT_IDS && isUneditedPriorDefault(t);
+const withoutRetired = (templates) => templates.filter(t => !isRetired(t));
+
 // Cache conflux data in memory after first load
 let confluxCache = null;
 function loadConflux() {
@@ -73,16 +81,17 @@ export async function GET(request) {
           if (def.edition && saved.edition !== def.edition) return saved;
           return { ...def, ...saved };
         });
-        // A retired built-in (app/data/retiredTemplates.js) is dropped only if
-        // the user never edited it; an edited copy carries over like a custom one.
-        const nonDefault = existingTemplates.filter(t =>
-          !defaultIds.has(t.id) && !(t.id in RETIRED_DEFAULT_IDS && isUneditedPriorDefault(t)));
+        const nonDefault = withoutRetired(existingTemplates.filter(t => !defaultIds.has(t.id)));
         const mergedTemplates = [...mergedDefaults, ...nonDefault];
         const dataWithVersion = { _version: TEMPLATES_VERSION, templates: mergedTemplates };
         fs.writeFileSync(TEMPLATES_FILE, JSON.stringify(dataWithVersion, null, 2), 'utf8');
         mmTemplates = mergedTemplates;
       } else {
-        mmTemplates = existingTemplates;
+        mmTemplates = withoutRetired(existingTemplates);
+        if (mmTemplates.length !== existingTemplates.length) {
+          const dataWithVersion = { _version: parsed._version, templates: mmTemplates };
+          fs.writeFileSync(TEMPLATES_FILE, JSON.stringify(dataWithVersion, null, 2), 'utf8');
+        }
       }
     } else {
       const dataWithVersion = { _version: TEMPLATES_VERSION, templates: defaultEnemyTemplates };
@@ -119,7 +128,7 @@ export async function POST(request) {
   ensureDataDir();
   try {
     const body = await request.json();
-    const dataWithVersion = { _version: TEMPLATES_VERSION, templates: body };
+    const dataWithVersion = { _version: TEMPLATES_VERSION, templates: withoutRetired(body) };
     fs.writeFileSync(TEMPLATES_FILE, JSON.stringify(dataWithVersion, null, 2), 'utf8');
     return NextResponse.json({ success: true });
   } catch (error) {

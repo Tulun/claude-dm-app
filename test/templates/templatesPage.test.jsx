@@ -131,4 +131,13 @@ describe('Templates library page', () => {
     expect(screen.getByPlaceholderText('Search templates by name...')).toHaveValue('gob');
     expect(screen.queryByText('Beholder')).not.toBeInTheDocument();
   });
+
+  it('ignores leading/trailing spaces in the search', async () => {
+    mockFetch();
+    render(<TemplatesPage />);
+    await settle();
+    fireEvent.change(screen.getByPlaceholderText('Search templates by name...'), { target: { value: '  Beholder ' } });
+    expect(screen.getByText('Beholder')).toBeInTheDocument();
+    expect(screen.queryByText('Aboleth')).not.toBeInTheDocument();
+  });
 });

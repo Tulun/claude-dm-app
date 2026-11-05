@@ -146,9 +146,10 @@ context costs:
 
 ## 5. Bigger ideas (feature-adjacent)
 
-- [ ] **127 built-in monsters still on older stats** — not in SRD 5.2.1; full
-  list in `MONSTERS.md`. Update case by case via Import Monster (screenshot from
-  the user's own Monster Manual). Possible polish: have Import Monster set
+- [ ] **2024 Monster Manual coverage: 65 to add, 68 to update** (snapshot
+  2026-11-05) — every one of the 503 MM 2024 stat blocks is accounted for in
+  `MONSTERS.md`. Import case by case via Import Monster (screenshot from the
+  user's own Monster Manual); retire the 2014 id when importing a rename. Possible polish: have Import Monster set
   `edition: '2024'` when it updates an existing template.
 - [ ] **Use 2024 initiative bonuses** — SRD templates now carry `initiativeBonus`
   (e.g. Hobgoblin Captain +4 vs DEX +2) but enemy initiative still rolls off DEX.
@@ -230,10 +231,12 @@ context costs:
   beholder): modal holds an ordered, reorderable list (max 6);
   `/api/parse-monster` accepts `{ images: [...] }` (legacy `{ image }` still
   works) and sends them in one call with a merge-these-pieces prompt — Nov 2026.
-- [x] Renamed 2014 built-ins removed where the 2024 version is built in (22:
-  Goblin, Kobold, Thug, Veteran, Half-Red Dragon Veteran, …). Templates
-  migration v14 drops unedited saved copies (`app/data/retiredTemplates.js`);
-  edited copies kept. `MONSTERS.md` updated — Nov 2026.
+- [x] Renamed 2014 built-ins retired once the 2024 version is in the app (31:
+  22 with an SRD built-in replacement — Goblin, Kobold, Thug, … — plus 9 the
+  user imported — Modrons, Bullywug, Gas Spore, Faerie Dragons, Fire Snake).
+  `app/data/retiredTemplates.js`; the templates route drops unedited saved
+  copies on every GET/POST (edited copies kept). `MONSTERS.md` now lists all 503
+  MM 2024 stat blocks by status — Nov 2026.
 - [x] Built-in monsters moved to 2024 stat blocks: 329 SRD 5.2.1 creatures
   (292 updated in place, 37 new) in `app/data/defaultEnemyTemplates.js`;
   templates migration v13 swaps a saved built-in only when its fingerprint

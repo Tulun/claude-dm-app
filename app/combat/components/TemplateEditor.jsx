@@ -305,7 +305,7 @@ const TemplateEditor = ({ templates, onDelete }) => {
       if (sourceFilter === 'default' && !isOfficial(t)) return false;
       
       // Search filter
-      if (searchQuery && !t.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      if (searchQuery.trim() && !t.name.toLowerCase().includes(searchQuery.trim().toLowerCase())) return false;
       
       // CR range filter
       if (crMin !== null || crMax !== null) {

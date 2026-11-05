@@ -171,13 +171,28 @@ describe('GET /api/templates', () => {
       return (await route.GET(getRequest())).json();
     };
 
-    it('every retired id is gone from the defaults and maps to a built-in replacement', () => {
+    it('every retired id is gone from the defaults, names its 2024 replacement, and has a fingerprint', () => {
       const defaultIds = new Set(defaultEnemyTemplates.map(t => t.id));
-      for (const [oldId, newId] of Object.entries(RETIRED_DEFAULT_IDS)) {
-        expect(defaultIds.has(oldId)).toBe(false);
-        expect(defaultIds.has(newId)).toBe(true);
-        expect(PRIOR_DEFAULT_FINGERPRINTS[oldId]?.length).toBeGreaterThan(0);
+      for (const [oldId, newName] of Object.entries(RETIRED_DEFAULT_IDS)) {
+        expect(defaultIds.has(oldId), oldId).toBe(false);
+        expect(newName, oldId).toMatch(/\w/);
+        expect(PRIOR_DEFAULT_FINGERPRINTS[oldId]?.length, oldId).toBeGreaterThan(0);
       }
+    });
+
+    it('a current-version file still holding a retired built-in is cleaned on load (stale-tab POST stamped the version)', async () => {
+      fs.writeFileSync(TEMPLATES_FILE(), JSON.stringify({ _version: 14, templates: [v13Goblin, customTemplate] }));
+      const templates = await (await route.GET(getRequest())).json();
+      expect(templates.map(t => t.id)).toEqual(['custom-test-ogre']);
+      const onDisk = JSON.parse(fs.readFileSync(TEMPLATES_FILE(), 'utf8'));
+      expect(onDisk).toEqual({ _version: 14, templates: [customTemplate] });
+    });
+
+    it('POST drops an unedited retired built-in but keeps an edited one', async () => {
+      const edited = { ...v13Goblin, id: 'mm-kobold', notes: 'edited' };
+      await route.POST(postRequest([v13Goblin, edited, customTemplate]));
+      const onDisk = JSON.parse(fs.readFileSync(TEMPLATES_FILE(), 'utf8'));
+      expect(onDisk.templates.map(t => t.id)).toEqual(['mm-kobold', 'custom-test-ogre']);
     });
 
     it('an untouched retired built-in is removed from the saved file', async () => {
