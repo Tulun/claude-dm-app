@@ -663,9 +663,9 @@
       "size": "Small",
       "creatureType": "Plant",
       "ac": 10,
-      "maxHp": 7,
-      "hitDice": "2d6",
-      "speed": 10,
+      "maxHp": 3,
+      "hitDice": "1d6",
+      "speed": "10",
       "cr": "0",
       "xp": 10,
       "profBonus": 2,
@@ -675,29 +675,34 @@
       "int": 8,
       "wis": 11,
       "cha": 5,
+      "savingThrows": "",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
       "senses": "Darkvision 120 ft., Passive Perception 10",
-      "languages": "—",
-      "isNpc": false,
+      "languages": "Telepathy 240 ft.",
       "traits": [
         {
-          "name": "Distress Spores",
-          "description": "When takes damage, all myconids within 240 ft can sense its pain."
-        },
-        {
           "name": "Sun Sickness",
-          "description": "In sunlight, Disadvantage on ability checks, attack rolls, and saves. Dies if in sunlight for 1 hour."
+          "description": "While in sunlight, the myconid has Disadvantage on D20 Tests. The myconid dies if it spends more than 1 hour in sunlight."
         }
       ],
       "actions": [
         {
-          "name": "Fist",
-          "description": "Melee Attack Roll: +1, reach 5 ft. Hit: 1 (1d4-1) Bludgeoning damage plus 2 (1d4) Poison damage."
+          "name": "Slam",
+          "description": "Melee Attack Roll: +1, reach 5 ft. Hit: 1 (1d4 - 1) Bludgeoning damage plus 2 (1d4) Poison damage."
         },
         {
           "name": "Rapport Spores",
-          "description": "10-foot radius. DC 10 CON or linked telepathically for 1 hour. Can communicate simple ideas while within 30 ft."
+          "description": "The myconid expels spores in a 30-foot Emanation originating from itself. Creatures in that area with an Intelligence score of 2 or higher that aren't Constructs, Elementals, or Undead gain telepathy with a range of 30 feet for 1 hour."
         }
       ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Lawful Neutral. Initiative +0 (10). Myconid sprouts tend to their fungal homes and watch for trespassers.",
+      "isNpc": false,
       "source": "mm"
     },
     {
@@ -718,34 +723,40 @@
       "int": 3,
       "wis": 10,
       "cha": 4,
-      "skills": "Perception +2, Stealth +4",
+      "savingThrows": "",
+      "skills": "Perception +2, Stealth +6",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
       "senses": "Darkvision 30 ft., Passive Perception 12",
-      "languages": "—",
-      "isNpc": false,
+      "languages": "None",
       "traits": [
         {
-          "name": "Hold Breath",
-          "description": "Can hold breath for 30 minutes."
-        },
-        {
-          "name": "Underwater Camouflage",
-          "description": "Advantage on Stealth checks while underwater."
+          "name": "Compression",
+          "description": "The octopus can move through a space as narrow as 1 inch without expending extra movement to do so."
         },
         {
           "name": "Water Breathing",
-          "description": "Can breathe only underwater."
+          "description": "The octopus can breathe only underwater."
         }
       ],
       "actions": [
         {
           "name": "Tentacles",
-          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 1 Bludgeoning. Target Grappled (escape DC 10). Until grapple ends, can't use Tentacles on another target."
-        },
-        {
-          "name": "Ink Cloud (1/Day)",
-          "description": "If underwater, 5-ft radius cloud of ink. Area heavily obscured for 1 minute. Octopus can Dash as Bonus Action."
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 1 Bludgeoning damage."
         }
       ],
+      "bonusActions": [],
+      "reactions": [
+        {
+          "name": "Ink Cloud (1/Day)",
+          "description": "Trigger: A creature ends its turn within 5 feet of the octopus while underwater. Response: The octopus releases ink that fills a 5-foot Cube centered on itself, and the octopus moves up to its Swim Speed. The Cube is Heavily Obscured for 1 minute or until a strong current or similar effect disperses the ink."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Alignment: Unaligned. Initiative +2 (12).",
+      "isNpc": false,
+      "book": "MM 2024",
       "source": "mm"
     },
     {
@@ -1925,41 +1936,44 @@
       "id": "mm-aarakocra-skirmisher",
       "name": "Aarakocra Skirmisher",
       "size": "Medium",
-      "creatureType": "Humanoid",
+      "creatureType": "Elemental",
       "ac": 12,
-      "maxHp": 13,
-      "hitDice": "3d8",
+      "maxHp": 11,
+      "hitDice": "2d8+2",
       "speed": "20, fly 50",
       "cr": "1/4",
       "xp": 50,
       "profBonus": 2,
       "str": 10,
       "dex": 14,
-      "con": 10,
+      "con": 12,
       "int": 11,
       "wis": 12,
       "cha": 11,
+      "savingThrows": "",
       "skills": "Perception +5",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
       "senses": "Passive Perception 15",
-      "languages": "Auran, Common",
-      "isNpc": false,
-      "traits": [
-        {
-          "name": "Dive Attack",
-          "description": "If flying and dives at least 30 ft toward target then hits with melee attack, +3 (1d6) extra damage."
-        }
-      ],
+      "languages": "Aarakocra, Primordial (Auran)",
+      "traits": [],
       "actions": [
         {
-          "name": "Talon",
-          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4+2) Slashing damage."
+          "name": "Talons",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4 + 2) Slashing damage, or 9 (3d4 + 2) Slashing damage if the aarakocra moved 30+ feet straight toward the target immediately before the hit."
         },
         {
-          "name": "Javelin",
-          "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 30/120 ft. Hit: 5 (1d6+2) Piercing damage."
+          "name": "Wind Javelin",
+          "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 30/120 ft. Hit: 5 (1d6 + 2) Piercing damage plus 2 (1d4) Thunder damage. Hit or Miss: The javelin magically returns to the aarakocra's hand immediately after a ranged attack."
         }
       ],
-      "source": "mm"
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Neutral. Initiative +2 (12). Aarakocra skirmishers are adept at fighting aerial foes, making diving strikes from above.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-acolyte",
@@ -2002,9 +2016,9 @@
       "size": "Small",
       "creatureType": "Construct",
       "ac": 15,
-      "maxHp": 17,
-      "hitDice": "5d6",
-      "speed": "0, fly 50 (hover)",
+      "maxHp": 14,
+      "hitDice": "4d6",
+      "speed": "5, fly 50 (hover)",
       "cr": "1/4",
       "xp": 50,
       "profBonus": 2,
@@ -2014,31 +2028,31 @@
       "int": 1,
       "wis": 5,
       "cha": 1,
-      "immunities": "Poison, Psychic; Blinded, Charmed, Deafened, Exhaustion, Frightened, Paralyzed, Petrified, Poisoned",
-      "senses": "Blindsight 30 ft. (blind beyond), Passive Perception 7",
-      "languages": "—",
-      "isNpc": false,
+      "savingThrows": "",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Poison, Psychic; Charmed, Deafened, Exhaustion, Frightened, Paralyzed, Petrified, Poisoned",
+      "senses": "Blindsight 60 ft., Passive Perception 7",
+      "languages": "None",
       "traits": [
         {
-          "name": "Antimagic Susceptibility",
-          "description": "Incapacitated in Antimagic Field. DC 10 CON or unconscious 1 min if targeted by Dispel Magic."
-        },
-        {
-          "name": "False Appearance",
-          "description": "While motionless, indistinguishable from normal broom."
+          "name": "Flyby",
+          "description": "The broom doesn't provoke an Opportunity Attack when it flies out of an enemy's reach."
         }
       ],
       "actions": [
         {
-          "name": "Multiattack",
-          "description": "Makes two Broomstick attacks."
-        },
-        {
-          "name": "Broomstick",
-          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 5 (1d4+3) Bludgeoning damage."
+          "name": "Slam",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 5 (1d4 + 3) Bludgeoning damage."
         }
       ],
-      "source": "mm"
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Unaligned. Initiative +5 (15). Other flying objects, like animated tools or staffs, might also use this stat block.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-animated-flying-sword",
