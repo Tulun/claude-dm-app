@@ -3,6 +3,7 @@
 import { describe, it, expect } from 'vitest';
 import { defaultEnemyTemplates } from '../../app/data/defaultEnemyTemplates.js';
 import { PRIOR_DEFAULT_FINGERPRINTS } from '../../app/data/templateFingerprints.js';
+import { RETIRED_DEFAULT_IDS } from '../../app/data/retiredTemplates.js';
 import { parseSpellcasting } from '../../app/combat/components/CharacterCard/spellcastingParser.js';
 import { splitStatText, sizeMatches, formatSpeeds, parseSavingThrows } from '../../app/combat/monsterAbilities.js';
 
@@ -36,9 +37,18 @@ describe('defaultEnemyTemplates', () => {
     }
   });
 
-  it('keeps every previously shipped id (saved encounters reference them)', () => {
+  it('keeps every previously shipped id (saved encounters reference them) unless deliberately retired', () => {
     const ids = new Set(defaultEnemyTemplates.map(t => t.id));
-    for (const id of Object.keys(PRIOR_DEFAULT_FINGERPRINTS)) expect(ids.has(id), id).toBe(true);
+    for (const id of Object.keys(PRIOR_DEFAULT_FINGERPRINTS)) {
+      if (id in RETIRED_DEFAULT_IDS) expect(ids.has(id), `${id} is retired`).toBe(false);
+      else expect(ids.has(id), id).toBe(true);
+    }
+  });
+
+  it('retired 2014 ids: 22 retired, the 2014 Goblin is gone and its 2024 rename stays', () => {
+    expect(Object.keys(RETIRED_DEFAULT_IDS)).toHaveLength(22);
+    expect(byName('Goblin')).toBeUndefined();
+    expect(byName('Goblin Warrior')).toMatchObject({ edition: '2024' });
   });
 
   it('Hobgoblin Captain is the 2024 version: Multiattack mixes Greatsword and Longbow', () => {

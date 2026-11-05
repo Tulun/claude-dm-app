@@ -16324,9 +16324,9 @@
       "size": "Large",
       "creatureType": "Aberration",
       "ac": 15,
-      "maxHp": 123,
-      "hitDice": "13d10+52",
-      "speed": 30,
+      "maxHp": 133,
+      "hitDice": "14d10+56",
+      "speed": "30",
       "cr": "7",
       "xp": 2900,
       "profBonus": 3,
@@ -16336,37 +16336,40 @@
       "int": 7,
       "wis": 7,
       "cha": 9,
+      "savingThrows": "",
       "skills": "Perception +1",
+      "vulnerabilities": "",
       "resistances": "Acid, Cold, Fire, Lightning, Thunder",
+      "immunities": "",
       "senses": "Darkvision 60 ft., Passive Perception 11",
-      "languages": "Slaad, telepathy 60 ft.",
-      "isNpc": false,
+      "languages": "Slaad; telepathy 60 ft.",
       "traits": [
         {
           "name": "Magic Resistance",
-          "description": "Advantage on saves vs spells/magic."
+          "description": "The slaad has Advantage on saving throws against spells and other magical effects."
         },
         {
           "name": "Regeneration",
-          "description": "Regains 10 HP at start of turn if has 1+ HP."
+          "description": "The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Three attacks: one Bite and two Claws."
+          "description": "The slaad makes three Mutating Claw attacks."
         },
         {
-          "name": "Bite",
-          "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 12 (2d6+5) Piercing damage."
-        },
-        {
-          "name": "Claw",
-          "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 12 (2d6+5) Slashing. Humanoid target: DC 15 CON or infected with slaad tadpole disease."
+          "name": "Mutating Claw",
+          "description": "Melee Attack Roll: +8, reach 10 ft. Hit: 12 (2d6 + 5) Slashing damage plus 3 (1d6) Poison damage. If the target is a Humanoid not cursed by a slaad, it is subjected to the following effect. Constitution Saving Throw: DC 15. Failure: The target is cursed. The cursed target can't regain Hit Points, and its Hit Point maximum decreases by 10 (3d6) after every 24 hours and doesn't return to normal after finishing a Long Rest. If the curse reduces the target's Hit Point maximum to 0, the curse ends, and instead of dying, the target instantly transforms into a Red Slaad or, if it can cast spells of level 3 or higher, a Green Slaad. Only a Wish spell can reverse this transformation."
         }
       ],
-      "notes": "Natural Armor",
-      "source": "mm"
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Chaotic Neutral. Initiative +2 (12).",
+      "lore": "Almost as numerous as red slaadi, blue slaadi are muscular brutes with vicious blades extending from the backs of their claws. These claws carry a magical curse called chaos phage, which can transform victims into red or green slaadi. Blue slaadi accompany red slaadi and behave similarly. They innately know the signs of chaos phage and avoid slaying creatures that carry it or other slaad curses.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-drow-mage",
@@ -17035,59 +17038,63 @@
       "id": "mm-green-slaad",
       "name": "Green Slaad",
       "size": "Large",
-      "creatureType": "Aberration (Shapechanger)",
+      "creatureType": "Aberration",
       "ac": 16,
-      "maxHp": 127,
-      "hitDice": "15d10+45",
-      "speed": 30,
+      "maxHp": 144,
+      "hitDice": "17d10+51",
+      "speed": "30",
       "cr": "8",
       "xp": 3900,
       "profBonus": 3,
-      "str": 18,
+      "str": 16,
       "dex": 15,
       "con": 16,
       "int": 11,
       "wis": 8,
-      "cha": 12,
+      "cha": 18,
+      "savingThrows": "",
       "skills": "Arcana +3, Perception +2",
+      "vulnerabilities": "",
       "resistances": "Acid, Cold, Fire, Lightning, Thunder",
+      "immunities": "",
       "senses": "Blindsight 30 ft., Darkvision 60 ft., Passive Perception 12",
-      "languages": "Slaad, telepathy 60 ft.",
-      "isNpc": false,
+      "languages": "Common, Slaad; telepathy 60 ft.",
       "traits": [
         {
-          "name": "Shapechanger",
-          "description": "Can polymorph into Small or Medium humanoid, or back. Stats same except size."
-        },
-        {
           "name": "Magic Resistance",
-          "description": "Advantage on saves vs spells/magic."
+          "description": "The slaad has Advantage on saving throws against spells and other magical effects."
         },
         {
           "name": "Regeneration",
-          "description": "Regains 10 HP at start of turn if has 1+ HP."
+          "description": "The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Three attacks: one Bite and two Claws, or three Staff attacks."
+          "description": "The slaad makes three Chaos Staff attacks."
         },
         {
-          "name": "Bite (Slaad Form)",
-          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 11 (2d6+4) Piercing damage."
+          "name": "Chaos Staff",
+          "description": "Melee or Ranged Attack Roll: +7, reach 10 ft. or range 60 ft. Hit: 8 (1d8 + 4) Force damage. Until the start of the slaad's next turn, the target has a condition determined by rolling 1d4: on a 1, Charmed; on a 2, Frightened; on a 3, Poisoned; or on a 4, Incapacitated."
         },
         {
-          "name": "Claw (Slaad Form)",
-          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 7 (1d6+4) Slashing plus 3 (1d6) Psychic."
-        },
-        {
-          "name": "Staff",
-          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 11 (2d6+4) Bludgeoning damage."
+          "name": "Spellcasting",
+          "description": "The slaad casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 14):\nAt Will: Detect Magic, Detect Thoughts, Mage Hand\n1/Day Each: Fireball, Invisibility (self only)"
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 12): At will: detect magic, detect thoughts, mage hand. 2/day each: fear, invisibility (self only). 1/day: fireball.",
-      "source": "mm"
+      "bonusActions": [
+        {
+          "name": "Shape-Shift",
+          "description": "The slaad shape-shifts into a Small or Medium Humanoid, or it returns to its true form. Other than its size, its game statistics are the same in each form. Any equipment it is wearing or carrying isn't transformed."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Initiative +5 (15). Spellcasting uses Charisma, spell save DC 14.",
+      "lore": "Green slaadi come into being when the propagation methods of red or blue slaadi affect certain creatures capable of casting spells of level 3 or higher. Green slaadi are more intelligent than their blue and red brethren and often direct their kin to portals where gray slaadi have identified Humanoid communities ripe for invasion.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-hezrou",
@@ -17719,63 +17726,63 @@
       "id": "mm-gray-slaad",
       "name": "Gray Slaad",
       "size": "Medium",
-      "creatureType": "Aberration (Shapechanger)",
+      "creatureType": "Aberration",
       "ac": 18,
-      "maxHp": 127,
-      "hitDice": "17d8+51",
-      "speed": 30,
+      "maxHp": 150,
+      "hitDice": "20d8+60",
+      "speed": "40",
       "cr": "9",
       "xp": 5000,
       "profBonus": 4,
-      "str": 17,
+      "str": 19,
       "dex": 17,
       "con": 16,
       "int": 13,
       "wis": 8,
-      "cha": 14,
+      "cha": 18,
+      "savingThrows": "",
       "skills": "Arcana +5, Perception +7",
+      "vulnerabilities": "",
       "resistances": "Acid, Cold, Fire, Lightning, Thunder",
+      "immunities": "",
       "senses": "Blindsight 60 ft., Darkvision 60 ft., Passive Perception 17",
-      "languages": "Slaad, telepathy 60 ft.",
-      "isNpc": false,
+      "languages": "Common, Slaad; telepathy 60 ft.",
       "traits": [
         {
-          "name": "Shapechanger",
-          "description": "Can polymorph into Small or Medium humanoid, or back. Stats same except size."
-        },
-        {
           "name": "Magic Resistance",
-          "description": "Advantage on saves vs spells/magic."
-        },
-        {
-          "name": "Magic Weapons",
-          "description": "Attacks are magical."
+          "description": "The slaad has Advantage on saving throws against spells and other magical effects."
         },
         {
           "name": "Regeneration",
-          "description": "Regains 10 HP at start of turn if has 1+ HP."
+          "description": "The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Three Bite attacks or three Greatsword attacks."
+          "description": "The slaad makes two Chaos Claw attacks."
         },
         {
-          "name": "Bite (Slaad Form)",
-          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 6 (1d6+3) Piercing damage."
+          "name": "Chaos Claw",
+          "description": "Melee Attack Roll: +8, reach 10 ft. Hit: 9 (1d10 + 4) Slashing damage plus 11 (2d10) Necrotic damage. Until the start of the slaad's next turn, the target has a condition determined by rolling 1d4: on a 1, Charmed; on a 2, Frightened; on a 3, Poisoned; or on a 4, Incapacitated."
         },
         {
-          "name": "Claws (Slaad Form)",
-          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 8 (1d10+3) Slashing damage."
-        },
-        {
-          "name": "Greatsword",
-          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 10 (2d6+3) Slashing damage."
+          "name": "Spellcasting",
+          "description": "The slaad casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):\nAt Will: Detect Magic, Detect Thoughts, Invisibility (self only), Mage Hand, Major Image\n1/Day Each: Cloudkill, Fly, Plane Shift (self only), Tongues"
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 14): At will: detect magic, detect thoughts, invisibility (self only), mage hand, major image. 2/day each: fear, fly, fireball, tongues. 1/day: plane shift (self only).",
-      "source": "mm"
+      "bonusActions": [
+        {
+          "name": "Shape-Shift",
+          "description": "The slaad shape-shifts into a Small or Medium Humanoid, or it returns to its true form. Other than its size, its game statistics are the same in each form. Any equipment it is wearing or carrying isn't transformed."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Initiative +7 (17). Alignment: Chaotic Neutral. Spellcasting uses Charisma (spell save DC 16).",
+      "lore": "Gray slaadi arise from green slaadi transformed by the Spawning Stone or slaad lords. They explore the planes, seeking Humanoid communities to invade near planar pathways.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-nycaloth",
@@ -18059,11 +18066,11 @@
       "id": "mm-death-slaad",
       "name": "Death Slaad",
       "size": "Medium",
-      "creatureType": "Aberration (Shapechanger)",
+      "creatureType": "Aberration",
       "ac": 18,
-      "maxHp": 170,
-      "hitDice": "20d8+80",
-      "speed": 30,
+      "maxHp": 178,
+      "hitDice": "21d8+84",
+      "speed": "40",
       "cr": "10",
       "xp": 5900,
       "profBonus": 4,
@@ -18072,50 +18079,50 @@
       "con": 19,
       "int": 15,
       "wis": 10,
-      "cha": 16,
+      "cha": 19,
+      "savingThrows": "",
       "skills": "Arcana +6, Perception +8",
+      "vulnerabilities": "",
       "resistances": "Acid, Cold, Fire, Lightning, Thunder",
+      "immunities": "",
       "senses": "Blindsight 60 ft., Darkvision 60 ft., Passive Perception 18",
-      "languages": "Slaad, telepathy 60 ft.",
-      "isNpc": false,
+      "languages": "Common, Slaad; telepathy 60 ft.",
       "traits": [
         {
-          "name": "Shapechanger",
-          "description": "Can polymorph into Small or Medium humanoid, or back. Stats same except size."
-        },
-        {
           "name": "Magic Resistance",
-          "description": "Advantage on saves vs spells/magic."
-        },
-        {
-          "name": "Magic Weapons",
-          "description": "Attacks are magical."
+          "description": "The slaad has Advantage on saving throws against spells and other magical effects."
         },
         {
           "name": "Regeneration",
-          "description": "Regains 10 HP at start of turn if has 1+ HP."
+          "description": "The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Three attacks: one Bite and two Claws, or three Greatsword attacks."
+          "description": "The slaad makes two Chaos Blade attacks."
         },
         {
-          "name": "Bite (Slaad Form)",
-          "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 9 (1d8+5) Piercing plus 7 (2d6) Necrotic."
+          "name": "Chaos Blade",
+          "description": "Melee Attack Roll: +9, reach 10 ft. Hit: 11 (1d12 + 5) Slashing damage plus 10 (3d6) Necrotic damage. Until the start of the slaad's next turn, the target has a condition determined by rolling 1d4: on a 1, Charmed; on a 2, Frightened; on a 3, Poisoned; or on a 4, Incapacitated."
         },
         {
-          "name": "Claws (Slaad Form)",
-          "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 10 (1d10+5) Slashing plus 7 (2d6) Necrotic."
-        },
-        {
-          "name": "Greatsword",
-          "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6+5) Slashing plus 7 (2d6) Necrotic."
+          "name": "Spellcasting",
+          "description": "The slaad casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):\nAt Will: Detect Magic, Detect Thoughts, Invisibility (self only), Mage Hand, Major Image\n1/Day Each: Blight (level 8 version), Cloudkill (level 6 version), Fly, Plane Shift, Tongues"
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 15): At will: detect magic, detect thoughts, invisibility (self only), mage hand, major image. 2/day each: fear, fireball, fly, tongues. 1/day each: cloudkill, plane shift.",
-      "source": "mm"
+      "bonusActions": [
+        {
+          "name": "Shape-Shift",
+          "description": "The slaad shape-shifts into a Small or Medium Humanoid, or it returns to its true form. Other than its size, its game statistics are the same in each form. Any equipment it is wearing or carrying isn't transformed."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Chaotic Evil. Initiative +10 (20). Spellcasting uses Charisma (spell save DC 16).",
+      "lore": "Slaad lords create death slaadi by infusing gray slaadi with a portion of their chaotic energy. When groups of slaadi act deliberately, death slaadi are often behind their designs.\n\nFight a slaad and lose, the story's over. Fight a slaad and win, there's a thousand more standing in line just to prove they're tougher.\n—Jebeel Sloom, Guide to the Plane of Limbo",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-deva",
@@ -18435,11 +18442,11 @@
       "id": "mm-dao",
       "name": "Dao",
       "size": "Large",
-      "creatureType": "Elemental",
+      "creatureType": "Elemental (Genie)",
       "ac": 18,
-      "maxHp": 187,
-      "hitDice": "15d10+105",
-      "speed": "30, burrow 30, fly 30",
+      "maxHp": 200,
+      "hitDice": "16d10+112",
+      "speed": "30, burrow 30, fly 30 (hover)",
       "cr": "11",
       "xp": 7200,
       "profBonus": 4,
@@ -18448,42 +18455,57 @@
       "con": 24,
       "int": 12,
       "wis": 13,
-      "cha": 14,
-      "savingThrows": "Int +5, Wis +5, Cha +6",
-      "immunities": "Charmed",
+      "cha": 18,
+      "savingThrows": "Dex +5, Wis +5",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Petrified",
       "senses": "Darkvision 120 ft., Passive Perception 11",
-      "languages": "Terran",
-      "isNpc": false,
+      "languages": "Primordial (Terran)",
       "traits": [
         {
           "name": "Earth Glide",
-          "description": "Can burrow through nonmagical unworked earth/stone without disturbing it."
+          "description": "The dao can burrow through nonmagical, unworked earth and stone. While doing so, the dao doesn't disturb the material it moves through."
         },
         {
-          "name": "Elemental Demise",
-          "description": "If dies, body disintegrates into crystalline powder, leaving only equipment."
+          "name": "Elemental Restoration",
+          "description": "If the dao dies outside the Elemental Plane of Earth, its body dissolves into dirt, and it gains a new body in 1d4 days, reviving with all its Hit Points somewhere on the Plane of Earth."
         },
         {
-          "name": "Sure-Footed",
-          "description": "Advantage on saves vs Prone."
+          "name": "Magic Resistance",
+          "description": "The dao has Advantage on saving throws against spells and other magical effects."
+        },
+        {
+          "name": "Wishes",
+          "description": "The dao has a 30 percent chance of knowing the Wish spell. If the dao knows it, the dao can cast it only on behalf of a non-genie creature who communicates a wish in a way the dao can understand. If the dao casts the spell for the creature, the dao suffers none of the spell's stress. Once the dao has cast it three times, the dao can't do so again for 365 days."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Two Fist attacks or two Maul attacks."
+          "description": "The dao makes three Earthen Maul attacks or two Earth Burst attacks."
         },
         {
-          "name": "Fist",
-          "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 15 (2d8+6) Bludgeoning damage."
+          "name": "Earthen Maul",
+          "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 20 (4d6 + 6) Bludgeoning damage. If the target is a Large or smaller creature, it has the Prone condition."
         },
         {
-          "name": "Maul",
-          "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 20 (4d6+6) Bludgeoning damage. DC 18 STR or Prone."
+          "name": "Earth Burst",
+          "description": "Ranged Attack Roll: +10, range 120 ft. Hit: 15 (2d8 + 6) Bludgeoning damage. Hit or Miss: Earth explodes from the target's space, creating the following effect. Dexterity Saving Throw: DC 16, each creature in a 10-foot Emanation originating from and including the target. Failure: 10 (3d6) Thunder damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The dao casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):\nAt Will: Detect Evil and Good, Detect Magic, Stone Shape\n1/Day Each: Gaseous Form, Invisibility, Move Earth, Passwall, Plane Shift, Tongues, Wall of Stone"
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 14): At will: detect evil and good, detect magic, stone shape. 3/day each: passwall, move earth, tongues. 1/day each: conjure elemental (earth only), gaseous form, invisibility, phantasmal killer, plane shift, wall of stone.",
-      "source": "mm"
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Initiative +1 (11). Habitat: Planar (Elemental Plane of Earth), Underdark; Treasure: Implements. Alignment: Neutral.",
+      "lore": "On the Elemental Plane of Earth, galaxies of gemstones twinkle over vaults of treasure. If dao are there, so is wealth worth hunting.\n—Gundren Rockseeker, Dwarf Treasure Hunter\n\nGenies of minerals and gemstones, dao embody the resolve of rock. Using innate magic, they move through the earth unimpeded, exploring depths inaccessible to most. Dao delight in the treasures of the earth, whether raw gemstones, jewelry crafted from pure metals, or wondrous fossils. In exchange for such treasures, dao might reveal underground mysteries, such as paths through the Underdark, buried ruins, or whole subterranean realms.\n\nMany dao call the Elemental Plane of Earth home. There, they create cities that glitter with treasure. Among these realms is the labyrinthine expanse called the Great Dismal Delve or the Sevenfold Mazework, which protects the City of Jewels, the Iron Crucible, and the Strait of Magnets.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-djinni",
@@ -18728,7 +18750,7 @@
       "id": "mm-marid",
       "name": "Marid",
       "size": "Large",
-      "creatureType": "Elemental",
+      "creatureType": "Elemental (Genie)",
       "ac": 17,
       "maxHp": 229,
       "hitDice": "17d10+136",
@@ -18742,37 +18764,57 @@
       "int": 18,
       "wis": 17,
       "cha": 18,
-      "savingThrows": "Dex +5, Wis +7, Cha +8",
+      "savingThrows": "Dex +5, Cha +8",
+      "skills": "",
+      "vulnerabilities": "",
       "resistances": "Acid, Cold, Lightning",
+      "immunities": "",
       "senses": "Blindsight 30 ft., Darkvision 120 ft., Passive Perception 13",
-      "languages": "Aquan",
-      "isNpc": false,
+      "languages": "Primordial (Aquan)",
       "traits": [
         {
           "name": "Amphibious",
-          "description": "Can breathe air and water."
+          "description": "The marid can breathe air and water."
         },
         {
-          "name": "Elemental Demise",
-          "description": "If dies, body disintegrates into burst of water and foam, leaving only equipment."
+          "name": "Elemental Restoration",
+          "description": "If the marid dies outside the Elemental Plane of Water, its body dissolves into brine, and it gains a new body in 1d4 days, reviving with all its Hit Points somewhere on the Plane of Water."
+        },
+        {
+          "name": "Wishes",
+          "description": "The marid has a 30 percent chance of knowing the Wish spell. If the marid knows it, the marid can cast it only on behalf of a non-genie creature who communicates a wish in a way the marid can understand. If the marid casts the spell for the creature, the marid suffers none of the spell's stress. Once the marid has cast it three times, the marid can't do so again for 365 days."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Two Trident attacks."
+          "description": "The marid makes three Aquatic Lash attacks."
         },
         {
-          "name": "Trident",
-          "description": "Melee or Ranged Attack Roll: +10, reach 5 ft. or range 20/60 ft. Hit: 13 (2d6+6) Piercing, or 15 (2d8+6) two-handed."
+          "name": "Aquatic Lash",
+          "description": "Melee Attack Roll: +10, reach 15 ft. Hit: 15 (2d8 + 6) Slashing damage plus 9 (2d8) Cold damage."
         },
         {
           "name": "Water Jet",
-          "description": "Blasts water in 60-ft Line. DC 16 DEX or 21 (6d6) Bludgeoning and pushed 20 ft and Prone."
+          "description": "Dexterity Saving Throw: DC 18, each creature in a 60-foot-long, 10-foot-wide Line. Failure: 31 (9d6) Cold damage. If the target is a Huge or smaller creature, it is pushed up to 20 feet straight away from the marid and has the Prone condition. Success: Half damage only."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The marid casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):\nAt Will: Create or Destroy Water, Detect Evil and Good, Detect Magic, Purify Food and Drink\n1/Day Each: Control Water, Gaseous Form, Invisibility, Plane Shift, Tongues"
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 16): At will: create or destroy water, detect evil and good, detect magic, fog cloud, purify food and drink. 3/day each: tongues, water breathing, water walk. 1/day each: conjure elemental (water only), control water, gaseous form, invisibility, plane shift.",
-      "source": "mm"
+      "bonusActions": [
+        {
+          "name": "Misty Veil (Recharge 5–6)",
+          "description": "The marid casts Fog Cloud, using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Habitat: Coastal, Planar (Elemental Plane of Water), Underwater; Treasure: Relics. Initiative +5 (15).",
+      "lore": "Genie of the Water\n\nMarids surge with the power of the seas, using it to manipulate the waves or create water. These genies typically dwell in or near bodies of water. While gentle marids make homes amid springs, oases, and serene pools, tempestuous marids inhabit sea stacks, whirlpools, and treacherous coasts. Marids vary in appearance, their bodies reflecting the colors of the waves while distinctive fins and scales accent their features. Marids lend their powers and knowledge of the seas to those who defend the marids' watery realms or who offer them pleasing gifts. Marids appreciate rare aquatic treasures, such as colorful pearls, shell instruments, or delicacies from distant seas.\n\nMarids hail from the Elemental Plane of Water, where they live in wondrous homes drifting amid the endless ocean. Among these is the Citadel of Ten Thousand Pearls—a coral sphere studded with dozens of domed theaters and libraries—and the air-filled, cosmopolitan City of Glass.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-remorhaz",
@@ -18938,10 +18980,10 @@
       "name": "Arcanaloth",
       "size": "Medium",
       "creatureType": "Fiend (Yugoloth)",
-      "ac": 17,
-      "maxHp": 104,
-      "hitDice": "16d8+32",
-      "speed": "30, fly 30",
+      "ac": 18,
+      "maxHp": 175,
+      "hitDice": "27d8+54",
+      "speed": "30, fly 30 (hover)",
       "cr": "12",
       "xp": 8400,
       "profBonus": 4,
@@ -18951,31 +18993,62 @@
       "int": 20,
       "wis": 16,
       "cha": 17,
-      "savingThrows": "Dex +5, Int +9, Wis +7, Cha +7",
-      "skills": "Arcana +13, Deception +11, Insight +11, Perception +7",
-      "resistances": "Cold, Fire, Lightning; Bludgeoning, Piercing, Slashing from nonmagical attacks",
+      "savingThrows": "Dex +5, Con +6, Int +9, Wis +7",
+      "skills": "Arcana +9, Deception +7, Insight +7, Perception +7",
+      "vulnerabilities": "",
+      "resistances": "Cold, Fire, Lightning",
       "immunities": "Acid, Poison; Charmed, Poisoned",
       "senses": "Truesight 120 ft., Passive Perception 17",
-      "languages": "All, telepathy 120 ft.",
-      "isNpc": false,
+      "languages": "All; telepathy 120 ft.",
       "traits": [
         {
-          "name": "Magic Resistance",
-          "description": "Advantage on saves vs spells/magic."
+          "name": "Fiendish Restoration",
+          "description": "If the arcanaloth dies outside Gehenna, its body dissolves into ichor, and it gains a new body instantly and revives with all its Hit Points in Gehenna."
         },
         {
-          "name": "Magic Weapons",
-          "description": "Attacks are magical."
+          "name": "Magic Resistance",
+          "description": "The arcanaloth has Advantage on saving throws against spells and other magical effects."
+        },
+        {
+          "name": "Soul Tome",
+          "description": "The arcanaloth has a magic tome. While holding or carrying the tome, the arcanaloth can use its Banishing Claw action.\n\nThe tome has AC 17; HP 35; and Immunity to Necrotic, Poison, and Psychic damage. The tome regains all its Hit Points at the end of every turn, but it turns to dust if reduced to 0 Hit Points or when the arcanaloth dies. If the tome is destroyed, the arcanaloth can create a new one when it finishes a Short or Long Rest."
         }
       ],
       "actions": [
         {
-          "name": "Claws",
-          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 8 (2d4+3) Slashing. DC 14 CON or 10 (3d6) Poison and Poisoned 1 min (save ends)."
+          "name": "Multiattack",
+          "description": "The arcanaloth makes three Fiendish Burst attacks. It can replace one attack with a Banishing Claw attack."
+        },
+        {
+          "name": "Banishing Claw (Requires Soul Tome)",
+          "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 10 (2d4 + 5) Slashing damage plus 19 (3d12) Psychic damage. If the target is a creature, it is subjected to the following effect. Charisma Saving Throw: DC 17. Failure: The target is trapped in a demiplane inside the Soul Tome. While trapped there, the target has the Incapacitated condition. At the end of each of its turns, the target repeats the save, escaping the tome on a success. When the target escapes, it appears in the space it left or, if that space is occupied, the nearest unoccupied space.\n\nIf the target fails three of these saves while in the demiplane, it becomes bound to the tome and can escape only if the tome is reduced to 0 Hit Points."
+        },
+        {
+          "name": "Fiendish Burst",
+          "description": "Melee or Ranged Attack Roll: +9, reach 5 ft. or range 120 ft. Hit: 31 (4d12 + 5) Necrotic damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The arcanaloth casts one of the following spells, requiring no Material components and using Intelligence as the spellcasting ability (spell save DC 17):\nAt Will: Alter Self, Detect Magic, Identify, Mage Hand, Prestidigitation\n1/Day Each: Contact Other Plane, Detect Thoughts, Dimension Door, Mind Blank"
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 17): At will: alter self, darkness, heat metal, invisibility (self only), magic missile. Spellcasting (DC 17, +9): Cantrips: fire bolt, mage hand, minor illusion, prestidigitation. 1st (4 slots): detect magic, identify, shield, Tenser's floating disk. 2nd (3 slots): detect thoughts, mirror image, phantasmal force, suggestion. 3rd (3 slots): counterspell, fear, fireball. 4th (3 slots): banishment, dimension door. 5th (2 slots): contact other plane, hold monster. 6th (1 slot): chain lightning. 7th (1 slot): finger of death. 8th (1 slot): mind blank.",
-      "source": "mm"
+      "bonusActions": [
+        {
+          "name": "Teleport",
+          "description": "The arcanaloth teleports up to 30 feet to an unoccupied space it can see."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Counterspell",
+          "description": "The arcanaloth casts Counterspell in response to that spell's trigger, using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Neutral Evil. Initiative +5 (15). Habitat: Planar (Lower Planes); Treasure: Arcana. Spell save DC 17.",
+      "lore": "Yugoloth of Magical Manipulation\n\nWhile all yugoloths are fiendish manifestations of wickedness and greed, arcanaloths bend their considerable intellects toward hoarding and exploiting secrets. They then deploy these secrets to ensnare countless victims and lesser villains, beguiling foes with false promises and powerful magic.\n\nArcanaloths possess considerable spellcasting prowess and frequently disguise themselves with magic. While they prefer to let magical servants or other yugoloths do their fighting for them, arcanaloths can defend themselves with arcane might, banishing opponents into the pages of their magic tomes.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-archmage",
@@ -19607,50 +19680,65 @@
       "size": "Medium",
       "creatureType": "Fiend (Yugoloth)",
       "ac": 19,
-      "maxHp": 153,
-      "hitDice": "18d8+72",
-      "speed": "30, fly 60",
+      "maxHp": 221,
+      "hitDice": "26d8+104",
+      "speed": "30, fly 60 (hover)",
       "cr": "13",
       "xp": 10000,
       "profBonus": 5,
-      "str": 16,
+      "str": 19,
       "dex": 16,
       "con": 18,
-      "int": 18,
+      "int": 19,
       "wis": 15,
-      "cha": 19,
-      "skills": "Intimidation +9, Perception +7, Stealth +8",
-      "resistances": "Cold, Fire, Lightning; Bludgeoning, Piercing, Slashing from nonmagical attacks",
+      "cha": 18,
+      "savingThrows": "",
+      "skills": "Deception +9, Perception +7, Stealth +8",
+      "vulnerabilities": "",
+      "resistances": "Cold, Fire, Lightning",
       "immunities": "Acid, Poison; Charmed, Frightened, Poisoned",
       "senses": "Truesight 120 ft., Passive Perception 17",
-      "languages": "Abyssal, Infernal, telepathy 120 ft.",
-      "isNpc": false,
+      "languages": "Abyssal, Infernal; telepathy 120 ft.",
       "traits": [
         {
-          "name": "Magic Resistance",
-          "description": "Advantage on saves vs spells/magic."
+          "name": "Fiendish Restoration",
+          "description": "If the ultroloth dies outside Gehenna, its body dissolves into ichor, and it gains a new body instantly, reviving with all its Hit Points somewhere in Gehenna."
         },
         {
-          "name": "Magic Weapons",
-          "description": "Attacks are magical."
+          "name": "Magic Resistance",
+          "description": "The ultroloth has Advantage on saving throws against spells and other magical effects."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Three Longsword attacks or three Hypnotic Gaze attacks."
+          "description": "The ultroloth uses Hypnotic Gaze and makes two Mercurial Whip attacks."
         },
         {
-          "name": "Longsword",
-          "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 7 (1d8+3) Slashing damage."
+          "name": "Mercurial Whip",
+          "description": "Melee Attack Roll: +9, reach 15 ft. Hit: 25 (6d6 + 4) Force damage, and the ultroloth can teleport the target up to 10 feet to an unoccupied space the ultroloth can see that isn't in the air."
         },
         {
           "name": "Hypnotic Gaze",
-          "description": "One creature within 30 ft: DC 17 WIS or Charmed until end of ultroloth's next turn. While Charmed, Incapacitated and speed 0."
+          "description": "Wisdom Saving Throw: DC 17, each creature in a 30-foot Cone. Failure: 10 (3d6) Psychic damage, and the target has the Stunned condition until the start of the ultroloth's next turn. Success: The target is immune to this ultroloth's Hypnotic Gaze for 24 hours."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The ultroloth casts one of the following spells, requiring no Material components and using Intelligence as the spellcasting ability (spell save DC 17):\nAt Will: Alter Self, Clairvoyance, Detect Magic\n1/Day Each: Dimension Door, Fireball (level 5 version), Wall of Fire"
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 17): At will: alter self, clairvoyance, darkness, detect magic, detect thoughts, dispel magic, invisibility (self only), suggestion. 3/day each: dimension door, fear, wall of fire. 1/day each: fire storm, mass suggestion.",
-      "source": "mm"
+      "bonusActions": [
+        {
+          "name": "Fiendish Guile (Recharge 4-6)",
+          "description": "The ultroloth casts Dispel Magic, Invisibility (self only), Misty Step, or Suggestion, requiring no Material components and using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Neutral Evil. Initiative +8 (18). Habitat: Planar (Lower Planes); Treasure: Armaments. Spellcasting uses Intelligence (spell save DC 17). Ultroloth Conspiracies (1d6) - The Ultroloth Schemes To...: 1 Convince cultists their god has forsaken them. 2 Destabilize a nation and rule the chaos. 3 Incite a calamity and hold a world hostage. 4 Provoke hostilities between immortal armies and sell magic weapons to both sides. 5 Steal an invention and slay all who know of it. 6 Unleash fiendish hordes on a foe's homeland.",
+      "lore": "Yugoloth of Conspiracy and Control\n\nWith uncanny patience and fiendish cunning, ultroloths manipulate mortals and their fellow yugoloths alike, seeking to hoard power and spread suffering. These sinister masterminds often work with other yugoloths, but they might compel nearly any creature into their service. If coercion doesn't work, ultroloths use their eerie eyes and innate magic to hypnotize or charm targets.\n\nUltroloths strive to achieve planes-spanning plots. Roll on or choose a result from the Ultroloth Conspiracies table to inspire such villainy.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-vampire",
@@ -23642,6 +23730,104 @@
       "legendaryActions": [],
       "notes": "Alignment: Lawful Neutral. Initiative +8 (18). Spellcasting uses Intelligence (spell save DC 16).",
       "lore": "These powerful psions oversee githzerai sanctuaries, study enigmatic planar events, and lead rrakkma—hostile forays into mind flayer colonies to slay illithids and uncover secrets of how the ancient gith were transformed.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793892063837",
+      "name": "Slaad Tadpole",
+      "size": "Tiny",
+      "creatureType": "Aberration",
+      "ac": 12,
+      "maxHp": 7,
+      "hitDice": "3d4",
+      "speed": "30, burrow 10",
+      "cr": "1/8",
+      "xp": 25,
+      "profBonus": 2,
+      "str": 7,
+      "dex": 15,
+      "con": 10,
+      "int": 3,
+      "wis": 5,
+      "cha": 3,
+      "savingThrows": "",
+      "skills": "Stealth +4",
+      "vulnerabilities": "",
+      "resistances": "Acid, Cold, Fire, Lightning, Thunder",
+      "immunities": "",
+      "senses": "Darkvision 60 ft., Passive Perception 7",
+      "languages": "Understands Slaad but can't speak",
+      "traits": [
+        {
+          "name": "Magic Resistance",
+          "description": "The slaad has Advantage on saving throws against spells and other magical effects."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Piercing damage."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Chaotic Neutral. Initiative +2 (12).",
+      "lore": "Slaad tadpoles are ravenous, newborn slaadi. They hatch from eggs implanted into living hosts by red slaadi, but they also appear in great numbers in Limbo and other chaotic realms. Under most conditions, a slaad tadpole transforms into a blue slaad—or a green slaad if its host was able to cast spells of level 3 or higher—within 2d12 hours of hatching.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793892094338",
+      "name": "Red Slaad",
+      "size": "Large",
+      "creatureType": "Aberration",
+      "ac": 14,
+      "maxHp": 93,
+      "hitDice": "11d10+33",
+      "speed": "30",
+      "cr": "5",
+      "xp": 1800,
+      "profBonus": 3,
+      "str": 16,
+      "dex": 12,
+      "con": 16,
+      "int": 6,
+      "wis": 6,
+      "cha": 7,
+      "savingThrows": "",
+      "skills": "Perception +1",
+      "vulnerabilities": "",
+      "resistances": "Acid, Cold, Fire, Lightning, Thunder",
+      "immunities": "",
+      "senses": "Darkvision 60 ft., Passive Perception 11",
+      "languages": "Slaad; telepathy 60 ft.",
+      "traits": [
+        {
+          "name": "Magic Resistance",
+          "description": "The slaad has Advantage on saving throws against spells and other magical effects."
+        },
+        {
+          "name": "Regeneration",
+          "description": "The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The slaad makes three Injecting Claw attacks."
+        },
+        {
+          "name": "Injecting Claw",
+          "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 10 (2d6 + 3) Piercing damage. If the target is a Humanoid not cursed by a slaad, it is subjected to the following effect. Constitution Saving Throw: DC 14. Failure: The target is cursed unawares, and a minuscule slaad egg is implanted in it. Removing the curse destroys the egg.\n\nOver 2d4 × 10 days, the egg gestates. In the final 24 hours, the cursed target feels unwell; its Speed is halved, and it has Disadvantage on D20 Tests. At the end of this time, the egg turns into a Slaad Tadpole, which chews out of the host and kills it."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Chaotic Neutral. Initiative +1 (11).",
+      "lore": "Red slaadi amass in vast throngs in Limbo. There they wrestle and croak-sing as they endlessly dismantle and rebuild islands of drifting planar matter. When they encounter non-slaadi, red slaadi seek to play with, telepathically converse with, or devour the other creatures. These whims change from moment to moment. Red slaadi instinctively avoid harming those bearing slaadi eggs, which red slaadi implant using their claws, or other slaad curses.",
       "isNpc": false,
       "book": "MM 2024"
     }

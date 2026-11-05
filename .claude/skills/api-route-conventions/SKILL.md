@@ -77,7 +77,7 @@ Each versioned file carries a version stamp written on every save:
 |---|---|---|---|
 | `app/api/spells/route.js` | `SPELLS_VERSION` (4) | `version` | `spells` |
 | `app/api/magic-items/route.js` | `ITEMS_VERSION` (3) | `version` | `items` |
-| `app/api/templates/route.js` | `TEMPLATES_VERSION` (13) | `_version` | `templates` |
+| `app/api/templates/route.js` | `TEMPLATES_VERSION` (14) | `_version` | `templates` |
 | `app/api/dm/route.js` | `DM_VERSION` (1) | `version` | (whole object) |
 
 **Bump the const whenever you add default content or default fields.** On load, if
@@ -120,7 +120,12 @@ to a new `edition`, keep the saved entry **verbatim** (no `{ ...def, ...saved }`
 which would graft 2024-only fields onto an older stat block); otherwise merge as
 in step 1. When you change built-in template content: append each outgoing
 entry's fingerprint to its array (never delete old ones), then bump the version.
-Pinned by the "v12 → v13" block in `test/api/templatesRoute.test.js`.
+**Removing a built-in**: delete it from the defaults AND list its id (→ its
+replacement) in `RETIRED_DEFAULT_IDS` (`app/data/retiredTemplates.js`) — without
+that, step 3 carries the saved copy over forever. The migration drops a saved
+retired id only on a fingerprint match; an edited copy carries over like a
+custom template. Pinned by the "v12 → v13" and "v13 → v14" blocks in
+`test/api/templatesRoute.test.js`.
 
 ## 4. Side effects to know
 

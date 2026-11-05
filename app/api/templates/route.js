@@ -3,12 +3,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { defaultEnemyTemplates } from '../../components/defaultData';
 import { PRIOR_DEFAULT_FINGERPRINTS } from '../../data/templateFingerprints';
+import { RETIRED_DEFAULT_IDS } from '../../data/retiredTemplates';
 import { templateFingerprint } from '../../../lib/templateFingerprint';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const TEMPLATES_FILE = path.join(DATA_DIR, 'templates.json');
 const CONFLUX_FILE = path.join(process.cwd(), 'public', 'data', 'conflux-creatures.json');
-const TEMPLATES_VERSION = 13; // 13: built-ins replaced by SRD 5.2.1 (2024) stat blocks
+// 13: built-ins replaced by SRD 5.2.1 (2024) stat blocks
+// 14: 2014 built-ins retired where their renamed 2024 version is built in
+const TEMPLATES_VERSION = 14;
 
 const isUneditedPriorDefault = (saved) =>
   (PRIOR_DEFAULT_FINGERPRINTS[saved.id] || []).includes(templateFingerprint(saved));
@@ -70,7 +73,10 @@ export async function GET(request) {
           if (def.edition && saved.edition !== def.edition) return saved;
           return { ...def, ...saved };
         });
-        const nonDefault = existingTemplates.filter(t => !defaultIds.has(t.id));
+        // A retired built-in (app/data/retiredTemplates.js) is dropped only if
+        // the user never edited it; an edited copy carries over like a custom one.
+        const nonDefault = existingTemplates.filter(t =>
+          !defaultIds.has(t.id) && !(t.id in RETIRED_DEFAULT_IDS && isUneditedPriorDefault(t)));
         const mergedTemplates = [...mergedDefaults, ...nonDefault];
         const dataWithVersion = { _version: TEMPLATES_VERSION, templates: mergedTemplates };
         fs.writeFileSync(TEMPLATES_FILE, JSON.stringify(dataWithVersion, null, 2), 'utf8');

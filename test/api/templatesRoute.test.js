@@ -12,6 +12,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { defaultEnemyTemplates } from '../../app/components/defaultData.js';
+import { RETIRED_DEFAULT_IDS } from '../../app/data/retiredTemplates.js';
+import { PRIOR_DEFAULT_FINGERPRINTS } from '../../app/data/templateFingerprints.js';
 
 let tmpDir;
 let dataDir;
@@ -65,7 +67,7 @@ const customTemplate = {
 };
 
 describe('GET /api/templates', () => {
-  it('seeds data/templates.json with the defaults (version 13) when no file exists and tags mm- ids with source', async () => {
+  it('seeds data/templates.json with the defaults (version 14) when no file exists and tags mm- ids with source', async () => {
     const res = await route.GET(getRequest());
     expect(res.status).toBe(200);
     const templates = await res.json();
@@ -74,7 +76,7 @@ describe('GET /api/templates', () => {
     expect(templates.every(t => t.source === 'mm')).toBe(true);
 
     const onDisk = JSON.parse(fs.readFileSync(TEMPLATES_FILE(), 'utf8'));
-    expect(onDisk._version).toBe(13);
+    expect(onDisk._version).toBe(14);
     expect(onDisk.templates).toHaveLength(defaultEnemyTemplates.length);
     // NOTE: the source tag is applied on read, not persisted to disk
     expect(onDisk.templates[0].source).toBeUndefined();
@@ -82,7 +84,7 @@ describe('GET /api/templates', () => {
 
   it('returns saved templates as-is when the file is at the current version', async () => {
     fs.writeFileSync(TEMPLATES_FILE(), JSON.stringify({
-      _version: 13,
+      _version: 14,
       templates: [customTemplate],
     }));
     const templates = await (await route.GET(getRequest())).json();
@@ -109,7 +111,7 @@ describe('GET /api/templates', () => {
     expect(templates.find(t => t.id === 'custom-test-ogre')).toMatchObject(customTemplate);
 
     const onDisk = JSON.parse(fs.readFileSync(TEMPLATES_FILE(), 'utf8'));
-    expect(onDisk._version).toBe(13);
+    expect(onDisk._version).toBe(14);
   });
 
   describe('v12 → v13: SRD 5.2.1 (2024) built-ins', () => {
@@ -154,10 +156,43 @@ describe('GET /api/templates', () => {
       const templates = await migrate([v12HobgoblinCaptain, customTemplate]);
       const ids = new Set(templates.map(t => t.id));
       expect(ids.has('mm-goblin-warrior')).toBe(true);   // new 2024 name
-      expect(ids.has('mm-goblin')).toBe(true);           // 2014 Goblin kept for old encounters
+      expect(ids.has('mm-goblin')).toBe(false);          // 2014 Goblin retired in v14 (renamed 2024 version is built in)
       expect(ids.has('mm-beholder')).toBe(true);         // not in SRD 5.2.1, unchanged
       expect(templates.find(t => t.id === 'custom-test-ogre')).toMatchObject(customTemplate);
       expect(templates).toHaveLength(defaultEnemyTemplates.length + 1);
+    });
+  });
+
+  describe('v13 → v14: retired 2014 built-ins whose renamed 2024 version is built in', () => {
+    // Exactly as mm-goblin shipped in versions 12 and 13 (2014 stats).
+    const v13Goblin = {"id":"mm-goblin","name":"Goblin","size":"Small","creatureType":"Humanoid","ac":15,"maxHp":7,"hitDice":"2d6","speed":30,"cr":"1/4","xp":50,"profBonus":2,"str":8,"dex":14,"con":10,"int":10,"wis":8,"cha":8,"skills":"Stealth +6","senses":"Darkvision 60 ft., Passive Perception 9","languages":"Common, Goblin","isNpc":false,"traits":[{"name":"Nimble Escape","description":"Can Disengage or Hide as a Bonus Action."}],"actions":[{"name":"Scimitar","description":"Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Slashing damage."},{"name":"Shortbow","description":"Ranged Attack Roll: +4, range 80/320 ft. Hit: 5 (1d6+2) Piercing damage."}]};
+    const migrate = async (templates) => {
+      fs.writeFileSync(TEMPLATES_FILE(), JSON.stringify({ _version: 13, templates }));
+      return (await route.GET(getRequest())).json();
+    };
+
+    it('every retired id is gone from the defaults and maps to a built-in replacement', () => {
+      const defaultIds = new Set(defaultEnemyTemplates.map(t => t.id));
+      for (const [oldId, newId] of Object.entries(RETIRED_DEFAULT_IDS)) {
+        expect(defaultIds.has(oldId)).toBe(false);
+        expect(defaultIds.has(newId)).toBe(true);
+        expect(PRIOR_DEFAULT_FINGERPRINTS[oldId]?.length).toBeGreaterThan(0);
+      }
+    });
+
+    it('an untouched retired built-in is removed from the saved file', async () => {
+      const templates = await migrate([v13Goblin, { ...v13Goblin, id: 'tpl-my-goblin' }]);
+      expect(templates.find(t => t.id === 'mm-goblin')).toBeUndefined();
+      expect(templates.find(t => t.id === 'mm-goblin-warrior')).toBeDefined();
+      expect(templates.find(t => t.id === 'tpl-my-goblin')).toBeDefined(); // custom copy untouched
+      const onDisk = JSON.parse(fs.readFileSync(TEMPLATES_FILE(), 'utf8'));
+      expect(onDisk.templates.some(t => t.id === 'mm-goblin')).toBe(false);
+    });
+
+    it('a user-edited retired built-in is kept exactly as saved', async () => {
+      const edited = { ...v13Goblin, maxHp: 12, notes: 'Our goblins are tougher' };
+      const templates = await migrate([edited]);
+      expect(templates.find(t => t.id === 'mm-goblin')).toEqual({ ...edited, source: 'mm' });
     });
   });
 
@@ -166,13 +201,13 @@ describe('GET /api/templates', () => {
     const templates = await (await route.GET(getRequest())).json();
     expect(templates).toHaveLength(defaultEnemyTemplates.length + 1);
     const onDisk = JSON.parse(fs.readFileSync(TEMPLATES_FILE(), 'utf8'));
-    expect(onDisk._version).toBe(13);
+    expect(onDisk._version).toBe(14);
   });
 
   it('a current-version file is left alone even when templates lack a size field', async () => {
     const sizeless = { id: 'custom-no-size', name: 'No Size', ac: 10, maxHp: 5 };
     fs.writeFileSync(TEMPLATES_FILE(), JSON.stringify({
-      _version: 13,
+      _version: 14,
       templates: [sizeless],
     }));
     const templates = await (await route.GET(getRequest())).json();
@@ -181,7 +216,7 @@ describe('GET /api/templates', () => {
 
   it('filters by source=mm and source=custom', async () => {
     fs.writeFileSync(TEMPLATES_FILE(), JSON.stringify({
-      _version: 13,
+      _version: 14,
       templates: [
         { ...defaultEnemyTemplates[0] }, // mm- id, size present so no upgrade
         customTemplate,
@@ -260,7 +295,7 @@ describe('POST /api/templates', () => {
     expect(await res.json()).toEqual({ success: true });
 
     const onDisk = JSON.parse(fs.readFileSync(TEMPLATES_FILE(), 'utf8'));
-    expect(onDisk).toEqual({ _version: 13, templates: body });
+    expect(onDisk).toEqual({ _version: 14, templates: body });
 
     // Round-trip: GET returns the posted list (source-tagged)
     const templates = await (await route.GET(getRequest())).json();

@@ -10,29 +10,30 @@ Last updated 2026-11-05.
 |---|---|---|
 | In SRD 5.2.1, updated to the 2024 stat block | 292 | 2024 (tagged **2024** in the template lists) |
 | New in 2024, added | 37 | 2024 |
-| 2014 name kept beside its renamed 2024 version | 21 | 2014 |
-| **Not in SRD 5.2.1 — still on the older stats** | **128** | older (92 + 19 have a 2024 version — see below) |
+| **Not in SRD 5.2.1 — still on the older stats** | **127** | older (92 + 18 have a 2024 version — see below) |
+| 2014 version removed because its renamed 2024 version is in the list | 22 | — |
 
 Your 8 custom templates (Topiary Golem Ornamental, the Gnoll Abyssal set,
 Lizardfolk Bloodeye, etc.) were not touched.
 
 ## Missing: not in SRD 5.2.1 (still on older stats)
 
-128 built-ins are not in the free SRD, so they keep the app's older stat
+127 built-ins are not in the free SRD, so they keep the app's older stat
 blocks. Checked against the full 2024 Monster Manual roster (503 stat blocks,
 5etools `XMM` data) on 2026-11-05, they split three ways:
 
 | | Count | What to do |
 |---|---|---|
 | In the 2024 Monster Manual, same name | 92 | Re-import to update |
-| In the 2024 Monster Manual, renamed | 19 | Import the 2024 block (new name) |
+| In the 2024 Monster Manual, renamed | 18 | Import the 2024 block (new name) |
 | Not in the 2024 Monster Manual | 17 | Nothing newer exists — keep the older stats |
 
 To update one, screenshot its stat block from your Monster Manual on D&D Beyond
 and drop it into **Import from Image** (templates library). For a same-name
 monster it detects the existing template and offers **Update Existing**; for a
-renamed one, edit the name to the 2024 name first (or import it as new and
-keep the old one for existing encounters). Set **Source book** to `MM 2024`
+renamed one, edit the name to the 2024 name first, then delete the 2014
+template — once a renamed monster is in the list under its 2024 name, the 2014
+version goes (see "Renamed in 2024: 2014 version removed" below). Set **Source book** to `MM 2024`
 while you're there.
 
 Already re-imported: Beholder.
@@ -64,7 +65,7 @@ Already re-imported: Beholder.
 - **CR 23:** Blob of Annihilation · Empyrean
 - **CR 25:** Colossus
 
-### In the 2024 Monster Manual — renamed (19)
+### In the 2024 Monster Manual — renamed (18)
 
 | Older name in the app | CR | 2024 name | Note |
 |---|---|---|---|
@@ -84,7 +85,6 @@ Already re-imported: Beholder.
 | Sahuagin Priestess | 2 | Sahuagin Priest |  |
 | Yuan-ti Malison | 3 | Yuan-ti Malison (Type 1 / 2 / 3) | 2024 splits it into three type blocks |
 | Lizardfolk King/Queen | 4 | Lizardfolk Sovereign |  |
-| Half-Red Dragon Veteran | 5 | Half-Dragon | folded into the generic Half-Dragon (already in your list from the SRD) |
 | Cyclops | 6 | Cyclops Sentry | 2024 also adds a Cyclops Oracle (CR 10) |
 | Grick Alpha | 7 | Grick Ancient |  |
 
@@ -118,12 +118,15 @@ every untagged older built-in `MM 2014`.
 The "latest official stat block" column is from book knowledge, not checked
 against a source; the in/not-in split above is checked.
 
-## Renamed in 2024: both versions are in the list
+## Renamed in 2024: 2014 version removed
 
-The 2014 template stays (old encounters may reference it). Use the 2024 one
-for new encounters.
+Rule: when a monster was renamed in 2024 and the 2024 version is in the list
+under its new name, the 2014 template is removed. These 22 were removed in
+templates version 14 (ids in `app/data/retiredTemplates.js`); no saved
+encounter used them. A 2014 copy you had edited would have been kept — none
+were. Enemies already in a combat are copies and keep their stats.
 
-| 2014 (older stats) | 2024 (SRD 5.2.1) |
+| 2014 (removed) | 2024 (SRD 5.2.1) |
 |---|---|
 | Acolyte | Priest Acolyte |
 | Azer | Azer Sentinel |
@@ -146,20 +149,22 @@ for new encounters.
 | Swarm of Quippers | Swarm of Piranhas |
 | Thug | Tough |
 | Veteran | Warrior Veteran |
+| Half-Red Dragon Veteran | Half-Dragon (folded into the generic Half-Dragon) |
 
 ## New in 2024 (added)
 
 Archmage, Bugbear Stalker, Goblin Minion, Half-Dragon, Merfolk Skirmisher,
 Noble, Pirate Captain, Tough Boss, Warrior Infantry, Werebear; animals Blood
 Hawk, Camel, Flying Snake, Giant Crab, Giant Weasel, Mastiff, Mule, Pony,
-Venomous Snake — plus the 2024 halves of the renames above.
+Venomous Snake — plus the 2024 versions of the renames above.
 
 ## How the update protects your edits
 
-The templates migration (version 13, `app/api/templates/route.js`) replaces a
-saved built-in **only if it is byte-for-byte the old default** — checked
-against fingerprints of every previously shipped template
-(`app/data/templateFingerprints.js`). A built-in you edited is kept exactly as
+The templates migration (`app/api/templates/route.js`; version 13 = 2024 stat
+blocks, version 14 = renamed 2014 duplicates removed) replaces — or, for a
+removed built-in, deletes — a saved built-in **only if it is byte-for-byte the
+old default** — checked against fingerprints of every previously shipped
+template (`app/data/templateFingerprints.js`). A built-in you edited is kept exactly as
 you saved it, without any 2024 fields mixed in. Custom templates are never
 touched.
 

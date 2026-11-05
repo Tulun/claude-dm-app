@@ -146,7 +146,7 @@ context costs:
 
 ## 5. Bigger ideas (feature-adjacent)
 
-- [ ] **128 built-in monsters still on older stats** — not in SRD 5.2.1; full
+- [ ] **127 built-in monsters still on older stats** — not in SRD 5.2.1; full
   list in `MONSTERS.md`. Update case by case via Import Monster (screenshot from
   the user's own Monster Manual). Possible polish: have Import Monster set
   `edition: '2024'` when it updates an existing template.
@@ -230,6 +230,10 @@ context costs:
   beholder): modal holds an ordered, reorderable list (max 6);
   `/api/parse-monster` accepts `{ images: [...] }` (legacy `{ image }` still
   works) and sends them in one call with a merge-these-pieces prompt — Nov 2026.
+- [x] Renamed 2014 built-ins removed where the 2024 version is built in (22:
+  Goblin, Kobold, Thug, Veteran, Half-Red Dragon Veteran, …). Templates
+  migration v14 drops unedited saved copies (`app/data/retiredTemplates.js`);
+  edited copies kept. `MONSTERS.md` updated — Nov 2026.
 - [x] Built-in monsters moved to 2024 stat blocks: 329 SRD 5.2.1 creatures
   (292 updated in place, 37 new) in `app/data/defaultEnemyTemplates.js`;
   templates migration v13 swaps a saved built-in only when its fingerprint
