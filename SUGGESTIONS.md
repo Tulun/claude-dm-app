@@ -188,6 +188,19 @@ context costs:
 ---
 
 ## Completed log
+- [x] Book-tagged imports count as official: the library's first source tab
+  is now "Official" (was "Monster Manual") and holds built-ins plus any
+  template tagged with a book other than Homebrew (`isOfficial` in
+  `app/templates/statBlock.js`); "Custom" is everything else. Monster-page
+  source badge reads Built-in / Imported / Custom / Conflux. Persisted
+  `source` and the API's `?source=` filter are unchanged — Nov 2026.
+- [x] Monster lore: optional free-text `lore` field (book flavor text).
+  `/api/parse-monster` asks the model for it (verbatim, paragraphs split by
+  blank lines, headings on their own line) and returns `lore: ''` when the
+  screenshots show none; editable in the import review and the monster
+  editor; shown on `/templates/[id]` as a collapsible Lore panel (`splitLore`
+  in `app/templates/statBlock.js` turns short unpunctuated lines into
+  headings). Plain text only — Nov 2026.
 - [x] Source-book tag on templates: free-text `book` field ("MM 2014",
   "MM 2024", "VGtM", …) editable on `/templates/[id]`, set in the
   image-import modal (last value remembered in localStorage), shown as a row

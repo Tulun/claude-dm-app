@@ -137,4 +137,17 @@ describe('POST /api/parse-monster', () => {
     expect(res.status).toBe(502);
     expect((await res.json()).error).toMatch(/cut off/);
   });
+
+  it('asks for the flavor text and returns it as lore', async () => {
+    replyWith({ name: 'Beholder', lore: '  Eyes of the Deep\nA floating orb.  ' });
+    const res = await post({ image: 'AAAA' });
+    expect(lastText(create.mock.calls[0][0])).toMatch(/"lore"/);
+    expect((await res.json()).monster.lore).toBe('Eyes of the Deep\nA floating orb.');
+  });
+
+  it('returns empty lore when the screenshot has none (or the model sends junk)', async () => {
+    replyWith({ name: 'Goblin', lore: { nope: true } });
+    const res = await post({ image: 'AAAA' });
+    expect((await res.json()).monster.lore).toBe('');
+  });
 });

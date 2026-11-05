@@ -154,6 +154,33 @@ describe('Monster detail page — editing', () => {
     expect(screen.getByTestId('book-badge')).toHaveTextContent('VGtM');
   });
 
+  it('shows lore collapsed, expands it, and edits it', async () => {
+    const fetchMock = mockFetch({ templates: [{ ...beholder, lore: 'Eyes of the Deep\nA beholder is a floating orb.\n\nEach believes itself supreme.' }, goblin] });
+    render(<MonsterDetailPage />);
+    await settle();
+
+    const lore = screen.getByTestId('lore');
+    const toggle = within(lore).getByRole('button');
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(within(lore).queryByRole('heading', { name: 'Eyes of the Deep' })).not.toBeInTheDocument();
+    fireEvent.click(toggle);
+    expect(within(lore).getByRole('heading', { name: 'Eyes of the Deep' })).toBeInTheDocument();
+    expect(within(lore).getByText('Each believes itself supreme.')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /^Edit$/ }));
+    fireEvent.change(screen.getByLabelText('Lore'), { target: { value: 'New lore.' } });
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /^Save$/ })); });
+    await flush();
+    expect(postedBody(fetchMock)[0].lore).toBe('New lore.');
+  });
+
+  it('has no lore panel when there is no lore', async () => {
+    mockFetch();
+    render(<MonsterDetailPage />);
+    await settle();
+    expect(screen.queryByTestId('lore')).not.toBeInTheDocument();
+  });
+
   it('adds, reorders and removes ability entries', async () => {
     const fetchMock = mockFetch();
     render(<MonsterDetailPage />);

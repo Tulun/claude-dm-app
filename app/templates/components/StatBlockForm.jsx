@@ -230,6 +230,11 @@ export default function StatBlockForm({ form, setForm, bookOptions = [] }) {
         />
       ))}
 
+      <Card title="Lore" id="edit-lore">
+        <AutoTextarea value={form.lore} onChange={set('lore')} minRows={4} aria-label="Lore"
+          placeholder={'Flavor text from the book. Separate paragraphs with a blank line; a short line on its own becomes a heading.\n\nEyes of the Deep\nA beholder is a floating orb of flesh…'} />
+      </Card>
+
       <Card title="Notes" id="edit-notes">
         <AutoTextarea value={form.notes} onChange={set('notes')} minRows={3} placeholder="Alignment: Lawful Evil. Gear, tactics, lair details…" aria-label="Notes" />
       </Card>

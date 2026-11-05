@@ -47,7 +47,8 @@ Return ONLY valid JSON with this exact structure (no markdown, no explanation):
   "legendaryActions": [
     { "name": "Legendary Action Name", "description": "Description..." }
   ],
-  "notes": "Any additional notes like armor type, spellcasting details, etc."
+  "notes": "Any additional notes like armor type, spellcasting details, etc.",
+  "lore": "Flavor text about the creature, if shown..."
 }
 
 Important parsing rules:
@@ -63,6 +64,7 @@ Important parsing rules:
 10. Leave empty strings "" for text fields that don't exist
 11. Extract XP value if shown, otherwise estimate from CR
 12. Extract proficiency bonus if shown
+13. "lore" is the descriptive flavor text that accompanies the stat block in the book — paragraphs about the creature's nature, behavior, habitat or history, often with their own headings or set beside or above the stat block. Copy it word for word; separate paragraphs with a blank line ("\\n\\n") and put a heading on its own line before its paragraph. Never put stat-block content (traits, actions, numbers) in "lore". Use "" if the screenshots show no flavor text.
 
 Parse the image now and return only the JSON:`;
 
@@ -211,6 +213,7 @@ export async function POST(request) {
       reactions: Array.isArray(monsterData.reactions) ? monsterData.reactions : [],
       legendaryActions: Array.isArray(monsterData.legendaryActions) ? monsterData.legendaryActions : [],
       notes: monsterData.notes || '',
+      lore: typeof monsterData.lore === 'string' ? monsterData.lore.trim() : '',
       isNpc: false,
     };
 

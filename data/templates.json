@@ -1973,7 +1973,8 @@
       "legendaryActions": [],
       "notes": "Alignment: Neutral. Initiative +2 (12). Aarakocra skirmishers are adept at fighting aerial foes, making diving strikes from above.",
       "isNpc": false,
-      "book": "MM 2024"
+      "book": "MM 2024",
+      "source": "mm"
     },
     {
       "id": "mm-acolyte",
@@ -2052,7 +2053,8 @@
       "legendaryActions": [],
       "notes": "Alignment: Unaligned. Initiative +5 (15). Other flying objects, like animated tools or staffs, might also use this stat block.",
       "isNpc": false,
-      "book": "MM 2024"
+      "book": "MM 2024",
+      "source": "mm"
     },
     {
       "id": "mm-animated-flying-sword",
@@ -8714,11 +8716,11 @@
       "id": "mm-githzerai-monk",
       "name": "Githzerai Monk",
       "size": "Medium",
-      "creatureType": "Humanoid",
+      "creatureType": "Aberration (Gith)",
       "ac": 14,
       "maxHp": 38,
       "hitDice": "7d8+7",
-      "speed": 30,
+      "speed": "40",
       "cr": "2",
       "xp": 450,
       "profBonus": 2,
@@ -8730,27 +8732,43 @@
       "cha": 10,
       "savingThrows": "Str +3, Dex +4, Int +3, Wis +4",
       "skills": "Insight +4, Perception +4",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
       "senses": "Passive Perception 14",
-      "languages": "Gith",
-      "isNpc": false,
-      "traits": [
-        {
-          "name": "Psychic Defense",
-          "description": "While not wearing armor, AC includes Wisdom modifier."
-        }
-      ],
+      "languages": "Common, Gith",
+      "traits": [],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Makes two Unarmed Strike attacks."
+          "description": "The githzerai makes two Psi Strike attacks."
         },
         {
-          "name": "Unarmed Strike",
-          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8+2) Bludgeoning plus 9 (2d8) Psychic."
+          "name": "Psi Strike",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8 + 2) Bludgeoning damage plus 9 (2d8) Psychic damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The githzerai casts one of the following spells, requiring no spell components and using Wisdom as the spellcasting ability:\nAt Will: Mage Hand (the hand is Invisible)\n1/Day: See Invisibility"
         }
       ],
-      "notes": "Innate Spellcasting (Wis, DC 12): At will: Mage Hand (hand is invisible). 3/day each: Feather Fall, Jump, See Invisibility, Shield.",
-      "source": "mm"
+      "bonusActions": [
+        {
+          "name": "Psi-Powered Leap (2/Day)",
+          "description": "The githzerai casts Jump, requiring no spell components and using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Psionic Defense (2/Day)",
+          "description": "The githzerai casts Feather Fall or Shield in response to the spell's trigger, requiring no spell components and using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Lawful Neutral. Initiative +4 (14). Spellcasting uses Wisdom.",
+      "lore": "Githzerai monks pursue control of their minds by honing their physical and psionic talents. They might be found beyond githzerai sanctuaries, testing themselves amid the dangerous extremes of the multiverse.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-gnoll-pack-lord",
@@ -11017,11 +11035,11 @@
       "id": "mm-githyanki-warrior",
       "name": "Githyanki Warrior",
       "size": "Medium",
-      "creatureType": "Humanoid",
+      "creatureType": "Aberration (Gith)",
       "ac": 17,
       "maxHp": 49,
       "hitDice": "9d8+9",
-      "speed": 30,
+      "speed": "30",
       "cr": "3",
       "xp": 700,
       "profBonus": 2,
@@ -11032,22 +11050,39 @@
       "wis": 13,
       "cha": 10,
       "savingThrows": "Con +3, Int +3, Wis +3",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
       "senses": "Passive Perception 11",
-      "languages": "Gith",
-      "isNpc": false,
+      "languages": "Common, Gith",
       "traits": [],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Two Greatsword attacks."
+          "description": "The githyanki makes two Psi Blade attacks."
         },
         {
-          "name": "Greatsword",
-          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 9 (2d6+2) Slashing plus 7 (2d6) Psychic damage."
+          "name": "Psi Blade",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 9 (2d6 + 2) Slashing damage plus 7 (2d6) Psychic damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The githyanki casts one of the following spells, requiring no spell components and using Intelligence as the spellcasting ability:\nAt Will: Mage Hand (the hand is Invisible)\n2/Day: Nondetection (self only)"
         }
       ],
-      "notes": "Half Plate. Innate Spellcasting (DC 11): At will: mage hand (hand is invisible). 3/day each: jump, misty step, nondetection (self only).",
-      "source": "mm"
+      "bonusActions": [
+        {
+          "name": "Misty Step (2/Day)",
+          "description": "The githyanki casts Misty Step, requiring no spell components and using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Lawful Evil. Initiative +4 (14). Gear: Half-Plate Armor. Spellcasting ability: Intelligence.",
+      "lore": "Githyanki warriors use psionic abilities to augment their battle prowess.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-goblin-hexer",
@@ -19846,48 +19881,66 @@
       "size": "Large",
       "creatureType": "Undead",
       "ac": 19,
-      "maxHp": 187,
-      "hitDice": "25d10+50",
-      "speed": "0, fly 20 (hover)",
+      "maxHp": 195,
+      "hitDice": "26d10+52",
+      "speed": "5, fly 40 (hover)",
       "cr": "14",
       "xp": 11500,
       "profBonus": 5,
-      "str": 10,
+      "str": 18,
       "dex": 14,
       "con": 14,
       "int": 19,
       "wis": 15,
       "cha": 19,
-      "savingThrows": "Str +5, Con +7, Int +9, Wis +7, Cha +9",
+      "savingThrows": "Con +7, Wis +7",
       "skills": "Perception +12",
+      "vulnerabilities": "",
+      "resistances": "",
       "immunities": "Poison; Charmed, Exhaustion, Paralyzed, Petrified, Poisoned, Prone",
       "senses": "Darkvision 120 ft., Passive Perception 22",
       "languages": "Deep Speech, Undercommon",
-      "isNpc": false,
       "traits": [
         {
-          "name": "Negative Energy Cone",
-          "description": "150-ft Cone. Living creatures in area can't regain HP. Humanoids that die in area rise as zombies under death tyrant's control."
+          "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
+          "description": "If the death tyrant fails a saving throw, it can choose to succeed instead."
         }
       ],
       "actions": [
         {
+          "name": "Multiattack",
+          "description": "The death tyrant uses Eye Rays three times."
+        },
+        {
           "name": "Bite",
-          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 14 (4d6) Piercing damage."
+          "description": "Melee Attack Roll: +9, reach 5 feet. Hit: 13 (2d8 + 4) Piercing damage."
         },
         {
           "name": "Eye Rays",
-          "description": "Shoots three random rays at 1-3 targets within 120 ft. Uses same eye rays as beholder."
+          "description": "The death tyrant randomly shoots one of the following magical rays at a target it can see within 120 feet of itself (roll 1d10; reroll if the death tyrant has already used that ray during this turn):\n1. Charm Ray. Wisdom Saving Throw: DC 17. Failure: 13 (3d8) Psychic damage, and the target has the Charmed condition for 1 hour or until it takes damage. Success: Half damage only.\n2. Paralyzing Ray. Constitution Saving Throw: DC 17. Failure: The target has the Paralyzed condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.\n3. Fear Ray. Wisdom Saving Throw: DC 17. Failure: 10 (3d6) Psychic damage, and the target has the Frightened condition until the end of its next turn. Success: Half damage only.\n4. Slowing Ray. Constitution Saving Throw: DC 17. Failure: 18 (4d8) Necrotic damage. Until the end of the target's next turn, the target can't take Reactions; its Speed is halved; and it can take either an action or a Bonus Action on its turn, not both. Success: Half damage only.\n5. Enervation Ray. Constitution Saving Throw: DC 17. Failure: 16 (3d10) Poison damage, and the target has the Poisoned condition until the end of its next turn. While Poisoned, the target can't regain Hit Points. Success: Half damage only.\n6. Telekinetic Ray. Strength Saving Throw: DC 17 (the target succeeds automatically if it is Gargantuan). Failure: The death tyrant moves the target up to 30 feet in any direction. The target has the Restrained condition until the start of the death tyrant's next turn or until the death tyrant has the Incapacitated condition. The death tyrant can also exert fine control on objects with this ray, such as manipulating a tool or opening a door or container.\n7. Sleep Ray. Wisdom Saving Throw: DC 17 (the target succeeds automatically if it is a Construct or an Undead). Failure: The target has the Unconscious condition for 1 minute. The condition ends if the target takes damage or a creature within 5 feet of it takes an action to wake it.\n8. Petrification Ray. Constitution Saving Throw: DC 17. First Failure: The target has the Restrained condition and repeats the save at the end of its next turn if it is still Restrained, ending the effect on itself on a success. Second Failure: The target has the Petrified condition instead of the Restrained condition.\n9. Disintegration Ray. Dexterity Saving Throw: DC 17. Failure: 36 (8d8) Force damage. If the target is a nonmagical object or a creation of magical force, a 10-foot Cube of it disintegrates into dust. Success: Half damage. Failure or Success: If the target is a creature and this damage reduces it to 0 Hit Points, it disintegrates into dust.\n10. Death Ray. Dexterity Saving Throw: DC 17. Failure: 55 (10d10) Necrotic damage. Success: Half damage. Failure or Success: The target dies if the ray reduces it to 0 Hit Points."
         }
       ],
+      "bonusActions": [
+        {
+          "name": "Negative Energy Cone",
+          "description": "The death tyrant's central eye emits an imperceptible, magical wave of negative energy in a 150-foot Cone. Creatures in that area can't regain Hit Points until the start of the death tyrant's next turn. An intact Humanoid corpse there instantly rises as a Zombie under the death tyrant's control and takes its turn immediately after the death tyrant on the same Initiative count."
+        }
+      ],
+      "reactions": [],
       "legendaryActions": [
         {
-          "name": "Eye Ray",
-          "description": "Uses one random eye ray."
+          "name": "Chomp",
+          "description": "The death tyrant makes two Bite attacks."
+        },
+        {
+          "name": "Glare",
+          "description": "The death tyrant uses Eye Rays."
         }
       ],
-      "notes": "Natural Armor. Same eye rays as beholder. 3 Legendary Actions/round.",
-      "source": "mm"
+      "notes": "Alignment: Lawful Evil. Subtype: Beholder. Initiative +12 (22). XP 13,000 in lair. Legendary Action Uses: 3 (4 in Lair). Immediately after another creature's turn, the death tyrant can expend a use to take one of the following actions. The death tyrant regains all expended uses at the start of each of its turns. Habitat: Underdark; Treasure: Any. Lair effects: Negative Energy Suffusion (creatures within 1 mile of the lair regaining Hit Points from a spell subtract 1d10 from the number regained); Scopophobia (creatures other than the death tyrant and its allies that finish a Short Rest within 1 mile must succeed on a DC 15 Wisdom saving throw or gain no benefit from that rest). These effects end immediately if the death tyrant dies or moves its lair elsewhere.",
+      "lore": "Beholder beyond Death\n\nA death tyrant is a beholder that pursues aberrant goals beyond its death. Ten magical singularities—all that remains of its magical eyes—orbit its floating, cyclopean skull, while the hateful gaze of its central eye socket stifles life and raises the dead.\n\nBeholders typically transform into death tyrants over years when their dreams fixate on death, morbid apotheoses, or journeys to realms inhospitable to life. Some death tyrants rise from the corpses of slain beholders or result from exposure to strange magic or Underdark radiation. Sometimes beholders purposefully pursue this undead state, just as depraved magic-users pursue lichdom, although it is rare, as most beholders already believe themselves to be perfect\n\nNo matter how death tyrants come into being, bizarre impulses drive their deathless existences. Their motivations tend to be extreme or beyond the reason of living creatures.\n\nDeath Tyrant Lairs\nDeath tyrants often lurk deep in the Underdark, in the tunnel-mazes they occupied in life or in the lairs of enemy beholders they conquered. These lairs are devoid of life, as death tyrants change their servants into Undead horrors.\n\nThe region containing a death tyrant's lair is warped by its presence, creating the following effects:\n\nNegative Energy Suffusion. Whenever a creature within 1 mile of the lair regains Hit Points from a spell, it subtracts 1d10 from the number of Hit Points regained.\n\nScopophobia. Creatures within 1 mile of the lair feel as if they're being watched. Any creature (excluding the death tyrant and its allies) that finishes a Short Rest while within 1 mile of the lair must succeed on a DC 15 Wisdom saving throw or gain no benefit from that rest.\n\nIf the death tyrant dies or moves its lair elsewhere, these effects end immediately.\n\nA cluster of tiny lights descended from a dark crevice in the ceiling. These motes cast an eerie glow on the great, alien skull that hung beneath them.\n—Journal of Jastus Hollowquill, explorer of Undermountain",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-ice-devil",
@@ -20456,61 +20509,58 @@
       "id": "mm-githyanki-dracomancer",
       "name": "Githyanki Dracomancer",
       "size": "Medium",
-      "creatureType": "Humanoid",
+      "creatureType": "Aberration (Gith)",
       "ac": 18,
-      "maxHp": 187,
-      "hitDice": "25d8+75",
-      "speed": 30,
+      "maxHp": 255,
+      "hitDice": "30d8+120",
+      "speed": "30, fly 30 (hover)",
       "cr": "16",
       "xp": 15000,
       "profBonus": 5,
-      "str": 16,
+      "str": 10,
       "dex": 16,
-      "con": 16,
-      "int": 21,
-      "wis": 17,
+      "con": 18,
+      "int": 20,
+      "wis": 16,
       "cha": 18,
-      "savingThrows": "Con +8, Int +10, Wis +8",
-      "skills": "Arcana +10, History +10, Insight +8, Perception +8",
-      "senses": "Passive Perception 18",
+      "savingThrows": "Dex +8, Con +9, Int +10, Wis +8",
+      "skills": "Arcana +10, Perception +8",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Blindsight 30 ft., Passive Perception 18",
       "languages": "Common, Draconic, Gith",
-      "isNpc": true,
-      "traits": [
-        {
-          "name": "Legendary Resistance (2/Day)",
-          "description": "If fails a save, can choose to succeed instead."
-        }
-      ],
+      "traits": [],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Three Silver Greatsword attacks or two Draconic Bolt attacks."
+          "description": "The githyanki makes three Draconic Strike attacks."
         },
         {
-          "name": "Silver Greatsword",
-          "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 10 (2d6+3) Slashing plus 17 (5d6) Psychic."
+          "name": "Draconic Strike",
+          "description": "Melee or Ranged Attack Roll: +10, reach 10 ft. or range 120 ft. Hit: 12 (2d6 + 5) Slashing damage plus 17 (5d6) Fire damage, and the target has the Frightened condition until the start of the githyanki's next turn."
         },
         {
-          "name": "Draconic Bolt",
-          "description": "Ranged Attack Roll: +10, range 120 ft. Hit: 27 (4d10+5) damage (fire, cold, lightning, acid, or poison; dracomancer's choice)."
+          "name": "Conjured Dragon's Breath (Recharge 5-6)",
+          "description": "Dexterity Saving Throw: DC 18, each creature in a 90-foot Cone. Failure: 27 (6d8) Fire damage plus 27 (6d8) Force damage. Success: Half damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The githyanki casts one of the following spells, requiring no spell components and using Intelligence as the spellcasting ability (spell save DC 18, +10 to hit with spell attacks):\nAt Will: Mage Hand (the hand is Invisible)\n2/Day Each: Nondetection (self only), Plane Shift, Tongues"
         }
       ],
-      "legendaryActions": [
+      "bonusActions": [
         {
-          "name": "Cantrip",
-          "description": "Casts a cantrip."
-        },
-        {
-          "name": "Draconic Bolt (2 Actions)",
-          "description": "Uses Draconic Bolt."
-        },
-        {
-          "name": "Breath of the Dragon (3 Actions)",
-          "description": "30-ft Cone. DC 18 DEX, 36 (8d8) Fire (half on save)."
+          "name": "Misty Step (3/Day)",
+          "description": "The githyanki casts Misty Step, requiring no spell components and using the same spellcasting ability as Spellcasting."
         }
       ],
-      "notes": "Plate Armor. Innate Spellcasting (Psionics, DC 18): At will: mage hand, message, minor illusion. 3/day each: blur, jump, misty step, nondetection. 1/day each: plane shift, telekinesis. Spellcasting (DC 18, +10): Cantrips: fire bolt, mage hand, prestidigitation, shocking grasp. 1st (4 slots): magic missile, shield. 2nd (3 slots): detect thoughts, mirror image. 3rd (3 slots): counterspell, fireball, fly. 4th (3 slots): greater invisibility, wall of fire. 5th (2 slots): cone of cold, hold monster. 6th (1 slot): chain lightning. 7th (1 slot): finger of death. 8th (1 slot): dominate monster. 3 Legendary Actions/round.",
-      "source": "mm"
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Initiative +8 (18). Spellcasting uses Intelligence (spell save DC 18, +10 to hit with spell attacks).",
+      "lore": "One of Gith's last deeds was to forge an alliance between the githyanki and the dragon god Tiamat. Ever since, the Dragon Queen's red dragon consort, Ephelomon, and his kind have been allies of the githyanki. Githyanki dracomancers uphold this pact and cultivate magic talents that complement the might of red dragons.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-gulthias-blight",
@@ -20920,9 +20970,9 @@
       "size": "Medium",
       "creatureType": "Undead",
       "ac": 20,
-      "maxHp": 180,
-      "hitDice": "19d8+95",
-      "speed": 30,
+      "maxHp": 199,
+      "hitDice": "21d8+105",
+      "speed": "30",
       "cr": "17",
       "xp": 18000,
       "profBonus": 6,
@@ -20932,121 +20982,156 @@
       "int": 12,
       "wis": 16,
       "cha": 18,
-      "savingThrows": "Dex +6, Wis +9, Cha +10",
+      "savingThrows": "Dex +6, Wis +9",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
       "immunities": "Necrotic, Poison; Exhaustion, Frightened, Poisoned",
       "senses": "Darkvision 120 ft., Passive Perception 13",
       "languages": "Abyssal, Common",
-      "isNpc": false,
       "traits": [
         {
+          "name": "Legendary Resistance (3/Day)",
+          "description": "If the death knight fails a saving throw, it can choose to succeed instead."
+        },
+        {
           "name": "Magic Resistance",
-          "description": "Advantage on saves vs spells/magic."
+          "description": "The death knight has Advantage on saving throws against spells and other magical effects."
         },
         {
           "name": "Marshal Undead",
-          "description": "Undead allies within 60 ft have Advantage on saves vs turn undead."
+          "description": "Undead creatures of the death knight's choice (excluding itself) in a 60-foot Emanation originating from it have Advantage on attack rolls and saving throws. It can't use this trait if it has the Incapacitated condition."
+        },
+        {
+          "name": "Undead Restoration",
+          "description": "If the death knight is destroyed before it atones for its evil, it gains a new body in 1d10 days, reviving with all its Hit Points. The new body appears in a location significant to the death knight."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Three Longsword attacks."
+          "description": "The death knight makes three Dread Blade attacks."
         },
         {
-          "name": "Longsword",
-          "description": "Melee Attack Roll: +11, reach 5 ft. Hit: 9 (1d8+5) Slashing, or 10 (1d10+5) two-handed, plus 18 (4d8) Necrotic."
+          "name": "Dread Blade",
+          "description": "Melee Attack Roll: +11, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 13 (3d8) Necrotic damage."
         },
         {
-          "name": "Hellfire Orb (1/Day)",
-          "description": "Hurls orb at point within 120 ft. Creatures within 20 ft of point: DC 18 DEX, 35 (10d6) Fire plus 35 (10d6) Necrotic (half on save)."
+          "name": "Hellfire Orb (Recharge 5–6)",
+          "description": "Dexterity Saving Throw: DC 18, each creature in a 20-foot-radius Sphere centered on a point the death knight can see within 120 feet. Failure: 35 (10d6) Fire damage plus 35 (10d6) Necrotic damage. Success: Half damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The death knight casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 18):\nAt Will: Command, Phantom Steed\n2/Day Each: Destructive Wave (Necrotic), Dispel Magic"
         }
       ],
+      "bonusActions": [],
       "reactions": [
         {
           "name": "Parry",
-          "description": "+6 AC against one melee attack."
+          "description": "Trigger: The death knight is hit by a melee attack roll while holding a weapon. Response: The death knight adds 6 to its AC against that attack, possibly causing it to miss."
         }
       ],
-      "notes": "Plate Armor. Spellcasting (DC 18, +10): 1st (4 slots): command, compelled duel, searing smite. 2nd (3 slots): hold person, magic weapon. 3rd (3 slots): dispel magic, elemental weapon. 4th (3 slots): banishment, staggering smite. 5th (2 slots): destructive wave (Necrotic).",
-      "source": "mm"
+      "legendaryActions": [
+        {
+          "name": "Dread Authority",
+          "description": "The death knight uses Spellcasting to cast Command. The death knight can't take this action again until the start of its next turn."
+        },
+        {
+          "name": "Fell Word",
+          "description": "Constitution Saving Throw: DC 18, one creature the death knight can see within 120 feet. Failure: 17 (5d6) Necrotic damage, and the target's Hit Point maximum decreases by an amount equal to the damage taken. Failure or Success: The death knight can't take this action again until the start of its next turn."
+        },
+        {
+          "name": "Lunge",
+          "description": "The death knight moves up to half its Speed, and it makes one Dread Blade attack."
+        }
+      ],
+      "notes": "Medium or Small Undead, Chaotic Evil. Initiative +12 (22). Habitat: Any; Treasure: Armaments. Legendary Action Uses: 3. Immediately after another creature's turn, the death knight can expend a use to take one of the following actions. The death knight regains all expended uses at the start of each of its turns.",
+      "lore": "Death Knights\nHaunted Commanders of Unliving Legions\n\nChampions of evil, death knights are armor-clad, skeletal warlords. Combining devastating martial prowess and blasphemous magic, these undying tyrants lead unholy legions against the living or brood in cursed citadels. Every death knight is haunted by a legacy of tragedy and dishonor that drives it to commit greater evils.\n\nDeath Knight\nDeath knights are deadly combatants and domineering commanders with grim histories. Some strive to end the curses that doom them to undeath, though their selfish souls eternally shackle them to their fates. Others, like the infamous death knight Lord Soth, brood in dismal ruins for centuries, rousing themselves to action only when something reignites their deathless evil.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-dracolich",
       "name": "Dracolich",
       "size": "Huge",
       "creatureType": "Undead",
-      "ac": 19,
+      "ac": 20,
       "maxHp": 225,
       "hitDice": "18d12+108",
-      "speed": "40, fly 80",
+      "speed": "40, burrow 30, fly 80",
       "cr": "17",
       "xp": 18000,
       "profBonus": 6,
       "str": 25,
       "dex": 10,
       "con": 23,
-      "int": 16,
+      "int": 19,
       "wis": 15,
-      "cha": 19,
-      "savingThrows": "Dex +6, Con +12, Wis +8, Cha +10",
+      "cha": 21,
+      "savingThrows": "Dex +6, Wis +8",
       "skills": "Perception +14, Stealth +6",
-      "resistances": "Necrotic",
-      "immunities": "Lightning, Poison; Charmed, Exhaustion, Frightened, Paralyzed, Poisoned",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Necrotic, Poison; Charmed, Exhaustion, Frightened, Paralyzed, Poisoned",
       "senses": "Blindsight 60 ft., Darkvision 120 ft., Passive Perception 24",
       "languages": "Common, Draconic",
-      "isNpc": false,
       "traits": [
         {
-          "name": "Legendary Resistance (3/Day)",
-          "description": "If fails a save, can choose to succeed instead."
+          "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
+          "description": "If the dracolich fails a saving throw, it can choose to succeed instead."
+        },
+        {
+          "name": "Life Suppression",
+          "description": "Creatures within 60 feet of the dracolich can't regain Hit Points."
         },
         {
           "name": "Magic Resistance",
-          "description": "Advantage on saves vs spells/magic."
+          "description": "The dracolich has Advantage on saving throws against spells and other magical effects."
+        },
+        {
+          "name": "Soul Gem",
+          "description": "The dracolich has a magical gem. If the dracolich is destroyed while the gem is on the same plane of existence as it, the dracolich gains a new body in 1d20 days, regaining all its Hit Points and appearing within 5 feet of the gem. The gem is a Tiny object that has AC 20; HP 50; and Immunity to Necrotic, Poison, and Psychic damage. The gem regains all its Hit Points at the end of every turn, but it turns to dust if reduced to 0 Hit Points. If the gem is destroyed, the dracolich can create a new one by completing an 8-hour ritual using a gem worth 1,000+ GP and by expending 5,000 GP, which the ritual consumes."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Uses Frightful Presence, then three attacks: one Bite and two Claws."
+          "description": "The dracolich makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast Ray of Sickness (level 2 version)."
         },
         {
-          "name": "Bite",
-          "description": "Melee Attack Roll: +13, reach 10 ft. Hit: 18 (2d10+7) Piercing plus 5 (1d10) Lightning plus 5 (1d10) Necrotic."
+          "name": "Rend",
+          "description": "Melee Attack Roll: +13, reach 10 ft. Hit: 18 (2d10 + 7) Slashing damage plus 4 (1d8) Necrotic damage."
         },
         {
-          "name": "Claw",
-          "description": "Melee Attack Roll: +13, reach 5 ft. Hit: 14 (2d6+7) Slashing damage."
+          "name": "Necrotic Breath (Recharge 5-6)",
+          "description": "Constitution Saving Throw: DC 20, each creature in a 60-foot Cone. Failure: 52 (8d12) Necrotic damage. Success: Half damage."
         },
         {
-          "name": "Tail",
-          "description": "Melee Attack Roll: +13, reach 15 ft. Hit: 16 (2d8+7) Bludgeoning damage."
-        },
-        {
-          "name": "Frightful Presence",
-          "description": "Creatures within 120 ft: DC 18 WIS or Frightened 1 min (save ends). Success = immune 24 hrs."
-        },
-        {
-          "name": "Lightning Breath (Recharge 5-6)",
-          "description": "90-ft Line. DC 20 DEX, 66 (12d10) Lightning (half on save)."
+          "name": "Spellcasting",
+          "description": "The dracolich casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 19, +11 to hit with spell attacks):\nAt Will: Detect Magic, Ray of Sickness (level 2 version)\n1/Day Each: Create Undead (level 8 version), Finger of Death"
         }
       ],
+      "bonusActions": [],
+      "reactions": [],
       "legendaryActions": [
         {
-          "name": "Detect",
-          "description": "Makes Perception check."
+          "name": "Pounce",
+          "description": "The dracolich moves up to half its Speed, and it makes one Rend attack."
         },
         {
-          "name": "Tail Attack",
-          "description": "Makes Tail attack."
+          "name": "Sickening Ray",
+          "description": "The dracolich uses Spellcasting to cast Ray of Sickness (level 2 version). The dracolich can't take this action again until the start of its next turn."
         },
         {
-          "name": "Wing Attack (2 Actions)",
-          "description": "DC 21 DEX or 14 (2d6+7) Bludgeoning and Prone. Dracolich can fly half speed."
+          "name": "Terrifying Presence",
+          "description": "Wisdom Saving Throw: DC 19, each creature in a 30-foot Emanation originating from the dracolich. Failure: 11 (2d10) Psychic damage, and the target has the Frightened condition until the end of its next turn. Failure or Success: The dracolich can't take this action again until the start of its next turn."
         }
       ],
-      "notes": "Natural Armor. Based on adult blue dragon. 3 Legendary Actions/round.",
-      "source": "mm"
+      "notes": "Size: Huge or Gargantuan. Alignment: Lawful Evil. Initiative +12 (22). XP 20,000 in lair. Legendary Action Uses: 3 (4 in Lair). Immediately after another creature's turn, the dracolich can expend a use to take one of the legendary actions. The dracolich regains all expended uses at the start of each of its turns. Habitat: Any; Treasure: Any. Lair effects: Sapping Mist - The area within 1 mile of the lair is Lightly Obscured by pale fog. Whenever a creature other than the dracolich or one of its allies finishes a Long Rest in that area, it must succeed on a DC 15 Constitution saving throw or gain 1 Exhaustion level. Soul Drain - Creatures within 1 mile of the lair have Disadvantage on Death Saving Throws. If the dracolich is destroyed or moves its lair elsewhere, these effects end immediately. The effects resume if the dracolich gains a new body (see its Soul Gem trait).",
+      "lore": "Draconic Tyrant Reborn\n\nThe vilest dragons seek to escape the grip of death, employing ageless secrets and blasphemous magic to become horrors called dracoliches. These deathless dragons bind their spirits to gems and magically animate their rotting corpses. Eventually becoming skeletal horrors, dracoliches continue the centuries-spanning plots they pursued in life, seek revenge on those that brought them low, and strive toward vicious goals they couldn't indulge in life.\n\nDracoliches combine the corrupt immortality of the undead with the legendary power of dragons. A dracolich retains a breath weapon, but it is a chilling necrotic blast. These terrors gradually sicken the land near their lairs and attract sinister followers—usually other undead or cultists seeking to revel in their terrible might. Living dragons of all types loathe and seek to destroy dracoliches, viewing them as distortions of draconic magic.\n\nThere are untold profane routes by which a dragon might become a dracolich. However one is created, a dracolich chooses a gem that becomes the anchor for its spirit and binds the deathless dragon to the world. So long as a dracolich is on the same plane of existence as its soul gem, the dracolich can survive the destruction of its physical body. Its spirit retreats into the gem if the dracolich's body is destroyed, and the monster might one day regain its terrifying form. Dracoliches often sequester their soul gems within meaningful treasure from their hoard or in unassuming baubles. Roll on or choose a result from the Dracolich Soul Gem Vessels table to inspire what holds a dracolich's soul gem.\n\nDracolich Soul Gem Vessels\n1d10 | A Dracolich's Soul Gem Is Hidden In...\n1 | Another dragon's treasure hoard.\n2 | The body of a servant or an ancestor.\n3 | The core of a dracolich's melted hoard.\n4 | A corrupted dragon egg.\n5 | A dragon horn a hero took as a trophy.\n6 | A nation's royal or religious treasure.\n7 | A powerful magic item.\n8 | A source of magical wonders, such as a giant tree or mystical pool.\n9 | The vault of an archdevil, a wicked god, or another extraplanar villain.\n10 | The weapon that slew the dracolich.\n\nDracolich Lairs\nA dracolich lurks in a corrupted version of the lair it had in life. The region containing a dracolich's lair is warped by its presence, creating the following effects:",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-dragon-turtle",
@@ -21107,7 +21192,7 @@
       "ac": 19,
       "maxHp": 310,
       "hitDice": "23d12+161",
-      "speed": 40,
+      "speed": "50",
       "cr": "17",
       "xp": 18000,
       "profBonus": 6,
@@ -21118,46 +21203,52 @@
       "wis": 13,
       "cha": 14,
       "savingThrows": "Str +13, Dex +6, Con +13, Wis +7",
-      "skills": "Perception +7",
-      "resistances": "Cold, Fire, Lightning; Bludgeoning, Piercing, Slashing from nonmagical attacks",
+      "skills": "Perception +7, Survival +7",
+      "vulnerabilities": "",
+      "resistances": "Cold, Fire, Lightning",
       "immunities": "Poison; Poisoned",
       "senses": "Darkvision 120 ft., Passive Perception 17",
       "languages": "Abyssal",
-      "isNpc": false,
       "traits": [
         {
-          "name": "Charge",
-          "description": "If moves 15+ ft and hits with Gore, +38 (7d10) Piercing damage. DC 21 STR or Prone."
-        },
-        {
-          "name": "Labyrinthine Recall",
-          "description": "Can perfectly recall any path it has traveled."
+          "name": "Demonic Restoration",
+          "description": "If the goristro dies outside the Abyss, its body dissolves into ichor, and it gains a new body instantly, reviving with all its Hit Points somewhere in the Abyss."
         },
         {
           "name": "Magic Resistance",
-          "description": "Advantage on saves vs spells/magic."
+          "description": "The goristro has Advantage on saving throws against spells and other magical effects."
         },
         {
           "name": "Siege Monster",
-          "description": "Double damage to objects and structures."
+          "description": "The goristro deals double damage to objects and structures."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Three attacks: two Fists and one Gore."
+          "description": "The goristro makes one Brutal Gore attack and two Slam attacks."
         },
         {
-          "name": "Fist",
-          "description": "Melee Attack Roll: +13, reach 10 ft. Hit: 20 (3d8+7) Bludgeoning damage."
+          "name": "Brutal Gore",
+          "description": "Melee Attack Roll: +13, reach 10 ft. Hit: 40 (6d10 + 7) Piercing damage. If the target is a Huge or smaller creature, it is pushed up to 20 feet straight away from the goristro and has the Prone condition."
         },
         {
-          "name": "Gore",
-          "description": "Melee Attack Roll: +13, reach 10 ft. Hit: 45 (7d10+7) Piercing damage."
+          "name": "Slam",
+          "description": "Melee Attack Roll: +13, reach 10 ft. Hit: 29 (4d10 + 7) Bludgeoning damage."
         }
       ],
-      "notes": "Natural Armor",
-      "source": "mm"
+      "bonusActions": [
+        {
+          "name": "Charge",
+          "description": "The goristro moves up to half its Speed straight toward an enemy it can see."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Initiative +6 (16). Habitat: Planar (Abyss); Treasure: Armaments.",
+      "lore": "Terrifying in scale and overwhelming power, goristros are giant demons capable of bringing cities to ruin. These demons embody senseless anarchy and nihilistic destruction, and they take special offense at creatures or structures that rival them in size. Castles, towers, giants, and beasts of war are all common victims of these monsters' wrath.\n\nGoristros resemble hunched, primeval minotaurs bearing the scars of Abyssal wars or wounds from mighty war machines. Their appearance reflects that of their creator, Baphomet, the demon lord worshiped by many evil minotaurs. Goristros stalk Baphomet's Abyssal realm, known as the Endless Maze, and pulp any non-demons they encounter in that massive, magical labyrinth.\n\nPlot and strategize, bait and scheme, but hubris is no armor against ruin incarnate, and greater beings than you have fallen under the onslaught of the Abyss.\n—Mellagorus the Pit Fiend, Deceptions and Stratagems",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-sphinx-of-valor",
@@ -21233,9 +21324,9 @@
       "size": "Tiny",
       "creatureType": "Undead",
       "ac": 20,
-      "maxHp": 80,
-      "hitDice": "20d4",
-      "speed": "0, fly 30 (hover)",
+      "maxHp": 180,
+      "hitDice": "72d4",
+      "speed": "5, fly 30 (hover)",
       "cr": "18",
       "xp": 20000,
       "profBonus": 6,
@@ -21245,56 +21336,57 @@
       "int": 20,
       "wis": 17,
       "cha": 20,
-      "savingThrows": "Con +6, Int +11, Wis +9, Cha +11",
-      "resistances": "Bludgeoning, Piercing, Slashing from magic weapons",
-      "immunities": "Necrotic, Poison, Psychic; Bludgeoning, Piercing, Slashing from nonmagical attacks; Charmed, Deafened, Exhaustion, Frightened, Paralyzed, Petrified, Poisoned, Prone, Stunned",
+      "savingThrows": "Str -5, Dex +11, Con +6, Int +11, Wis +9, Cha +5",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "Bludgeoning, Piercing, Slashing",
+      "immunities": "Necrotic, Poison, Psychic; Charmed, Deafened, Exhaustion, Frightened, Paralyzed, Petrified, Poisoned, Prone, Stunned",
       "senses": "Truesight 120 ft., Passive Perception 13",
-      "languages": "—",
-      "isNpc": false,
+      "languages": "None",
       "traits": [
         {
-          "name": "Avoidance",
-          "description": "If subjected to effect allowing DEX save for half damage, takes no damage on success, half on failure."
+          "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
+          "description": "If the demilich fails a saving throw, it can choose to succeed instead."
         },
         {
-          "name": "Legendary Resistance (3/Day)",
-          "description": "If fails a save, can choose to succeed instead."
-        },
-        {
-          "name": "Turn Immunity",
-          "description": "Immune to turn undead effects."
+          "name": "Undead Restoration",
+          "description": "If the demilich is destroyed, it reforms and regains all its Hit Points in 1d10 days unless a Wish spell is cast on its remains."
         }
       ],
       "actions": [
         {
-          "name": "Howl (Recharge 5-6)",
-          "description": "Creatures within 30 ft: DC 15 CON or drop to 0 HP. Success = 10d6 Necrotic."
+          "name": "Multiattack",
+          "description": "The demilich makes three Necrotic Burst attacks."
         },
         {
-          "name": "Life Drain",
-          "description": "Creatures within 10 ft: DC 19 CON, 21 (6d6) Necrotic (half on save). HP max reduced by amount equal to damage. Reduction lasts until Long Rest. Dies if max HP reduced to 0."
+          "name": "Necrotic Burst",
+          "description": "Melee or Ranged Attack Roll: +11, reach 5 ft. or range 120 ft. Hit: 24 (7d6) Necrotic damage."
+        },
+        {
+          "name": "Howl (Recharge 5–6)",
+          "description": "Constitution Saving Throw: DC 19, each creature in a 30-foot Emanation originating from the demilich. Failure: 70 (20d6) Psychic damage. Failure or Success: The target has the Frightened condition until the start of the demilich's next turn."
         }
       ],
+      "bonusActions": [],
+      "reactions": [],
       "legendaryActions": [
         {
-          "name": "Flight",
-          "description": "Flies up to half speed."
+          "name": "Energy Drain",
+          "description": "Constitution Saving Throw: DC 19, one creature the demilich can see within 120 feet. Failure: The target's Hit Point maximum decreases by 14 (4d6). Failure or Success: The demilich can't take this action again until the start of its next turn."
         },
         {
-          "name": "Cloud of Dust",
-          "description": "Creates 10-ft-radius cloud of dust. Heavily Obscured for others. Lasts until start of demilich's next turn."
+          "name": "Grave-Dust Flight",
+          "description": "The demilich flies up to its Fly Speed, shedding grave dust. Each creature within 5 feet of the demilich as it moves is targeted once by the following effect. Constitution Saving Throw: DC 19. Failure: The target has the Blinded condition until the end of the demilich's next turn. Failure or Success: The demilich can't take this action again until the start of its next turn."
         },
         {
-          "name": "Energy Drain (2 Actions)",
-          "description": "Each creature within 30 ft: DC 15 CON or one slot of highest spell level expended. If no spell slots, 10 (3d6) Psychic."
-        },
-        {
-          "name": "Vile Curse (3 Actions)",
-          "description": "One creature within 30 ft: DC 15 WIS or Cursed. While Cursed, Disadvantage on attacks and saves. Remove curse ends."
+          "name": "Necrosis",
+          "description": "The demilich makes one Necrotic Burst attack."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round.",
-      "source": "mm"
+      "notes": "Initiative +17 (27). XP 22,000 in lair. Legendary Action Uses: 3 (4 in Lair). Immediately after another creature's turn, the demilich can expend a use to take one of the following actions. The demilich regains all expended uses at the start of each of its turns. Habitat: Any; Treasure: Arcana.",
+      "lore": "What Lies beyond Lichdom\n\nA demilich is a skull harboring the remnants of a lich's wicked essence. If the burden of immortality overwhelms a lich, its consciousness turns inward as its body rots away. But if its remains are disturbed, a demilich rises. Demiliches usually appear as skulls adorned with gems or arcane sigils.\n\nDemilich Lairs\nDemiliches jealously guard their deathtrap-laden sanctums. The most notorious of these is the Tomb of Horrors, lair of the infamous Acererak.\n\nThe region containing a demilich's lair is twisted by its presence, creating the following effects:\n\nEnervating Domain. Whenever a creature other than the demilich or one of its allies finishes a Long Rest within 1 mile of the lair, the creature must succeed on a DC 20 Constitution saving throw or have its Hit Point maximum reduced by 1d4. This reduction lasts until the creature finishes a Long Rest outside that area.\n\nTravel Ward. Creatures can't use teleportation or planar travel to enter or exit the lair.\n\nIf the demilich dies or moves its lair elsewhere, these effects end immediately.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-balor",
@@ -21715,72 +21807,90 @@
     {
       "id": "mm-arch-hag",
       "name": "Arch-hag",
-      "size": "Medium",
+      "size": "Large",
       "creatureType": "Fey",
-      "ac": 17,
-      "maxHp": 170,
-      "hitDice": "20d8+80",
-      "speed": "30, fly 30 (hover)",
+      "ac": 20,
+      "maxHp": 333,
+      "hitDice": "29d10+174",
+      "speed": "40",
       "cr": "21",
       "xp": 33000,
       "profBonus": 7,
-      "str": 18,
-      "dex": 16,
-      "con": 18,
-      "int": 20,
-      "wis": 18,
-      "cha": 20,
-      "savingThrows": "Con +11, Int +12, Wis +11, Cha +12",
-      "skills": "Arcana +12, Deception +12, Insight +11, Perception +11, Stealth +10",
-      "resistances": "Cold, Fire; Bludgeoning, Piercing, Slashing from nonmagical attacks",
-      "immunities": "Charmed, Frightened",
-      "senses": "Truesight 120 ft., Passive Perception 21",
-      "languages": "Common, Draconic, Giant, Primordial, Sylvan",
-      "isNpc": false,
+      "str": 24,
+      "dex": 15,
+      "con": 23,
+      "int": 19,
+      "wis": 19,
+      "cha": 25,
+      "savingThrows": "Dex +9, Wis +11",
+      "skills": "Deception +14, Perception +11, Persuasion +21",
+      "vulnerabilities": "",
+      "resistances": "Cold, Fire, Psychic",
+      "immunities": "Charmed, Exhaustion, Frightened",
+      "senses": "Truesight 60 ft., Passive Perception 21",
+      "languages": "All",
       "traits": [
         {
-          "name": "Legendary Resistance (3/Day)",
-          "description": "If fails a save, can choose to succeed instead."
+          "name": "Coven Magic",
+          "description": "While within 30 feet of at least two hag allies, the hag can cast one of the following spells, requiring no Material components, using the spell's normal casting time, and using Intelligence as the spellcasting ability (spell save DC 19): Augury, Find Familiar, Identify, Locate Object, Scrying, or Unseen Servant. The hag must finish a Long Rest before using this trait to cast that spell again."
+        },
+        {
+          "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+          "description": "If the hag fails a saving throw, it can choose to succeed instead."
         },
         {
           "name": "Magic Resistance",
-          "description": "Advantage on saves vs spells/magic."
+          "description": "The hag has Advantage on saving throws against spells and other magical effects."
+        },
+        {
+          "name": "Spiteful Escape",
+          "description": "When the hag drops to 0 Hit Points, it dies only if it is within 30 feet of its anathema (a thing the DM chooses as the hag's most hated thing). Otherwise, the hag drops to 1 Hit Point and teleports to a harmless demiplane, and it can't return to the plane it left for 2d6 days. When the hag teleports away, each creature within 60 feet of the space it left is cursed. Until the curse ends, a creature has Disadvantage on ability checks and saving throws, and the hag knows its location anywhere in the multiverse."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Three Claw attacks or two Nightmare Bolt attacks."
+          "description": "The hag makes two Spectral Claw attacks and uses Crackling Wave."
         },
         {
-          "name": "Claw",
-          "description": "Melee Attack Roll: +11, reach 5 ft. Hit: 11 (2d6+4) Slashing plus 14 (4d6) Necrotic."
+          "name": "Spectral Claw",
+          "description": "Melee or Ranged Attack Roll: +14, reach 10 ft. or range 60 ft. Hit: 17 (3d6 + 7) Force damage. If the target is a Large or smaller creature, it has the Prone condition."
         },
         {
-          "name": "Nightmare Bolt",
-          "description": "Ranged Attack Roll: +12, range 120 ft. Hit: 27 (5d8+5) Psychic. DC 20 WIS or Frightened until end of arch-hag's next turn."
+          "name": "Crackling Wave",
+          "description": "Dexterity Saving Throw: DC 22, each creature in a 60-foot Cone. Failure: 32 (5d12) Lightning damage. Success: Half damage. Failure or Success: The target is cursed until the end of the hag's next turn. The target can't take Reactions until the curse ends."
         },
         {
-          "name": "Weird (1/Day)",
-          "description": "Casts weird spell (DC 20)."
+          "name": "Spellcasting",
+          "description": "The hag casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 22):\nAt Will: Detect Thoughts, Dimension Door, Dispel Magic, Hypnotic Pattern\n2/Day Each: Mass Suggestion, Modify Memory, Plane Shift"
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Witch Strike",
+          "description": "Each creature cursed by the hag and within 60 feet of it takes 14 (4d6) Lightning damage."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Tongue Twister",
+          "description": "The hag casts Counterspell in response to that spell's trigger, using the same spellcasting ability as Spellcasting. If the target fails its saving throw, it is cursed until the end of its next turn. Until the curse ends, the target can't cast spells with a Verbal component, and when it speaks, it says the opposite of what it means."
         }
       ],
       "legendaryActions": [
         {
-          "name": "Claw",
-          "description": "Makes one Claw attack."
+          "name": "Hag's Swipe",
+          "description": "The hag makes one Spectral Claw attack."
         },
         {
-          "name": "Nightmare Bolt (2 Actions)",
-          "description": "Uses Nightmare Bolt."
-        },
-        {
-          "name": "Cackle (3 Actions)",
-          "description": "Each Frightened creature within 60 ft: DC 20 WIS, 22 (4d10) Psychic (half on save)."
+          "name": "Malicious Magic",
+          "description": "The hag uses Spellcasting to cast Dimension Door or Hypnotic Pattern. The hag can't take this action again until the start of its next turn."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 20): At will: detect magic, disguise self, fog cloud, ray of sickness. 3/day each: bestow curse, counterspell, dispel magic, phantom steed. 1/day each: eyebite, feeblemind, plane shift. 3 Legendary Actions/round.",
-      "source": "mm"
+      "notes": "Initiative +16 (26). XP 41,000 in lair. Legendary Action Uses: 3 (4 in Lair). Immediately after another creature's turn, the hag can expend a use to take one of the following actions. The hag regains all expended uses at the start of each of its turns. Habitat: Any; Treasure: Arcana. Alignment: Neutral Evil.",
+      "lore": "Hag of Forbidden Secrets and Magical Malice\n\nImmortal and unpredictable, arch-hags hoard secrets and strike magical bargains, altering fate to indulge their fickle whims. These timeless schemers pursue the secrets of the multiverse and work strange magic in pursuit of their inscrutable goals.\n\nArch-hags are unpredictable, self-interested, and greedy, with bizarre fascinations and affectations. Nevertheless, they often make deals to further their plots. These hags are fonts of secret knowledge, particularly lore regarding forbidden magic and multiversal secrets. They might share their knowledge, but their secrets always have a price. In trade for their secrets, arch-hags might request peculiar errands, valuable magic items, or preternatural currency, like one's memories, a year of one's life, or the ability to cry.\n\nMost arch-hags avoid battle, but if forced to fight, they unleash dangerous magic, such as spectral claws, arcing lightning, and mind-bending spells. An arch-hag can curse other magic-users, confounding the spellcasters' incantations and forcing the spellcasters to say the opposite of what they mean. Even if an arch-hag is brought low, its preparations allow it to magically slip away and begin plotting its revenge.\n\nEvery arch-hag has a unique weakness tied to a fateful encounter the hag had in the past or something that embodies the antithesis of the hag's magic. A hag goes out of its way to keep this vulnerability secret. Although an arch-hag isn't physically harmed by its weakness, it can be destroyed only while its weakness is nearby. Roll on or choose a result from the Arch-hag Anathemas table to inspire an arch-hag's weakness.\n\nArch-hag Anathemas\n1d10 | The Arch-hag's Weakness Is...\n1 | The bones of the arch-hag's first love.\n2 | A devil's tear.\n3 | An egg with a miniature castle inside.\n4 | A flower that blooms only when time stops.\n5 | A gift from the hag's twin.\n6 | The multiverse's worst pun.\n7 | One of the hag's missing teeth.\n8 | Snow from the top of Mount Celestia.\n9 | A star pulled from the sky.\n10 | A thread from the Lady of Pain's robes.\n\nArch-hag Lairs\nEach arch-hag creates a magical home, such as a hidden demiplane, a mansion atop a storm cloud, or—in the case of the arch-hag Baba Yaga—a hut atop giant chicken legs. The interiors of these lairs frequently change or exhibit bewildering features.\n\nThe region containing an arch-hag's lair is altered by its presence, creating the following effects:\n\nLapsus Linguae. Creatures (excluding the hag and its allies) within 1 mile of the lair subtract 1d10 from any ability checks they make when they take the Influence action.\n\nMeddlesome Magic. Whenever a creature other than the hag or its allies finishes a Long Rest while within 1 mile of the lair, the next time that creature casts a spell using a spell slot, it also casts Confusion centered on itself. The spell uses the creature's spellcasting ability and doesn't require Concentration.\n\nIf the arch-hag is destroyed or moves its lair elsewhere, these effects end immediately.\n\n\"Heh! People who know too much grow old before their time. Ask me your questions, but be certain that every secret has its cost.\" —Baba Yaga, Mother of Witches",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-lich",
@@ -22090,69 +22200,75 @@
       "id": "mm-elemental-cataclysm",
       "name": "Elemental Cataclysm",
       "size": "Gargantuan",
-      "creatureType": "Elemental",
-      "ac": 18,
+      "creatureType": "Elemental (Titan)",
+      "ac": 20,
       "maxHp": 370,
       "hitDice": "20d20+160",
-      "speed": "50, burrow 50, fly 50 (hover), swim 50",
+      "speed": "60, burrow 60, fly 80 (hover), swim 80",
       "cr": "22",
       "xp": 41000,
       "profBonus": 7,
       "str": 26,
-      "dex": 18,
-      "con": 26,
-      "int": 8,
+      "dex": 19,
+      "con": 27,
+      "int": 9,
       "wis": 14,
-      "cha": 10,
-      "savingThrows": "Con +15, Wis +9",
-      "resistances": "Bludgeoning, Piercing, Slashing from nonmagical attacks",
-      "immunities": "Poison; Exhaustion, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained, Unconscious",
-      "senses": "Darkvision 120 ft., Tremorsense 120 ft., Passive Perception 12",
+      "cha": 9,
+      "savingThrows": "Dex +11, Con +15, Wis +9, Cha +6",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Acid, Cold, Fire, Lightning, Poison, Thunder; Blinded, Charmed, Deafened, Exhaustion, Frightened, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained, Stunned, Unconscious",
+      "senses": "Truesight 150 ft., Passive Perception 12",
       "languages": "Primordial",
-      "isNpc": false,
       "traits": [
         {
-          "name": "Elemental Nature",
-          "description": "Doesn't require air, food, drink, or sleep."
+          "name": "Earth Glide",
+          "description": "The cataclysm can burrow through nonmagical, unworked earth and stone. While doing so, the cataclysm doesn't disturb the material it moves through."
         },
         {
-          "name": "Legendary Resistance (3/Day)",
-          "description": "If fails a save, can choose to succeed instead."
+          "name": "Legendary Resistance (4/Day)",
+          "description": "If the cataclysm fails a saving throw, it can choose to succeed instead."
         },
         {
           "name": "Siege Monster",
-          "description": "Double damage to objects and structures."
+          "description": "The cataclysm deals double damage to objects and structures."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Four Slam attacks."
+          "description": "The cataclysm makes two Elemental Burst attacks."
         },
         {
-          "name": "Slam",
-          "description": "Melee Attack Roll: +15, reach 20 ft. Hit: 30 (4d10+8) Bludgeoning damage."
+          "name": "Elemental Burst",
+          "description": "Melee or Ranged Attack Roll: +15, reach 30 ft. or range 150 ft. Hit: 25 (5d6 + 8) damage of a type chosen by the cataclysm: Acid, Cold, Fire, Lightning, or Thunder."
         },
         {
-          "name": "Elemental Surge (Recharge 5-6)",
-          "description": "Chooses one of four effects. 90-ft Cone or 120-ft Line. DC 23 DEX (or CON for some): ~70 damage of chosen type (half on save). Also causes environmental effects."
+          "name": "Cataclysmic Event (Recharge 4-6)",
+          "description": "The cataclysm creates one of the following effects at random (roll 1d4):\n1. Clinging Flames. Dexterity Saving Throw: DC 23, each creature in a 60-foot-radius Sphere centered on a point the cataclysm can see within 150 feet. Failure: 45 (13d6) Fire damage. Success: Half damage. Failure or Success: The target starts burning.\n2. Freezing Waves. Strength Saving Throw: DC 23, each creature in a 90-foot Cone. Failure: 22 (5d8) Bludgeoning damage plus 22 (5d8) Cold damage, and the target has the Prone condition. Success: Half damage only. Failure or Success: The target's Speed is reduced to 0 until the end of its next turn.\n3. Raging Storm. A storm cloud fills a 60-foot-radius Sphere centered on a point the cataclysm can see within 150 feet. The cloud lasts for 1 minute or until the cataclysm uses Cataclysmic Event again. Creatures entirely in the cloud have the Blinded and Deafened conditions and can't cast spells with a Verbal component. Dexterity Saving Throw: DC 23, each creature that enters the cloud for the first time on a turn or starts its turn there. Failure: 18 (4d8) Lightning damage plus 18 (4d8) Thunder damage. Success: Half damage.\n4. Swallowing Earth. Strength Saving Throw: DC 23, each creature in a 90-foot Cube originating from a point on the ground within 150 feet. Failure: 18 (4d8) Bludgeoning damage plus 18 (4d8) Acid damage, and the target has the Prone condition and is buried under rubble. A buried target has the Restrained condition, has Total Cover, and is suffocating. As an action, a buried creature or another creature within 5 feet of it can make a DC 18 Strength (Athletics) check. On a successful check, the creature is no longer buried. Success: Half damage only."
+        },
+        {
+          "name": "Control Weather",
+          "description": "The cataclysm casts the Control Weather spell, requiring no spell components and using Constitution as the spellcasting ability."
         }
       ],
+      "bonusActions": [],
+      "reactions": [],
       "legendaryActions": [
         {
-          "name": "Slam",
-          "description": "Makes one Slam attack."
+          "name": "Eruption",
+          "description": "The cataclysm makes one Elemental Burst attack."
         },
         {
-          "name": "Elemental Shift (2 Actions)",
-          "description": "Moves up to speed. Opportunity attacks have Disadvantage against it."
-        },
-        {
-          "name": "Earthshaker (3 Actions)",
-          "description": "Creatures within 30 ft: DC 23 STR or Prone and 21 (6d6) Bludgeoning."
+          "name": "Rumbling Movement",
+          "description": "The cataclysm moves up to its Speed, Fly Speed, or Swim Speed without provoking Opportunity Attacks. Each creature within 5 feet of the cataclysm as it moves is targeted once by the following effect. Constitution Saving Throw: DC 23. Failure: The target has the Prone condition. Failure or Success: The cataclysm can't take this action again until the start of its next turn."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "notes": "Chaotic Neutral. Initiative +18 (28). Legendary Action Uses: 3. Immediately after another creature's turn, the cataclysm can expend a use to take one of these actions. It regains all expended uses at the start of each of its turns. Habitat: Planar (Elemental Chaos); Treasure: None.",
+      "lore": "The End and Beginning of Ages\n\nBeyond the fringes of the Elemental Planes, primordial forces endlessly clash amid the Elemental Chaos. Within the vastness and violence of this realm rage elemental cataclysms, entities spawned from the raw forces of the multiverse and awash in dissonant elemental powers. These beings of primal conflict annihilate nearly all they encounter and seed the ruins left in their wake with the potential for new creations.\n\nElemental cataclysms rarely escape the Elemental Chaos. When they do, it is typically due to some planar disruption or the summons of nihilistic cultists. When they emerge on Material Plane worlds, elemental cataclysms create realm-altering trails of destruction, carelessly destroying cities and throwing whole nations into chaos. The rampages aren't random. Elemental cataclysms abhor anything that visibly mars nature, be it mines or monuments, fortresses or cities,\n\nLittle can stop an elemental cataclysm. Those that oppose one of these calamities often attempt to reverse the ritual that summoned it, coax it through a planar rift, or conjure another titan in hopes that the two destroy one another. These terrors leave a wake of ashes, floods, storms, and broken earth. But after these disasters recede, the land is imbued with new life or environmental changes. Roll on or choose a result from the Elemental Alterations table to inspire what changes emerge after an elemental cataclysm's destruction.\n\nElemental Alterations\n1d8 | The Elemental Cataclysm Leaves Behind A...\n1 | Dramatic increase or decrease in temperature.\n2 | Gigantic coral reef or fungal forest.\n3 | Never-ending storm or whirlpool.\n4 | Passage to the Underdark or portal to an Elemental Plane.\n5 | Primeval or previously extinct animal population.\n6 | Rapidly growing rainforest.\n7 | River where previously there was none.\n8 | Series of dramatic rock formations.",
+      "isNpc": false,
+      "book": "MM 2024",
       "source": "mm"
     },
     {
@@ -22296,64 +22412,80 @@
     {
       "id": "mm-blob-of-annihilation",
       "name": "Blob of Annihilation",
-      "size": "Large",
-      "creatureType": "Ooze",
-      "ac": 8,
-      "maxHp": 210,
-      "hitDice": "20d10+100",
-      "speed": "30, climb 30",
+      "size": "Gargantuan",
+      "creatureType": "Ooze (Titan)",
+      "ac": 18,
+      "maxHp": 448,
+      "hitDice": "23d20+207",
+      "speed": "30",
       "cr": "23",
       "xp": 50000,
       "profBonus": 7,
-      "str": 22,
-      "dex": 6,
-      "con": 20,
-      "int": 1,
-      "wis": 6,
-      "cha": 1,
-      "immunities": "Acid, Cold, Fire, Lightning, Necrotic, Poison, Psychic, Radiant, Thunder; Bludgeoning, Piercing, Slashing; Blinded, Charmed, Deafened, Exhaustion, Frightened, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained, Stunned",
-      "senses": "Blindsight 120 ft. (blind beyond), Passive Perception 8",
-      "languages": "—",
-      "isNpc": false,
+      "str": 27,
+      "dex": 14,
+      "con": 28,
+      "int": 10,
+      "wis": 16,
+      "cha": 10,
+      "savingThrows": "Dex +9, Con +16",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "Bludgeoning, Piercing, Slashing",
+      "immunities": "Acid, Necrotic, Poison; Charmed, Exhaustion, Frightened, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained, Stunned, Unconscious",
+      "senses": "Blindsight 120 ft., Passive Perception 13",
+      "languages": "None",
       "traits": [
         {
-          "name": "Annihilation",
-          "description": "Creature or object that touches the blob or hits it with melee attack within 5 ft: 55 (10d10) Force. Magic items must succeed on DC 18 save or be destroyed."
+          "name": "Astral Implosion",
+          "description": "If the blob is reduced to 0 Hit Points, it implodes and ejects any creatures and objects engulfed by it into the Astral Sea. The blob itself vanishes, leaving behind a layer of slime on everything that was within 600 feet of it. In 1d20 years, the blob reconstitutes on a random world in the Material Plane."
         },
         {
-          "name": "Amorphous",
-          "description": "Can move through spaces as narrow as 1 inch."
+          "name": "Legendary Resistance (4/Day)",
+          "description": "If the blob fails a saving throw, it can choose to succeed instead."
         },
         {
-          "name": "Legendary Resistance (3/Day)",
-          "description": "If fails a save, can choose to succeed instead."
-        },
-        {
-          "name": "Magic Immunity",
-          "description": "Immune to spells and magical effects unless blob allows it."
+          "name": "Magic Resistance",
+          "description": "The blob has Advantage on saving throws against spells and other magical effects."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Two Pseudopod attacks."
+          "description": "The blob makes two Pseudopod attacks and uses Engulf. It can replace one attack with a use of Restraining Glob."
         },
         {
           "name": "Pseudopod",
-          "description": "Melee Attack Roll: +13, reach 15 ft. Hit: 55 (10d10) Force. Magic items hit must succeed on DC 18 save or be destroyed."
-        }
-      ],
-      "legendaryActions": [
-        {
-          "name": "Move",
-          "description": "Moves up to its speed."
+          "description": "Melee Attack Roll: +15, reach 30 ft. Hit: 24 (3d10 + 8) Force damage."
         },
         {
-          "name": "Pseudopod (2 Actions)",
-          "description": "Makes one Pseudopod attack."
+          "name": "Engulf",
+          "description": "The blob moves up to its Speed and can move through the spaces of Huge or smaller creatures and objects. Strength Saving Throw: DC 23, each creature or object whose space the blob enters for the first time during this move. Failure: The target is engulfed. While engulfed, a target has Total Cover against attacks and other effects outside the blob, and when the blob moves, the engulfed target moves with it. A nonmagical object is destroyed after spending 1 minute engulfed.\n\nWhile engulfed, a creature takes 21 (6d6) Force damage at the start of each of its turns, is suffocating, has the Restrained condition, and repeats the save at the end of each of its turns. An engulfed creature that is reduced to 0 Hit Points dissolves into ash, which is ejected into the Astral Sea.\n\nSuccess: The target escapes and enters the nearest unoccupied space."
+        },
+        {
+          "name": "Restraining Glob",
+          "description": "The blob lobs a slimy glob at one Large or smaller creature it can see within 600 feet of itself. Dexterity Saving Throw: DC 23, the targeted creature. Failure: 18 (3d6 + 8) Acid damage. The glob rolls the target 60 feet straight toward the blob, and the target has the Restrained condition until the end of its next turn, when the glob harmlessly dissolves. Success: Half damage only."
         }
       ],
-      "notes": "3 Legendary Actions/round.",
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [
+        {
+          "name": "Decay",
+          "description": "The blob deals 14 (4d6) Necrotic damage to each creature engulfed by it. The blob can't take this action again until the start of its next turn."
+        },
+        {
+          "name": "Grasping Glob",
+          "description": "The blob uses Restraining Glob. The blob can't take this action again until the start of its next turn."
+        },
+        {
+          "name": "Lashing Goop",
+          "description": "The blob makes one Pseudopod attack."
+        }
+      ],
+      "notes": "Legendary Action Uses: 3. Immediately after another creature's turn, the blob can expend a use to take one of the following actions. The blob regains all expended uses at the start of each of its turns. Initiative +16 (26). Habitat: Any; Treasure: Any.",
+      "lore": "All-Consuming Cosmic Entropy Unleashed\n\nHoney, I've seen horrors that would make you shit your drawers and reach for the nearest drink. And then there's the blob of annihilation. If you see it, run. And if you can't get away from it, just hope you dissolve fast.\n—Vi, Artificer of Eberron\n\nThe blob of annihilation is a coagulation of cosmic entropy conjoined to the remains of dead gods. This malicious entity drifts through Wildspace and multiversal expanses inimical to life—vast regions where the chance of encountering it is low.\n\nThe blob poses the greatest threat when disasters or nihilistic magic-users summon it to inhabited realms. Once unleashed, the blob of annihilation rolls across the land in vast, cosmic gyres, with fragments of the blob splitting off to engulf targets. The blob consumes anything it encounters, sweeping forests, villages, and fortresses into its mass. Within the blob is an expanse without air or gravity where entropic forces destroy whatever they engulf. Nothing can survive within for long.\n\nOnly magic items and the corpses of gods and titans can endure inside the blob. Because of that fact, treasure hunters and theologians sometimes give themselves the deadly task of trying to retrieve something from within the blob. This quest usually ends in annihilation, but occasionally it results in the find of a lifetime.\n\nWhen the blob appears, roll on or choose a result from the Blob of Annihilation Contents table to inspire what extraordinary thing remains within its goop.\n\nBlob of Annihilation Contents\n1d10 | The Blob Contains...\n1 | An Amulet of the Planes.\n2 | An Artifact of the DM's choice.\n3 | The corpses of two gods who were entangled in battle when the blob consumed them.\n4 | A Cubic Gate.\n5 | A Deck of Many Things.\n6 | A magic key that opens a door in Sigil that no other key and no spell can open.\n7 | The preserved corpse of an empyrean.\n8 | The remains of half a kraken.\n9 | The skull of a death god.\n10 | A tarrasque that just died.",
+      "isNpc": false,
+      "book": "MM 2024",
       "source": "mm"
     },
     {
@@ -22650,75 +22782,79 @@
       "id": "mm-colossus",
       "name": "Colossus",
       "size": "Gargantuan",
-      "creatureType": "Construct",
-      "ac": 20,
-      "maxHp": 400,
-      "hitDice": "26d20+130",
-      "speed": 60,
+      "creatureType": "Construct (Titan)",
+      "ac": 23,
+      "maxHp": 553,
+      "hitDice": "27d20+270",
+      "speed": "60",
       "cr": "25",
       "xp": 75000,
       "profBonus": 8,
       "str": 30,
       "dex": 11,
-      "con": 20,
+      "con": 30,
       "int": 3,
       "wis": 11,
-      "cha": 1,
-      "immunities": "Poison, Psychic; Bludgeoning, Piercing, Slashing from nonmagical attacks; Charmed, Exhaustion, Frightened, Paralyzed, Petrified, Poisoned",
-      "senses": "Darkvision 120 ft., Passive Perception 10",
-      "languages": "Understands languages of creator",
-      "isNpc": false,
+      "cha": 8,
+      "savingThrows": "Dex +8, Wis +8",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "Necrotic, Radiant",
+      "immunities": "Poison, Psychic; Charmed, Exhaustion, Frightened, Paralyzed, Petrified, Poisoned, Stunned, Unconscious",
+      "senses": "Truesight 300 ft., Passive Perception 10",
+      "languages": "Understands Celestial and Common but can't speak",
       "traits": [
         {
           "name": "Immutable Form",
-          "description": "Immune to form-altering spells/effects."
+          "description": "The colossus can't shape-shift."
         },
         {
-          "name": "Legendary Resistance (3/Day)",
-          "description": "If fails a save, can choose to succeed instead."
+          "name": "Legendary Resistance (4/Day)",
+          "description": "If the colossus fails a saving throw, it can choose to succeed instead."
         },
         {
           "name": "Magic Resistance",
-          "description": "Advantage on saves vs spells/magic."
-        },
-        {
-          "name": "Magic Weapons",
-          "description": "Attacks are magical."
+          "description": "The colossus has Advantage on saving throws against spells and other magical effects."
         },
         {
           "name": "Siege Monster",
-          "description": "Double damage to objects and structures."
+          "description": "The colossus deals double damage to objects and structures."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Two Slam attacks."
+          "description": "The colossus makes three attacks, using Slam or Radiant Ray in any combination."
         },
         {
           "name": "Slam",
-          "description": "Melee Attack Roll: +17, reach 20 ft. Hit: 36 (4d12+10) Bludgeoning damage."
+          "description": "Melee Attack Roll: +18, reach 20 ft. Hit: 32 (4d10 + 10) Bludgeoning damage, and the colossus pushes the target up to 20 feet straight away from itself."
         },
         {
-          "name": "Destructive Fist",
-          "description": "Slams fist into ground. Creatures within 30 ft: DC 24 STR, 30 (4d12+10) Bludgeoning plus 30 (4d12+10) Thunder, Prone (half, not Prone on save). Structures automatically take max damage."
+          "name": "Radiant Ray",
+          "description": "Ranged Attack Roll: +18, range 300 ft. Hit: 22 (4d10) Radiant damage. If the target is a Large or smaller creature, it has the Prone condition."
+        },
+        {
+          "name": "Divine Beam (Recharge 5-6)",
+          "description": "Dexterity Saving Throw: DC 26, each creature in a 300-foot-long, 10-foot-wide Line. Failure: 65 (10d12) Radiant damage. Success: Half damage. Failure or Success: A creature reduced to 0 Hit Points by this beam disintegrates into dust, leaving behind any magic items it was wearing or carrying."
         }
       ],
+      "bonusActions": [],
+      "reactions": [],
       "legendaryActions": [
         {
-          "name": "Slam",
-          "description": "Makes one Slam attack."
+          "name": "Smite",
+          "description": "The colossus makes one Radiant Ray attack."
         },
         {
-          "name": "Move (2 Actions)",
-          "description": "Moves up to speed without provoking."
-        },
-        {
-          "name": "Destructive Fist (3 Actions)",
-          "description": "Uses Destructive Fist if available."
+          "name": "Stomp",
+          "description": "The colossus moves up to half its Speed without provoking Opportunity Attacks, and it can make one Slam attack at any point during that move."
         }
       ],
-      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "notes": "Initiative +16 (26). Legendary Action Uses: 3. Immediately after another creature's turn, the colossus can expend a use to take one of the following actions. The colossus regains all expended uses at the start of each of its turns. Habitat: Any; Treasure: Relics. Alignment: Unaligned.",
+      "lore": "Colossi are massive Constructs created by the devout to reflect the nature of a deity, which could be benevolent or wicked. Colossi thrum with incredible magic and work divine will on the land.\n\nDroves of faithful artisans craft a colossus in a shape to honor their deity, then call on that god to infuse the statue with life. This arduous process might take decades and involve hundreds of workers. If the god favors the creation, the mighty crystal at the construct's heart pulses with divine power, and the colossus rises to protect the faithful or enact the god's will.\n\nMost colossi were created in ages past and now lie dormant in secluded wilderness, awakening only when disturbed or called on to serve once more.",
+      "isNpc": false,
+      "book": "MM 2024",
       "source": "mm"
     },
     {
@@ -23278,6 +23414,236 @@
       "notes": "Typically Chaotic Evil alignment. Minion creature with special damage rules.",
       "isNpc": false,
       "source": "custom"
+    },
+    {
+      "id": "imported-1793890176425",
+      "name": "Death Knight Aspirant",
+      "size": "Medium",
+      "creatureType": "Undead",
+      "ac": 20,
+      "maxHp": 178,
+      "hitDice": "21d8+84",
+      "speed": "30",
+      "cr": "11",
+      "xp": 7200,
+      "profBonus": 4,
+      "str": 20,
+      "dex": 10,
+      "con": 18,
+      "int": 10,
+      "wis": 12,
+      "cha": 16,
+      "savingThrows": "Dex +4, Wis +5",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Necrotic, Poison; Exhaustion, Frightened, Poisoned",
+      "senses": "Darkvision 120 ft., Passive Perception 11",
+      "languages": "Abyssal, Common",
+      "traits": [
+        {
+          "name": "Magic Resistance",
+          "description": "The aspirant has Advantage on saving throws against spells and other magical effects."
+        },
+        {
+          "name": "Marshal Undead",
+          "description": "Undead creatures of the aspirant's choice (excluding itself) in a 60-foot Emanation originating from it have Advantage on attack rolls and saving throws. It can't use this trait if it has the Incapacitated condition."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The aspirant makes three Dread Blade attacks."
+        },
+        {
+          "name": "Dread Blade",
+          "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 14 (2d8 + 5) Slashing damage plus 10 (3d6) Necrotic damage."
+        },
+        {
+          "name": "Hellfire Orb (Recharge 5–6)",
+          "description": "Dexterity Saving Throw: DC 15, each creature in a 20-foot-radius Sphere centered on a point the aspirant can see within 120 feet of itself. Failure: 21 (6d6) Fire damage plus 21 (6d6) Necrotic damage. Success: Half damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The aspirant casts one of the following spells, using Charisma as the spellcasting ability (spell save DC 15): At Will: Phantom Steed. 1/Day Each: Destructive Wave (Necrotic), Dispel Magic."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [
+        {
+          "name": "Parry",
+          "description": "Trigger: The aspirant is hit by a melee attack roll while holding a weapon. Response: The aspirant adds 4 to its AC against that attack, possibly causing it to miss."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Size: Medium or Small. Alignment: Chaotic Evil. Initiative +4 (14).",
+      "lore": "When the leader of a villainous order rises as a death knight, their wicked devotees might join them in their cursed existence as death knight aspirants. These followers bear a measure of their leader's power and serve as they did in life, obediently following the death knight's decrees and heralding its terrible will.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793890695899",
+      "name": "Githyanki Knight",
+      "size": "Medium",
+      "creatureType": "Aberration (Gith)",
+      "ac": 18,
+      "maxHp": 117,
+      "hitDice": "18d8+36",
+      "speed": "30",
+      "cr": "8",
+      "xp": 3900,
+      "profBonus": 3,
+      "str": 16,
+      "dex": 14,
+      "con": 15,
+      "int": 14,
+      "wis": 14,
+      "cha": 15,
+      "savingThrows": "Con +5, Int +5, Wis +5",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 12",
+      "languages": "Common, Gith",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The githyanki makes three Silver Sword attacks. It can replace one attack with a use of Spellcasting to cast Telekinesis if available."
+        },
+        {
+          "name": "Silver Sword",
+          "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 10 (2d6 + 3) Slashing damage plus 14 (4d6) Psychic damage. Critical Hit: If the target is in an astral body (as with the Astral Projection spell), the githyanki can cut the silvery cord that tethers the target to its material body instead of dealing damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The githyanki casts one of the following spells, requiring no spell components and using Intelligence as the spellcasting ability (spell save DC 13):\nAt Will: Mage Hand (the hand is Invisible)\n2/Day Each: Nondetection (self only), Tongues\n1/Day Each: Plane Shift, Telekinesis"
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Misty Step (2/Day)",
+          "description": "The githyanki casts Misty Step, requiring no spell components and using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Lawful Evil. Initiative +5 (15). Gear: Plate Armor. Spell save DC 13 (Intelligence).",
+      "lore": "Githyanki knights wield silver blades to slay magic-users who use the Astral Projection spell to intrude on githyanki territories on the Astral Plane. These silver blades are sacred to the githyanki. Non-githyanki who claim these weapons often find themselves hunted by wrathful githyanki knights.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793890874856",
+      "name": "Githzerai Zerth",
+      "size": "Medium",
+      "creatureType": "Aberration (Gith)",
+      "ac": 17,
+      "maxHp": 84,
+      "hitDice": "13d8+26",
+      "speed": "40",
+      "cr": "6",
+      "xp": 2300,
+      "profBonus": 3,
+      "str": 13,
+      "dex": 18,
+      "con": 15,
+      "int": 16,
+      "wis": 17,
+      "cha": 12,
+      "savingThrows": "Str +4, Dex +7, Int +6, Wis +6",
+      "skills": "Arcana +6, Insight +6, Perception +6",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 16",
+      "languages": "Common, Gith",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The githzerai makes two Psi Strike attacks."
+        },
+        {
+          "name": "Psi Strike",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 11 (2d6 + 4) Bludgeoning damage plus 13 (3d8) Psychic damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The githzerai casts one of the following spells, requiring no spell components and using Wisdom as the spellcasting ability (spell save DC 14):\nAt Will: Mage Hand (the hand is Invisible)\n1/Day Each: Phantasmal Killer (level 6 version), Plane Shift, See Invisibility"
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Psi-Powered Leap (2/Day)",
+          "description": "The githzerai casts Jump, requiring no spell components and using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Psionic Defense (2/Day)",
+          "description": "The githzerai casts Feather Fall or Shield in response to the spell's trigger, requiring no spell components and using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Lawful Neutral. Initiative +7 (17). Spellcasting uses Wisdom (spell save DC 14).",
+      "lore": "Githzerai zerths embody the discipline espoused by their first leader, Zerthimon. Their psionic control aids them in protecting their people and traveling the planes of existence without fear of being followed by githyanki or mind flayer foes.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793890890876",
+      "name": "Githzerai Psion",
+      "size": "Medium",
+      "creatureType": "Aberration (Gith)",
+      "ac": 18,
+      "maxHp": 169,
+      "hitDice": "26d8+52",
+      "speed": "40, fly 40 (hover)",
+      "cr": "12",
+      "xp": 8400,
+      "profBonus": 4,
+      "str": 12,
+      "dex": 18,
+      "con": 15,
+      "int": 19,
+      "wis": 18,
+      "cha": 14,
+      "savingThrows": "Str +5, Dex +8, Int +8, Wis +8",
+      "skills": "Arcana +8, Insight +8, Perception +8",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 18",
+      "languages": "Common, Gith",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The githzerai makes three Psychic Warp attacks."
+        },
+        {
+          "name": "Psychic Warp",
+          "description": "Melee or Ranged Attack Roll: +8, reach 5 ft. or range 120 ft. Hit: 26 (4d10 + 4) Psychic damage, and the target has the githzerai's choice of (A) the Charmed condition until the start of the githzerai's next turn or (B) the Prone condition, provided the target is a Large or smaller creature."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The githzerai casts one of the following spells, requiring no spell components and using Intelligence as the spellcasting ability (spell save DC 16):\nAt Will: Mage Hand (the hand is Invisible)\n1/Day Each: Plane Shift, See Invisibility"
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [
+        {
+          "name": "Psionic Defense",
+          "description": "The githzerai casts Feather Fall or Shield in response to the spell's trigger, requiring no spell components and using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Alignment: Lawful Neutral. Initiative +8 (18). Spellcasting uses Intelligence (spell save DC 16).",
+      "lore": "These powerful psions oversee githzerai sanctuaries, study enigmatic planar events, and lead rrakkma—hostile forays into mind flayer colonies to slay illithids and uncover secrets of how the ancient gith were transformed.",
+      "isNpc": false,
+      "book": "MM 2024"
     }
   ]
 }

@@ -81,8 +81,20 @@ describe('ImportMonsterModal — multiple screenshots', () => {
     addFiles(Array.from({ length: 7 }, (_, i) => png(`p${i}`)));
     await waitFor(() => expect(shots()).toHaveLength(6));
     expect(screen.getByText(/at most 6 screenshots/)).toBeInTheDocument();
-    // Drop zone disappears once full
-    expect(screen.queryByTestId('import-file-input')).toBeNull();
+    // The drop zone disappears once full
+    expect(screen.queryByTestId('import-drop-zone')).toBeNull();
+  });
+
+  it('keeps the drop zone the same size after the first screenshot, and accepts drops anywhere', async () => {
+    renderModal();
+    const emptyClasses = screen.getByTestId('import-drop-zone').className;
+    addFiles([png('top')]);
+    await waitFor(() => expect(shots()).toHaveLength(1));
+    expect(screen.getByTestId('import-drop-zone')).toHaveTextContent('Add another screenshot');
+    expect(screen.getByTestId('import-drop-zone').className).toBe(emptyClasses);
+
+    fireEvent.drop(screen.getByTestId('import-drop-area'), { dataTransfer: { files: [png('bottom')] } });
+    await waitFor(() => expect(shots()).toHaveLength(2));
   });
 
   it('ignores non-image files', async () => {
@@ -123,5 +135,25 @@ describe('ImportMonsterModal — source book tag', () => {
   it('withBook trims, sets, or drops the tag', () => {
     expect(withBook({ name: 'X' }, ' MM 2024 ')).toEqual({ name: 'X', book: 'MM 2024' });
     expect(withBook({ name: 'X', book: 'Old' }, '')).toEqual({ name: 'X' });
+  });
+});
+
+describe('ImportMonsterModal — lore', () => {
+  it('shows parsed flavor text, lets it be edited, and imports it', async () => {
+    fetchMock.mockResolvedValue({
+      json: async () => ({ success: true, monster: { name: 'Beholder', lore: 'A floating orb of flesh.', traits: [], actions: [] } }),
+    });
+    const onImport = vi.fn();
+    renderModal({ onImport });
+    addFiles([png('top')]);
+    await waitFor(() => expect(shots()).toHaveLength(1));
+    fireEvent.click(screen.getByRole('button', { name: /Parse Image/ }));
+    await screen.findByText(/Monster Parsed Successfully/);
+
+    expect(screen.getByTestId('import-lore')).toHaveTextContent('A floating orb of flesh.');
+    fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
+    fireEvent.change(screen.getByLabelText('Lore'), { target: { value: 'Edited lore.' } });
+    fireEvent.click(screen.getByRole('button', { name: /Import Monster/ }));
+    expect(onImport.mock.calls[0][0].lore).toBe('Edited lore.');
   });
 });

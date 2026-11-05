@@ -58,6 +58,9 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
 
   const handleDragLeave = (e) => {
     e.preventDefault();
+    // Moving between children of the drop area fires dragleave too; only
+    // clear the highlight when the pointer actually leaves the area.
+    if (e.currentTarget.contains(e.relatedTarget)) return;
     setIsDragging(false);
   };
 
@@ -182,6 +185,10 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
     setParsedMonster(prev => ({ ...prev, [field]: value }));
   };
 
+  const dropZoneTone = isDragging
+    ? 'border-amber-500 bg-amber-900/20'
+    : 'border-stone-600 hover:border-stone-500 hover:bg-stone-800/50';
+
   if (!isOpen) return null;
 
   return (
@@ -200,8 +207,24 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-4">
           {!parsedMonster ? (
-            // Upload/Parse Stage
-            <div className="space-y-4">
+            // Upload/Parse Stage — the whole area accepts dropped files.
+            <div
+              className="space-y-4"
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              data-testid="import-drop-area"
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileSelect}
+                className="hidden"
+                data-testid="import-file-input"
+              />
+
               {/* Selected screenshots, in parse order */}
               {images.length > 0 && (
                 <div className="space-y-2">
@@ -215,7 +238,7 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
                       <div
                         key={img.id}
                         data-testid="import-screenshot"
-                        className="relative bg-stone-800 border border-stone-700 rounded-lg p-2 w-40"
+                        className="relative bg-stone-800 border border-stone-700 rounded-lg p-2 w-48"
                       >
                         <span className="absolute top-1 left-1 bg-amber-600 text-white text-xs font-bold rounded px-1.5">
                           {i + 1}
@@ -231,7 +254,7 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
                         <img
                           src={img.preview}
                           alt={`Stat block screenshot ${i + 1}`}
-                          className="h-32 w-full object-contain rounded"
+                          className="h-48 w-full object-contain rounded"
                         />
                         {images.length > 1 && (
                           <div className="flex justify-between mt-1 text-xs">
@@ -261,45 +284,31 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
                 </div>
               )}
 
-              {/* Drop Zone */}
+              {/* Drop zone — same full-width size whether or not screenshots
+                  are already loaded, so it never becomes a hard-to-hit target. */}
               {images.length < MAX_IMAGES && (
                 <div
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className={`border-2 border-dashed rounded-xl text-center cursor-pointer transition-colors ${
-                    images.length > 0 ? 'p-4' : 'p-8'
-                  } ${
-                    isDragging
-                      ? 'border-amber-500 bg-amber-900/20'
-                      : 'border-stone-600 hover:border-stone-500 hover:bg-stone-800/50'
-                  }`}
+                  data-testid="import-drop-zone"
+                  className={`border-2 border-dashed rounded-xl text-center cursor-pointer transition-colors p-8 ${dropZoneTone}`}
                 >
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleFileSelect}
-                    className="hidden"
-                    data-testid="import-file-input"
-                  />
-                  {images.length > 0 ? (
-                    <p className="text-stone-400 text-sm flex items-center justify-center gap-2">
-                      <Icons.Plus /> Add another screenshot (drop or click)
-                    </p>
-                  ) : (
-                    <div className="space-y-2">
+                  <div className="space-y-2">
+                    {images.length > 0 ? (
+                      <span className="flex h-12 items-center justify-center text-stone-500"><span className="scale-[2]"><Icons.Plus /></span></span>
+                    ) : (
                       <Icons.Upload className="w-12 h-12 mx-auto text-stone-500" />
-                      <p className="text-stone-400">
-                        Drag and drop stat block screenshots here, or click to browse
-                      </p>
-                      <p className="text-xs text-stone-500">
-                        Supports PNG, JPG, WebP. Big stat block? Add up to {MAX_IMAGES} screenshots and they&apos;ll be combined.
-                      </p>
-                    </div>
-                  )}
+                    )}
+                    <p className="text-stone-400">
+                      {images.length > 0
+                        ? 'Add another screenshot — drag and drop, or click to browse'
+                        : 'Drag and drop stat block screenshots here, or click to browse'}
+                    </p>
+                    <p className="text-xs text-stone-500">
+                      {images.length > 0
+                        ? `Up to ${MAX_IMAGES - images.length} more. Screenshots are combined top to bottom in the order shown.`
+                        : <>Supports PNG, JPG, WebP. Big stat block? Add up to {MAX_IMAGES} screenshots and they&apos;ll be combined.</>}
+                    </p>
+                  </div>
                 </div>
               )}
 
@@ -448,6 +457,13 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
                     <input type="text" value={parsedMonster.speed} onChange={(e) => updateParsedField('speed', e.target.value)} className="w-full bg-stone-900 border border-stone-600 rounded px-3 py-2" />
                   </div>
 
+                  <div>
+                    <label className="text-xs text-stone-400">Lore</label>
+                    <textarea aria-label="Lore" rows={5} value={parsedMonster.lore || ''} onChange={(e) => updateParsedField('lore', e.target.value)}
+                      placeholder="Flavor text from the book (optional)"
+                      className="w-full bg-stone-900 border border-stone-600 rounded px-3 py-2 text-sm leading-relaxed" />
+                  </div>
+
                   <div className="text-xs text-stone-500">
                     Note: Traits, Actions, and other stat block sections can be edited after import in the Templates tab.
                   </div>
@@ -497,6 +513,13 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
                     <div className="text-xs"><span className="text-stone-500">Languages</span> <span className="text-stone-300">{parsedMonster.languages}</span></div>
                   )}
                   <div className="text-xs"><span className="text-stone-500">CR</span> <span className="text-amber-400">{parsedMonster.cr}</span> <span className="text-stone-500">({parsedMonster.xp} XP)</span></div>
+
+                  {parsedMonster.lore && (
+                    <div className="border-t border-stone-700 pt-2" data-testid="import-lore">
+                      <div className="text-xs text-amber-500 font-bold mb-1">Lore</div>
+                      <p className="text-xs text-stone-400 italic whitespace-pre-line max-h-32 overflow-y-auto">{parsedMonster.lore}</p>
+                    </div>
+                  )}
 
                   {parsedMonster.traits?.length > 0 && (
                     <div className="border-t border-stone-700 pt-2">

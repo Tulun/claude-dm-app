@@ -21,11 +21,23 @@ export const SECTIONS = [
 // GET /api/templates?source=conflux; their ids carry this prefix.
 export const isConfluxId = (id) => String(id ?? '').startsWith('cc-');
 
-// Built-in, Conflux or user-made — for the header badge.
+const isBuiltIn = (t) => String(t?.id ?? '').startsWith('mm-') && t?.source !== 'custom';
+
+// Official stat block = a built-in, or anything tagged with a real book
+// (every book except "Homebrew") — e.g. a monster imported from the 2024
+// Monster Manual. Drives the library's Official / Custom tabs.
+export const isOfficial = (t) => {
+  if (isConfluxId(t?.id) || t?.source === 'conflux') return false;
+  if (isBuiltIn(t)) return true;
+  const book = String(t?.book ?? '').trim();
+  return !!book && !/^homebrew$/i.test(book);
+};
+
+// Where the template came from — for the header badge (the book has its own).
 export const sourceLabel = (t) => {
   if (isConfluxId(t?.id) || t?.source === 'conflux') return 'Conflux';
-  if (t?.source === 'custom' || (t?.id && !String(t.id).startsWith('mm-'))) return 'Custom';
-  return 'Monster Manual';
+  if (isBuiltIn(t)) return 'Built-in';
+  return isOfficial(t) ? 'Imported' : 'Custom';
 };
 
 // Which book a stat block comes from ("MM 2014", "MM 2024", "VGtM", …) —
@@ -97,6 +109,34 @@ export const splitDescription = (text) =>
     });
 
 // "Perception +12, Stealth +6" → ['Perception +12', 'Stealth +6'].
+// Flavor text ("lore") → [{ heading, text }]. Blocks are separated by blank
+// lines; a block whose first line is short and unpunctuated is a heading
+// ("Eyes of the Deep") over the rest of the block. A lone heading line is
+// joined to the next block.
+const isHeading = (line) => line.length <= 60 && !/[.!?:;,"”)]$/.test(line);
+export const splitLore = (text) => {
+  const out = [];
+  let pending = null;
+  for (const block of String(text ?? '').split(/\n\s*\n/)) {
+    const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+    if (!lines.length) continue;
+    let heading = pending;
+    pending = null;
+    if (isHeading(lines[0])) {
+      if (lines.length === 1) {
+        if (heading) out.push({ heading, text: '' });
+        pending = lines[0];
+        continue;
+      }
+      if (heading) out.push({ heading, text: '' });
+      heading = lines.shift();
+    }
+    out.push({ heading, text: lines.join(' ') });
+  }
+  if (pending) out.push({ heading: pending, text: '' });
+  return out;
+};
+
 export const splitList = (text) =>
   String(text ?? '').split(',').map(s => s.trim()).filter(Boolean);
 
@@ -123,11 +163,11 @@ export const BLANK_TEMPLATE = {
   ac: 10, maxHp: 10, hitDice: '1d8', speed: 30, cr: '1', xp: 200, profBonus: 2,
   str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10,
   savingThrows: '', skills: '', senses: '', languages: '',
-  vulnerabilities: '', resistances: '', immunities: '', notes: '',
+  vulnerabilities: '', resistances: '', immunities: '', notes: '', lore: '',
   traits: [], actions: [], bonusActions: [], reactions: [], legendaryActions: [],
 };
 
-const STRING_FIELDS = ['name', 'book', 'size', 'creatureType', 'hitDice', 'cr', 'savingThrows', 'skills', 'senses',
+const STRING_FIELDS = ['name', 'book', 'lore', 'size', 'creatureType', 'hitDice', 'cr', 'savingThrows', 'skills', 'senses',
   'languages', 'vulnerabilities', 'resistances', 'immunities', 'notes'];
 
 // Template → edit form. Every input is a string (so a half-typed "-" or ""

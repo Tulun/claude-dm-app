@@ -2,7 +2,7 @@
 
 Quick reference for the built-in monster list (`mm-*` templates, defined in
 [app/data/defaultEnemyTemplates.js](app/data/defaultEnemyTemplates.js)).
-Last updated 2026-11-04.
+Last updated 2026-11-05.
 
 ## At a glance
 
@@ -11,36 +11,51 @@ Last updated 2026-11-04.
 | In SRD 5.2.1, updated to the 2024 stat block | 292 | 2024 (tagged **2024** in the template lists) |
 | New in 2024, added | 37 | 2024 |
 | 2014 name kept beside its renamed 2024 version | 21 | 2014 |
-| **Not in SRD 5.2.1 — still on the older stats** | **128** | older (listed below) |
+| **Not in SRD 5.2.1 — still on the older stats** | **128** | older (92 + 19 have a 2024 version — see below) |
 
 Your 8 custom templates (Topiary Golem Ornamental, the Gnoll Abyssal set,
 Lizardfolk Bloodeye, etc.) were not touched.
 
 ## Missing: not in SRD 5.2.1 (still on older stats)
 
-These are in the 2024 Monster Manual but not in the free SRD, so they keep the
-app's older stat blocks. To update one, screenshot its stat block from your
-Monster Manual on D&D Beyond and drop it into **Import Monster** (combat page →
-templates). It detects the existing template by name and offers to update it.
+128 built-ins are not in the free SRD, so they keep the app's older stat
+blocks. Checked against the full 2024 Monster Manual roster (503 stat blocks,
+5etools `XMM` data) on 2026-11-05, they split three ways:
+
+| | Count | What to do |
+|---|---|---|
+| In the 2024 Monster Manual, same name | 92 | Re-import to update |
+| In the 2024 Monster Manual, renamed | 19 | Import the 2024 block (new name) |
+| Not in the 2024 Monster Manual | 17 | Nothing newer exists — keep the older stats |
+
+To update one, screenshot its stat block from your Monster Manual on D&D Beyond
+and drop it into **Import from Image** (templates library). For a same-name
+monster it detects the existing template and offers **Update Existing**; for a
+renamed one, edit the name to the 2024 name first (or import it as new and
+keep the old one for existing encounters). Set **Source book** to `MM 2024`
+while you're there.
+
+Already re-imported: Beholder.
+
+### In the 2024 Monster Manual — same name (92)
 
 - **CR 0:** Myconid Sprout · Octopus
-- **CR 1/4:** Aarakocra Skirmisher · Animated Broom · Bullywug · Drow · Duodrone · Kenku · Kuo-toa · Mud Mephit · Needle Blight · Pixie · Smoke Mephit · Troglodyte · Twig Blight · Winged Kobold
-- **CR 1/2:** Gas Spore · Jackalwere · Lizardfolk · Myconid Adult · Orc · Performer · Piercer · Tridrone · Vine Blight
-- **CR 1:** Duergar · Faerie Dragon (Older) · Faerie Dragon (Youth) · Fire Snake · Half-Ogre · Kuo-toa Whip · Lacedon Ghoul · Myconid Spore Servant · Ogrillon · Psychic Gray Ooze · Quadrone · Scarecrow · Swarm of Larvae · Thri-kreen · Yuan-ti Pureblood
-- **CR 2:** Bulette Pup · Carrion Crawler · Faerie Dragon (Adult) · Githzerai Monk · Gnoll Pack Lord · Guard Drake · Intellect Devourer · Lizardfolk Geomancer · Lizardfolk Shaman · Mage Apprentice · Myconid Sovereign · Nothic · Orog · Pentadrone · Peryton · Poltergeist · Quaggoth · Sahuagin Priestess · Spined Devil · Swarm of Stirges
-- **CR 3:** Bugbear Chief · Displacer Beast · Flaming Skeleton · Githyanki Warrior · Goblin Hexer · Grell · Hook Horror · Kuo-toa Monitor · Quaggoth Thonot · Scout Captain · Spectator · Swarm of Lemures · Water Weird · Yeti · Yuan-ti Malison
-- **CR 4:** Aarakocra Aeromancer · Banshee · Bone Naga · Bullywug Bog Sage · Flameskull · Girallon · Gnoll Fang of Yeenoghu · Helmed Horror · Juvenile Shadow Dragon · Lizardfolk King/Queen · Orc War Chief · Redcap · Shadow Demon · Swarm of Dretches · Yuan-ti Mind Whisperer
-- **CR 5:** Barlgura · Cambion · Half-Red Dragon Veteran · Mezzoloth · Umber Hulk
-- **CR 6:** Cyclops · Galeb Duhr · Hobgoblin Warlord · Kuo-toa Archpriest
-- **CR 7:** Blue Slaad · Drow Mage · Grick Alpha · Mind Flayer
+- **CR 1/4:** Aarakocra Skirmisher · Animated Broom · Kenku · Kuo-toa · Mud Mephit · Needle Blight · Pixie · Smoke Mephit · Troglodyte · Twig Blight · Winged Kobold
+- **CR 1/2:** Jackalwere · Myconid Adult · Performer · Piercer · Vine Blight
+- **CR 1:** Kuo-toa Whip · Lacedon Ghoul · Myconid Spore Servant · Psychic Gray Ooze · Scarecrow · Swarm of Larvae
+- **CR 2:** Bulette Pup · Carrion Crawler · Githzerai Monk · Gnoll Pack Lord · Intellect Devourer · Lizardfolk Geomancer · Mage Apprentice · Myconid Sovereign · Nothic · Peryton · Poltergeist · Quaggoth · Spined Devil · Swarm of Stirges
+- **CR 3:** Displacer Beast · Flaming Skeleton · Githyanki Warrior · Goblin Hexer · Grell · Hook Horror · Kuo-toa Monitor · Quaggoth Thonot · Scout Captain · Spectator · Swarm of Lemures · Water Weird · Yeti
+- **CR 4:** Aarakocra Aeromancer · Banshee · Bone Naga · Bullywug Bog Sage · Flameskull · Gnoll Fang of Yeenoghu · Helmed Horror · Juvenile Shadow Dragon · Shadow Demon · Swarm of Dretches
+- **CR 5:** Barlgura · Cambion · Mezzoloth · Umber Hulk
+- **CR 6:** Galeb Duhr · Hobgoblin Warlord · Kuo-toa Archpriest
+- **CR 7:** Blue Slaad · Mind Flayer
 - **CR 8:** Green Slaad
 - **CR 9:** Abominable Yeti · Gray Slaad · Nycaloth
 - **CR 10:** Death Slaad
 - **CR 11:** Dao · Marid
-- **CR 12:** Arcanaloth · Gray Render · Ki-rin
+- **CR 12:** Arcanaloth
 - **CR 13:** Beholder · Ultroloth
 - **CR 14:** Death Tyrant
-- **CR 15:** Vampire Spellcaster
 - **CR 16:** Githyanki Dracomancer · Gulthias Blight
 - **CR 17:** Death Knight · Dracolich · Goristro
 - **CR 18:** Demilich
@@ -48,6 +63,60 @@ templates). It detects the existing template by name and offers to update it.
 - **CR 22:** Elemental Cataclysm
 - **CR 23:** Blob of Annihilation · Empyrean
 - **CR 25:** Colossus
+
+### In the 2024 Monster Manual — renamed (19)
+
+| Older name in the app | CR | 2024 name | Note |
+|---|---|---|---|
+| Bullywug | 1/4 | Bullywug Warrior |  |
+| Duodrone | 1/4 | Modron Duodrone |  |
+| Gas Spore | 1/2 | Gas Spore Fungus |  |
+| Tridrone | 1/2 | Modron Tridrone |  |
+| Faerie Dragon (Youth) | 1 | Faerie Dragon Youth |  |
+| Fire Snake | 1 | Salamander Fire Snake |  |
+| Half-Ogre | 1 | Ogrillon Ogre | same creature as Ogrillon — the 2014 block was "Half-Ogre (Ogrillon)" |
+| Ogrillon | 1 | Ogrillon Ogre | duplicate of Half-Ogre |
+| Quadrone | 1 | Modron Quadrone |  |
+| Thri-kreen | 1 | Thri-kreen Marauder |  |
+| Yuan-ti Pureblood | 1 | Yuan-ti Infiltrator |  |
+| Faerie Dragon (Adult) | 2 | Faerie Dragon Adult |  |
+| Pentadrone | 2 | Modron Pentadrone |  |
+| Sahuagin Priestess | 2 | Sahuagin Priest |  |
+| Yuan-ti Malison | 3 | Yuan-ti Malison (Type 1 / 2 / 3) | 2024 splits it into three type blocks |
+| Lizardfolk King/Queen | 4 | Lizardfolk Sovereign |  |
+| Half-Red Dragon Veteran | 5 | Half-Dragon | folded into the generic Half-Dragon (already in your list from the SRD) |
+| Cyclops | 6 | Cyclops Sentry | 2024 also adds a Cyclops Oracle (CR 10) |
+| Grick Alpha | 7 | Grick Ancient |  |
+
+### Not in the 2024 Monster Manual (17)
+
+These only exist in older books, so the app's stats are as current as they
+get. Tag them with their book (`MM 2014`, `MPMM`) via **Source book** if you
+want the library's Book filter to reflect that — the automatic label calls
+every untagged older built-in `MM 2014`.
+
+| Monster | CR | Latest official stat block | Note |
+|---|---|---|---|
+| Drow | 1/4 | MM 2014 |  |
+| Lizardfolk | 1/2 | MM 2014 |  |
+| Orc | 1/2 | MM 2014 |  |
+| Duergar | 1 | MM 2014 (variants in MPMM) |  |
+| Faerie Dragon (Older) | 1 | MM 2014 | 2024 has only Youth and Adult |
+| Guard Drake | 2 | MPMM (orig. Volo's) |  |
+| Lizardfolk Shaman | 2 | MM 2014 | closest 2024: Lizardfolk Geomancer |
+| Orog | 2 | MM 2014 |  |
+| Bugbear Chief | 3 | MM 2014 | closest 2024: Bugbear Stalker |
+| Girallon | 4 | MPMM (orig. Volo's) |  |
+| Orc War Chief | 4 | MM 2014 |  |
+| Redcap | 4 | MPMM (orig. Volo's) |  |
+| Yuan-ti Mind Whisperer | 4 | MPMM (orig. Volo's) |  |
+| Drow Mage | 7 | MM 2014 |  |
+| Gray Render | 12 | MPMM (orig. Volo's) |  |
+| Ki-rin | 12 | MPMM (orig. Volo's) |  |
+| Vampire Spellcaster | 15 | MM 2014 (Vampire variant) | 2024 Vampire Umbral Lord is also CR 15 but a different block |
+
+The "latest official stat block" column is from book knowledge, not checked
+against a source; the in/not-in split above is checked.
 
 ## Renamed in 2024: both versions are in the list
 

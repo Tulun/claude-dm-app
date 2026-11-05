@@ -57,6 +57,17 @@ describe('Templates library page', () => {
     expect(screen.getByRole('link', { name: /New Template/ })).toHaveAttribute('href', '/templates/new');
   });
 
+  it('Import from Image sits in the header and opens the import dialog', async () => {
+    mockFetch();
+    render(<TemplatesPage />);
+    await settle();
+    const header = screen.getByRole('heading', { name: /Enemy & NPC Templates/ }).parentElement;
+    expect(header).toContainElement(screen.getByRole('button', { name: /Import from Image/ }));
+    expect(header).toContainElement(screen.getByRole('link', { name: /New Template/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Import from Image/ }));
+    expect(screen.getByText(/Import Monster from Image/)).toBeInTheDocument();
+  });
+
   it('deleting saves immediately', async () => {
     const fetchMock = mockFetch();
     render(<TemplatesPage />);
@@ -91,6 +102,21 @@ describe('Templates library page', () => {
     fireEvent.click(screen.getByRole('button', { name: 'VGtM' }));
     expect(screen.getAllByTestId('template-row')).toHaveLength(1);
     expect(screen.getByText('Kobold Scale')).toBeInTheDocument();
+  });
+
+  it('a monster imported from an official book is listed under Official, not Custom', async () => {
+    templates.push({ id: 'imported-9', name: 'Githyanki Knight', source: 'custom', book: 'MM 2024', cr: '8', ac: 18, maxHp: 117, speed: 30, traits: [], actions: [] });
+    try {
+      mockFetch();
+      render(<TemplatesPage />);
+      await settle();
+      expect(screen.getByText('Githyanki Knight')).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: 'Custom' }));
+      expect(screen.queryByText('Githyanki Knight')).not.toBeInTheDocument();
+      expect(screen.getByText('Goblin Boss')).toBeInTheDocument();
+    } finally {
+      templates.pop();
+    }
   });
 
   it('remembers the search when coming back from a monster page', async () => {

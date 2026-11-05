@@ -1,10 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { getModNum, formatMod } from '../../utils/rules';
 import { formatSpeeds, parseSavingThrows, parseSenses, splitDefenses, parseUsage, abilityLabel } from '../../combat/monsterAbilities';
 import { StatText } from '../../combat/components/MonsterAbilities';
 import {
-  ABILITY_KEYS, SECTIONS, parseAlignment, getInitiativeBonus, getLegendaryUses, splitDescription, splitList,
+  ABILITY_KEYS, SECTIONS, parseAlignment, getInitiativeBonus, getLegendaryUses, splitDescription, splitList, splitLore,
 } from '../statBlock';
 
 const PALETTE = {
@@ -99,6 +100,36 @@ const AbilitySection = ({ section, items, extra }) => {
   );
 };
 
+// Flavor text from the book, collapsed to a two-line teaser until expanded.
+// Plain text only (no HTML) — imported from screenshots or typed in the editor.
+const LorePanel = ({ lore, defaultOpen }) => {
+  const [open, setOpen] = useState(defaultOpen);
+  const blocks = splitLore(lore);
+  if (!blocks.length) return null;
+  const teaser = blocks.find(b => b.text)?.text || blocks[0].heading;
+  return (
+    <section data-testid="lore" className="rounded-lg border border-amber-900/40 bg-amber-950/10">
+      <button type="button" onClick={() => setOpen(o => !o)} aria-expanded={open}
+        className="w-full flex items-center gap-2 px-4 py-2.5 text-left hover:bg-amber-950/20 rounded-lg">
+        <span className="text-xs font-bold uppercase tracking-[0.15em] text-amber-500/90">Lore</span>
+        {!open && <span className="flex-1 min-w-0 truncate text-sm italic text-stone-400">{teaser}</span>}
+        {open && <span className="flex-1" />}
+        <span className="shrink-0 text-xs text-amber-400/80">{open ? 'Hide' : 'Read more'}</span>
+      </button>
+      {open && (
+        <div className="px-4 pb-4 space-y-3 max-w-prose">
+          {blocks.map((b, i) => (
+            <div key={i}>
+              {b.heading && <h3 className="font-semibold text-amber-200/90 mb-1">{b.heading}</h3>}
+              {b.text && <p className="text-[15px] leading-relaxed text-stone-300 italic">{b.text}</p>}
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+};
+
 /**
  * A monster template rendered as a full stat block: vitals, ability scores
  * with saves, a details column (skills / senses / languages / defenses /
@@ -150,6 +181,8 @@ export default function StatBlockView({ template: t, compact = false, stickyTop 
         <h1 className={`${compact ? 'text-2xl' : 'text-3xl md:text-4xl'} font-bold tracking-tight text-stone-50`}>{t.name || 'Unnamed creature'}</h1>
         {subtitle && <div className="text-stone-400 italic mt-0.5">{subtitle}</div>}
       </header>
+
+      <LorePanel lore={t.lore} defaultOpen={compact} />
 
       <div className={`grid gap-2 ${compact ? 'grid-cols-3' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6'}`}>
         <VitalTile label="Armor Class" value={t.ac ?? '—'} testId="vital-ac" />

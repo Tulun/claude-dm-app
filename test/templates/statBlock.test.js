@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   parseAlignment, getInitiativeBonus, getLegendaryUses, splitDescription, splitList, xpForCr, profForCr,
-  toEditForm, fromEditForm, sameTemplate, sourceLabel, isConfluxId, bookLabel, defaultBook,
+  toEditForm, fromEditForm, sameTemplate, sourceLabel, isConfluxId, isOfficial, bookLabel, defaultBook, splitLore,
 } from '../../app/templates/statBlock.js';
 
 const beholder = {
@@ -44,8 +44,16 @@ describe('stat block display helpers', () => {
 
   it('splits comma lists and labels sources', () => {
     expect(splitList('Perception +12, Stealth +6')).toEqual(['Perception +12', 'Stealth +6']);
-    expect(sourceLabel(beholder)).toBe('Monster Manual');
+    expect(sourceLabel(beholder)).toBe('Built-in');
     expect(sourceLabel({ id: 'tpl-1', source: 'custom' })).toBe('Custom');
+    // Imported from an official book: not custom, even though it isn't built in.
+    expect(sourceLabel({ id: 'imported-1', source: 'custom', book: 'MM 2024' })).toBe('Imported');
+    expect(sourceLabel({ id: 'imported-1', book: 'Homebrew' })).toBe('Custom');
+    expect(isOfficial({ id: 'imported-1', book: 'MM 2024' })).toBe(true);
+    expect(isOfficial({ id: 'imported-1', book: ' homebrew ' })).toBe(false);
+    expect(isOfficial({ id: 'imported-1' })).toBe(false);
+    expect(isOfficial(beholder)).toBe(true);
+    expect(isOfficial({ id: 'cc-x', book: 'MM 2024' })).toBe(false);
     expect(sourceLabel({ id: 'cc-aboleth' })).toBe('Conflux');
     expect(isConfluxId('cc-aboleth')).toBe(true);
     expect(isConfluxId('mm-aboleth')).toBe(false);
@@ -61,6 +69,17 @@ describe('stat block display helpers', () => {
     expect(bookLabel({ id: 'tpl-1', source: 'custom' })).toBeNull();
     expect(bookLabel({ id: 'tpl-1', source: 'custom', book: 'Homebrew' })).toBe('Homebrew');
     expect(defaultBook({ id: 'cc-aboleth', source: 'conflux' })).toBeNull();
+  });
+
+  it('splits lore into paragraphs with their headings', () => {
+    const lore = 'A beholder is a floating orb of flesh.\n\nEyes of the Deep\nBeholders lair in caverns.\nThey hoard.\n\nTyrants\n\nEach believes itself supreme.';
+    expect(splitLore(lore)).toEqual([
+      { heading: null, text: 'A beholder is a floating orb of flesh.' },
+      { heading: 'Eyes of the Deep', text: 'Beholders lair in caverns. They hoard.' },
+      { heading: 'Tyrants', text: 'Each believes itself supreme.' },
+    ]);
+    expect(splitLore('')).toEqual([]);
+    expect(splitLore(undefined)).toEqual([]);
   });
 
   it('knows standard XP and proficiency by CR', () => {
@@ -82,6 +101,7 @@ describe('edit form round trip', () => {
     expect('bonusActions' in saved).toBe(false);
     expect('initiativeBonus' in saved).toBe(false);
     expect('book' in saved).toBe(false);
+    expect('lore' in saved).toBe(false);
   });
 
   it('stores an edited book and drops a cleared one', () => {

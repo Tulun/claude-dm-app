@@ -3,9 +3,8 @@
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Icons from '../../components/Icons';
-import ImportMonsterModal from './ImportMonsterModal';
 import { sizeMatches } from '../monsterAbilities';
-import { bookLabel } from '../../templates/statBlock';
+import { bookLabel, isOfficial } from '../../templates/statBlock';
 
 const NO_BOOK = 'No book';
 
@@ -216,10 +215,10 @@ const detailHref = (t, edit = false) => `/templates/${encodeURIComponent(t.id)}$
 /**
  * The monster library list: search + filters, one row per template. A row
  * opens the monster's own page (/templates/[id]), which owns viewing and
- * editing; this list only browses, deletes, and imports.
+ * editing; this list only browses and deletes. Creating (New Template /
+ * Import from Image) lives in the page header (app/templates/page.jsx).
  */
-const TemplateEditor = ({ templates, onUpdate, onDelete, onImport }) => {
-  const [showImport, setShowImport] = useState(false);
+const TemplateEditor = ({ templates, onDelete }) => {
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   // Filters start from the per-tab saved copy. TemplateEditor only mounts
   // after the client-side templates fetch, so reading sessionStorage in the
@@ -301,9 +300,9 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onImport }) => {
       if (filter === 'enemies' && t.isNpc) return false;
       if (filter === 'npcs' && !t.isNpc) return false;
       
-      // Source sub-filter for default view
-      if (sourceFilter === 'custom' && t.id?.startsWith('mm-')) return false;
-      if (sourceFilter === 'default' && t.source === 'custom') return false;
+      // Official (built-ins + book-tagged imports) vs Custom (everything else)
+      if (sourceFilter === 'custom' && isOfficial(t)) return false;
+      if (sourceFilter === 'default' && !isOfficial(t)) return false;
       
       // Search filter
       if (searchQuery && !t.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
@@ -371,7 +370,7 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onImport }) => {
         {/* Source Filter */}
         <div className="flex gap-1">
           {[
-            { key: 'default', label: 'Monster Manual' },
+            { key: 'default', label: 'Official' },
             { key: 'conflux', label: 'Conflux' },
             { key: 'custom', label: 'Custom' },
           ].map(s => (
@@ -441,18 +440,6 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onImport }) => {
             Clear All
           </button>
         )}
-
-        <div className="flex-1" />
-
-        {onImport && (
-          <button onClick={() => setShowImport(true)} className="px-3 py-1.5 rounded-lg bg-purple-700 hover:bg-purple-600 text-sm flex items-center gap-1">
-            <Icons.Image /> Import from Image
-          </button>
-        )}
-
-        <Link href="/templates/new" className="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-sm flex items-center gap-1">
-          <Icons.Plus /> New Template
-        </Link>
       </div>
 
       {/* Active Filter Tags */}
@@ -523,23 +510,6 @@ const TemplateEditor = ({ templates, onUpdate, onDelete, onImport }) => {
           </div>
         ))}
       </div>
-
-      {/* Import Monster Modal */}
-      {onImport && (
-        <ImportMonsterModal
-          isOpen={showImport}
-          onClose={() => setShowImport(false)}
-          templates={templates}
-          onImport={(monster) => {
-            onImport(monster);
-            setShowImport(false);
-          }}
-          onUpdate={(monster) => {
-            onUpdate(monster);
-            setShowImport(false);
-          }}
-        />
-      )}
     </div>
   );
 };
