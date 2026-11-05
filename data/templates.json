@@ -2760,9 +2760,9 @@
       "size": "Medium",
       "creatureType": "Plant",
       "ac": 12,
-      "maxHp": 11,
-      "hitDice": "2d8+2",
-      "speed": 30,
+      "maxHp": 16,
+      "hitDice": "3d8+3",
+      "speed": "30",
       "cr": "1/4",
       "xp": 50,
       "profBonus": 2,
@@ -2772,21 +2772,31 @@
       "int": 4,
       "wis": 8,
       "cha": 3,
-      "immunities": "Blinded, Deafened",
-      "senses": "Blindsight 60 ft. (blind beyond), Passive Perception 9",
+      "savingThrows": "",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Deafened",
+      "senses": "Blindsight 60 ft., Passive Perception 9",
       "languages": "Understands Common but can't speak",
-      "isNpc": false,
       "traits": [],
       "actions": [
         {
-          "name": "Claws",
-          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 6 (2d4+1) Piercing damage."
+          "name": "Claw",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 6 (2d4 + 1) Slashing damage."
         },
         {
           "name": "Needles",
-          "description": "Ranged Attack Roll: +3, range 30/60 ft. Hit: 8 (2d6+1) Piercing damage."
+          "description": "Ranged Attack Roll: +3, range 30/60 ft. Hit: 6 (2d4 + 1) Piercing damage."
         }
       ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Neutral Evil. Initiative +1 (11).",
+      "lore": "Needle blights have vaguely bipedal forms, with gaunt, misshapen limbs. Whether standing unnaturally still or lurching with their awkward gaits, these blights can't pass as either normal plants or woodland travelers. Once they spot foes, needle blights attack using their thorn-covered claws or by rapidly growing and flinging volleys of serrated, needlelike projectiles.",
+      "isNpc": false,
+      "book": "MM 2024",
       "source": "mm"
     },
     {
@@ -2834,8 +2844,8 @@
       "size": "Tiny",
       "creatureType": "Fey",
       "ac": 15,
-      "maxHp": 1,
-      "hitDice": "1d4-1",
+      "maxHp": 9,
+      "hitDice": "6d4-6",
       "speed": "10, fly 30",
       "cr": "1/4",
       "xp": 50,
@@ -2846,22 +2856,36 @@
       "int": 10,
       "wis": 14,
       "cha": 15,
+      "savingThrows": "",
       "skills": "Perception +4, Stealth +7",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
       "senses": "Passive Perception 14",
       "languages": "Sylvan",
-      "isNpc": false,
       "traits": [
         {
           "name": "Magic Resistance",
-          "description": "Advantage on saves against spells and magical effects."
+          "description": "The pixie has Advantage on saving throws against spells and other magical effects."
         }
       ],
       "actions": [
         {
+          "name": "Faerie Dust",
+          "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 60 ft. Hit: 1 Radiant damage, and the target has the Charmed or Poisoned condition (pixie's choice) until the start of the pixie's next turn."
+        },
+        {
           "name": "Spellcasting",
-          "description": "Casts one of the following spells requiring no material components, using Charisma as spellcasting ability (spell save DC 12). At will: Druidcraft. 1/day each: Confusion, Dancing Lights, Detect Evil and Good, Detect Thoughts, Dispel Magic, Entangle, Fly, Phantasmal Force, Polymorph, Sleep."
+          "description": "The pixie casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 12):\nAt Will: Dancing Lights, Druidcraft, Invisibility (self only)\n1/Day Each: Detect Thoughts, Fly, Sleep"
         }
       ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Neutral Good. Initiative +5 (15). Habitat: Forest, Planar (Feywild); Treasure: Arcana.",
+      "lore": "Pixies\nFriends of the Forest\n\nBarely a foot tall, pixies resemble diminutive elves with gossamer wings. They invisibly observe those who enter their wooded homes, revealing themselves to those with friendly intentions. Those who are unfriendly become the targets of pixies' pranks.\n\nPixie\nPixies spend their days frolicking and exploring and avoid direct conflict when they can.",
+      "isNpc": false,
+      "book": "MM 2024",
       "source": "mm"
     },
     {
@@ -3381,37 +3405,45 @@
       "name": "Twig Blight",
       "size": "Small",
       "creatureType": "Plant",
-      "ac": 13,
-      "maxHp": 4,
-      "hitDice": "1d6+1",
-      "speed": 20,
-      "cr": "1/4",
-      "xp": 50,
+      "ac": 14,
+      "maxHp": 7,
+      "hitDice": "2d6",
+      "speed": "20",
+      "cr": "1/8",
+      "xp": 25,
       "profBonus": 2,
       "str": 6,
-      "dex": 13,
-      "con": 12,
+      "dex": 14,
+      "con": 11,
       "int": 4,
       "wis": 8,
       "cha": 3,
-      "skills": "Stealth +3",
+      "savingThrows": "",
+      "skills": "Stealth +4",
       "vulnerabilities": "Fire",
-      "immunities": "Blinded, Deafened",
-      "senses": "Blindsight 60 ft. (blind beyond), Passive Perception 9",
+      "resistances": "",
+      "immunities": "Deafened",
+      "senses": "Blindsight 60 ft., Passive Perception 9",
       "languages": "Understands Common but can't speak",
-      "isNpc": false,
       "traits": [
         {
-          "name": "False Appearance",
-          "description": "While motionless, indistinguishable from dead shrub."
+          "name": "Pack Tactics",
+          "description": "The blight has Advantage on an attack roll against a creature if at least one of the blight's allies is within 5 feet of the creature and the ally doesn't have the Incapacitated condition."
         }
       ],
       "actions": [
         {
-          "name": "Claws",
-          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 3 (1d4+1) Piercing damage."
+          "name": "Claw",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4 + 2) Slashing damage."
         }
       ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Neutral Evil. Initiative +2 (12).",
+      "lore": "Resembling bundles of sticks or dead brush, twig blights easily blend in among deadwood, flotsam, and the wood piles common in many rural settings. Groups of them are often found near river crossings, forgotten wells, or natural campsites, where they ambush those who let down their guard.",
+      "isNpc": false,
+      "book": "MM 2024",
       "source": "mm"
     },
     {
@@ -4378,35 +4410,45 @@
       "name": "Performer",
       "size": "Medium",
       "creatureType": "Humanoid",
-      "ac": 12,
-      "maxHp": 16,
-      "hitDice": "3d8+3",
-      "speed": 30,
+      "ac": 13,
+      "maxHp": 27,
+      "hitDice": "5d8+5",
+      "speed": "30",
       "cr": "1/2",
       "xp": 100,
       "profBonus": 2,
-      "str": 10,
-      "dex": 14,
+      "str": 12,
+      "dex": 16,
       "con": 12,
-      "int": 11,
-      "wis": 10,
+      "int": 13,
+      "wis": 14,
       "cha": 16,
-      "skills": "Acrobatics +4, Performance +7, Persuasion +5",
-      "senses": "Passive Perception 10",
-      "languages": "Common plus one other",
-      "isNpc": true,
+      "savingThrows": "Dex +5, Cha +5",
+      "skills": "Acrobatics +5, Athletics +3, Performance +7",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 12",
+      "languages": "Common plus one other language",
       "traits": [],
       "actions": [
         {
-          "name": "Dagger",
-          "description": "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 20/60 ft. Hit: 4 (1d4+2) Piercing damage."
-        },
-        {
-          "name": "Inspire (Recharge 5-6)",
-          "description": "One ally within 30 ft gains 5 (1d10) Temporary HP and Advantage on one attack roll, ability check, or saving throw in the next minute."
+          "name": "Shortsword",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Piercing damage."
         }
       ],
-      "notes": "Leather Armor",
+      "bonusActions": [],
+      "reactions": [
+        {
+          "name": "Uncanny Dodge",
+          "description": "Trigger: The performer is hit by an attack roll. Response: The performer halves the damage (round down) it takes from that attack."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Size: Medium or Small. Alignment: Neutral. Initiative +3 (13). Gear: Shortsword.",
+      "lore": "Performer\nCommon performers include traveling storytellers, tavern musicians, local entertainers, and chorus members performing with veteran artists. These performers might be self-taught or in the early years of formal training. Most have a modest level of celebrity and two or three instruments or talents at which they excel.",
+      "isNpc": false,
+      "book": "MM 2024",
       "source": "mm"
     },
     {
@@ -4876,9 +4918,9 @@
       "size": "Medium",
       "creatureType": "Plant",
       "ac": 12,
-      "maxHp": 26,
-      "hitDice": "4d8+8",
-      "speed": 10,
+      "maxHp": 19,
+      "hitDice": "3d8+6",
+      "speed": "20",
       "cr": "1/2",
       "xp": 100,
       "profBonus": 2,
@@ -4888,28 +4930,31 @@
       "int": 5,
       "wis": 10,
       "cha": 3,
+      "savingThrows": "",
       "skills": "Stealth +1",
-      "immunities": "Blinded, Deafened",
-      "senses": "Blindsight 60 ft. (blind beyond), Passive Perception 10",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Deafened",
+      "senses": "Blindsight 60 ft., Passive Perception 10",
       "languages": "Common",
-      "isNpc": false,
-      "traits": [
-        {
-          "name": "False Appearance",
-          "description": "While motionless, indistinguishable from tangle of vines."
-        }
-      ],
+      "traits": [],
       "actions": [
         {
-          "name": "Constrict",
-          "description": "Melee Attack Roll: +4, reach 10 ft. Hit: 9 (2d6+2) Bludgeoning. Large or smaller: Grappled (DC 12 to escape). Until grapple ends, target Restrained, blight can't constrict another."
+          "name": "Constricting Vine",
+          "description": "Melee Attack Roll: +4, reach 10 ft. Hit: 6 (1d8 + 2) Bludgeoning damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 12). Until the grapple ends, the target takes 4 (1d8) Bludgeoning damage at the start of each of its turns, and the blight can't make Constricting Vine attacks."
         },
         {
           "name": "Entangling Plants (Recharge 5-6)",
-          "description": "Grasping roots and vines sprout in 15-ft radius. Area becomes difficult terrain for 1 min. Creatures starting turn there: DC 12 STR or Restrained. Can repeat save at end of turn."
+          "description": "The blight casts the Entangle spell, using Constitution as the spellcasting ability (spell save DC 12)."
         }
       ],
-      "notes": "Natural Armor",
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Neutral Evil. Initiative -1 (9).",
+      "lore": "Vine blights resemble humans wrapped in vines common to the areas in which they grow, from hairy ivy vines to flowering kudzu. They can cause plants to burst from the ground around themselves and entangle nearby foes.\n\nUnlike most other blights, vine blights can speak. They do so rarely, typically only to convey messages from their masters or to repeat the words of their victims in rasping voices.",
+      "isNpc": false,
+      "book": "MM 2024",
       "source": "mm"
     },
     {
@@ -6422,38 +6467,47 @@
     {
       "id": "mm-swarm-of-larvae",
       "name": "Swarm of Larvae",
-      "size": "Medium",
-      "creatureType": "Swarm of Tiny Fiends",
-      "ac": 10,
+      "size": "Large",
+      "creatureType": "Swarm of Medium Fiends",
+      "ac": 13,
       "maxHp": 22,
-      "hitDice": "5d8",
-      "speed": 20,
+      "hitDice": "3d10+6",
+      "speed": "30",
       "cr": "1",
       "xp": 200,
       "profBonus": 2,
-      "str": 4,
-      "dex": 10,
-      "con": 10,
-      "int": 1,
-      "wis": 5,
-      "cha": 1,
+      "str": 14,
+      "dex": 11,
+      "con": 14,
+      "int": 6,
+      "wis": 12,
+      "cha": 2,
+      "savingThrows": "",
+      "skills": "",
+      "vulnerabilities": "",
       "resistances": "Bludgeoning, Piercing, Slashing",
       "immunities": "Charmed, Frightened, Grappled, Paralyzed, Petrified, Prone, Restrained, Stunned",
-      "senses": "Blindsight 30 ft. (blind beyond), Passive Perception 7",
-      "languages": "—",
-      "isNpc": false,
+      "senses": "Darkvision 60 ft., Passive Perception 11",
+      "languages": "Understands all but can't speak",
       "traits": [
         {
           "name": "Swarm",
-          "description": "Can occupy another's space. Moves through Tiny gaps. Can't regain HP."
+          "description": "The swarm can occupy another creature's space and vice versa, and the swarm can move through an opening large enough for a Medium creature. The swarm can't regain Hit Points or gain Temporary Hit Points."
         }
       ],
       "actions": [
         {
           "name": "Bites",
-          "description": "Melee Attack Roll: +2, reach 0 ft. (creatures in swarm's space). Hit: 7 (2d6) Piercing, or 3 (1d6) Piercing if at half HP or less."
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 9 (2d6 + 2) Necrotic damage, or 7 (2d4 + 2) Necrotic damage if the swarm is Bloodied."
         }
       ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Neutral Evil. Initiative +0 (10).",
+      "lore": "Lone larvae pose little threat, but in large numbers, larvae can overwhelm vulnerable creatures. Out of desperation, larvae band together in grotesque swarms, their squirming stampedes heralded by a din of wordless whimpers and stomach-turning worm sounds.",
+      "isNpc": false,
+      "book": "MM 2024",
       "source": "mm"
     },
     {
@@ -7553,11 +7607,11 @@
       "id": "mm-gnoll-pack-lord",
       "name": "Gnoll Pack Lord",
       "size": "Medium",
-      "creatureType": "Humanoid",
+      "creatureType": "Fiend",
       "ac": 15,
       "maxHp": 49,
       "hitDice": "9d8+9",
-      "speed": 30,
+      "speed": "30",
       "cr": "2",
       "xp": 450,
       "profBonus": 2,
@@ -7567,41 +7621,44 @@
       "int": 8,
       "wis": 11,
       "cha": 9,
+      "savingThrows": "",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
       "senses": "Darkvision 60 ft., Passive Perception 10",
       "languages": "Gnoll",
-      "isNpc": false,
-      "traits": [
-        {
-          "name": "Rampage",
-          "description": "When reducing creature to 0 HP with melee, Bonus Action to move half speed and Bite."
-        }
-      ],
+      "traits": [],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Two attacks: one Bite and one Glaive, or two Longbow attacks."
+          "description": "The gnoll makes two attacks, using Bone Whip or Bone Javelin in any combination, and it uses Incite Rampage if available."
         },
         {
-          "name": "Bite",
-          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 5 (1d4+3) Piercing damage."
+          "name": "Bone Whip",
+          "description": "Melee Attack Roll: +5, reach 10 ft. Hit: 8 (2d4 + 3) Slashing damage."
         },
         {
-          "name": "Glaive",
-          "description": "Melee Attack Roll: +5, reach 10 ft. Hit: 8 (1d10+3) Slashing damage."
+          "name": "Bone Javelin",
+          "description": "Ranged Attack Roll: +5, range 30/120 ft. Hit: 7 (1d8 + 3) Piercing damage."
         },
         {
-          "name": "Longbow",
-          "description": "Ranged Attack Roll: +4, range 150/600 ft. Hit: 6 (1d8+2) Piercing damage."
+          "name": "Incite Rampage (Recharge 5–6)",
+          "description": "The gnoll targets another creature it can see within 60 feet of itself that has the Rampage Bonus Action. The target can take a Reaction to make one melee attack."
         }
       ],
       "bonusActions": [
         {
-          "name": "Incite Rampage",
-          "description": "One gnoll within 30 ft can use its reaction to make a Bite attack."
+          "name": "Rampage (2/Day)",
+          "description": "Immediately after dealing damage to a creature that is already Bloodied, the gnoll moves up to half its Speed, and it makes one Bone Whip attack."
         }
       ],
-      "notes": "Chain Shirt, Shield",
-      "source": "mm"
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Chaotic Evil. Initiative +4 (14).",
+      "lore": "Rising above other gnolls with their viciousness and physical prowess, gnoll pack lords terrorize weaker gnolls into their service. These brutes drive other gnolls to acts of great violence, then claim the best of their servants' spoils.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-green-dragon-wyrmling",
@@ -11578,9 +11635,9 @@
       "size": "Medium",
       "creatureType": "Fiend",
       "ac": 14,
-      "maxHp": 65,
-      "hitDice": "10d8+20",
-      "speed": 30,
+      "maxHp": 71,
+      "hitDice": "11d8+22",
+      "speed": "30",
       "cr": "4",
       "xp": 1100,
       "profBonus": 2,
@@ -11591,31 +11648,39 @@
       "wis": 11,
       "cha": 13,
       "savingThrows": "Con +4, Wis +2, Cha +3",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
       "senses": "Darkvision 60 ft., Passive Perception 10",
       "languages": "Abyssal, Gnoll",
-      "isNpc": false,
-      "traits": [
-        {
-          "name": "Rampage",
-          "description": "When reduces creature to 0 HP with melee, Bonus Action to move half speed and Bite."
-        }
-      ],
+      "traits": [],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "One Bite and two Claws attacks."
+          "description": "The gnoll makes one Bite attack and two Bone Flail attacks."
         },
         {
           "name": "Bite",
-          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6+3) Piercing. If target is creature, DC 12 CON or 7 (2d6) Poison."
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Piercing damage plus 7 (2d6) Poison damage, and the target has the Poisoned condition until the start of the gnoll's next turn."
         },
         {
-          "name": "Claw",
-          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8+3) Slashing damage."
+          "name": "Bone Flail",
+          "description": "Melee Attack Roll: +5, reach 10 ft. Hit: 7 (1d8 + 3) Piercing damage."
         }
       ],
-      "notes": "Hide Armor",
-      "source": "mm"
+      "bonusActions": [
+        {
+          "name": "Rampage (2/Day)",
+          "description": "Immediately after dealing damage to a creature that is already Bloodied, the gnoll moves up to half its Speed, and it makes one Bite attack."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Chaotic Evil. Initiative +4 (14).",
+      "lore": "Gnolls possessed by demonic vestiges of the demon lord Yeenoghu, fangs of Yeenoghu direct the chaos of gnoll packs. Along the way, these fanatics seek grisly omens from Yeenoghu and strive to interpret the demon lord's vicious goals.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-guard-captain",
@@ -11808,51 +11873,61 @@
       "size": "Medium",
       "creatureType": "Dragon",
       "ac": 15,
-      "maxHp": 52,
-      "hitDice": "8d8+16",
-      "speed": "30, fly 60",
+      "maxHp": 45,
+      "hitDice": "6d8+18",
+      "speed": "30, climb 30, fly 60",
       "cr": "4",
       "xp": 1100,
       "profBonus": 2,
-      "str": 14,
-      "dex": 16,
-      "con": 14,
+      "str": 17,
+      "dex": 14,
+      "con": 17,
       "int": 12,
       "wis": 11,
-      "cha": 14,
-      "savingThrows": "Dex +5, Con +4, Wis +2, Cha +4",
-      "skills": "Perception +4, Stealth +7",
-      "resistances": "Necrotic",
-      "immunities": "Necrotic (in dim light or darkness)",
-      "senses": "Blindsight 10 ft., Darkvision 120 ft., Passive Perception 14",
-      "languages": "Draconic",
-      "isNpc": false,
+      "cha": 15,
+      "savingThrows": "Dex +4",
+      "skills": "Perception +4, Stealth +6",
+      "vulnerabilities": "",
+      "resistances": "See Living Shadow",
+      "immunities": "Necrotic",
+      "senses": "Blindsight 10 ft., Darkvision 60 ft., Passive Perception 14",
+      "languages": "Common, Draconic",
       "traits": [
         {
           "name": "Living Shadow",
-          "description": "In dim light or darkness, resistant to all damage except Force, Psychic, and Radiant."
-        },
-        {
-          "name": "Shadow Stealth",
-          "description": "In dim light or darkness, can Hide as Bonus Action."
+          "description": "While in Dim Light or Darkness, the dragon has Resistance to damage that isn't Force, Psychic, or Radiant."
         },
         {
           "name": "Sunlight Sensitivity",
-          "description": "Disadvantage on attack rolls and Perception in direct sunlight."
+          "description": "While in sunlight, the dragon has Disadvantage on ability checks and attack rolls."
         }
       ],
       "actions": [
         {
-          "name": "Bite",
-          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (1d10+3) Piercing plus 4 (1d8) Necrotic damage."
+          "name": "Multiattack",
+          "description": "The dragon makes two Rend attacks."
+        },
+        {
+          "name": "Rend",
+          "description": "Melee Attack Roll: +5, reach 10 ft. Hit: 7 (1d8 + 3) Slashing damage plus 3 (1d6) Necrotic damage."
         },
         {
           "name": "Shadow Breath (Recharge 5-6)",
-          "description": "15-ft Cone. DC 12 DEX, 22 (4d10) Necrotic damage (half on save). Creature reduced to 0 HP by this damage dies."
+          "description": "Dexterity Saving Throw: DC 13, each creature in a 30-foot Cone. Failure: 17 (5d6) Necrotic damage. Success: Half damage. Failure or Success: A Humanoid reduced to 0 Hit Points by this damage dies, and a Shadow rises from its corpse. The shadow is under the dragon's control and shares the dragon's Initiative count but acts immediately after the dragon."
         }
       ],
-      "notes": "Natural Armor",
-      "source": "mm"
+      "bonusActions": [
+        {
+          "name": "Shadow Stealth",
+          "description": "While in Dim Light or Darkness, the dragon takes the Hide action."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Initiative +4 (14). Habitat: Planar (Shadowfell), Underdark; Treasure: Any.",
+      "lore": "Dragon Corrupted by Darkness\n\nShadow dragons haunt forgotten, lightless places. While they might have once been other types of dragons, the influence of planar forces, negative energy, or sinister magic has stripped them of their former color or luster. In place of any former breath weapon, shadow dragons exhale caliginous gouts that saps life from everything it touches. Those slain by a shadow dragon's breath rise as shades obedient to the shadow dragon's will.\n\nShadow dragons typically dwell in the Underdark, particularly in areas with connections to the Shadowfell or other tenebrous realms. In some cases, they might lurk in dark, corrupted reaches of the regions they preferred before transforming into shadow dragons. Overgrown swamps, sepulchral desert ruins, and ash-choked volcanoes make natural lairs for shadow dragons.\n\nLike many other dragons, shadow dragons collect hoards. Their tastes tend to be morbid—collecting coins from ruined empires and their victims' skulls.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-lamia",
@@ -12056,10 +12131,10 @@
       "name": "Shadow Demon",
       "size": "Medium",
       "creatureType": "Fiend (Demon)",
-      "ac": 13,
+      "ac": 14,
       "maxHp": 66,
       "hitDice": "12d8+12",
-      "speed": "30, fly 30",
+      "speed": "30, fly 30 (hover)",
       "cr": "4",
       "xp": 1100,
       "profBonus": 2,
@@ -12072,32 +12147,42 @@
       "savingThrows": "Dex +5, Cha +4",
       "skills": "Stealth +7",
       "vulnerabilities": "Radiant",
-      "resistances": "Acid, Fire, Necrotic, Thunder; Bludgeoning, Piercing, Slashing from nonmagical attacks",
-      "immunities": "Cold, Lightning, Poison; Charmed, Exhaustion, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained",
+      "resistances": "Acid, Bludgeoning, Cold, Fire, Lightning, Piercing, Slashing, Thunder",
+      "immunities": "Necrotic, Poison; Exhaustion, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained",
       "senses": "Darkvision 120 ft., Passive Perception 11",
-      "languages": "Abyssal, telepathy 120 ft.",
-      "isNpc": false,
+      "languages": "Abyssal; telepathy 120 ft.",
       "traits": [
         {
+          "name": "Demonic Restoration",
+          "description": "If the demon dies outside the Abyss, its body dissolves into ichor, and it gains a new body instantly, reviving with all its Hit Points somewhere in the Abyss."
+        },
+        {
           "name": "Incorporeal Movement",
-          "description": "Can move through creatures/objects. Takes 5 (1d10) Force if ends turn in object."
+          "description": "The demon can move through other creatures and objects as if they were Difficult Terrain. It takes 5 (1d10) Force damage if it ends its turn inside an object."
         },
         {
           "name": "Light Sensitivity",
-          "description": "Disadvantage on attacks and Perception (sight) in bright light."
-        },
-        {
-          "name": "Shadow Stealth",
-          "description": "In dim light/darkness, can Hide as Bonus Action."
+          "description": "While in Bright Light, the demon has Disadvantage on ability checks and attack rolls."
         }
       ],
       "actions": [
         {
-          "name": "Claws",
-          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6+3) Psychic damage. If in dim light/darkness, also 7 (2d6) Cold."
+          "name": "Umbral Claw",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 16 (3d8 + 3) Psychic damage."
         }
       ],
-      "source": "mm"
+      "bonusActions": [
+        {
+          "name": "Shadow Stealth",
+          "description": "While in Dim Light or Darkness, the demon takes the Hide action."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Chaotic Evil. Initiative +3 (13). Habitat: Planar (Abyss); Treasure: None.",
+      "lore": "Vestige of Evil\n\nShadow demons form when exceptionally wicked demons are destroyed and prevented from reconstituting their physical forms in the Abyss. This might occur due to divine intervention, when a demon is destroyed in the Abyss, or under more unusual circumstances. Shadow demons are the incorporeal remnants of these destroyed demons' evil. They usually vaguely resemble their former shapes, but some take purposefully deceptive shapes. Many lurk in dark places or venture out only at night to hide their true forms from those they manipulate.\n\nShadow demons seek ways to regain their former might and take revenge on those who destroyed them. They often ingratiate themselves with more powerful demons or mortal spellcasters, bargaining with and coercing others into restoring them to power. Many try to claim or corrupt souls to restore their fiendish forms, while some shadow demons seek wicked relics or nexuses of profane magic. It typically takes shadow demons centuries to recover their demonic power, if they ever do.\n\nParticularly powerful demons might return as multiple shadow demons after being defeated. These fiendish entities each think they're the true manifestation of their past self and hunt one another to recover their power.\n\nIn rare cases, Fiends other than demons might adopt forms similar to shadow demons.\n\nThere are three rules to endings. First, good always wins. Second, evil always returns. Third, the first rule isn't always true.\n\n—Tarsheva Longreach, Planar Traveler",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-succubus",
@@ -14704,9 +14789,9 @@
       "size": "Medium",
       "creatureType": "Aberration",
       "ac": 15,
-      "maxHp": 71,
-      "hitDice": "13d8+13",
-      "speed": 30,
+      "maxHp": 99,
+      "hitDice": "18d8+18",
+      "speed": "30, fly 15 (hover)",
       "cr": "7",
       "xp": 2900,
       "profBonus": 3,
@@ -14716,33 +14801,44 @@
       "int": 19,
       "wis": 17,
       "cha": 17,
-      "savingThrows": "Int +7, Wis +6, Cha +6",
-      "skills": "Arcana +7, Deception +6, Insight +6, Perception +6, Persuasion +6, Stealth +4",
+      "savingThrows": "Dex +4, Int +7, Wis +6, Cha +6",
+      "skills": "Arcana +7, Insight +6, Perception +6, Stealth +4",
+      "vulnerabilities": "",
+      "resistances": "Psychic",
+      "immunities": "",
       "senses": "Darkvision 120 ft., Passive Perception 16",
-      "languages": "Deep Speech, Undercommon, telepathy 120 ft.",
-      "isNpc": false,
+      "languages": "Deep Speech, Undercommon; telepathy 120 ft.",
       "traits": [
         {
           "name": "Magic Resistance",
-          "description": "Advantage on saves against spells and magical effects."
+          "description": "The mind flayer has Advantage on saving throws against spells and other magical effects."
         }
       ],
       "actions": [
         {
           "name": "Tentacles",
-          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 15 (2d10+4) Psychic. Medium or smaller: Grappled (escape DC 15). DC 15 INT or Stunned until grapple ends."
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 22 (4d8 + 4) Psychic damage. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 14) from all the mind flayer's tentacles, and the target has the Stunned condition until the grapple ends."
         },
         {
           "name": "Extract Brain",
-          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 55 (10d10) Piercing. If reduces to 0 HP, mind flayer kills target by extracting and devouring brain."
+          "description": "Constitution Saving Throw: DC 15, one creature that is Grappled by the mind flayer's Tentacles. Failure: 55 (10d10) Piercing damage. Success: Half damage. Failure or Success: If this damage reduces the target to 0 Hit Points, the mind flayer kills it and devours its brain."
         },
         {
           "name": "Mind Blast (Recharge 5-6)",
-          "description": "60-foot Cone. DC 15 INT, 22 (4d8+4) Psychic and Stunned 1 min (save ends, half damage on success)."
+          "description": "Intelligence Saving Throw: DC 15, each creature in a 60-foot Cone. Failure: 31 (6d8 + 4) Psychic damage, and the target has the Stunned condition until the end of the mind flayer's next turn. Success: Half damage only."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The mind flayer casts one of the following spells, requiring no spell components and using Intelligence as the spellcasting ability (spell save DC 15):\nAt Will: Detect Thoughts\n1/Day Each: Dominate Monster, Plane Shift (self only)"
         }
       ],
-      "notes": "Breastplate. Innate Spellcasting (Psionics) DC 15: At will: detect thoughts, levitate. 1/day each: dominate monster, plane shift (self only).",
-      "source": "mm"
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Lawful Evil. Initiative +4 (14). Gear: Breastplate. Spellcasting uses Intelligence (spell save DC 15), no components required.",
+      "lore": "A mind flayer's hunger for brains is outmeasured only by its thirst for dominance, and it embraces any plot that allows it to indulge both.",
+      "isNpc": false,
+      "book": "MM 2024"
     },
     {
       "id": "mm-oni",
@@ -18508,91 +18604,6 @@
       "source": "mm"
     },
     {
-      "id": "mm-vampire-spellcaster",
-      "name": "Vampire Spellcaster",
-      "size": "Medium",
-      "creatureType": "Undead (Shapechanger)",
-      "ac": 16,
-      "maxHp": 144,
-      "hitDice": "17d8+68",
-      "speed": 30,
-      "cr": "15",
-      "xp": 13000,
-      "profBonus": 5,
-      "str": 18,
-      "dex": 18,
-      "con": 18,
-      "int": 17,
-      "wis": 15,
-      "cha": 18,
-      "savingThrows": "Dex +9, Wis +7, Cha +9",
-      "skills": "Perception +7, Stealth +9",
-      "resistances": "Necrotic; Bludgeoning, Piercing, Slashing from nonmagical attacks",
-      "senses": "Darkvision 120 ft., Passive Perception 17",
-      "languages": "Languages it knew in life",
-      "isNpc": false,
-      "traits": [
-        {
-          "name": "Shapechanger",
-          "description": "Can polymorph into Tiny bat, Medium cloud of mist, or back."
-        },
-        {
-          "name": "Legendary Resistance (3/Day)",
-          "description": "If fails a save, can choose to succeed instead."
-        },
-        {
-          "name": "Misty Escape",
-          "description": "When drops to 0 HP outside resting place, transforms to mist instead of falling Unconscious."
-        },
-        {
-          "name": "Regeneration",
-          "description": "Regains 20 HP at start of turn if 1+ HP and not in sunlight/running water."
-        },
-        {
-          "name": "Spider Climb",
-          "description": "Climbs difficult surfaces including ceilings."
-        },
-        {
-          "name": "Vampire Weaknesses",
-          "description": "Forbiddance, Harmed by Running Water, Stake to Heart, Sunlight Hypersensitivity."
-        }
-      ],
-      "actions": [
-        {
-          "name": "Multiattack (Vampire Form)",
-          "description": "Two attacks, only one can be Bite."
-        },
-        {
-          "name": "Unarmed Strike (Vampire Form)",
-          "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 8 (1d8+4) Bludgeoning. Can grapple instead (escape DC 18)."
-        },
-        {
-          "name": "Bite (Bat/Vampire Form)",
-          "description": "Melee Attack Roll: +9, reach 5 ft. Willing/Grappled/Incapacitated/Restrained creature. Hit: 7 (1d6+4) Piercing plus 10 (3d6) Necrotic. HP max reduced by Necrotic, vampire regains that HP."
-        },
-        {
-          "name": "Charm",
-          "description": "One humanoid within 30 ft: DC 17 WIS or Charmed 24 hrs."
-        }
-      ],
-      "legendaryActions": [
-        {
-          "name": "Move",
-          "description": "Moves up to speed without provoking."
-        },
-        {
-          "name": "Unarmed Strike",
-          "description": "Makes one Unarmed Strike."
-        },
-        {
-          "name": "Bite (2 Actions)",
-          "description": "Makes one Bite attack."
-        }
-      ],
-      "notes": "Natural Armor. Spellcasting (DC 17, +9): Cantrips: mage hand, prestidigitation, ray of frost. 1st (4 slots): comprehend languages, fog cloud, sleep. 2nd (3 slots): detect thoughts, gust of wind, mirror image. 3rd (3 slots): animate dead, bestow curse, nondetection. 4th (3 slots): blight, greater invisibility. 5th (2 slots): animate objects, scrying. 3 Legendary Actions/round.",
-      "source": "mm"
-    },
-    {
       "id": "mm-adult-blue-dragon",
       "name": "Adult Blue Dragon",
       "size": "Huge",
@@ -18791,67 +18802,59 @@
     {
       "id": "mm-gulthias-blight",
       "name": "Gulthias Blight",
-      "size": "Huge",
+      "size": "Gargantuan",
       "creatureType": "Plant",
-      "ac": 16,
-      "maxHp": 230,
-      "hitDice": "20d12+100",
-      "speed": 30,
+      "ac": 20,
+      "maxHp": 264,
+      "hitDice": "16d20+96",
+      "speed": "50",
       "cr": "16",
       "xp": 15000,
       "profBonus": 5,
-      "str": 23,
+      "str": 25,
       "dex": 10,
-      "con": 21,
-      "int": 12,
-      "wis": 16,
+      "con": 22,
+      "int": 10,
+      "wis": 18,
       "cha": 12,
-      "savingThrows": "Con +10, Wis +8",
-      "skills": "Perception +8",
-      "resistances": "Bludgeoning, Piercing",
-      "immunities": "Necrotic, Poison; Blinded, Deafened, Exhaustion, Poisoned",
-      "senses": "Blindsight 120 ft. (blind beyond), Passive Perception 18",
-      "languages": "Understands Common, Druidic, Elvish, Sylvan",
-      "isNpc": false,
+      "savingThrows": "",
+      "skills": "Perception +9",
+      "vulnerabilities": "",
+      "resistances": "Fire, Necrotic",
+      "immunities": "Deafened",
+      "senses": "Blindsight 120 ft., Passive Perception 19",
+      "languages": "Common, Druidic",
       "traits": [
         {
-          "name": "Legendary Resistance (3/Day)",
-          "description": "If fails a save, can choose to succeed instead."
-        },
-        {
-          "name": "Necrotic Absorption",
-          "description": "No damage from Necrotic; regains HP equal to Necrotic damage dealt."
+          "name": "Blight Seeds",
+          "description": "When it finishes a Long Rest, the blight expels 1d6 seeds into unoccupied spaces on the ground within 30 feet of itself. After 24 hours, the seeds become creatures under the blight's control. Roll 1d8 for each seed to determine the creature it becomes: on 1–4, Twig Blight; on 5–6, Needle Blight; on 7–8, Vine Blight."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Three Slam attacks."
+          "description": "The blight makes two attacks, using Slam or Thorn Volley in any combination. It also uses Life-Draining Root."
         },
         {
           "name": "Slam",
-          "description": "Melee Attack Roll: +11, reach 15 ft. Hit: 19 (3d8+6) Bludgeoning plus 10 (3d6) Necrotic."
+          "description": "Melee Attack Roll: +12, reach 10 ft. Hit: 25 (4d8 + 7) Bludgeoning damage."
         },
         {
-          "name": "Vampiric Roots (Recharge 5-6)",
-          "description": "Creatures touching ground within 30 ft: DC 18 CON or 36 (8d8) Necrotic (half on save). Gulthias regains HP equal to highest damage dealt."
+          "name": "Thorn Volley",
+          "description": "Ranged Attack Roll: +12, range 60/180 ft. Hit: 20 (3d8 + 7) Piercing damage."
+        },
+        {
+          "name": "Life-Draining Root",
+          "description": "Constitution Saving Throw: DC 20, one Huge or smaller creature the blight can see within 30 feet. Failure: 14 (2d6 + 7) Necrotic damage, and the target has the Grappled condition (escape DC 17) from one of six roots. Until the grapple ends, the target has the Restrained condition and takes 14 (4d6) Necrotic damage at the start of each of its turns. The target's Hit Point maximum decreases by an amount equal to the Necrotic damage taken, and the blight regains Hit Points equal to that amount."
         }
       ],
-      "legendaryActions": [
-        {
-          "name": "Detect",
-          "description": "Makes Perception check."
-        },
-        {
-          "name": "Slam",
-          "description": "Makes one Slam attack."
-        },
-        {
-          "name": "Summon Blights (2 Actions)",
-          "description": "Summons 1d4 twig blights that appear within 30 ft. They act immediately after the Gulthias and remain for 1 hour."
-        }
-      ],
-      "notes": "Natural Armor. 3 Legendary Actions/round.",
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Initiative +5 (15); Neutral Evil",
+      "lore": "Ancient plants twisted by evil, Gulthias blights feed on blood and despoil the surrounding land, often giving rise to subservient blights. These cursed plants take their name from the story of their creation; the first of their kind was a tree that grew from the stake piercing the heart of the vampire Gulthias. These blights consider all creatures either servants or fertilizer for the blights' corruption.",
+      "isNpc": false,
+      "book": "MM 2024",
       "source": "mm"
     },
     {
@@ -20723,11 +20726,11 @@
       "id": "mm-empyrean",
       "name": "Empyrean",
       "size": "Huge",
-      "creatureType": "Celestial (Titan)",
+      "creatureType": "Celestial or Fiend (Titan)",
       "ac": 22,
-      "maxHp": 313,
-      "hitDice": "19d12+190",
-      "speed": "50, fly 50, swim 50",
+      "maxHp": 346,
+      "hitDice": "21d12+210",
+      "speed": "50, fly 50 (hover), swim 50",
       "cr": "23",
       "xp": 50000,
       "profBonus": 7,
@@ -20737,59 +20740,61 @@
       "int": 21,
       "wis": 22,
       "cha": 27,
-      "savingThrows": "Str +17, Int +12, Wis +13, Cha +15",
-      "skills": "Insight +13, Persuasion +15",
-      "immunities": "Bludgeoning, Piercing, Slashing from nonmagical attacks",
-      "senses": "Truesight 120 ft., Passive Perception 16",
+      "savingThrows": "Str +17, Wis +13",
+      "skills": "Insight +13, Perception +13",
+      "vulnerabilities": "",
+      "resistances": "Bludgeoning, Piercing, Slashing",
+      "immunities": "Necrotic, Radiant",
+      "senses": "Truesight 120 ft., Passive Perception 23",
       "languages": "All",
-      "isNpc": false,
       "traits": [
         {
-          "name": "Legendary Resistance (3/Day)",
-          "description": "If fails a save, can choose to succeed instead."
+          "name": "Legendary Resistance (4/Day)",
+          "description": "If the empyrean fails a saving throw, it can choose to succeed instead."
         },
         {
           "name": "Magic Resistance",
-          "description": "Advantage on saves vs spells/magic."
-        },
-        {
-          "name": "Magic Weapons",
-          "description": "Attacks are magical."
+          "description": "The empyrean has Advantage on saving throws against spells and other magical effects."
         }
       ],
       "actions": [
         {
           "name": "Multiattack",
-          "description": "Two Maul attacks or three Bolt attacks."
+          "description": "The empyrean makes two attacks, using Sacred Weapon or Divine Ray in any combination."
         },
         {
-          "name": "Maul",
-          "description": "Melee Attack Roll: +17, reach 10 ft. Hit: 31 (6d6+10) Bludgeoning damage."
+          "name": "Sacred Weapon",
+          "description": "Melee Attack Roll: +17, reach 10 ft. Hit: 31 (6d6 + 10) Force damage, and the target has the Stunned condition until the start of the empyrean's next turn. The target can choose not to be Stunned, in which case it takes an extra 21 Force damage that bypasses Resistance or Immunity."
         },
         {
-          "name": "Bolt",
-          "description": "Ranged Attack Roll: +17, range 600 ft. Hit: 24 (4d6+10) damage (fire or radiant; empyrean's choice)."
+          "name": "Divine Ray",
+          "description": "Ranged Attack Roll: +15, range 600 ft. Hit: 35 (6d8 + 8) Necrotic or Radiant damage (empyrean's choice)."
         },
         {
-          "name": "Trembling Strike (Recharge 5-6)",
-          "description": "Strikes ground, creating shockwave. Creatures within 60 ft: DC 25 CON, 35 (10d6) Thunder plus 35 (10d6) Radiant, Stunned until end of next turn, Prone (half, not Stunned/Prone on save)."
+          "name": "Spellcasting",
+          "description": "The empyrean casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 23):\nAt Will: Calm Emotions, Greater Restoration, Pass without Trace, Water Breathing\n1/Day Each: Commune, Dispel Evil and Good, Plane Shift"
         }
       ],
+      "bonusActions": [],
+      "reactions": [],
       "legendaryActions": [
         {
-          "name": "Attack",
-          "description": "Makes one Maul or Bolt attack."
+          "name": "Bolster",
+          "description": "The empyrean gains 10 Temporary Hit Points, and the empyrean and each ally within 30 feet of it gain Advantage on D20 Tests until the end of the empyrean's next turn. The empyrean can't take this action again until the start of its next turn."
         },
         {
-          "name": "Bolster (2 Actions)",
-          "description": "Bolsters itself or another creature within 120 ft, giving Advantage on attacks and saves until end of empyrean's next turn."
+          "name": "Shockwave of Glory",
+          "description": "Constitution Saving Throw: DC 23, each creature in a 30-foot Emanation originating from the empyrean. Failure: 27 (6d8) Force damage, and the target has the Prone condition. Success: Half damage only. Failure or Success: The empyrean can't take this action again until the start of its next turn."
         },
         {
-          "name": "Trembling Strike (3 Actions)",
-          "description": "Uses Trembling Strike if available."
+          "name": "Smite",
+          "description": "The empyrean makes one Divine Ray attack."
         }
       ],
-      "notes": "Natural Armor. Innate Spellcasting (DC 23): At will: greater restoration, pass without trace, water breathing, water walk. 1/day each: commune, dispel evil and good, earthquake, fire storm, plane shift (self only). 3 Legendary Actions/round.",
+      "notes": "Initiative +19 (29). Legendary Action Uses: 3. Immediately after another creature's turn, the empyrean can expend a use to take one of the following actions. The empyrean regains all expended uses at the start of each of its turns.",
+      "lore": "Inheritors of divine might, empyreans are idealized, human-shaped beings of godly power. These beings might have relationships with their creators akin to those of parents and their children, royalty and their servants, inventors and their creations, or other bonds. Empyreans' existences are fundamentally influenced by their patrons and their connection to the heavenly deities of the Upper Planes or the fiendish deities of the Lower Planes. Nevertheless, empyreans have free will.\n\nCelestial empyreans are typically noble beings who quest to prove themselves worthy of their divine pedigree. Many work in the service of their parents or support those gods' causes and champions.\n\nFiendish empyreans are usually dreadful, self-serving villains who seek to claim their parents' power. Some forge unholy armies or rule over hidden realms in mockery of true gods, while others might seek to escape their accursed families.\n\nOne day I might be the god of storms—mind countless followers, answer prayers, change whole worlds—but, until then, I do what I please.\n—Kopoha, Scion of Storms",
+      "isNpc": false,
+      "book": "MM 2024",
       "source": "mm"
     },
     {
@@ -23427,6 +23432,2877 @@
       "legendaryActions": [],
       "notes": "Alignment: Unaligned. Initiative +3 (13).",
       "lore": "Gricks can live for centuries, with the eldest growing to monstrous sizes. Grick ancients actively hunt more than they wait in ambush, and they have no qualms about devouring smaller gricks.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793900878818",
+      "name": "Crawling Claw",
+      "size": "Tiny",
+      "creatureType": "Undead",
+      "ac": 12,
+      "maxHp": 2,
+      "hitDice": "1d4",
+      "speed": "20, climb 20",
+      "cr": "0",
+      "xp": 10,
+      "profBonus": 2,
+      "str": 13,
+      "dex": 14,
+      "con": 11,
+      "int": 5,
+      "wis": 10,
+      "cha": 4,
+      "savingThrows": "",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Necrotic, Poison; Charmed, Exhaustion, Frightened, Incapacitated, Poisoned",
+      "senses": "Blindsight 30 ft., Passive Perception 10",
+      "languages": "Understands Common but can't speak",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Slam",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 2 Necrotic damage."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Neutral Evil. Initiative +2 (12). Habitat: Any; Treasure: None.",
+      "lore": "Crawling Claws\nSevered Appendages with Malicious Will\n\nCrawling claws are severed hands that move and act of their own murderous accord. These deathless appendages can spring to life from the severed limbs of killers and villains, and sinister magic-users might animate crawling claws as foul servants. Crawling claws appear in a variety of forms, from decaying human hands to the fresh appendages of animals or monsters.\n\nCrawling Claw\nLone crawling claws can continue killing sprees they perpetrated in life. Some recklessly attack the living, while others pursue specific victims. In rare cases, a crawling claw wreaks mayhem while the rest of its body still lives, with the original creature potentially unaware of its severed hand's crimes.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793900911599",
+      "name": "Larva",
+      "size": "Medium",
+      "creatureType": "Fiend",
+      "ac": 9,
+      "maxHp": 9,
+      "hitDice": "2d8",
+      "speed": "20",
+      "cr": "0",
+      "xp": 10,
+      "profBonus": 2,
+      "str": 9,
+      "dex": 9,
+      "con": 10,
+      "int": 6,
+      "wis": 10,
+      "cha": 2,
+      "savingThrows": "",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Darkvision 60 ft., Passive Perception 10",
+      "languages": "Understands Common plus one other language but can't speak",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +1, reach 5 ft. Hit: 1 (1d4 - 1) Necrotic damage."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Neutral Evil. Initiative -1 (9).",
+      "lore": "Larvae have disjointed, painful memories of their past lives. Most desperately avoid other creatures.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793901061975",
+      "name": "Flumph",
+      "size": "Small",
+      "creatureType": "Aberration",
+      "ac": 12,
+      "maxHp": 7,
+      "hitDice": "2d6",
+      "speed": "5, fly 30 (hover)",
+      "cr": "1/8",
+      "xp": 25,
+      "profBonus": 2,
+      "str": 6,
+      "dex": 15,
+      "con": 10,
+      "int": 14,
+      "wis": 14,
+      "cha": 11,
+      "savingThrows": "",
+      "skills": "Arcana +4, History +4, Religion +4",
+      "vulnerabilities": "Psychic",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Darkvision 60 ft., Passive Perception 12",
+      "languages": "Understands Undercommon but can't speak; telepathy 60 ft.",
+      "traits": [
+        {
+          "name": "Advanced Telepathy",
+          "description": "The flumph perceives the content of any telepathic communication within 60 feet of it."
+        },
+        {
+          "name": "Prone Deficiency",
+          "description": "If the flumph receives the Prone condition, roll a die. On an odd number, it has the Incapacitated condition. At the end of each of its turns, the flumph makes a DC 10 Dexterity saving throw, ending the Incapacitated condition on a success."
+        },
+        {
+          "name": "Telepathic Shroud",
+          "description": "The flumph's thoughts can't be read by any means, and magic can't detect its location or observe it remotely."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Tentacle",
+          "description": "Melee Attack Roll: +4, reach 5 feet. Hit: 4 (1d4 + 2) Acid damage."
+        },
+        {
+          "name": "Stench Spray (1/Day)",
+          "description": "Dexterity Saving Throw: DC 10, one creature the flumph can see within 15 feet. Failure: The target is coated in a foul-smelling liquid, exudes a stench for 1d4 hours, and has the Poisoned condition while the stench lasts. Other creatures have the Poisoned condition while in a 5-foot Emanation originating from the coated target. The target can remove the stench on itself if it bathes during a Short or Long Rest."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Lawful Good. Initiative +2 (12). Habitat: Underdark; Treasure: Arcana.",
+      "lore": "Flumph\nStrange Ally from a Strange Place\n\nBizarre creatures with aberrant agendas inhabit the Underdark. Flumphs number among the few that are helpful to strangers.\n\nThese tentacled, telepathic creatures jet through the air in short bursts, venting gases with a sound that gives them their name. Rather than speaking, flumphs communicate telepathically and by changing color to reflect their moods.\n\nFlumphs dwell in psychically charged regions or near creatures with psionic magic. They harmlessly feed off psychic energies, but in doing so, they often encounter dangerous beings such as aboleths and mind flayers. While flumphs generally avoid combat, they often help adventurers in peril. Such help might be of doubtful use, but flumphs mean well. Roll on or choose a result from the Flumph Assistance table to inspire what support flumphs provide.\n\nFlumph Assistance\n1d6 | The Flumph Helps By...\n1 | Cooking a meal of Underdark delicacies.\n2 | Performing a psychic song or \"smell poem.\"\n3 | Recovering and nursing fallen adventurers.\n4 | Revealing the location of helpful magic items.\n5 | Serving as a guide to a foe's hidden lair.\n6 | Sharing excessive encouragement and praise.\n\nFlumph Colors\nA flumph's extremities change color to reflect its mood. The Flumph Colors and Emotions table summarizes common flumph colors and the human emotions to which they most closely correspond.\n\nFlumph Colors and Emotions\nColor | Emotion\nBlue, Dark | Sadness\nBlue, Light | Happiness\nGreen | Curiosity\nMagenta | Unknown*\nOrange | Confusion\nPink | Amusement\nPurple | Fear\nRed | Anger\nTeal | Serenity\nYellow | Excitement\n*Rarely seen; potentially no human equivalent",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793901108259",
+      "name": "Fomorian",
+      "size": "Huge",
+      "creatureType": "Giant",
+      "ac": 14,
+      "maxHp": 172,
+      "hitDice": "15d12+75",
+      "speed": "40",
+      "cr": "8",
+      "xp": 3900,
+      "profBonus": 3,
+      "str": 23,
+      "dex": 10,
+      "con": 20,
+      "int": 9,
+      "wis": 14,
+      "cha": 6,
+      "savingThrows": "",
+      "skills": "Perception +8, Stealth +3",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Darkvision 120 ft., Passive Perception 18",
+      "languages": "Giant, Undercommon",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The fomorian makes two Stone Club attacks. It can replace one attack with a use of Warping Hex if available."
+        },
+        {
+          "name": "Stone Club",
+          "description": "Melee Attack Roll: +9, reach 15 ft. Hit: 24 (4d8 + 6) Bludgeoning damage."
+        },
+        {
+          "name": "Warping Hex (Recharge 4-6)",
+          "description": "Wisdom Saving Throw: DC 16, one creature the fomorian can see within 120 feet. Failure: 21 (6d6) Psychic damage, and the target gains 1 Exhaustion level. Success: Half damage only."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Chaotic Evil. Initiative +0 (10). Habitat: Underdark; Treasure: Any.",
+      "lore": "Once infamous for their magical aptitude, fomorians are giants afflicted with a fey curse. In their pride, they were tricked into invading the Feywild to claim its magic for their own. When the archfey rulers of that realm united, the fomorians were turned back and cursed with supernatural strangeness to make their bodies match their vile souls. Ever since, fomorians have dwelled in the Underdark amid the ruins of their magical cities. The archfey's curse afflicts them still, tormenting them with wandering cankers, lurching organs, and stranger discomforts. Rather than atoning for their offenses, fomorians harness the magic of their curse and turn it against others. Roll on or choose a result from the Fomorian Warping table to inspire the cosmetic effects a creature undergoes while they're affected by a fomorian's Warping Hex.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793901151895",
+      "name": "Manes",
+      "size": "Small",
+      "creatureType": "Fiend (Demon)",
+      "ac": 9,
+      "maxHp": 9,
+      "hitDice": "2d6+2",
+      "speed": "20",
+      "cr": "1/8",
+      "xp": 25,
+      "profBonus": 2,
+      "str": 10,
+      "dex": 9,
+      "con": 13,
+      "int": 3,
+      "wis": 8,
+      "cha": 4,
+      "savingThrows": "",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "Cold, Fire, Lightning",
+      "immunities": "Poison; Charmed, Frightened, Poisoned",
+      "senses": "Darkvision 60 ft., Passive Perception 9",
+      "languages": "Understands Abyssal but can't speak",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Claw",
+          "description": "Melee Attack Roll: +2, reach 5 ft. Hit: 5 (2d4) Slashing damage."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Chaotic Evil. Initiative -1 (9).",
+      "lore": "Manes lash out at creatures that appear weaker than themselves—or that react to them with fear—and strive to avoid more powerful demons. When manes escape from the Abyss, they go on reckless rampages and inflict as much harm as possible.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793901168429",
+      "name": "Manes Vaporspawn",
+      "size": "Medium",
+      "creatureType": "Fiend (Demon)",
+      "ac": 13,
+      "maxHp": 19,
+      "hitDice": "3d8+6",
+      "speed": "30",
+      "cr": "1",
+      "xp": 200,
+      "profBonus": 2,
+      "str": 14,
+      "dex": 12,
+      "con": 15,
+      "int": 5,
+      "wis": 8,
+      "cha": 3,
+      "savingThrows": "",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "Cold, Fire, Lightning",
+      "immunities": "Poison; Charmed, Exhaustion, Frightened, Grappled, Poisoned, Restrained",
+      "senses": "Darkvision 60 ft., Passive Perception 9",
+      "languages": "Understands Abyssal but can't speak",
+      "traits": [
+        {
+          "name": "Contortionist",
+          "description": "The manes can move through a space as narrow as 1 inch without expending extra movement to do so."
+        },
+        {
+          "name": "Sickening Vapors",
+          "description": "Constitution Saving Throw: DC 12, each creature in a 5-foot Emanation originating from the manes at the end of the manes's turn. Failure: The target has the Incapacitated condition until the end of its next turn. Success: The target is immune to this manes's Sickening Vapors for 24 hours."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Claw",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage plus 5 (2d4) Necrotic damage."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Shadow Stealth",
+          "description": "While in Dim Light or Darkness, the manes takes the Hide action."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Chaotic Evil. Initiative +1 (11).",
+      "lore": "Vaporspawn arise from evil souls shattered by unspeakable torments or the depredations of more powerful demons. These distorted manes undergo endless, painful contortions, and they share their torment with whatever creatures they encounter.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793901448826",
+      "name": "Empyrean Iota",
+      "size": "Medium",
+      "creatureType": "Celestial or Fiend (Titan)",
+      "ac": 13,
+      "maxHp": 22,
+      "hitDice": "5d8",
+      "speed": "5, fly 30 (hover)",
+      "cr": "1",
+      "xp": 200,
+      "profBonus": 2,
+      "str": 1,
+      "dex": 14,
+      "con": 10,
+      "int": 15,
+      "wis": 16,
+      "cha": 16,
+      "savingThrows": "",
+      "skills": "History +4, Insight +5, Perception +5",
+      "vulnerabilities": "",
+      "resistances": "Bludgeoning, Piercing, Slashing",
+      "immunities": "Prone",
+      "senses": "Truesight 30 ft., Passive Perception 15",
+      "languages": "All",
+      "traits": [
+        {
+          "name": "Incorporeal Movement",
+          "description": "The empyrean can move through other creatures and objects as if they were Difficult Terrain. It takes 5 (1d10) Force damage if it ends its turn inside an object."
+        },
+        {
+          "name": "Magic Resistance",
+          "description": "The empyrean has Advantage on saving throws against spells and other magical effects."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Otherworldly Strike",
+          "description": "Melee or Ranged Attack Roll: +5, reach 5 ft. or range 30 ft. Hit: 7 (1d8 + 3) Necrotic or Radiant damage (empyrean's choice)."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The empyrean casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability:\n1/Day Each: Bless, Lesser Restoration (as an action)"
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Healing Word (1/Day)",
+          "description": "The empyrean casts Healing Word, using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Neutral. Initiative +2 (12). Habitat: Any; Treasure: Relics.",
+      "lore": "Empyreans\nScions of the Gods\n\nEmpyreans are the spawn of deities. While not gods themselves, they possess divine influence and powers related to their divine parents. Some empyreans are near-demigods with fantastic might and the power to reshape mortal lives. Others are little more than divine thoughts or moments of immortal attention made manifest. Whether empyreans are idealized beings or vestiges of divinity, their appearances are influenced by their creators. Roll on or choose a result from the Empyrean Influences table to inspire what aspects of an empyrean's heritage manifest in its physical form.\n\nEmpyrean Iota\nEmpyrean iotas are the thoughts, memories, or indirect attentions of deities personified and given a measure of autonomy. Resembling floating glyphs, motes of color, icons of divinity, or stranger shapes, these beings are messengers of the gods and aides to those gods' servants. Iotas have their own knowledge and personalities, though they might know little more than the realms and wishes of their creators.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793901580956",
+      "name": "Beholder Zombie",
+      "size": "Large",
+      "creatureType": "Undead",
+      "ac": 15,
+      "maxHp": 93,
+      "hitDice": "11d10+33",
+      "speed": "5, fly 20 (hover)",
+      "cr": "5",
+      "xp": 1800,
+      "profBonus": 3,
+      "str": 14,
+      "dex": 8,
+      "con": 16,
+      "int": 3,
+      "wis": 8,
+      "cha": 5,
+      "savingThrows": "Wis +2",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Poison; Exhaustion, Poisoned, Prone",
+      "senses": "Darkvision 60 ft., Passive Perception 9",
+      "languages": "Understands Deep Speech and Undercommon but can't speak",
+      "traits": [
+        {
+          "name": "Undead Fortitude",
+          "description": "If damage reduces the zombie to 0 Hit Points, it makes a Constitution saving throw (DC 5 plus the damage taken) unless the damage is Radiant or from a Critical Hit. On a successful save, the zombie drops to 1 Hit Point instead."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The zombie uses Eye Rays twice."
+        },
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 16 (4d6 + 2) Piercing damage."
+        },
+        {
+          "name": "Eye Rays",
+          "description": "The zombie randomly shoots one of the following magical rays at a target it can see within 120 feet of itself (roll 1d4; reroll if the zombie has already used that ray during this turn):\n1. Paralyzing Ray. Constitution Saving Throw: DC 14. Failure: The target has the Paralyzed condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.\n2. Fear Ray. Wisdom Saving Throw: DC 14. Failure: 13 (3d8) Psychic damage, and the target has the Frightened condition until the end of its next turn.\n3. Enervation Ray. Constitution Saving Throw: DC 14. Failure: 10 (3d6) Necrotic damage, and the target has the Poisoned condition until the end of its next turn. While Poisoned, the target can't regain Hit Points. Success: Half damage only.\n4. Disintegration Ray. Dexterity Saving Throw: DC 14. Failure: 27 (5d10) Force damage. If the target is a nonmagical object or a creation of magical force, a 10-foot Cube of it disintegrates into dust. Success: Half damage. Failure or Success: If the target is a creature and this damage reduces it to 0 Hit Points, it disintegrates into dust."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Initiative -1 (9)",
+      "lore": "Zombies animated from the corpses of beholders retain some use of those monsters' magical eyestalks. These hovering corpses rely on their magic to destroy impediments and paralyze foes, allowing them to savage foes with their rotting maws.\n\nMagic-using beholders typically raise these abominations from the corpses of defeated rivals.\n\nThen, by a spectacular crack of lightning, the figures came into view, moving slowly toward the village. Over driving winds a voice cried out, \"The dead come for Marais d'Tarascon! An army of the walking dead!\"\n—Account of the Night of the Walking Dead",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793901630004",
+      "name": "Giant Axe Beak",
+      "size": "Huge",
+      "creatureType": "Monstrosity",
+      "ac": 15,
+      "maxHp": 84,
+      "hitDice": "8d12+32",
+      "speed": "50",
+      "cr": "5",
+      "xp": 1800,
+      "profBonus": 3,
+      "str": 21,
+      "dex": 14,
+      "con": 19,
+      "int": 3,
+      "wis": 12,
+      "cha": 5,
+      "savingThrows": "",
+      "skills": "Perception +4",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 14",
+      "languages": "None",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The axe beak makes one Sharpened Beak attack and one Talons attack."
+        },
+        {
+          "name": "Sharpened Beak",
+          "description": "Melee Attack Roll: +8, reach 10 ft. Hit: 18 (2d12 + 5) Slashing damage, and a creature within 5 feet of the target (axe beak's choice) takes 6 (1d12) Slashing damage."
+        },
+        {
+          "name": "Talons",
+          "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 14 (2d8 + 5) Piercing damage. If the target is a Large or smaller creature, it has the Prone condition."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Unaligned. Initiative +5 (15).",
+      "lore": "Giant axe beaks typically dwell in secluded, primeval realms, such as isolated islands or underground wildernesses. They often compete with dinosaurs and other giant beasts for territory.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793901694107",
+      "name": "Pixie Wonderbringer",
+      "size": "Tiny",
+      "creatureType": "Fey",
+      "ac": 15,
+      "maxHp": 60,
+      "hitDice": "24d4",
+      "speed": "10, fly 30",
+      "cr": "5",
+      "xp": 1800,
+      "profBonus": 3,
+      "str": 2,
+      "dex": 20,
+      "con": 10,
+      "int": 11,
+      "wis": 14,
+      "cha": 18,
+      "savingThrows": "",
+      "skills": "Arcana +3, Perception +5, Stealth +8",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 15",
+      "languages": "Common, Elvish, Sylvan",
+      "traits": [
+        {
+          "name": "Magic Resistance",
+          "description": "The pixie has Advantage on saving throws against spells and other magical effects."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The pixie makes two Faerie Dust attacks."
+        },
+        {
+          "name": "Faerie Dust",
+          "description": "Melee or Ranged Attack Roll: +7, reach 5 ft. or range 60 ft. Hit: 15 (2d10 + 4) Radiant damage, and the target has the Charmed or Poisoned condition (pixie's choice) until the start of the pixie's next turn."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The pixie casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 15):\nAt Will: Dancing Lights, Druidcraft, Invisibility (self only)\n1/Day Each: Detect Thoughts, Fly, Major Image"
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Burst of Wonder (Recharge 5-6)",
+          "description": "The pixie casts Entangle, Polymorph, or Tasha's Hideous Laughter, requiring no Material components and using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Neutral Good. Initiative +5 (15). Spellcasting uses Charisma (spell save DC 15).",
+      "lore": "Energetic entertainers, wonderbringers use their magic in defense of the wilderness when they must.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793901778075",
+      "name": "Revenant",
+      "size": "Medium",
+      "creatureType": "Undead",
+      "ac": 13,
+      "maxHp": 127,
+      "hitDice": "15d8+60",
+      "speed": "30",
+      "cr": "5",
+      "xp": 1800,
+      "profBonus": 3,
+      "str": 18,
+      "dex": 14,
+      "con": 18,
+      "int": 13,
+      "wis": 16,
+      "cha": 18,
+      "savingThrows": "Str +7, Con +7, Wis +6, Cha +7",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "Necrotic, Psychic",
+      "immunities": "Poison; Charmed, Exhaustion, Frightened, Paralyzed, Poisoned, Stunned",
+      "senses": "Darkvision 60 ft., Passive Perception 13",
+      "languages": "Common plus one other language",
+      "traits": [
+        {
+          "name": "Regeneration",
+          "description": "The revenant regains 10 Hit Points at the start of each of its turns. If the revenant takes Fire or Radiant damage, this trait doesn't function at the start of its next turn. Its body is destroyed only if it starts its turn with 0 Hit Points and doesn't regenerate."
+        },
+        {
+          "name": "Undead Restoration",
+          "description": "If the revenant dies, it revives 24 hours later in a different body unless Dispel Evil and Good is cast on its corpse. If it revives, it animates a Humanoid corpse elsewhere on the same plane of existence; it now looks different but uses the same stat block and returns with all its Hit Points."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The revenant uses Vengeful Glare and makes two Slam attacks."
+        },
+        {
+          "name": "Slam",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 11 (2d6 + 4) Necrotic damage."
+        },
+        {
+          "name": "Vengeful Glare",
+          "description": "Wisdom Saving Throw: DC 15, one creature the revenant can see within 30 feet. Failure: The target has the Frightened condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically. If the Frightened target is cursed by the revenant (see Vow of Revenge), the target also has the Paralyzed condition for the duration."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Vow of Revenge (1/Day)",
+          "description": "The revenant curses one creature it can see within 30 feet of itself. The revenant knows the distance to and direction of the cursed target, even if it is on a different plane of existence. The curse ends on the target if the revenant uses this Bonus Action on a different creature."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Initiative +2 (12). Alignment: Neutral.",
+      "lore": "Revenants\nVengeance from beyond the Grave\n\nHabitat: Forest, Swamp, Urban; Treasure: Any\n\nWrathful spirits bent on revenge, revenants possess corpses and other materials, using them to seek justice or vent their rage on those who wronged them. Revenants refuse to rest until those they seek to punish are no more. If their bodies are destroyed, revenants claim new forms and continue their ruthless quests.\n\nRevenant\nRevenants possess the bodies they had in life, using them to hunt down their killers. If their bodies are destroyed, they take control of new bodies that gradually change to resemble the revenants' original forms.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793901805930",
+      "name": "Graveyard Revenant",
+      "size": "Huge",
+      "creatureType": "Undead",
+      "ac": 14,
+      "maxHp": 161,
+      "hitDice": "14d12+70",
+      "speed": "40",
+      "cr": "7",
+      "xp": 2900,
+      "profBonus": 3,
+      "str": 20,
+      "dex": 14,
+      "con": 20,
+      "int": 13,
+      "wis": 16,
+      "cha": 18,
+      "savingThrows": "Str +8, Con +8, Wis +6, Cha +7",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "Necrotic, Psychic",
+      "immunities": "Poison; Charmed, Exhaustion, Frightened, Paralyzed, Petrified, Poisoned, Stunned, Unconscious",
+      "senses": "Darkvision 120 ft., Passive Perception 13",
+      "languages": "Common plus two other languages",
+      "traits": [
+        {
+          "name": "Undead Restoration",
+          "description": "If the revenant dies, it revives 24 hours later unless Dispel Evil and Good is cast on its remains. If it revives, it animates another group of corpses elsewhere on the same plane of existence; it now looks different but uses the same stat block and returns with all its Hit Points."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The revenant makes two Suffocate attacks."
+        },
+        {
+          "name": "Suffocate",
+          "description": "Melee Attack Roll: +8, reach 10 ft. Hit: 10 (1d10 + 5) Bludgeoning damage plus 10 (3d6) Necrotic damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 15). Until the grapple ends, the target is suffocating. The revenant can have up to two targets Grappled in this way at a time."
+        },
+        {
+          "name": "Haunting Glare (Recharge 5-6)",
+          "description": "Wisdom Saving Throw: DC 15, each creature in a 30-foot Emanation originating from the revenant. Failure: The target has the Paralyzed condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Neutral. Initiative +2 (12).",
+      "lore": "Graveyard revenants possess dozens of bodies that combine to form grotesque masses. They take revenge on those responsible for mass deaths or institutions that callously ruin lives.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793901835680",
+      "name": "Haunting Revenant",
+      "size": "Gargantuan",
+      "creatureType": "Undead",
+      "ac": 20,
+      "maxHp": 203,
+      "hitDice": "14d20+56",
+      "speed": "30",
+      "cr": "10",
+      "xp": 5900,
+      "profBonus": 4,
+      "str": 20,
+      "dex": 12,
+      "con": 18,
+      "int": 16,
+      "wis": 18,
+      "cha": 20,
+      "savingThrows": "Con +8, Wis +8",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "Necrotic, Psychic",
+      "immunities": "Poison; Charmed, Exhaustion, Frightened, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained, Unconscious",
+      "senses": "Truesight 60 ft., Passive Perception 14",
+      "languages": "Common plus two other languages",
+      "traits": [
+        {
+          "name": "Haunted Zone",
+          "description": "Constitution Saving Throw: DC 17, any creature that casts a spell while inside the revenant's space. Failure: The spell fails and is wasted."
+        },
+        {
+          "name": "Undead Restoration",
+          "description": "If the revenant dies, it revives 24 hours later unless Dispel Evil and Good is cast on its remains. If it revives, it animates another Gargantuan object or structure elsewhere on the same plane of existence; it now looks different but uses the same stat block and returns with all its Hit Points."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The revenant makes two Object Slam attacks and uses Invitation."
+        },
+        {
+          "name": "Object Slam",
+          "description": "Melee or Ranged Attack Roll: +9 (with Advantage if the target is inside the revenant's space), reach 10 ft. or range 30/90 ft. Hit: 27 (5d8 + 5) Bludgeoning damage."
+        },
+        {
+          "name": "Invitation",
+          "description": "Charisma Saving Throw: DC 17, each creature in a 60-foot Cone. Failure: The target is teleported inside the revenant's space and swallowed. A swallowed creature has Total Cover against attacks and other effects outside the revenant.\n\nWhile the revenant has Hit Points, a swallowed creature can leave the revenant's space only by using magic that enables planar travel, such as the Plane Shift spell."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Initiative +5 (15)",
+      "lore": "Haunting revenants possess ruins and forsaken places connected with their deaths—such as abandoned buildings, wrecked ships, or junk heaps. These revenants lurk in plain sight, waiting for their foes to near, then trap their victims within their massive bodies. Those inside a revenant might be battered by animate furnishings or more unsettling manifestations of the revenant's hatred.\n\nThe places haunting revenants lurk swiftly gain infamous reputations.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793901956635",
+      "name": "Young Remorhaz",
+      "size": "Large",
+      "creatureType": "Monstrosity",
+      "ac": 14,
+      "maxHp": 93,
+      "hitDice": "11d10+33",
+      "speed": "30, burrow 20",
+      "cr": "5",
+      "xp": 1800,
+      "profBonus": 3,
+      "str": 18,
+      "dex": 13,
+      "con": 17,
+      "int": 3,
+      "wis": 10,
+      "cha": 4,
+      "savingThrows": "",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Cold, Fire",
+      "senses": "Darkvision 60 ft., Tremorsense 60 ft., Passive Perception 10",
+      "languages": "None",
+      "traits": [
+        {
+          "name": "Heat Aura",
+          "description": "At the end of each of the remorhaz's turns, each creature in a 5-foot Emanation originating from the remorhaz takes 11 (2d10) Fire damage."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 15 (2d10 + 4) Piercing damage plus 13 (3d8) Fire damage."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Unaligned. Initiative +1 (11). Habitat: Arctic; Treasure: None.",
+      "lore": "Remorhazes\nSuper-Heated Arctic Arthropods\n\nRemorhazes are centipede-like terrors that burrow through snow and ice to ambush smaller creatures that trespass in their frozen territories.\n\nYoung Remorhaz\nYoung remorhazes scorch and consume any creatures they can chase down and overwhelm.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793902016492",
+      "name": "Azer Pyromancer",
+      "size": "Medium",
+      "creatureType": "Elemental",
+      "ac": 18,
+      "maxHp": 97,
+      "hitDice": "13d8+39",
+      "speed": "30",
+      "cr": "6",
+      "xp": 2300,
+      "profBonus": 3,
+      "str": 15,
+      "dex": 14,
+      "con": 16,
+      "int": 12,
+      "wis": 18,
+      "cha": 13,
+      "savingThrows": "Con +6, Wis +7",
+      "skills": "Arcana +4, Perception +7",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Fire, Poison; Poisoned",
+      "senses": "Passive Perception 17",
+      "languages": "Primordial (Ignan)",
+      "traits": [
+        {
+          "name": "Fire Aura",
+          "description": "At the end of each of the azer's turns, each creature of the azer's choice in a 5-foot Emanation originating from the azer takes 11 (2d10) Fire damage unless the azer has the Incapacitated condition."
+        },
+        {
+          "name": "Illumination",
+          "description": "The azer sheds Bright Light in a 10-foot radius and Dim Light for an additional 10 feet."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The azer makes two Flame Burst attacks."
+        },
+        {
+          "name": "Flame Burst",
+          "description": "Melee or Ranged Attack Roll: +7, reach 5 ft. or range 120 ft. Hit: 15 (2d10 + 4) Fire damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The azer casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 15):\nAt Will: Elementalism, Mage Hand\n1/Day: Fireball"
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [
+        {
+          "name": "Hellish Rebuke (2/Day)",
+          "description": "The azer casts Hellish Rebuke in response to that spell's trigger, using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Initiative +2 (12). Spellcasting uses Wisdom (spell save DC 15).",
+      "lore": "Azers are living bronze folk who work the primal elements of creation to craft weapons and magical wonders among the multiverse's mightiest infernos.\n\nAzer Pyromancer\nAzer pyromancers conjure flames from the Elemental Plane of Fire to defend themselves and stoke magical forges.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793902067606",
+      "name": "Chasme",
+      "size": "Large",
+      "creatureType": "Fiend (Demon)",
+      "ac": 15,
+      "maxHp": 78,
+      "hitDice": "12d10+12",
+      "speed": "20, fly 60",
+      "cr": "6",
+      "xp": 2300,
+      "profBonus": 3,
+      "str": 15,
+      "dex": 15,
+      "con": 12,
+      "int": 11,
+      "wis": 14,
+      "cha": 10,
+      "savingThrows": "Dex +5, Wis +5",
+      "skills": "Perception +5",
+      "vulnerabilities": "",
+      "resistances": "Cold, Fire, Lightning",
+      "immunities": "Poison; Poisoned",
+      "senses": "Blindsight 10 ft., Darkvision 120 ft., Passive Perception 15",
+      "languages": "Abyssal; telepathy 120 ft.",
+      "traits": [
+        {
+          "name": "Demonic Restoration",
+          "description": "If the chasme dies outside the Abyss, its body dissolves into ichor, and it gains a new body instantly, reviving with all its Hit Points somewhere in the Abyss."
+        },
+        {
+          "name": "Magic Resistance",
+          "description": "The chasme has Advantage on saving throws against spells and other magical effects."
+        },
+        {
+          "name": "Spider Climb",
+          "description": "The chasme can climb difficult surfaces, including along ceilings, without needing to make an ability check."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Proboscis",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 16 (4d6 + 2) Piercing damage plus 21 (6d6) Necrotic damage. If the target is a creature, its Hit Point maximum decreases by an amount equal to the Necrotic damage taken."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Drone",
+          "description": "Constitution Saving Throw: DC 12, each creature in a 30-foot Emanation originating from the chasme (demons automatically succeed on this save). Failure: The target has the Unconscious condition and repeats the save at the end of each of its turns. The target succeeds automatically after 10 minutes or if it takes damage or a creature within 5 feet of it takes an action to empty a flask of Holy Water on it. Success: The target is immune to this chasme's Drone for 24 hours."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Initiative +5 (15). Chaotic Evil. Habitat: Planar (Abyss); Treasure: Relics.",
+      "lore": "Demon of Betrayal and Sycophancy\n\nFlying forth from the Abyss, chasmes resemble horse-size flies. They incapacitate foes by producing a mind-numbing droning, then use their proboscises to drain victims of life. In the Abyss, most chasmes obsequiously serve more powerful demons and search for captives to press into demonic hordes.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793902186691",
+      "name": "Ghast Gravecaller",
+      "size": "Medium",
+      "creatureType": "Undead",
+      "ac": 16,
+      "maxHp": 97,
+      "hitDice": "15d8+30",
+      "speed": "30",
+      "cr": "6",
+      "xp": 2300,
+      "profBonus": 3,
+      "str": 16,
+      "dex": 17,
+      "con": 14,
+      "int": 18,
+      "wis": 14,
+      "cha": 8,
+      "savingThrows": "Con +5, Wis +5",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Necrotic, Poison; Charmed, Exhaustion, Poisoned",
+      "senses": "Darkvision 120 ft., Passive Perception 12",
+      "languages": "Abyssal, Common",
+      "traits": [
+        {
+          "name": "Stench",
+          "description": "Constitution Saving Throw: DC 13, any creature that starts its turn in a 5-foot Emanation originating from the ghast. Failure: The target has the Poisoned condition until the start of its next turn. Success: The target is immune to this ghast's Stench for 24 hours."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The ghast makes two Horrific Necrosis attacks. It can replace one attack with a Claw attack."
+        },
+        {
+          "name": "Claw",
+          "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (3d6 + 3) Slashing damage. If the target isn't an Undead, it has the Paralyzed condition until the end of its next turn."
+        },
+        {
+          "name": "Horrific Necrosis",
+          "description": "Melee or Ranged Attack Roll: +7, reach 5 ft. or range 120 ft. Hit: 15 (2d10 + 4) Necrotic damage, and the target has the Frightened condition until the end of its next turn."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The ghast casts one of the following spells, requiring no Material components and using Intelligence as the spellcasting ability:\nAt Will: Speak with Dead, Thaumaturgy"
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Chaotic Evil. Initiative +3 (13). Spellcasting uses Intelligence; at will: Speak with Dead, Thaumaturgy.",
+      "lore": "Ghast gravecallers wield fell magic and converse with corpses. They might pose as liches or vampires.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793902926536",
+      "name": "Giant Squid",
+      "size": "Huge",
+      "creatureType": "Beast",
+      "ac": 12,
+      "maxHp": 120,
+      "hitDice": "16d12+16",
+      "speed": "5, swim 80",
+      "cr": "6",
+      "xp": 2300,
+      "profBonus": 3,
+      "str": 23,
+      "dex": 14,
+      "con": 12,
+      "int": 5,
+      "wis": 11,
+      "cha": 4,
+      "savingThrows": "Str +9, Dex +5",
+      "skills": "Perception +6",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Darkvision 120 ft., Passive Perception 16",
+      "languages": "None",
+      "traits": [
+        {
+          "name": "Water Breathing",
+          "description": "The squid can breathe only underwater."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The squid makes one Bite attack and one Tentacle attack."
+        },
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 28 (4d10 + 6) Piercing damage."
+        },
+        {
+          "name": "Tentacle",
+          "description": "Melee Attack Roll: +9, reach 15 ft. Hit: 19 (3d8 + 6) Bludgeoning damage. If the target is a Huge or smaller creature, it has the Grappled condition (escape DC 16) from one of two tentacles, and the squid can pull the target up to 10 feet straight toward itself."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [
+        {
+          "name": "Ink Cloud (1/Day)",
+          "description": "Trigger: The squid takes damage while underwater. Response: The squid releases ink that fills a 15-foot Cube centered on itself, and the squid moves up to its Swim Speed. The Cube is Heavily Obscured for 1 minute or until a strong current or similar effect disperses the ink."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Alignment: Unaligned. Initiative +2 (12).",
+      "lore": "",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793902964467",
+      "name": "Merfolk Wavebender",
+      "size": "Medium",
+      "creatureType": "Elemental",
+      "ac": 14,
+      "maxHp": 97,
+      "hitDice": "15d8+30",
+      "speed": "10, swim 40",
+      "cr": "6",
+      "xp": 2300,
+      "profBonus": 3,
+      "str": 10,
+      "dex": 18,
+      "con": 14,
+      "int": 13,
+      "wis": 19,
+      "cha": 15,
+      "savingThrows": "Dex +7, Con +5, Wis +7, Cha +5",
+      "skills": "Perception +7",
+      "vulnerabilities": "",
+      "resistances": "Cold",
+      "immunities": "",
+      "senses": "Passive Perception 17",
+      "languages": "Common, Primordial (Aquan)",
+      "traits": [
+        {
+          "name": "Amphibious",
+          "description": "The merfolk can breathe air and water."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The merfolk makes two Aquatic Burst attacks."
+        },
+        {
+          "name": "Aquatic Burst",
+          "description": "Melee or Ranged Attack Roll: +7, reach 5 ft. or range 60 ft. Hit: 20 (3d10 + 4) Cold damage. If the target is a Large or smaller creature, it has the Prone condition."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The merfolk casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 15):\nAt Will: Elementalism, Light\n1/Day Each: Control Water, Create or Destroy Water"
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [
+        {
+          "name": "Watery Rebuke",
+          "description": "Trigger: An enemy the merfolk can see enters a space within 5 feet of the merfolk. Response—Strength Saving Throw: DC 15, the triggering enemy. Failure: 14 (4d6) Cold damage. If the target is Large or smaller, it is pushed up to 30 feet straight away from the merfolk by conjured water."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Alignment: Neutral. Initiative +4 (14). Spellcasting uses Wisdom (spell save DC 15).",
+      "lore": "These merfolk mages use magic to manipulate water, storms, and sea creatures to aid them.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793903011549",
+      "name": "Performer Maestro",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 18,
+      "maxHp": 110,
+      "hitDice": "17d8+34",
+      "speed": "30",
+      "cr": "6",
+      "xp": 2300,
+      "profBonus": 3,
+      "str": 12,
+      "dex": 18,
+      "con": 14,
+      "int": 13,
+      "wis": 14,
+      "cha": 19,
+      "savingThrows": "Dex +7, Cha +7",
+      "skills": "Acrobatics +10, Athletics +4, Perception +5, Performance +10, Stealth +7",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 15",
+      "languages": "Common plus one other language",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The performer makes three Rapier attacks."
+        },
+        {
+          "name": "Rapier",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 8 (1d8 + 4) Piercing damage plus 7 (2d6) Psychic damage."
+        },
+        {
+          "name": "Beguiling Song",
+          "description": "Wisdom Saving Throw: DC 15, each creature in a 20-foot-radius Sphere centered on a point within 120 feet. Failure: 20 (3d10 + 4) Psychic damage, and the target has the Charmed condition until the end of the performer's next turn. Success: Half damage only."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The performer casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 15):\nAt Will: Minor Illusion, Prestidigitation\n1/Day: Tasha's Hideous Laughter (level 3 version)"
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Medium or Small Humanoid, Neutral. Initiative +7 (17). Gear: Rapier. Spellcasting uses Charisma (spell save DC 15).",
+      "lore": "Maestros are headlining performers who enjoy considerable renown. They might be theaters' marquee actors, astonishing daredevils, or jesters experienced at entertaining fickle royals. Some share their techniques with apprentices, while others jealously guard their secrets.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793903111212",
+      "name": "Performer Legend",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 20,
+      "maxHp": 162,
+      "hitDice": "25d8+50",
+      "speed": "30",
+      "cr": "10",
+      "xp": 5900,
+      "profBonus": 4,
+      "str": 12,
+      "dex": 20,
+      "con": 14,
+      "int": 15,
+      "wis": 16,
+      "cha": 20,
+      "savingThrows": "Int +6, Wis +7, Cha +9",
+      "skills": "Acrobatics +13, Athletics +5, Perception +7, Performance +13, Stealth +9",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 17",
+      "languages": "Common plus two other languages",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The performer makes three Bejeweled Baton attacks."
+        },
+        {
+          "name": "Bejeweled Baton",
+          "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 10 (2d4 + 5) Bludgeoning damage plus 10 (3d6) Psychic damage."
+        },
+        {
+          "name": "Majestic Song",
+          "description": "Wisdom Saving Throw: DC 17, each creature in a 20-foot-radius Sphere centered on a point within 120 feet. Failure: 22 (4d8 + 4) Psychic damage, and the target has the Charmed or Frightened condition (performer's choice) until the end of the performer's next turn. Success: Half damage only."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The performer casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 17):\nAt Will: Mage Hand, Minor Illusion, Prestidigitation\n1/Day Each: Major Image, Project Image"
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [
+        {
+          "name": "Warding Charm",
+          "description": "Trigger: A creature hits the performer with an attack roll. Response—Wisdom Saving Throw: DC 17, the triggering creature. Failure: The attack roll misses the performer, and the target has the Charmed condition until the end of the performer's next turn."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Medium or Small Humanoid, Neutral. Initiative +9 (19). Spell save DC 17 (Charisma).",
+      "lore": "Performer legends are celebrities known across nations, continents, or worlds. Their prestige might grant them access to the heights of society, or they might use their performances to manipulate audiences. Performer legends usually have signature traits or talents that set them apart from other entertainers, such as a distinct voice, incredible athleticism, or a unique manner of dress. They often travel with a retinue of other performers, guards, or noble patrons.\n\nWelcome, one! Welcome, all! Welcome to the short, and welcome to the tall! Welcome angels, welcome fiends, welcome to all from walks between! Welcome to the Carnival!\n—Tindal, Carnival Barker",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793903151692",
+      "name": "Satyr Revelmaster",
+      "size": "Medium",
+      "creatureType": "Fey",
+      "ac": 17,
+      "maxHp": 82,
+      "hitDice": "15d8+15",
+      "speed": "40",
+      "cr": "6",
+      "xp": 2300,
+      "profBonus": 3,
+      "str": 12,
+      "dex": 18,
+      "con": 12,
+      "int": 12,
+      "wis": 14,
+      "cha": 17,
+      "savingThrows": "Dex +7, Wis +5",
+      "skills": "Acrobatics +7, Perception +5, Performance +9",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 15",
+      "languages": "Common, Elvish, Sylvan",
+      "traits": [
+        {
+          "name": "Magic Resistance",
+          "description": "The satyr has Advantage on saving throws against spells and other magical effects."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The satyr makes three Prance attacks."
+        },
+        {
+          "name": "Prance",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 13 (2d8 + 4) Bludgeoning damage, and the target has the Charmed condition until the start of the satyr's next turn."
+        },
+        {
+          "name": "Fey Melody (Recharge 4–6)",
+          "description": "The satyr conjures a charming or frightening song. Wisdom Saving Throw: DC 14, each enemy in a 60-foot Emanation originating from the satyr. Failure: The target is subjected to the song's effect:\nCharming. The target has the Charmed condition for 1 minute. While Charmed, the target has the Incapacitated condition and uses all its movement to dance in place. The effect ends on the target if it takes any damage.\nFrightening. 10 (2d6 + 3) Psychic damage, and the target has the Frightened condition for 1 minute. If the target ends its turn out of line of sight from the satyr, the condition ends on it."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Chaotic Neutral. Initiative +7 (17).",
+      "lore": "Satyr revelmasters use magical music to change the moods of other creatures. They do so to keep their celebrations exciting and to ward off foes.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793903203066",
+      "name": "Bandit Deceiver",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 16,
+      "maxHp": 130,
+      "hitDice": "20d8+40",
+      "speed": "30",
+      "cr": "7",
+      "xp": 2900,
+      "profBonus": 3,
+      "str": 8,
+      "dex": 16,
+      "con": 14,
+      "int": 17,
+      "wis": 12,
+      "cha": 16,
+      "savingThrows": "Dex +6, Int +6",
+      "skills": "Acrobatics +6, Perception +4, Stealth +9",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 14",
+      "languages": "Common, Thieves' Cant",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The bandit makes three Dagger attacks."
+        },
+        {
+          "name": "Dagger",
+          "description": "Melee or Ranged Attack Roll: +6, reach 5 ft. or range 20/60 ft. Hit: 8 (2d4 + 3) Piercing damage plus 10 (3d6) Poison damage."
+        },
+        {
+          "name": "Blinding Flash (Recharge 4-6)",
+          "description": "Constitution Saving Throw: DC 14, each creature in a 10-foot-radius Sphere centered on a point the bandit can see within 120 feet. Failure: 13 (3d6 + 3) Radiant damage, and the target has the Blinded condition until the start of the bandit's next turn. Success: Half damage only."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The bandit casts one of the following spells, using Intelligence as the spellcasting ability (spell save DC 14):\nAt Will: Disguise Self, Mage Hand, Minor Illusion\n1/Day Each: Hold Person (level 4 version), Mage Armor (included in AC), Major Image"
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Size: Medium or Small. Alignment: Neutral. Initiative +6 (16). Gear: Daggers (6), Wand. AC includes Mage Armor.",
+      "lore": "Bandit deceivers use magic to disguise their activities or create flashy distractions.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793903228489",
+      "name": "Bandit Crime Lord",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 17,
+      "maxHp": 169,
+      "hitDice": "26d8+52",
+      "speed": "30",
+      "cr": "11",
+      "xp": 7200,
+      "profBonus": 4,
+      "str": 10,
+      "dex": 20,
+      "con": 14,
+      "int": 18,
+      "wis": 14,
+      "cha": 15,
+      "savingThrows": "Dex +9, Con +6",
+      "skills": "Acrobatics +9, Perception +10, Stealth +13",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 20",
+      "languages": "Common, Thieves' Cant",
+      "traits": [
+        {
+          "name": "Evasion",
+          "description": "If the bandit is subjected to an effect that allows it to make a Dexterity saving throw to take only half damage, the bandit instead takes no damage if it succeeds on the save and only half damage if it fails. It can't use this trait if it has the Incapacitated condition."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The bandit makes three attacks, using Scimitar or Pistol in any combination."
+        },
+        {
+          "name": "Scimitar",
+          "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 14 (4d6) Poison damage."
+        },
+        {
+          "name": "Pistol",
+          "description": "Ranged Attack Roll: +9, range 30/90 ft. Hit: 10 (1d10 + 5) Piercing damage plus 14 (4d6) Poison damage."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Deadly Aim",
+          "description": "The bandit gives itself Advantage on the next attack roll it makes during the current turn. If that attack hits, the target takes an extra 28 (8d6) Poison damage."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Medium or Small Humanoid, Neutral. Initiative +9 (19). Gear: Pistols (2), Scimitar, Studded Leather Armor.",
+      "lore": "Bandit crime lords manipulate shadowy organizations and prioritize their own survival over any single lackey or plot.\n\n\"I am he who rules the world, don't you know? One little piece at a time.\" —Jarlaxle",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793903270548",
+      "name": "Centaur Warden",
+      "size": "Large",
+      "creatureType": "Fey",
+      "ac": 16,
+      "maxHp": 105,
+      "hitDice": "14d10+28",
+      "speed": "50",
+      "cr": "7",
+      "xp": 2900,
+      "profBonus": 3,
+      "str": 18,
+      "dex": 14,
+      "con": 14,
+      "int": 9,
+      "wis": 18,
+      "cha": 11,
+      "savingThrows": "Con +5, Wis +7",
+      "skills": "Athletics +7, Nature +5, Perception +7",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 17",
+      "languages": "Druidic, Elvish, Sylvan",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The centaur makes two attacks, using Forest Staff or Sun Ray in any combination."
+        },
+        {
+          "name": "Forest Staff",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 13 (2d8 + 4) Bludgeoning damage plus 14 (4d6) Poison damage."
+        },
+        {
+          "name": "Sun Ray",
+          "description": "Ranged Attack Roll: +7, range 90 ft. Hit: 14 (3d6 + 4) Radiant damage, and the target has the Blinded condition until the start of the centaur's next turn."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The centaur casts one of the following spells, using Wisdom as the spellcasting ability (spell save DC 15):\nAt Will: Druidcraft, Speak with Animals"
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Entangling Trail (Recharge 5-6)",
+          "description": "The centaur moves up to its Speed without provoking Opportunity Attacks. Each creature within 5 feet of the centaur as it moves is targeted once by the following effect. Strength Saving Throw: DC 15. Failure: 11 (2d6 + 4) Bludgeoning damage, and the target has the Restrained condition until the end of its next turn."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Neutral Good. Initiative +2 (12). Spellcasting uses Wisdom (spell save DC 15).",
+      "lore": "Centaur wardens often lead groups of centaur troopers and act as intermediaries between Fey creatures and trespassers into their territories.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793903309374",
+      "name": "Primeval Owlbear",
+      "size": "Huge",
+      "creatureType": "Monstrosity",
+      "ac": 16,
+      "maxHp": 126,
+      "hitDice": "12d12+48",
+      "speed": "40, climb 40, fly 5",
+      "cr": "7",
+      "xp": 2900,
+      "profBonus": 3,
+      "str": 22,
+      "dex": 14,
+      "con": 19,
+      "int": 8,
+      "wis": 15,
+      "cha": 7,
+      "savingThrows": "Con +7, Wis +5",
+      "skills": "Perception +8",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Darkvision 120 ft., Passive Perception 18",
+      "languages": "None",
+      "traits": [
+        {
+          "name": "Magic Resistance",
+          "description": "The owlbear has Advantage on saving throws against spells and other magical effects."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The owlbear makes two Ravage attacks."
+        },
+        {
+          "name": "Ravage",
+          "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 15 (2d8 + 6) Slashing damage. If the target is a Huge or smaller creature and the owlbear moved 20+ feet straight toward it immediately before the hit, the target takes an extra 9 (2d8) Slashing damage and has the Prone condition."
+        },
+        {
+          "name": "Screech (Recharge 5-6)",
+          "description": "Constitution Saving Throw: DC 15, each creature in a 30-foot Emanation originating from the owlbear. Failure: 27 (6d8) Thunder damage, and the target has the Incapacitated condition until the end of its next turn. Success: Half damage only."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Unaligned. Initiative +5 (15).",
+      "lore": "Ancient forests and Feywild demesnes steeped in magic can give rise to particularly large and vicious owlbears. These primeval specimens can fly—albeit poorly—and emit thunderous screeches that can rattle foes and even tear them asunder.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793903354979",
+      "name": "Tree Blight",
+      "size": "Huge",
+      "creatureType": "Plant",
+      "ac": 15,
+      "maxHp": 115,
+      "hitDice": "10d12+50",
+      "speed": "30",
+      "cr": "7",
+      "xp": 2900,
+      "profBonus": 3,
+      "str": 23,
+      "dex": 10,
+      "con": 20,
+      "int": 6,
+      "wis": 10,
+      "cha": 3,
+      "savingThrows": "",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Deafened",
+      "senses": "Blindsight 60 ft., Passive Perception 10",
+      "languages": "Understands Common and Druidic but can't speak",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The blight makes two Branch attacks and uses Grasping Root."
+        },
+        {
+          "name": "Branch",
+          "description": "Melee Attack Roll: +9, reach 15 ft. Hit: 16 (3d6 + 6) Bludgeoning damage."
+        },
+        {
+          "name": "Grasping Root",
+          "description": "Strength Saving Throw: DC 17, one Large or smaller creature the blight can see within 15 feet. Failure: The target is pulled up to 10 feet straight toward the blight and has the Grappled condition (escape DC 16) from one of six roots. Until the grapple ends, the target takes 13 (2d6 + 6) Bludgeoning damage at the start of each of its turns."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Gnash",
+          "description": "Dexterity Saving Throw: DC 17, one creature Grappled by the blight. Failure: 19 (3d8 + 6) Piercing damage. Success: Half damage."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Neutral Evil. Initiative +3 (13).",
+      "lore": "Tree blights look like ancient, dead trees with gnarled limbs and splintered hollows. Imbued with bloodlust, these blights feed on the living. Evidence of their past meals is often tangled amid their branches and roots. Tree blights cooperate with other blights, but they attack other tree-shaped beings they encounter, such as awakened trees and treants.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793903504635",
+      "name": "Aberrant Cultist",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 14,
+      "maxHp": 137,
+      "hitDice": "25d8+25",
+      "speed": "30",
+      "cr": "8",
+      "xp": 3900,
+      "profBonus": 3,
+      "str": 10,
+      "dex": 19,
+      "con": 12,
+      "int": 16,
+      "wis": 18,
+      "cha": 15,
+      "savingThrows": "Int +6, Wis +7",
+      "skills": "Arcana +6, Perception +7, Religion +6",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Darkvision 90 ft., Passive Perception 17",
+      "languages": "Common, Deep Speech; telepathy 30 ft.",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The cultist makes two Tentacle Lash attacks. It can replace any attack with a use of Mind Rot."
+        },
+        {
+          "name": "Tentacle Lash",
+          "description": "Melee Attack Roll: +7, reach 10 ft. Hit: 7 (1d6 + 4) Slashing damage plus 14 (4d6) Psychic damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 14) from one of two tentacles, and it has the Restrained condition until the grapple ends."
+        },
+        {
+          "name": "Mind Rot",
+          "description": "Wisdom Saving Throw: DC 15, one creature the cultist can see within 90 feet. Failure: 27 (6d8) Psychic damage, and the target has the Poisoned condition until the start of the cultist's next turn. Success: Half damage only."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The cultist casts one of the following spells, using Wisdom as the spellcasting ability (spell save DC 15):\nAt Will: Detect Thoughts, Minor Illusion"
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [
+        {
+          "name": "Counterspell (2/Day)",
+          "description": "The cultist casts Counterspell in response to that spell's trigger, using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Medium or Small Humanoid, Neutral Evil. Initiative +7 (17). Spellcasting uses Wisdom (spell save DC 15).",
+      "lore": "Aberrant cultists pursue mind-bending powers from alien forces. Aberrant cultists align with monsters such as aboleths and mind flayers or forces such as Cthulhu, Hadar, Ityak-Ortheel the Elf Eater, Nyarlathotep, malicious solar bodies, or entities from the Far Realm.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793903517699",
+      "name": "Death Cultist",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 17,
+      "maxHp": 127,
+      "hitDice": "15d8+60",
+      "speed": "30",
+      "cr": "8",
+      "xp": 3900,
+      "profBonus": 3,
+      "str": 19,
+      "dex": 12,
+      "con": 18,
+      "int": 12,
+      "wis": 16,
+      "cha": 14,
+      "savingThrows": "Con +7, Wis +6",
+      "skills": "Insight +6, Perception +6, Religion +4",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 16",
+      "languages": "Common",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The cultist makes three attacks, using Dread Scythe or Deathly Ray in any combination."
+        },
+        {
+          "name": "Dread Scythe",
+          "description": "Melee Attack Roll: +7, reach 10 ft. Hit: 9 (1d10 + 4) Slashing damage plus 11 (2d10) Necrotic damage, and the target can't regain Hit Points until the end of its next turn."
+        },
+        {
+          "name": "Deathly Ray",
+          "description": "Ranged Attack Roll: +6, range 120 ft. Hit: 22 (4d10) Necrotic damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The cultist casts one of the following spells, using Wisdom as the spellcasting ability (spell save DC 14):\nAt Will: Speak with Dead, Thaumaturgy"
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Spirit Wail (Recharge 5-6)",
+          "description": "Wisdom Saving Throw: DC 14, each creature in a 20-foot Emanation originating from the cultist. Failure: 14 (4d6) Psychic damage, and the target has the Frightened condition until the end of its next turn. Success: Half damage only."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Medium or Small Humanoid, Neutral Evil. Initiative +4 (14). Gear: Splint Armor.",
+      "lore": "Death cultists revel in nihilistic forces, embracing them as paths to undeath, multiversal purity, or entropic inevitability. These cultists serve powerful undead beings, apocalyptic prophecies, or immortals with power over death, such as Acererak, Kyuss, Orcus, Vecna, or Wee Jas.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793903533751",
+      "name": "Elemental Cultist",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 16,
+      "maxHp": 135,
+      "hitDice": "18d8+54",
+      "speed": "30",
+      "cr": "8",
+      "xp": 3900,
+      "profBonus": 3,
+      "str": 18,
+      "dex": 12,
+      "con": 16,
+      "int": 14,
+      "wis": 18,
+      "cha": 12,
+      "savingThrows": "Con +6, Wis +7",
+      "skills": "Arcana +5, Perception +7, Religion +5",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 17",
+      "languages": "Common, Primordial",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The cultist makes three attacks, using Elemental Flail or Elemental Claw in any combination."
+        },
+        {
+          "name": "Elemental Flail",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 25 (6d6 + 4) damage of a type chosen by the cultist: Acid, Cold, Fire, Lightning, or Thunder."
+        },
+        {
+          "name": "Elemental Claw",
+          "description": "Ranged Attack Roll: +7, range 120 ft. Hit: 22 (4d10) damage of a type chosen by the cultist: Acid, Cold, Fire, Lightning, or Thunder. If the target is a Medium or smaller creature, the cultist moves the target up to 10 feet straight toward or away from itself."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The cultist casts one of the following spells, using Wisdom as the spellcasting ability (spell save DC 15): At Will: Elementalism, Mage Hand"
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [
+        {
+          "name": "Elemental Absorption (1/Day)",
+          "description": "Trigger: The cultist takes Acid, Cold, Fire, Lightning, or Thunder damage. Response: The cultist gives itself Resistance to that instance of damage and gains 10 Temporary Hit Points."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Medium or Small Humanoid, Chaotic Evil. Initiative +4 (14). Gear: Chain Mail. Spellcasting uses Wisdom (spell save DC 15).",
+      "lore": "Elemental cultists harness destructive natural forces to cleanse the world of civilization or prove the dominance of one element over all others. Such cultists are aligned with Elemental monsters or wicked immortals such as the Princes of Elemental Evil or the Elder Elemental Eye.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793903556552",
+      "name": "Fiend Cultist",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 16,
+      "maxHp": 127,
+      "hitDice": "17d8+51",
+      "speed": "30",
+      "cr": "8",
+      "xp": 3900,
+      "profBonus": 3,
+      "str": 19,
+      "dex": 15,
+      "con": 16,
+      "int": 12,
+      "wis": 18,
+      "cha": 10,
+      "savingThrows": "Con +6, Wis +7",
+      "skills": "Perception +7, Religion +4",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Darkvision 90 ft. (unimpeded by magical Darkness), Passive Perception 17",
+      "languages": "Abyssal, Common, Infernal",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The cultist makes three Pact Axe attacks."
+        },
+        {
+          "name": "Pact Axe",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 10 (1d12 + 4) Slashing damage plus 13 (3d8) Fire damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The cultist casts one of the following spells, using Wisdom as the spellcasting ability (spell save DC 15, +7 to hit with spell attacks):\nAt Will: Scorching Ray (level 5 version), Thaumaturgy\n2/Day: Fireball (level 6 version)"
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [
+        {
+          "name": "Hellish Rebuke",
+          "description": "The cultist casts Hellish Rebuke in response to that spell's trigger, using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Medium or Small Humanoid, Neutral Evil. Initiative +5 (15). Gear: Breastplate. Spellcasting ability: Wisdom (spell save DC 15, +7 to hit with spell attacks).",
+      "lore": "Fiend cultists worship fiends or evil deities. They often work to bring ruin to innocents or to summon their sinister patron into the world. Fiend cultists might serve infamous powers such as archdevils and demon lords, or foul immortals—beings such as Demogorgon, Pazuzu, Iuz, Zariel, or Zuggtmoy.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793903590289",
+      "name": "Cultist Hierophant",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 16,
+      "maxHp": 144,
+      "hitDice": "17d8+68",
+      "speed": "30",
+      "cr": "10",
+      "xp": 5900,
+      "profBonus": 4,
+      "str": 14,
+      "dex": 18,
+      "con": 18,
+      "int": 13,
+      "wis": 16,
+      "cha": 20,
+      "savingThrows": "Wis +7, Cha +9",
+      "skills": "Perception +7, Persuasion +9, Religion +5",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 17",
+      "languages": "Celestial, Common",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The cultist makes three attacks, using Pact Blade or Radiant Ray in any combination."
+        },
+        {
+          "name": "Pact Blade",
+          "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 18 (4d8) Radiant damage."
+        },
+        {
+          "name": "Radiant Ray",
+          "description": "Ranged Attack Roll: +9, range 120 ft. Hit: 31 (4d12 + 5) Radiant damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The cultist casts one of the following spells, using Charisma as the spellcasting ability (spell save DC 17):\nAt Will: Thaumaturgy\n1/Day Each: Jallarzi's Storm of Radiance (level 7 version), Mass Suggestion"
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Size: Medium or Small. Alignment: Neutral. Initiative +8 (18). Gear: Breastplate, Holy Symbol.",
+      "lore": "Cultist hierophants are leaders who oversee the lives of their underlings, dictate the edicts of the cult, and interpret their patron's will. They possess supernatural powers gained from the cult's patron, supernatural sources, or the power of their own fanaticism. These leaders know their cult's deepest secrets and often control strange relics, mystical sites, and monstrous servants.",
+      "isNpc": false,
+      "book": "MM 2024",
+      "source": "custom"
+    },
+    {
+      "id": "imported-1793907772291",
+      "name": "Berserker Commander",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 16,
+      "maxHp": 136,
+      "hitDice": "16d8+64",
+      "speed": "40",
+      "cr": "8",
+      "xp": 3900,
+      "profBonus": 3,
+      "str": 19,
+      "dex": 14,
+      "con": 19,
+      "int": 10,
+      "wis": 14,
+      "cha": 9,
+      "savingThrows": "Str +7, Con +7",
+      "skills": "Athletics +7, Perception +5",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Charmed, Frightened",
+      "senses": "Passive Perception 15",
+      "languages": "Common",
+      "traits": [
+        {
+          "name": "Bloodied Frenzy",
+          "description": "While Bloodied, the berserker has Advantage on attack rolls and saving throws."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The berserker makes three attacks, using Greataxe or Javelin in any combination."
+        },
+        {
+          "name": "Greataxe",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 10 (1d12 + 4) Slashing damage, plus 10 (3d6) Thunder damage to the target or another creature within 5 feet of the target."
+        },
+        {
+          "name": "Javelin",
+          "description": "Melee or Ranged Attack Roll: +7, reach 5 ft. or range 30/120 ft. Hit: 18 (4d6 + 4) Piercing damage, and the target's Speed decreases by 5 feet until the start of the berserker's next turn."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Frenzied Rush",
+          "description": "Each ally within 30 feet of the berserker can take a Reaction to move up to half the ally's Speed without provoking Opportunity Attacks. The berserker can also move up to half its Speed without provoking Opportunity Attacks."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Medium or Small Humanoid, Neutral. Initiative +5 (15). Gear: Greataxe, Javelins (6).",
+      "lore": "Berserker commanders bear the scars of battle and drive their followers to match their deadly zeal. These commanders tap into a primal magic to enhance their might.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793907807768",
+      "name": "Cockatrice Regent",
+      "size": "Large",
+      "creatureType": "Monstrosity",
+      "ac": 15,
+      "maxHp": 136,
+      "hitDice": "16d10+48",
+      "speed": "30, fly 60",
+      "cr": "8",
+      "xp": 3900,
+      "profBonus": 3,
+      "str": 19,
+      "dex": 14,
+      "con": 16,
+      "int": 3,
+      "wis": 16,
+      "cha": 5,
+      "savingThrows": "Wis +6",
+      "skills": "",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "; Petrified",
+      "senses": "Darkvision 120 ft., Passive Perception 13",
+      "languages": "None",
+      "traits": [
+        {
+          "name": "Flyby",
+          "description": "The cockatrice doesn't provoke an Opportunity Attack when it flies out of an enemy's reach."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The cockatrice makes one Petrifying Bite attack and two Talons attacks."
+        },
+        {
+          "name": "Petrifying Bite",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 13 (2d8 + 4) Piercing damage. If the target is a creature, it is subjected to the following effect. Constitution Saving Throw: DC 14. First Failure: The target has the Restrained condition and repeats the save at the end of its next turn if it is still Restrained, ending the effect on itself on a success. Second Failure: The target has the Petrified condition instead of the Restrained condition."
+        },
+        {
+          "name": "Talons",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 18 (4d6 + 4) Slashing damage."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [
+        {
+          "name": "Magical Backlash",
+          "description": "Trigger: A creature within 120 feet of the cockatrice deals damage to it. Response—Dexterity Saving Throw: DC 14, the triggering creature. Failure: 13 (3d6 + 3) Force damage."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Initiative +2 (12). Alignment: Unaligned.",
+      "lore": "Bolder than their smaller cousins, cockatrice regents brim with unstable magical energy they use to restrain distant foes.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793907846268",
+      "name": "Gnoll Demoniac",
+      "size": "Medium",
+      "creatureType": "Fiend",
+      "ac": 16,
+      "maxHp": 135,
+      "hitDice": "18d8+54",
+      "speed": "30",
+      "cr": "8",
+      "xp": 3900,
+      "profBonus": 3,
+      "str": 16,
+      "dex": 12,
+      "con": 17,
+      "int": 14,
+      "wis": 15,
+      "cha": 17,
+      "savingThrows": "Str +6, Con +6, Wis +5, Cha +6",
+      "skills": "Perception +5",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Darkvision 60 ft., Passive Perception 15",
+      "languages": "Abyssal, Common, Gnoll",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The gnoll makes two Abyssal Strike attacks."
+        },
+        {
+          "name": "Abyssal Strike",
+          "description": "Melee or Ranged Attack Roll: +6, reach 5 ft. or range 60 ft. Hit: 20 (5d6 + 3) Poison damage."
+        },
+        {
+          "name": "Hunger of Yeenoghu (Recharge 5–6)",
+          "description": "The gnoll conjures a 30-foot Cube of magical Darkness originating from a point it can see within 60 feet, which lasts for 1 minute or until the gnoll's Concentration ends on it. This area is Difficult Terrain. Dexterity Saving Throw: DC 14, any creature that starts its turn in this area or enters it for the first time on a turn. Failure: 28 (8d6) Necrotic damage, and the gnoll or a creature of its choice it can see gains 10 Temporary Hit Points. Success: Half damage only."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Rampage (2/Day)",
+          "description": "Immediately after dealing damage to a creature that is already Bloodied, the gnoll moves up to half its Speed, and it makes one Abyssal Strike attack."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Chaotic Evil. Initiative +4 (14).",
+      "lore": "Gnoll demoniacs are berserkers that arise from gnolls who've ritualistically fed on flesh corrupted by the Abyss. Now embodying the ruinous hunger of Yeenoghu, these gnolls throw themselves into battle, heedless of odds or their own survival. Rampaging demoniacs even devour other gnolls in their wild frenzies.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793907976954",
+      "name": "Sphinx of Secrets",
+      "size": "Large",
+      "creatureType": "Celestial",
+      "ac": 16,
+      "maxHp": 136,
+      "hitDice": "16d10+48",
+      "speed": "40, fly 60",
+      "cr": "8",
+      "xp": 3900,
+      "profBonus": 3,
+      "str": 18,
+      "dex": 15,
+      "con": 16,
+      "int": 18,
+      "wis": 18,
+      "cha": 18,
+      "savingThrows": "",
+      "skills": "History +7, Perception +7, Religion +7",
+      "vulnerabilities": "",
+      "resistances": "Necrotic, Radiant",
+      "immunities": "Psychic; Charmed, Frightened",
+      "senses": "Truesight 60 ft., Passive Perception 17",
+      "languages": "Celestial, Common",
+      "traits": [
+        {
+          "name": "Inscrutable",
+          "description": "No magic can observe the sphinx remotely or detect its thoughts without its permission. Wisdom (Insight) checks made to ascertain its intentions or sincerity are made with Disadvantage."
+        },
+        {
+          "name": "Magic Resistance",
+          "description": "The sphinx has Advantage on saving throws against spells and other magical effects."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The sphinx makes three Claw attacks. It can replace one attack with a use of Curse of the Riddle."
+        },
+        {
+          "name": "Claw",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 13 (2d8 + 4) Slashing damage plus 7 (2d6) Radiant damage."
+        },
+        {
+          "name": "Curse of the Riddle",
+          "description": "Intelligence Saving Throw: DC 15, one creature the sphinx can see within 60 feet. Failure: 21 (6d6) Psychic damage, and the target is cursed with a riddle. The cursed target has Disadvantage on ability checks and attack rolls. In addition, if it takes the Magic action, it must succeed on a DC 15 Intelligence saving throw or that action is wasted. The cursed target can take a Study action to make a DC 15 Intelligence check, solving the riddle and ending the curse on a success. The curse ends early if the sphinx curses another target."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The sphinx casts one of the following spells, requiring no Material components and using Intelligence as the spellcasting ability (spell save DC 15):\nAt Will: Detect Magic, Identify, Prestidigitation\n1/Day Each: Locate Object, Remove Curse"
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Spellcasting uses Intelligence (spell save DC 15).",
+      "lore": "Sphinxes of secrets are commonly associated with a site of great magic or learning. These immortal beings often outlive such locations, though, and might protect a site's ruins as they continue their own studies. Sphinxes of secrets fiercely guard their dwellings and research.\n\nSphinx Lairs\nSphinxes typically dwell in places that hold great knowledge or prophetic magic.\n\nThe region containing a sphinx of lore's or sphinx of valor's lair is altered by its presence, creating the following effects:\n\nDistant Sight. While in its lair, the sphinx can cast Clairvoyance, requiring no spell components and using the same spellcasting ability as its Spellcasting action. When cast this way, the spell's range is 1 mile.\n\nInfusion of Knowledge. Whenever the sphinx or one of its allies takes a Study action while within 1 mile of the lair, it adds 1d6 to any ability check it makes for that action.\n\nIf the sphinx dies or moves its lair elsewhere, these effects end immediately.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793908031059",
+      "name": "Vampire Nightbringer",
+      "size": "Medium",
+      "creatureType": "Undead",
+      "ac": 16,
+      "maxHp": 142,
+      "hitDice": "19d8+57",
+      "speed": "30, fly 30 (hover)",
+      "cr": "8",
+      "xp": 3900,
+      "profBonus": 3,
+      "str": 16,
+      "dex": 18,
+      "con": 16,
+      "int": 13,
+      "wis": 14,
+      "cha": 15,
+      "savingThrows": "Dex +7, Wis +5",
+      "skills": "Perception +5, Stealth +7",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Cold, Necrotic; Charmed, Exhaustion, Frightened",
+      "senses": "Darkvision 120 ft., Passive Perception 15",
+      "languages": "Common plus one other language",
+      "traits": [
+        {
+          "name": "Sunlight Hypersensitivity",
+          "description": "The vampire takes 10 Radiant damage if it starts its turn in sunlight. While in sunlight, it has Disadvantage on attack rolls and ability checks."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The vampire makes one Bite attack and one Shadow Strike attack."
+        },
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 7 (1d6 + 4) Piercing damage plus 10 (3d6) Necrotic damage. The target's Hit Point maximum decreases by an amount equal to the Necrotic damage taken, and the vampire regains Hit Points equal to that amount."
+        },
+        {
+          "name": "Shadow Strike",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 7 (1d6 + 4) Slashing damage plus 14 (4d6) Cold damage."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Shadow Stealth",
+          "description": "While in Dim Light or Darkness, the vampire takes the Hide action."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Size: Medium or Small. Alignment: Neutral Evil. Initiative +4 (14).",
+      "lore": "Born of necromantic rituals and planes of existence suffused with negative energy, vampire nightbringers manipulate shadows and feed on the raw life force of living creatures.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793908091099",
+      "name": "Vampire Umbral Lord",
+      "size": "Medium",
+      "creatureType": "Undead",
+      "ac": 16,
+      "maxHp": 187,
+      "hitDice": "22d8+88",
+      "speed": "40, climb 40, fly 40 (hover)",
+      "cr": "15",
+      "xp": 13000,
+      "profBonus": 5,
+      "str": 20,
+      "dex": 18,
+      "con": 18,
+      "int": 19,
+      "wis": 16,
+      "cha": 21,
+      "savingThrows": "Str +10, Dex +9, Wis +8, Cha +10",
+      "skills": "Arcana +9, Perception +13, Stealth +9",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Cold, Necrotic; Charmed, Exhaustion",
+      "senses": "Blindsight 120 ft., Passive Perception 23",
+      "languages": "Common plus three other languages",
+      "traits": [
+        {
+          "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
+          "description": "If the vampire fails a saving throw, it can choose to succeed instead."
+        },
+        {
+          "name": "Shadow Escape",
+          "description": "If the vampire drops to 0 Hit Points outside its resting place, it teleports into its resting place unless it is in running water or sunlight. If it can't teleport, it is destroyed. Once inside its resting place, it has the Paralyzed condition for 1 hour, after which it regains 1 Hit Point."
+        },
+        {
+          "name": "Vampire Weakness",
+          "description": "The vampire has these weaknesses:\nForbiddance. The vampire can't enter a residence without an invitation from an occupant.\nRunning Water. The vampire takes 20 Acid damage if it ends its turn in running water.\nStake to the Heart. If a weapon that deals Piercing damage is driven into the vampire's heart while the vampire has the Incapacitated condition in its resting place, the vampire has the Paralyzed condition until the weapon is removed.\nSunlight. The vampire takes 20 Radiant damage if it starts its turn in sunlight. While in sunlight, it has Disadvantage on attack rolls and ability checks."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The vampire makes two attacks, using Grave Strike or Sickening Ray in any combination."
+        },
+        {
+          "name": "Grave Strike",
+          "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 9 (1d8 + 5) Slashing damage plus 13 (3d8) Necrotic damage."
+        },
+        {
+          "name": "Sickening Ray",
+          "description": "Ranged Attack Roll: +10, range 120 ft. Hit: 16 (2d10 + 5) Necrotic damage, and the target has the Poisoned condition until the start of the vampire's next turn."
+        },
+        {
+          "name": "Hunger of Hadar (Recharge 5-6)",
+          "description": "The vampire casts Hunger of Hadar (level 5 version), requiring no spell components and using Charisma as the spellcasting ability (spell save DC 18)."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Sanguine Drain",
+          "description": "Constitution Saving Throw: DC 18, one creature the vampire can see within 30 feet that isn't a Construct or an Undead. Failure: 14 (4d6) Necrotic damage. The target's Hit Point maximum decreases by an amount equal to the damage taken, and the vampire regains Hit Points equal to that amount."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [
+        {
+          "name": "Beguile",
+          "description": "The vampire casts Command, requiring no spell components and using Charisma as the spellcasting ability (spell save DC 18). The vampire can't take this action again until the start of its next turn."
+        },
+        {
+          "name": "Umbral Strike",
+          "description": "The vampire moves up to half its Speed, and it makes one Grave Strike or Sickening Ray attack."
+        }
+      ],
+      "notes": "Medium or Small Undead, Lawful Evil. Initiative +14 (24). XP 15,000 in lair. Legendary Action Uses: 3 (4 in Lair). Immediately after another creature's turn, the vampire can expend a use to take one of the following actions. The vampire regains all expended uses at the start of each of its turns.",
+      "lore": "Vampire umbral lords embrace their ties to the darkness, devoting themselves to sinister powers in exchange for access to forbidden magic.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793908162013",
+      "name": "Brazen Gorgon",
+      "size": "Large",
+      "creatureType": "Construct",
+      "ac": 19,
+      "maxHp": 161,
+      "hitDice": "17d10+68",
+      "speed": "40",
+      "cr": "9",
+      "xp": 5000,
+      "profBonus": 4,
+      "str": 18,
+      "dex": 14,
+      "con": 19,
+      "int": 2,
+      "wis": 14,
+      "cha": 7,
+      "savingThrows": "",
+      "skills": "Perception +10",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Fire; Exhaustion, Petrified",
+      "senses": "Darkvision 60 ft., Passive Perception 20",
+      "languages": "None",
+      "traits": [
+        {
+          "name": "Flame Aura",
+          "description": "At the end of each of the gorgon's turns, each creature in a 5-foot Emanation originating from the gorgon takes 13 (3d8) Fire damage."
+        },
+        {
+          "name": "Illumination",
+          "description": "The gorgon sheds Bright Light in a 10-foot radius and Dim Light for an additional 10 feet."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The gorgon makes two Gore attacks."
+        },
+        {
+          "name": "Gore",
+          "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 11 (2d6 + 4) Piercing damage plus 10 (3d6) Fire damage."
+        },
+        {
+          "name": "Smelting Charge (Recharge 5-6)",
+          "description": "The gorgon moves up to its Speed without provoking Opportunity Attacks and can move through the spaces of Medium or smaller creatures. Each time the gorgon enters a creature's space for the first time during this move, that target is subjected to the following effect. Dexterity Saving Throw: DC 16. Failure: 13 (2d8 + 4) Piercing damage plus 13 (3d8) Fire damage, and the target is pulled into the gorgon's space and has the Grappled condition (escape DC 14); if the gorgon already has a creature Grappled, the target has the Prone condition instead. Until the grapple ends, the target has the Restrained condition. When the gorgon moves, the Grappled target moves with it, costing no extra movement."
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Initiative +2 (12)",
+      "lore": "Followers of the exiled archdevil Moloch altered the process of creating gorgons to craft their own diabolical guardians called brazen gorgons. These gorgons are hollow, bull-like automatons whose metal bodies glow with intense heat. When they charge their foes, the ribs of their frames open like cages to ensnare enemies and roast them within. Brazen gorgons are often found in blasphemous sites dedicated to Moloch, other archdevils, or bloodthirsty gods.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793908199863",
+      "name": "Dire Worg",
+      "size": "Huge",
+      "creatureType": "Fey",
+      "ac": 16,
+      "maxHp": 147,
+      "hitDice": "14d12+56",
+      "speed": "50",
+      "cr": "10",
+      "xp": 5900,
+      "profBonus": 4,
+      "str": 22,
+      "dex": 14,
+      "con": 18,
+      "int": 7,
+      "wis": 16,
+      "cha": 8,
+      "savingThrows": "Dex +6, Wis +7",
+      "skills": "Perception +11",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Darkvision 120 ft., Passive Perception 21",
+      "languages": "Goblin, Sylvan, Worg",
+      "traits": [
+        {
+          "name": "Magic Resistance",
+          "description": "The worg has Advantage on saving throws against spells and other magical effects."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The worg makes three Bite attacks."
+        },
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 15 (2d8 + 6) Piercing damage plus 7 (2d6) Poison damage, and the target has the Poisoned condition until the start of the worg's next turn. While Poisoned, the target can't regain Hit Points."
+        },
+        {
+          "name": "Dreadful Howl (Recharge 5-6)",
+          "description": "Wisdom Saving Throw: DC 16, each creature within 30 feet that isn't a worg. Failure: 36 (8d8) Psychic damage, and the target has the Frightened condition until the start of the worg's next turn. Success: Half damage only."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Warp Step",
+          "description": "The worg teleports, along with a willing creature of its choice within 5 feet of it, up to 30 feet to an unoccupied space it can see."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Alignment: Neutral Evil. Initiative +2 (12).",
+      "lore": "Dire worgs are larger than common worgs and possess a supernaturally terrifying howl. They frequently hunt alongside ettins, ogres, and trolls.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793908237602",
+      "name": "Noble Prodigy",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 16,
+      "maxHp": 148,
+      "hitDice": "27d8+27",
+      "speed": "30",
+      "cr": "10",
+      "xp": 5900,
+      "profBonus": 4,
+      "str": 8,
+      "dex": 16,
+      "con": 12,
+      "int": 15,
+      "wis": 14,
+      "cha": 19,
+      "savingThrows": "Dex +7, Con +5, Wis +6, Cha +8",
+      "skills": "Perception +6, Persuasion +8",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 16",
+      "languages": "Common plus two other languages",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The noble makes three Beguiling Strike attacks."
+        },
+        {
+          "name": "Beguiling Strike",
+          "description": "Melee or Ranged Attack Roll: +8, reach 5 ft. or range 60 ft. Hit: 18 (4d6 + 4) Psychic damage, and the target has the Charmed condition until the start of the noble's next turn."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The noble casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):\nAt Will: Mage Armor (included in AC), Mage Hand, Minor Illusion\n1/Day Each: Befuddlement, Detect Thoughts, Fly, Scrying, Shatter (level 7 version)"
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [
+        {
+          "name": "Shield (2/Day)",
+          "description": "The noble casts Shield in response to that spell's trigger, using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Medium or Small Humanoid, Neutral. Initiative +7 (17). AC includes Mage Armor.",
+      "lore": "Noble prodigies trace their lineage to a legendary hero, a demigod, a dragon, or some other ancestor that grants them magical prowess. Among some nobles, the source of a prodigy's magic might be a family secret.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793908269491",
+      "name": "Spy Master",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 19,
+      "maxHp": 137,
+      "hitDice": "25d8+25",
+      "speed": "30, climb 30",
+      "cr": "10",
+      "xp": 5900,
+      "profBonus": 4,
+      "str": 10,
+      "dex": 20,
+      "con": 12,
+      "int": 18,
+      "wis": 16,
+      "cha": 16,
+      "savingThrows": "Dex +9, Con +5, Int +8, Wis +7",
+      "skills": "Deception +7, Insight +7, Investigation +8, Perception +11, Sleight of Hand +9, Stealth +13",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 21",
+      "languages": "Common plus two other languages",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The spy makes three attacks, using Rapier or Hand Crossbow in any combination."
+        },
+        {
+          "name": "Rapier",
+          "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 14 (2d8 + 5) Piercing damage plus 7 (2d6) Poison damage."
+        },
+        {
+          "name": "Hand Crossbow",
+          "description": "Ranged Attack Roll: +9, range 30/120 ft. Hit: 12 (2d6 + 5) Piercing damage plus 9 (2d8) Poison damage."
+        },
+        {
+          "name": "Smoke Bomb (1/Day)",
+          "description": "The spy throws a bomb to a point it can see within 30 feet of itself. Constitution Saving Throw: DC 16, each creature in a 20-foot-radius Sphere centered on that point. Failure: 28 (8d6) Poison damage, and the target has the Blinded condition until the end of the spy's next turn. Success: Half damage only."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Cunning Action",
+          "description": "The spy takes the Dash, Disengage, or Hide action."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Medium or Small Humanoid, Neutral. Initiative +9 (19). Gear: Hand Crossbow, Rapier, Thieves' Tools.",
+      "lore": "Spy masters have extensive experience in gathering secrets while leaving no evidence of their presence.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793908308565",
+      "name": "Warrior Commander",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 18,
+      "maxHp": 161,
+      "hitDice": "19d8+76",
+      "speed": "30",
+      "cr": "10",
+      "xp": 5900,
+      "profBonus": 4,
+      "str": 21,
+      "dex": 20,
+      "con": 18,
+      "int": 14,
+      "wis": 16,
+      "cha": 14,
+      "savingThrows": "Str +9, Dex +9, Con +8, Wis +7",
+      "skills": "Athletics +9, Insight +7, Perception +7",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 17",
+      "languages": "Common plus one other language",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The warrior makes three attacks, using Greatsword or Longbow in any combination."
+        },
+        {
+          "name": "Greatsword",
+          "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 19 (4d6 + 5) Slashing damage. The warrior also creates one of the following effects:\n\nSap. The target has Disadvantage on its next attack roll before the start of the warrior's next turn.\n\nManeuver. One ally who can see or hear the warrior can take a Reaction to move up to half the ally's Speed without provoking Opportunity Attacks."
+        },
+        {
+          "name": "Longbow",
+          "description": "Ranged Attack Roll: +9, range 150/600 ft. Hit: 18 (3d8 + 5) Piercing damage, and the target's Speed decreases by 10 feet until the end of the target's next turn."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Tactical Charge",
+          "description": "The warrior moves up to half its Speed straight toward an enemy it can see without provoking Opportunity Attacks."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Counterattack",
+          "description": "Trigger: The warrior is hit by an attack roll. Response: The warrior adds 4 to its AC against that attack, possibly causing it to miss. On a miss, the warrior can make one Greatsword or Longbow attack against the attacker."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Medium or Small Humanoid, Neutral. Initiative +9 (19). Gear: Greatsword, Longbow, Plate Armor.",
+      "lore": "Skilled in both combat and leadership, warrior commanders overcome challenges through a combination of martial skill and clever tactics.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793908365510",
+      "name": "Yochlol",
+      "size": "Medium",
+      "creatureType": "Fiend (Demon)",
+      "ac": 15,
+      "maxHp": 153,
+      "hitDice": "18d8+72",
+      "speed": "30, climb 30",
+      "cr": "10",
+      "xp": 5900,
+      "profBonus": 4,
+      "str": 15,
+      "dex": 19,
+      "con": 18,
+      "int": 13,
+      "wis": 15,
+      "cha": 17,
+      "savingThrows": "Dex +8, Int +5, Wis +6, Cha +7",
+      "skills": "Deception +11, Insight +6",
+      "vulnerabilities": "",
+      "resistances": "Cold, Fire, Lightning",
+      "immunities": "Poison; Poisoned",
+      "senses": "Darkvision 120 ft., Passive Perception 12",
+      "languages": "Abyssal, Elvish, Undercommon",
+      "traits": [
+        {
+          "name": "Demonic Restoration",
+          "description": "If the yochlol dies outside the Abyss, its body dissolves, and it gains a new body instantly, reviving with all its Hit Points in the Abyss."
+        },
+        {
+          "name": "Magic Resistance",
+          "description": "The yochlol has Advantage on saving throws against spells and other magical effects."
+        },
+        {
+          "name": "Spider Climb",
+          "description": "The yochlol can climb difficult surfaces, including along ceilings, without needing to make an ability check."
+        },
+        {
+          "name": "Web Walker",
+          "description": "The yochlol ignores movement restrictions caused by webs."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The yochlol makes two Caustic Lash attacks, and it can use Spellcasting to cast Web or Dominate Person if available."
+        },
+        {
+          "name": "Caustic Lash",
+          "description": "Melee or Ranged Attack Roll: +8, reach 10 ft. or range 120 ft. Hit: 25 (6d6 + 4) Acid damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The yochlol casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 15):\nAt Will: Detect Thoughts, Gaseous Form (self only), Web\n1/Day: Dominate Person"
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Shape-Shift",
+          "description": "The yochlol shape-shifts into a Medium Humanoid or a Medium spider or back into its true form. Its game statistics are the same in each form. Any equipment it is wearing or carrying isn't transformed."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Toxic Escape",
+          "description": "Trigger: The yochlol is hit by an attack roll. Response: The yochlol halves the attack's damage to itself (round down), and it teleports to an unoccupied space it can see within 30 feet of itself. Constitution Saving Throw: DC 15, each creature within 5 feet of the yochlol's destination space. Failure: The target has the Poisoned condition until the end of its next turn. While Poisoned, it has the Incapacitated condition."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Alignment: Chaotic Evil. Initiative +8 (18). Habitat: Planar (Abyss); Treasure: None. Spell save DC 15 (Charisma).",
+      "lore": "Demon of Depraved Will\n\nYochlols embody the pernicious will and infectious philosophies of the Abyss. In their rarely seen true forms, these noxious manipulators appear as ever-shifting masses of dripping tentacles and toxic flesh crowned by a single baleful eye. More often, though, yochlols take the form of spiders or zealous cultists. They use manipulative magic and dangerous rhetoric to spread demonic cults, corrupt the righteous, and further the plots of their fiendish overlords. They relish coercing the unwitting into furthering demonic plots and turning mortals against one another.\n\nMost yochlols serve Lolth. The Demon Queen of Spiders claims all yochlols as minions and orders any yochlols that disagree destroyed. In rare cases, yochlols might serve other demon lords, particularly manipulative or changeable ones like Graz'zt, Juiblex, and Zuggtmoy.\n\nDespite their service to demon lords, yochlols harbor their own vicious whims and ambitions. They might claim to speak for their overlords to further their own ambitions or seek to reveal rivals' selfish goals to gain standing with their demonic masters.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793908416901",
+      "name": "Mind Flayer Arcanist",
+      "size": "Medium",
+      "creatureType": "Aberration",
+      "ac": 16,
+      "maxHp": 143,
+      "hitDice": "26d8+26",
+      "speed": "30, fly 30 (hover)",
+      "cr": "11",
+      "xp": 7200,
+      "profBonus": 4,
+      "str": 11,
+      "dex": 14,
+      "con": 13,
+      "int": 20,
+      "wis": 17,
+      "cha": 17,
+      "savingThrows": "Dex +6, Int +9, Wis +7, Cha +7",
+      "skills": "Arcana +13, Insight +7, Perception +7, Stealth +6",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Psychic; Charmed, Frightened",
+      "senses": "Darkvision 120 ft., Passive Perception 17",
+      "languages": "Deep Speech, Undercommon; telepathy 120 ft.",
+      "traits": [
+        {
+          "name": "Magic Resistance",
+          "description": "The mind flayer has Advantage on saving throws against spells and other magical effects."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The mind flayer makes three Arcane Tentacles attacks."
+        },
+        {
+          "name": "Arcane Tentacles",
+          "description": "Melee or Ranged Attack Roll: +9, reach 5 ft. or range 120 ft. Hit: 27 (4d10 + 5) Psychic damage, and the mind flayer can teleport the target up to 30 feet to an unoccupied space the mind flayer can see on a surface or liquid large enough to support the target. If this damage reduces the target to 0 Hit Points, the mind flayer kills it and magically devours its brain."
+        },
+        {
+          "name": "Mind Burst (Recharge 5–6)",
+          "description": "Intelligence Saving Throw: DC 17, each creature in a 40-foot Emanation originating from the mind flayer. Failure: 41 (8d8 + 5) Psychic damage, and the target has the Stunned condition until the end of the mind flayer's next turn. Success: Half damage only."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The mind flayer casts one of the following spells, requiring no spell components and using Intelligence as the spellcasting ability (spell save DC 17):\nAt Will: Detect Magic, Detect Thoughts, Disguise Self, Mage Hand (the hand is Invisible)\n1/Day Each: Clairvoyance, Dimension Door, Fireball (level 5 version), Lightning Bolt (level 5 version), Plane Shift (self only), Sending"
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [
+        {
+          "name": "Shield (2/Day)",
+          "description": "The mind flayer casts Shield in response to that spell's trigger, using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Alignment: Lawful Evil. Initiative +6 (16). Gear: Breastplate. Spellcasting uses Intelligence (spell save DC 17), no components required.",
+      "lore": "Mind flayer arcanists enhance their psionic abilities with magic. Other mind flayers view those that undertake such experiments with disgust and fear.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793908474628",
+      "name": "Archpriest",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 16,
+      "maxHp": 240,
+      "hitDice": "32d8+96",
+      "speed": "30",
+      "cr": "12",
+      "xp": 8400,
+      "profBonus": 4,
+      "str": 16,
+      "dex": 12,
+      "con": 17,
+      "int": 14,
+      "wis": 21,
+      "cha": 14,
+      "savingThrows": "Str +7, Con +7, Int +6, Wis +9",
+      "skills": "Insight +9, Medicine +9, Perception +9, Religion +10",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 19",
+      "languages": "Common plus two other languages",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The archpriest makes three Radiant Burst attacks."
+        },
+        {
+          "name": "Radiant Burst",
+          "description": "Melee or Ranged Attack Roll: +9, reach 5 ft. or range 60 ft. Hit: 27 (4d10 + 5) Radiant damage."
+        },
+        {
+          "name": "Holy Word (Recharge 4-6)",
+          "description": "Wisdom Saving Throw: DC 17, each enemy in a 20-foot Emanation originating from the archpriest. Failure: 21 (6d6) Radiant damage, and the target has the Stunned condition until the end of the archpriest's next turn. Success: Half damage only."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The archpriest casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 17):\nAt Will: Light, Thaumaturgy\n1/Day Each: Flame Strike (level 6 version), Greater Restoration, Raise Dead, Zone of Truth"
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Divine Aid (3/Day)",
+          "description": "The priest casts Bless, Dispel Magic, Healing Word, or Lesser Restoration, using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Medium or Small Humanoid (Cleric), Neutral. Initiative +5 (15). Gear: Chain Mail, Holy Symbol. Spellcasting uses Wisdom (spell save DC 17).",
+      "lore": "By forging connections with divine beings and mastering mystical truths, archpriests become conduits for godly intentions and other supernatural forces. Their magic allows them to work wonders, whether to share the benevolence of their faiths or to vent divine wrath. Some archpriests attract vast followings as they claim to speak for divine forces, while others undertake personal spiritual journeys and seek to transcend mortal concerns.\n\nShining One, light my hours. Enkindle my soul, and inspire my deeds. Chase the shadows from my path, and let me walk in your brilliance.\n—Morning prayer to Pelor",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793908495752",
+      "name": "Pirate Admiral",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 20,
+      "maxHp": 182,
+      "hitDice": "28d8+56",
+      "speed": "30",
+      "cr": "12",
+      "xp": 8400,
+      "profBonus": 4,
+      "str": 14,
+      "dex": 22,
+      "con": 14,
+      "int": 12,
+      "wis": 14,
+      "cha": 19,
+      "savingThrows": "Str +6, Dex +10, Wis +6, Cha +8",
+      "skills": "Acrobatics +10, Athletics +6, Perception +6",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "",
+      "senses": "Passive Perception 16",
+      "languages": "Common plus one other language",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The pirate makes three attacks, using Scimitar or Pistol in any combination."
+        },
+        {
+          "name": "Scimitar",
+          "description": "Melee Attack Roll: +10, reach 5 ft. Hit: 16 (3d6 + 6) Slashing damage plus 7 (2d6) Poison damage, and the target suffers one of the following effects of the pirate's choice:\nAwestruck. The target has the Charmed condition until the start of the pirate's next turn.\nPoison. The target has the Poisoned condition until the start of the pirate's next turn."
+        },
+        {
+          "name": "Pistol",
+          "description": "Ranged Attack Roll: +10, range 30/90 ft. Hit: 28 (4d10 + 6) Piercing damage."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Rally (1/Day)",
+          "description": "The pirate chooses up to three other creatures it can see within 30 feet. Until the start of the pirate's next turn, the targets have Advantage on attack rolls and saving throws."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Defensive Stance",
+          "description": "Trigger: The pirate is hit by a melee attack roll while holding a weapon. Response: The pirate adds 4 to its AC against melee attack rolls (including the triggering attack) until the start of its next turn, possibly causing the attacks to miss."
+        }
+      ],
+      "legendaryActions": [],
+      "notes": "Size: Medium or Small. Alignment: Neutral. Initiative +10 (20). Gear: Pistol, Scimitar.",
+      "lore": "Pirate admirals command whole pirate fleets. They undertake audacious ventures, such as challenging the navies of coastal nations, hunting legendary sea creatures, or carving out their own pirate kingdoms. Pirate admirals might launch their fleets from hidden fortresses where they hoard their treasure—or keep maps to where they've hidden their riches. Some pirate admirals ally with the followers of oceanic deities, underwater dwellers, and sea monsters, as well as their fellow scalawags.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793908532415",
+      "name": "Questing Knight",
+      "size": "Medium",
+      "creatureType": "Humanoid",
+      "ac": 18,
+      "maxHp": 202,
+      "hitDice": "27d8+81",
+      "speed": "30",
+      "cr": "12",
+      "xp": 8400,
+      "profBonus": 4,
+      "str": 20,
+      "dex": 16,
+      "con": 16,
+      "int": 11,
+      "wis": 12,
+      "cha": 18,
+      "savingThrows": "Str +9, Con +7, Wis +5, Cha +8",
+      "skills": "Athletics +9, Perception +5, Persuasion +8",
+      "vulnerabilities": "",
+      "resistances": "",
+      "immunities": "Charmed, Frightened",
+      "senses": "Passive Perception 15",
+      "languages": "Common plus one other language",
+      "traits": [
+        {
+          "name": "Aura of Bravery",
+          "description": "Creatures of the knight's choice in a 30-foot Emanation originating from it have Immunity to the Charmed and Frightened conditions while there."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The knight makes three attacks, using Greatsword or Longbow in any combination."
+        },
+        {
+          "name": "Greatsword",
+          "description": "Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 22 (5d8) Radiant damage."
+        },
+        {
+          "name": "Longbow",
+          "description": "Ranged Attack Roll: +7, range 150/600 ft. Hit: 12 (2d8 + 3) Piercing damage plus 22 (5d8) Radiant damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The knight casts one of the following spells, using Charisma as the spellcasting ability (spell save DC 16):\n1/Day Each: Daylight, Dispel Evil and Good, Greater Restoration, Phantom Steed"
+        }
+      ],
+      "bonusActions": [],
+      "reactions": [],
+      "legendaryActions": [],
+      "notes": "Size: Medium or Small. Alignment: Neutral. Initiative +7 (17). Gear: Greatsword, Longbow, Plate Armor.",
+      "lore": "Questing knights travel in pursuit of a cause, such as slaying a villain, defeating a monster, recovering an Artifact, or restoring their lost honor.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793908669287",
+      "name": "Shadow Dragon",
+      "size": "Huge",
+      "creatureType": "Dragon",
+      "ac": 16,
+      "maxHp": 189,
+      "hitDice": "18d12+72",
+      "speed": "40, climb 40, fly 80",
+      "cr": "13",
+      "xp": 10000,
+      "profBonus": 5,
+      "str": 21,
+      "dex": 19,
+      "con": 18,
+      "int": 14,
+      "wis": 12,
+      "cha": 18,
+      "savingThrows": "Dex +9, Wis +6",
+      "skills": "Perception +11, Stealth +14",
+      "vulnerabilities": "",
+      "resistances": "See Living Shadow",
+      "immunities": "Necrotic",
+      "senses": "Blindsight 30 ft., Darkvision 120 ft., Passive Perception 21",
+      "languages": "Common, Draconic",
+      "traits": [
+        {
+          "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
+          "description": "If the dragon fails a saving throw, it can choose to succeed instead."
+        },
+        {
+          "name": "Living Shadow",
+          "description": "While in Dim Light or Darkness, the dragon has Resistance to damage that isn't Force, Psychic, or Radiant."
+        },
+        {
+          "name": "Sunlight Sensitivity",
+          "description": "While in sunlight, the dragon has Disadvantage on ability checks and attack rolls."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The dragon makes three Rend attacks."
+        },
+        {
+          "name": "Rend",
+          "description": "Melee Attack Roll: +10, reach 10 ft. Hit: 12 (2d6 + 5) Slashing damage plus 3 (1d6) Necrotic damage."
+        },
+        {
+          "name": "Shadow Breath (Recharge 5-6)",
+          "description": "Dexterity Saving Throw: DC 17, each creature in a 60-foot Cone. Failure: 35 (10d6) Necrotic damage. Success: Half damage. Failure or Success: A Humanoid reduced to 0 Hit Points by this damage dies, and a Shadow rises from the corpse. The shadow is under the dragon's control and shares the dragon's Initiative count but acts immediately after the dragon."
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Shadow Stealth",
+          "description": "While in Dim Light or Darkness, the dragon takes the Hide action."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [
+        {
+          "name": "Pounce",
+          "description": "The dragon moves up to half its Speed, and it makes one Rend attack."
+        },
+        {
+          "name": "Veil of Shadow",
+          "description": "The dragon uses Shadow Stealth, and one creature of its choice that it can see within 10 feet of it takes 10 (3d6) Necrotic damage. The dragon can't take this action again until the start of its next turn."
+        }
+      ],
+      "notes": "Size: Huge or Large. Alignment: Chaotic Evil. Initiative +14 (24). XP 11,500 in lair. Legendary Action Uses: 3 (4 in Lair). Immediately after another creature's turn, the dragon can expend a use to take one of the following actions. The dragon regains all expended uses at the start of each of its turns.",
+      "lore": "Shadow Dragon Lairs\nShadow dragons lair in places of darkness and despair, such as accursed ruins, the depths of the Underdark, or the Shadowfell.\n\nThe region around a shadow dragon's lair is twisted by its presence, creating the following effects:\n\nNegative Energy Suffusion. Whenever a creature within 1 mile of the lair regains Hit Points from a spell, it subtracts 1d10 from the number of Hit Points regained.\n\nStifling Shadows. Within 1 mile of the lair, effects that normally create Bright Light instead create Dim Light, and creatures there have Advantage on Dexterity (Stealth) checks.\n\nIf the dragon dies or moves its lair elsewhere, these effects end immediately.",
+      "isNpc": false,
+      "book": "MM 2024"
+    },
+    {
+      "id": "imported-1793908760048",
+      "name": "Animal Lord",
+      "size": "Medium",
+      "creatureType": "Celestial",
+      "ac": 19,
+      "maxHp": 323,
+      "hitDice": "34d8+170",
+      "speed": "60, fly 60 (hover), swim 60",
+      "cr": "20",
+      "xp": 25000,
+      "profBonus": 6,
+      "str": 24,
+      "dex": 25,
+      "con": 20,
+      "int": 19,
+      "wis": 23,
+      "cha": 22,
+      "savingThrows": "Con +11, Wis +12",
+      "skills": "Acrobatics +13, Athletics +13, Perception +18, Stealth +13",
+      "vulnerabilities": "",
+      "resistances": "Cold, Fire, Necrotic, Psychic, Radiant",
+      "immunities": "Charmed, Frightened, Stunned",
+      "senses": "Truesight 120 ft., Passive Perception 28",
+      "languages": "All",
+      "traits": [
+        {
+          "name": "Animal Lordship",
+          "description": "An animal lord represents a Forager, Hunter, or Sage (DM's choice), which determines certain traits in this stat block."
+        },
+        {
+          "name": "Legendary Resistance (4/Day)",
+          "description": "If the animal lord fails a saving throw, it can choose to succeed instead."
+        },
+        {
+          "name": "Lordly Presence",
+          "description": "Wisdom Saving Throw: DC 20, any enemy that starts its turn in a 30-foot Emanation originating from the animal lord. Failure: The target suffers one of the following effects:\nCaptivated (Forager Only). The target has the Charmed condition until the end of its next turn. While Charmed, the target has the Incapacitated condition.\nFearful (Hunter Only). The target has the Frightened condition until the end of its next turn.\nMired (Sage Only). The target takes 10 (3d6) Psychic damage, and the target is magically bewildered until the end of its next turn. While bewildered, the target subtracts 1d4 from its saving throws."
+        },
+        {
+          "name": "Magic Resistance",
+          "description": "The animal lord has Advantage on saving throws against spells and other magical effects."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The animal lord makes two attacks, using Rend or Radiant Ray in any combination, and uses Animal Spirit."
+        },
+        {
+          "name": "Rend",
+          "description": "Melee Attack Roll: +13, reach 5 ft. Hit: 14 (2d6 + 7) Slashing damage plus 7 (2d6) Force damage."
+        },
+        {
+          "name": "Radiant Ray",
+          "description": "Ranged Attack Roll: +12, range 120 ft. Hit: 20 (4d6 + 6) Radiant damage."
+        },
+        {
+          "name": "Animal Spirit",
+          "description": "The animal lord conjures an animal spirit that strikes at a creature and then disappears. Dexterity Saving Throw: DC 20, one creature the animal lord can see within 120 feet. Failure: 28 (4d10 + 6) Radiant damage. Success: Half damage. Failure or Success: One of the following effects occurs:\nFortify (Forager Only). The animal lord gains 20 Temporary Hit Points.\nMarked as Prey (Hunter Only). The animal lord has Advantage on attack rolls against the target until the start of the animal lord's next turn.\nPesky Swarm (Sage Only). The target has Disadvantage on attack rolls and ability checks until the end of its next turn."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The animal lord casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 20):\nAt Will: Animal Friendship, Animal Messenger, Speak with Animals\n2/Day Each: Awaken, Greater Restoration\n1/Day Each (Sage Only): Animal Shapes, Sunburst"
+        }
+      ],
+      "bonusActions": [
+        {
+          "name": "Shape-Shift",
+          "description": "The animal lord shape-shifts into a Huge or smaller version of the animal it represents or a Medium or Small Humanoid, or it returns to its true form. Its game statistics, other than its size, are the same in each form. Any equipment it is wearing or carrying isn't transformed."
+        }
+      ],
+      "reactions": [],
+      "legendaryActions": [
+        {
+          "name": "Feral Strike",
+          "description": "The animal lord moves up to its Speed without provoking Opportunity Attacks, and it makes one Rend attack."
+        },
+        {
+          "name": "Radiant Strike",
+          "description": "The animal lord makes one Radiant Ray attack."
+        }
+      ],
+      "notes": "Initiative +19 (29). Alignment: Neutral. Habitat: Planar (Beastlands); Treasure: Relics. Legendary Action Uses: 3. Immediately after another creature's turn, the animal lord can expend a use to take one of the following actions. The animal lord regains all expended uses at the start of each of its turns.",
+      "lore": "Immortal Regent of the Wild\n\nWhile I don't deny the compliment, I assure you, I'm more akin to a god than a \"pretty kitty.\" —Brother of Shadows, Cat Lord\n\nAnimal lords are the immortal spirits of legendary animals. They serve as the divine protectors of animals of their kind, and they appear as hybrids of humanoids and the animals they defend. They frequently change into giant, idealized versions of the animals they're associated with—albeit with glowing eyes. When contending with people, they sometimes appear as humanlike beings with subtle, animal-like features. No matter their appearance, animal lords exhibit the instincts and predilections of the animals they represent, tempered by their intellect and experience.\n\nMost animal lords make their homes in the Beastlands, but they occasionally journey to the Feywild or other idyllic realms. They rarely travel to the Material Plane, making exceptions only when a world faces environmental disaster or droves of animals are otherwise in jeopardy.\n\nAmong the best-known animal lords are those that represent cats, hawks, lizards, and wolves, but animal lords exist for beasts of all types. Some animal lords even embody creatures that are rare or extinct on Material Plane worlds, like megafauna or dinosaurs. Using their divine might, animal lords can summon spectral animals, channel spiritual energy, and exhibit powers associated with one of three broad groups: foragers, hunters, or sages. These powers are tied to an animal lord's personality and traits associated with the creature it resembles. Roll on or choose results from the relevant Animal Lord Appearances table to inspire what creature an animal lord resembles.\n\nForager Animal Lord Appearances\n1d10: 1 Bear; 2 Bee; 3 Bison; 4 Capybara; 5 Carp; 6 Rabbit; 7 Rooster; 8 Sloth; 9 Stag; 10 Vulture\n\nHunter Animal Lord Appearances\n1d10: 1 Alligator; 2 Badger; 3 Bat; 4 Cat; 5 Hawk; 6 Mongoose; 7 Praying mantis; 8 Shark; 9 Snake; 10 Wolf\n\nSage Animal Lord Appearances\n1d10: 1 Coyote; 2 Crow; 3 Elephant; 4 Lizard; 5 Mouse; 6 Owl; 7 Salmon; 8 Spider; 9 Turtle; 10 Whale",
       "isNpc": false,
       "book": "MM 2024"
     }

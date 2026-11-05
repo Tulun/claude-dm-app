@@ -147,6 +147,19 @@ describe('splitStatText', () => {
     expect(marked('Each creature takes 8d6 fire damage, or half as much.')).toEqual([['damage', '8d6 fire damage']]);
   });
 
+  it('tags each damage segment with its type, and catches flat typed damage', () => {
+    const typed = (text) => splitStatText(text).filter(s => s.kind === 'damage').map(s => [s.text, s.damageType]);
+    expect(typed('Melee Attack Roll: +3, reach 5 ft. Hit: 3 (1d4+1) Slashing damage plus 1 Necrotic damage.')).toEqual([
+      ['3 (1d4+1) Slashing damage', 'slashing'], ['1 Necrotic damage', 'necrotic'],
+    ]);
+    expect(typed('Each creature takes 8d6 fire damage, or half as much.')).toEqual([['8d6 fire damage', 'fire']]);
+    expect(typed('Hit: 13 (2d8+4) plus 7 (2d6) Poison damage.')).toEqual([['13 (2d8+4)', null], ['7 (2d6) Poison damage', 'poison']]);
+    expect(typed('Once per turn, +10 (3d6) damage if an ally is near.')).toEqual([['+10 (3d6) damage', null]]);
+    // A flat number only counts with a named damage type.
+    expect(typed('It drops to 1 Hit Point and takes 5 damage.')).toEqual([]);
+    expect(splitStatText('Hit: 3 Slashing damage.').find(s => s.kind)).toEqual({ text: '3 Slashing damage', kind: 'damage', damageType: 'slashing' });
+  });
+
   it('round-trips the text and leaves plain prose alone', () => {
     const text = 'Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6+2) Piercing damage. DC 12.';
     expect(splitStatText(text).map(s => s.text).join('')).toBe(text);

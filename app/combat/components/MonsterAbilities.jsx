@@ -15,10 +15,30 @@ const GROUPS = [
 ];
 const STAT_CLASS = { hit: 'text-amber-300 font-semibold', damage: 'text-red-300 font-semibold', dc: 'text-purple-300 font-semibold' };
 
+// Damage colored by type, loosely after Baldur's Gate 3's palette. Physical
+// (bludgeoning / piercing / slashing) and untyped damage keep the plain
+// damage red from STAT_CLASS.
+export const DAMAGE_TYPE_CLASS = {
+  acid: 'text-lime-300',
+  cold: 'text-sky-300',
+  fire: 'text-orange-400',
+  force: 'text-rose-400',
+  lightning: 'text-blue-400',
+  necrotic: 'text-emerald-400',
+  poison: 'text-green-500',
+  psychic: 'text-fuchsia-400',
+  radiant: 'text-yellow-200',
+  thunder: 'text-violet-400',
+};
+const segmentClass = (seg) =>
+  seg.kind === 'damage' && DAMAGE_TYPE_CLASS[seg.damageType]
+    ? `${DAMAGE_TYPE_CLASS[seg.damageType]} font-semibold`
+    : STAT_CLASS[seg.kind];
+
 // Stat-block text with to-hit / damage / save DC picked out (plain React
 // text nodes — no HTML injection). Shared with PartyAbilities.
 export const StatText = ({ text }) => splitStatText(text).map((seg, i) =>
-  seg.kind ? <span key={i} className={STAT_CLASS[seg.kind]}>{seg.text}</span> : seg.text
+  seg.kind ? <span key={i} className={segmentClass(seg)} data-damage-type={seg.damageType || undefined}>{seg.text}</span> : seg.text
 );
 
 /**

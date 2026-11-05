@@ -769,7 +769,7 @@ describe('CombatPage — turn tracker', () => {
     expect(within(spellsBox).getByText('Sacred Flame')).toBeInTheDocument();
     expect(within(spellsBox).queryByText('Bless')).not.toBeInTheDocument();
     expect(within(spellsBox).queryByText('Ceremony')).not.toBeInTheDocument();
-    expect(within(spellsBox).getByText('1d8 force damage')).toHaveClass('text-red-300');
+    expect(within(spellsBox).getByText('1d8 force damage')).toHaveClass('text-rose-400'); // force damage colored by type
 
     // Cast a 1st-level spell: spends the bonus action and the last 1st slot
     fetchMock.mockClear();

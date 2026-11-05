@@ -384,7 +384,11 @@ Three rules keep the pointer honest:
   leaves room for the tables scrolling under it. To-hit / damage /
   save DCs are highlighted via `splitStatText` (monsterAbilities.js) →
   segments rendered as React text nodes — NOT an HTML sink (§3). The
-  exported `StatText` is the one renderer for that; reuse it.
+  exported `StatText` is the one renderer for that; reuse it. Damage
+  segments carry `damageType` (one of `DAMAGE_TYPES`, or null) and are
+  colored by `DAMAGE_TYPE_CLASS` in MonsterAbilities.jsx (BG3-inspired;
+  physical/untyped stay red). A flat number is only damage with a named
+  type ("1 Necrotic damage"), so "1 Hit Point" stays plain.
 - **Party panel** (`PartyAbilities.jsx`, a `TurnEconomy` child on a party
   turn): collapsed = `PartyLoadout` chips + the same toggle; expanded =
   `data-testid="party-expanded"`, a `max-h-[40vh]` scroll box with regions
