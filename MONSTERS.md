@@ -1,27 +1,27 @@
-# Monster templates — 2024 coverage and what's left
+# Monster templates — 2024 coverage
 
 Every stat block in the 2024 Monster Manual, checked against what's in the app
 (built-ins in [app/data/defaultEnemyTemplates.js](app/data/defaultEnemyTemplates.js)
 plus your saved and imported templates in `data/templates.json`). Roster: 503
 stat blocks, 5etools `XMM` data. Matched by name, ignoring case and punctuation.
-**Snapshot as of 2026-11-05 (second pass)** — counts drift as you import.
+**Snapshot as of 2026-11-06 (third pass)** — counts drift as you import.
 
 ## At a glance — all 503 stat blocks in the 2024 Monster Manual
 
 | | Count | What to do |
 |---|---|---|
-| In the app as a 2024 SRD 5.2.1 built-in | 326 | Nothing |
-| In the app, imported by you from the 2024 MM (Source book `MM 2024`) | 124 | Nothing |
-| Not in the app at all | **0** | — every 2024 monster is now in |
-| **In the app, but still on older (2014-era) stats** | **53** | Re-import (same name → **Update Existing**) |
+| In the app as a 2024 SRD 5.2.1 built-in | 324 | Nothing |
+| In the app, imported by you from the 2024 MM (Source book `MM 2024`) | 179 | Nothing |
+| Not in the app at all | **0** | — |
+| In the app, but still on older (2014-era) stats | **0** | — |
 
-All 65 monsters that were missing on the first pass are in (55 new in 2024 +
-10 renames). The 124 imports are 82 new templates plus 42 built-ins you updated
-in place. Two of those were already SRD 5.2.1 built-ins (Ogre, Sahuagin
-Warrior) — re-importing them was harmless. On top of the 503, 17 older
-built-ins have no 2024 Monster Manual version at all (listed further down) and
-8 of your custom templates (Topiary Golem Ornamental, the Gnoll Abyssal set,
-Lizardfolk Bloodeye, etc.) aren't from the Monster Manual.
+**Coverage is complete.** The 53 that were on older stats at the second pass
+are all re-imported (Beholder now tagged `MM 2024`). The 179 imports include 5
+monsters that were already SRD 5.2.1 built-ins (Archmage, Mage, Ogre, Sahuagin
+Warrior, Salamander) — re-importing those was harmless. On top of the 503, 17
+older built-ins have no 2024 Monster Manual version at all (listed further
+down) and 8 of your custom templates (Topiary Golem Ornamental, the Gnoll
+Abyssal set, Lizardfolk Bloodeye, etc.) aren't from the Monster Manual.
 
 ## How to update one
 
@@ -33,42 +33,25 @@ have, import it under the new name; the old template then goes — delete it in
 the library AND retire its id in `app/data/retiredTemplates.js`, or a future
 update re-adds it (see "Renamed in 2024: 2014 version removed" below).
 
-## What's left: in the app, still on older stats (53)
-
-Same name in the 2024 Monster Manual; the app's stat block is the older one.
-Beholder was re-imported but has no Source book set, so it can't be told apart
-from the old stats — set it to `MM 2024` and it moves to "done".
-
-- **CR 1/4:** Kenku · Kuo-toa · Mud Mephit · Smoke Mephit · Troglodyte · Winged Kobold
-- **CR 1/2:** Jackalwere · Myconid Adult · Piercer
-- **CR 1:** Kuo-toa Whip · Lacedon Ghoul · Myconid Spore Servant · Psychic Gray Ooze · Scarecrow
-- **CR 2:** Bulette Pup · Carrion Crawler · Intellect Devourer · Mage Apprentice · Myconid Sovereign · Nothic · Peryton · Poltergeist · Quaggoth · Spined Devil · Swarm of Stirges
-- **CR 3:** Displacer Beast · Flaming Skeleton · Goblin Hexer · Grell · Hook Horror · Kuo-toa Monitor · Quaggoth Thonot · Scout Captain · Spectator · Swarm of Lemures · Water Weird · Yeti
-- **CR 4:** Aarakocra Aeromancer · Banshee · Bone Naga · Flameskull · Helmed Horror · Swarm of Dretches
-- **CR 5:** Barlgura · Cambion · Mezzoloth · Umber Hulk
-- **CR 6:** Galeb Duhr · Hobgoblin Warlord · Kuo-toa Archpriest
-- **CR 9:** Abominable Yeti · Nycaloth
-- **CR 13:** Beholder
-
-## Done: imported from the 2024 Monster Manual (124)
+## Done: imported from the 2024 Monster Manual (179)
 
 - **CR 0:** Crawling Claw · Larva · Myconid Sprout · Octopus
 - **CR 1/8:** Flumph · Manes · Modron Monodrone · Slaad Tadpole · Twig Blight
-- **CR 1/4:** Aarakocra Skirmisher · Animated Broom · Bullywug Warrior · Modron Duodrone · Needle Blight · Pixie
-- **CR 1/2:** Gas Spore Fungus · Modron Tridrone · Performer · Sahuagin Warrior · Vine Blight
-- **CR 1:** Empyrean Iota · Faerie Dragon Youth · Manes Vaporspawn · Modron Quadrone · Ogrillon Ogre · Salamander Fire Snake · Swarm of Larvae · Thri-kreen Marauder · Yuan-ti Infiltrator
-- **CR 2:** Faerie Dragon Adult · Githzerai Monk · Gnoll Pack Lord · Lizardfolk Geomancer · Modron Pentadrone · Ogre · Sahuagin Priest
-- **CR 3:** Githyanki Warrior · Yuan-ti Malison (Type 1) · Yuan-ti Malison (Type 2) · Yuan-ti Malison (Type 3)
-- **CR 4:** Bullywug Bog Sage · Gnoll Fang of Yeenoghu · Juvenile Shadow Dragon · Lizardfolk Sovereign · Shadow Demon
-- **CR 5:** Beholder Zombie · Giant Axe Beak · Pixie Wonderbringer · Red Slaad · Revenant · Sahuagin Baron · Salamander · Young Remorhaz
-- **CR 6:** Azer Pyromancer · Chasme · Cyclops Sentry · Ghast Gravecaller · Giant Squid · Githzerai Zerth · Merfolk Wavebender · Performer Maestro · Satyr Revelmaster
+- **CR 1/4:** Aarakocra Skirmisher · Animated Broom · Bullywug Warrior · Kenku · Kuo-toa · Modron Duodrone · Mud Mephit · Needle Blight · Pixie · Smoke Mephit · Troglodyte · Winged Kobold
+- **CR 1/2:** Gas Spore Fungus · Jackalwere · Modron Tridrone · Myconid Adult · Performer · Piercer · Sahuagin Warrior · Vine Blight
+- **CR 1:** Empyrean Iota · Faerie Dragon Youth · Kuo-toa Whip · Lacedon Ghoul · Manes Vaporspawn · Modron Quadrone · Myconid Spore Servant · Ogrillon Ogre · Psychic Gray Ooze · Salamander Fire Snake · Scarecrow · Swarm of Larvae · Thri-kreen Marauder · Yuan-ti Infiltrator
+- **CR 2:** Bulette Pup · Carrion Crawler · Faerie Dragon Adult · Githzerai Monk · Gnoll Pack Lord · Intellect Devourer · Lizardfolk Geomancer · Mage Apprentice · Modron Pentadrone · Myconid Sovereign · Nothic · Ogre · Peryton · Poltergeist · Quaggoth · Sahuagin Priest · Spined Devil · Swarm of Stirges
+- **CR 3:** Displacer Beast · Flaming Skeleton · Githyanki Warrior · Goblin Hexer · Grell · Hook Horror · Kuo-toa Monitor · Quaggoth Thonot · Scout Captain · Spectator · Swarm of Lemures · Water Weird · Yeti · Yuan-ti Malison (Type 1) · Yuan-ti Malison (Type 2) · Yuan-ti Malison (Type 3)
+- **CR 4:** Aarakocra Aeromancer · Banshee · Bone Naga · Bullywug Bog Sage · Flameskull · Gnoll Fang of Yeenoghu · Helmed Horror · Juvenile Shadow Dragon · Lizardfolk Sovereign · Shadow Demon · Swarm of Dretches
+- **CR 5:** Barlgura · Beholder Zombie · Cambion · Giant Axe Beak · Mezzoloth · Pixie Wonderbringer · Red Slaad · Revenant · Sahuagin Baron · Salamander · Umber Hulk · Young Remorhaz
+- **CR 6:** Azer Pyromancer · Chasme · Cyclops Sentry · Galeb Duhr · Ghast Gravecaller · Giant Squid · Githzerai Zerth · Hobgoblin Warlord · Kuo-toa Archpriest · Mage · Merfolk Wavebender · Performer Maestro · Satyr Revelmaster
 - **CR 7:** Bandit Deceiver · Blue Slaad · Centaur Warden · Graveyard Revenant · Grick Ancient · Mind Flayer · Primeval Owlbear · Tree Blight · Violet Fungus Necrohulk · Yuan-ti Abomination
 - **CR 8:** Aberrant Cultist · Berserker Commander · Cockatrice Regent · Death Cultist · Elemental Cultist · Fiend Cultist · Fomorian · Githyanki Knight · Gnoll Demoniac · Green Slaad · Sphinx of Secrets · Thri-kreen Psion · Vampire Nightbringer
-- **CR 9:** Brazen Gorgon · Gray Slaad
+- **CR 9:** Abominable Yeti · Brazen Gorgon · Gray Slaad · Nycaloth
 - **CR 10:** Cultist Hierophant · Cyclops Oracle · Death Slaad · Dire Worg · Haunting Revenant · Noble Prodigy · Performer Legend · Spy Master · Warrior Commander · Yochlol
 - **CR 11:** Bandit Crime Lord · Dao · Death Knight Aspirant · Marid · Mind Flayer Arcanist
-- **CR 12:** Arcanaloth · Archpriest · Githzerai Psion · Pirate Admiral · Questing Knight
-- **CR 13:** Shadow Dragon · Ultroloth
+- **CR 12:** Arcanaloth · Archmage · Archpriest · Githzerai Psion · Pirate Admiral · Questing Knight
+- **CR 13:** Beholder · Shadow Dragon · Ultroloth
 - **CR 14:** Death Tyrant
 - **CR 15:** Salamander Inferno Master · Vampire Umbral Lord
 - **CR 16:** Githyanki Dracomancer · Gulthias Blight

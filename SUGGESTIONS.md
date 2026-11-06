@@ -146,10 +146,6 @@ context costs:
 
 ## 5. Bigger ideas (feature-adjacent)
 
-- [ ] **2024 Monster Manual coverage: 53 left to update** (snapshot
-  2026-11-05, second pass) — all 503 MM 2024 stat blocks are in the app; 53
-  same-name built-ins still carry older stats. List in `MONSTERS.md`. Re-import
-  case by case via Import Monster (Update Existing).
 - [ ] **Use 2024 initiative bonuses** — SRD templates now carry `initiativeBonus`
   (e.g. Hobgoblin Captain +4 vs DEX +2) but enemy initiative still rolls off DEX.
 - [ ] **Per-monster legendary action uses** — SRD templates carry
@@ -601,3 +597,9 @@ context costs:
 - [x] Fixed: templates migration discarded user edits to `mm-*` templates; removed over-eager `size` heuristic — July 2026
 - [x] Fixed: spell sync wrote duplicate `castTime`/`castingTime` keys on character spells (now `castTime` only, legacy key stripped) — July 2026
 - [x] Investigated, not a bug: combat card "ignoring" temp AC — the card adds `tempAC` at display time; including it in the calculator would double-count — July 2026
+- [x] **2024 Monster Manual coverage complete** (2026-11-06) — all 503 MM 2024
+  stat blocks are in the app as SRD built-ins (324) or `MM 2024` imports (179);
+  none left on older stats. See `MONSTERS.md`.
+- [x] **Import Monster: closing mid-parse no longer drops the parse** (2026-11-06) —
+  `handleClose` skips its reset while `isParsing`, so reopening shows
+  "Parsing stat block..." and then the result.

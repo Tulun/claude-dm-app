@@ -97,6 +97,41 @@ describe('ImportMonsterModal — multiple screenshots', () => {
     await waitFor(() => expect(shots()).toHaveLength(2));
   });
 
+  it('closing mid-parse keeps the parse running: reopening shows it still parsing, then the result', async () => {
+    let resolveFetch;
+    fetchMock.mockReturnValueOnce(new Promise(r => { resolveFetch = r; }));
+    const onClose = vi.fn();
+    const props = { onClose, onImport: vi.fn() };
+    const { rerender } = render(<ImportMonsterModal isOpen {...props} />);
+    addFiles([png('top')]);
+    await waitFor(() => expect(shots()).toHaveLength(1));
+    fireEvent.click(screen.getByRole('button', { name: /Parse Image/ }));
+    expect(screen.getByText(/Parsing stat block/)).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(onClose).toHaveBeenCalledTimes(1);
+    rerender(<ImportMonsterModal isOpen={false} {...props} />);
+    expect(screen.queryByText(/Parsing stat block/)).toBeNull();
+
+    rerender(<ImportMonsterModal isOpen {...props} />);
+    expect(screen.getByText(/Parsing stat block/)).toBeInTheDocument();
+    expect(shots()).toHaveLength(1);
+
+    resolveFetch({ json: async () => ({ success: true, monster: { name: 'Beholder', traits: [], actions: [] } }) });
+    await screen.findByText(/Monster Parsed Successfully/);
+  });
+
+  it('closing when not parsing still clears the screenshots', async () => {
+    const props = { onClose: vi.fn(), onImport: vi.fn() };
+    const { rerender } = render(<ImportMonsterModal isOpen {...props} />);
+    addFiles([png('top')]);
+    await waitFor(() => expect(shots()).toHaveLength(1));
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    rerender(<ImportMonsterModal isOpen={false} {...props} />);
+    rerender(<ImportMonsterModal isOpen {...props} />);
+    expect(shots()).toHaveLength(0);
+  });
+
   it('ignores non-image files', async () => {
     renderModal();
     addFiles([new File(['x'], 'notes.txt', { type: 'text/plain' }), png('top')]);

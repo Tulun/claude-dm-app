@@ -173,6 +173,13 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
   };
 
   const handleClose = () => {
+    // Closing mid-parse only hides the modal: the request keeps running in
+    // this (still mounted) component, so reopening shows "Parsing..." and then
+    // the result. Resetting here used to drop the parse on the floor.
+    if (isParsing) {
+      onClose();
+      return;
+    }
     setImages([]);
     setParsedMonster(null);
     setError(null);
