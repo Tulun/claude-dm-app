@@ -10,7 +10,9 @@
     "test:watch": "vitest",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "conflux:import": "node scripts/convert-conflux.mjs",
+    "conflux:groups": "node scripts/conflux-groups.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.74.0",
@@ -26,6 +28,7 @@
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.2.10",
     "jsdom": "^27.0.1",
+    "pdfjs-dist": "^4.10.38",
     "prettier": "^3.9.4",
     "tailwindcss": "^4",
     "vitest": "^3.2.6"

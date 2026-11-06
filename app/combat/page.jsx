@@ -9,6 +9,7 @@ import Navbar from '../components/Navbar';
 import { defaultPartyData, defaultEnemyTemplates } from '../components/defaultData';
 import CharacterCard from './components/CharacterCard';
 import CombatantTable from './components/CombatantTable';
+import PartyPresenceBar from './components/PartyPresenceBar';
 import TurnTracker from './components/TurnTracker';
 import useNavbarBottom from '../hooks/useNavbarBottom';
 import InitiativeItem from './components/InitiativeItem';
@@ -92,6 +93,10 @@ export default function CombatPage() {
   const [turnReminder, setTurnReminder] = useState(null);
   // Manual initiative order - stores IDs in display order
   const [initiativeOrder, setInitiativeOrder] = useState([]);
+  // Party members sitting this fight out (split party, absent player):
+  // array of party ids, persisted with the encounter. They stay in party.json
+  // untouched — only the fight ignores them (and their companions).
+  const [absentPartyIds, setAbsentPartyIds] = useState([]);
   // Saving stays disabled until the initial load settles, so loading data
   // never echoes an unchanged copy back to the API.
   const saveEnabled = React.useRef(false);
@@ -134,6 +139,9 @@ export default function CombatPage() {
           }
           if (encounterData && Array.isArray(encounterData.initiativeOrder)) {
             setInitiativeOrder(encounterData.initiativeOrder);
+          }
+          if (encounterData && Array.isArray(encounterData.absentPartyIds)) {
+            setAbsentPartyIds(encounterData.absentPartyIds);
           }
           if (encounterData && typeof encounterData.round === 'number') {
             setRound(encounterData.round);
@@ -220,6 +228,7 @@ export default function CombatPage() {
           lairActions,
           loadedEncounter,
           initiativeOrder,
+          absentPartyIds,
           combatActive,
           round,
           turnIndex: turn.index,
@@ -233,7 +242,7 @@ export default function CombatPage() {
       }).catch(console.error);
     }, SAVE_DEBOUNCE_MS);
     return () => clearTimeout(timeout);
-  }, [enemies, lairActions, loadedEncounter, initiativeOrder, combatActive, round, turn, interrupt, reactionsUsed, turnUsage]);
+  }, [enemies, lairActions, loadedEncounter, initiativeOrder, absentPartyIds, combatActive, round, turn, interrupt, reactionsUsed, turnUsage]);
 
   const reloadParty = async () => {
     try {
@@ -298,8 +307,19 @@ export default function CombatPage() {
 
 
 
+  // The party members actually in this fight; absent ones (split party) are
+  // left out of initiative, the tables/cards and companion extraction.
+  const absentSet = useMemo(() => new Set(absentPartyIds), [absentPartyIds]);
+  const activeParty = useMemo(
+    () => (party ? (absentSet.size ? party.filter(p => !absentSet.has(p.id)) : party) : party),
+    [party, absentSet]
+  );
+  const togglePartyPresence = useCallback((id) => setAbsentPartyIds(prev =>
+    prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+  ), []);
+
   // Extract active companions from party members that are marked for combat
-  const partyCompanions = useMemo(() => (party || []).flatMap(member =>
+  const partyCompanions = useMemo(() => (activeParty || []).flatMap(member =>
     (member.companions || [])
       .filter(c => c.active && c.inCombat)
       .map(c => ({
@@ -313,7 +333,7 @@ export default function CombatPage() {
         currentHp: c.currentHp || c.maxHp || 1,
         maxHp: c.maxHp || 1,
       }))
-  ), [party]);
+  ), [activeParty]);
 
   // Build the initiative list based on manual order or default to all combatants
   // Own memo so the Enemies section's lair cards (memoized InitiativeItems)
@@ -327,8 +347,8 @@ export default function CombatPage() {
   })), [lairActions]);
 
   const allCombatants = useMemo(
-    () => [...(party || []), ...partyCompanions, ...enemies, ...lairActionEntries],
-    [party, partyCompanions, enemies, lairActionEntries]
+    () => [...(activeParty || []), ...partyCompanions, ...enemies, ...lairActionEntries],
+    [activeParty, partyCompanions, enemies, lairActionEntries]
   );
 
   // If we have a manual order, use it (filtering out any removed combatants)
@@ -683,7 +703,7 @@ export default function CombatPage() {
   const showEnemies = viewMode !== 'party';
   const viewTabs = [
     { id: 'initiative', label: 'Initiative', icon: <Icons.Sword />, active: 'text-amber-400 border-amber-500' },
-    { id: 'party', label: 'Party & Allies', icon: <Icons.Shield />, count: party?.length, active: 'text-emerald-400 border-emerald-500' },
+    { id: 'party', label: 'Party & Allies', icon: <Icons.Shield />, count: activeParty?.length, active: 'text-emerald-400 border-emerald-500' },
     { id: 'enemies', label: 'Enemies', icon: <Icons.Skull />, count: enemies.length, active: 'text-red-400 border-red-500' },
   ];
 
@@ -776,15 +796,22 @@ export default function CombatPage() {
             {!party ? (
               <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg animate-pulse">Loading party...</div>
             ) : party.length > 0 ? (
-              isInitiative ? (
-                <CombatantTable combatants={party} isEnemy={false} onUpdate={updatePartyMember} onRemove={removePartyMember} templates={templates || EMPTY_TEMPLATES} />
+              <>
+              <PartyPresenceBar party={party} absentSet={absentSet} onToggle={togglePartyPresence} />
+              <div data-testid="party-roster">
+              {activeParty.length === 0 ? (
+                <div className="text-center py-6 text-stone-500 border border-dashed border-stone-700 rounded-lg">Everyone is sitting this fight out.</div>
+              ) : isInitiative ? (
+                <CombatantTable combatants={activeParty} isEnemy={false} onUpdate={updatePartyMember} onRemove={removePartyMember} templates={templates || EMPTY_TEMPLATES} />
               ) : (
               // Full-width tab: up to three card columns; rows stretch so
               // side-by-side cards line up (`stretch` pins their stat bars).
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {party.map(m => <CharacterCard key={m.id} character={m} isEnemy={false} onUpdate={updatePartyMember} onRemove={removePartyMember} onInspect={inspectCombatant} onUpdateInitiative={updateInitiative} showResources templates={templates || EMPTY_TEMPLATES} stretch />)}
+                {activeParty.map(m => <CharacterCard key={m.id} character={m} isEnemy={false} onUpdate={updatePartyMember} onRemove={removePartyMember} onInspect={inspectCombatant} onUpdateInitiative={updateInitiative} showResources templates={templates || EMPTY_TEMPLATES} stretch />)}
               </div>
-              )
+              )}
+              </div>
+              </>
             ) : (
               <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">No party members yet.</div>
             )}

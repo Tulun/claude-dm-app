@@ -18,9 +18,35 @@ export const SECTIONS = [
   { key: 'legendaryActions', label: 'Legendary Actions', singular: 'Legendary Action', color: 'purple' },
 ];
 
-// Conflux creatures live in a separate 5.4 MB file served by
+// Conflux creatures live in a separate ~6 MB file served by
 // GET /api/templates?source=conflux; their ids carry this prefix.
 export const isConfluxId = (id) => String(id ?? '').startsWith('cc-');
+
+// Conflux release stamps, written by scripts/convert-conflux.mjs: a creature
+// new in release X carries `confluxAdded: X`, one whose stat block changed
+// carries `confluxUpdated: X` (plus `confluxRenamedFrom` when renamed).
+const compareVersions = (a, b) => {
+  const pa = String(a).split('.').map(Number);
+  const pb = String(b).split('.').map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const d = (pa[i] || 0) - (pb[i] || 0);
+    if (d) return d;
+  }
+  return 0;
+};
+
+// The newest release any creature in the list is stamped with, or null.
+export const latestConfluxVersion = (list) =>
+  (list || []).reduce((best, t) => [t?.confluxAdded, t?.confluxUpdated].filter(Boolean)
+    .reduce((b, v) => (!b || compareVersions(v, b) > 0 ? v : b), best), null);
+
+// 'new' / 'updated' when the creature changed in `version`, else null.
+export const confluxChange = (t, version) => {
+  if (!version) return null;
+  if (t?.confluxAdded === version) return 'new';
+  if (t?.confluxUpdated === version) return 'updated';
+  return null;
+};
 
 const isBuiltIn = (t) => String(t?.id ?? '').startsWith('mm-') && t?.source !== 'custom';
 

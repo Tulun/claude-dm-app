@@ -127,7 +127,7 @@ context costs:
   starts to matter.
 - [ ] **`classData.js` (863 lines)** — only loads on `/classes`, so low priority;
   could be fetched or dynamic-imported if that page feels slow.
-- [ ] **`public/data/conflux-creatures.json` is 5.4 MB** — loaded on demand only when
+- [ ] **`public/data/conflux-creatures.json` is ~6 MB** — loaded on demand only when
   the user filters to Conflux, which is the right shape; if it feels slow, split by CR
   band or precompress.
 - [ ] **Async fs in API routes** — routes use sync fs; fine for a local single-user
@@ -146,6 +146,12 @@ context costs:
 
 ## 5. Bigger ideas (feature-adjacent)
 
+- [ ] **30 Conflux creatures sit in "Ungrouped"** (Nov 2026 `conflux:groups` run) —
+  mostly renamed since the 1.58 export or living only in the Cobra Codex docs under
+  other names (Uchuulon, Cult Fanatic of the … NPCs). Next 5eTools export should
+  shrink this; otherwise a small name-alias table in `scripts/conflux-groups.mjs`.
+  Related: `ÅŒmukade` is mojibake for `Ōmukade` that `convert-conflux.mjs`'s
+  MOJIBAKE table doesn't cover (it also keeps it out of its group).
 - [ ] **Use 2024 initiative bonuses** — SRD templates now carry `initiativeBonus`
   (e.g. Hobgoblin Captain +4 vs DEX +2) but enemy initiative still rolls off DEX.
 - [ ] **Per-monster legendary action uses** — SRD templates carry
@@ -184,6 +190,29 @@ context costs:
 ---
 
 ## Completed log
+- [x] **By Conflux Group** index on the Conflux library tabs: Conflux's own
+  families (Aboleths, Goblins…) under the catalog's sections, CR range +
+  Homebrewery link per family; the monster page links its group(s).
+  `scripts/conflux-groups.mjs` (`npm run conflux:groups`, tested) builds
+  `public/data/conflux-groups.json` from the monthly Individual Links PDF + each
+  family's Homebrewery source; the templates route joins it as `confluxGroups`.
+  Nov 2026 run: 818 TOC entries, 2486/2516 creatures placed — Nov 2026.
+- [x] Conflux 1.58 import: `scripts/convert-conflux.mjs` (new, tested) rebuilt
+  `public/data/conflux-creatures.json` — 159 new, 92 updated (10 of them renames
+  that kept their ids), 26 dropped by Conflux. Fixed old-import junk on every
+  creature: saving throws/skills were "STR ++5" (the combat card's save parser read
+  none of them), languages carried leaked "**XP** :: …" text, Colossal became
+  Medium, mythic actions were dropped. New **Latest Conflux** library tab + New /
+  Updated chips — Nov 2026.
+- [x] Split-party support on /combat: "In this fight" chips above the party
+  table/cards toggle a member out of the fight (`absentPartyIds` in
+  encounter.json; their companions drop out too; party.json untouched).
+  /characters NPC cards now show "Remove from Party" when their copy is in the
+  party (drops only the copy) — Nov 2026.
+- [x] Monster library browse sidebar: All Monsters (cards/list) or grouped
+  indexes By Habitat / Creature Type / Challenge Rating / Book, names in
+  columns under a heading per group, sidebar jump links per group; filters
+  and search still apply (`app/monsters/groupMonsters.js`) — Nov 2026.
 - [x] Renamed the Templates page to Monsters: route `/templates` → `/monsters`
   (`app/monsters/`, `test/monsters/`; `next.config.mjs` redirects old URLs),
   navbar and on-screen labels say Monsters. Kept the API (`/api/templates`),
@@ -242,6 +271,10 @@ context costs:
   beholder): modal holds an ordered, reorderable list (max 6);
   `/api/parse-monster` accepts `{ images: [...] }` (legacy `{ image }` still
   works) and sends them in one call with a merge-these-pieces prompt — Nov 2026.
+- [x] Retirements checked against D&D Beyond's MM 2024 "Stat Block Conversions"
+  table: all 40 matched; added Faerie Dragon (Older) → Faerie Dragon Adult
+  (41 now). `MONSTERS.md` "Not in 2024" table gained a 2024 stand-in column
+  from the same table (Drow → Priest Acolyte, Orc → Tough, …) — Nov 2026.
 - [x] Renamed 2014 built-ins retired once the 2024 version is in the app (40:
   22 with an SRD built-in replacement — Goblin, Kobold, Thug, … — plus 18 the
   user imported — Modrons, Bullywug, Cyclops, Yuan-ti, Half-Ogre/Ogrillon, …).

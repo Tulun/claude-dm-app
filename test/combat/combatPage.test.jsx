@@ -79,7 +79,8 @@ const getColumns = () => {
   const main = document.querySelector('main');
   // (jsdom's selector engine trips on the "&" in an attribute selector)
   const section = (label) => [...main.querySelectorAll('section')].find(el => el.getAttribute('aria-label') === label) || null;
-  return { initCol: main.querySelector('[data-testid="initiative-bar"]'), partyCol: section('Party & Allies'), enemiesCol: section('Enemies') };
+  // partyRoster = the party table/cards, without the "In this fight" chips
+  return { initCol: main.querySelector('[data-testid="initiative-bar"]'), partyCol: section('Party & Allies'), partyRoster: main.querySelector('[data-testid="party-roster"]'), enemiesCol: section('Enemies') };
 };
 
 const postCalls = (fetchMock, url) =>
@@ -103,8 +104,8 @@ describe('CombatPage — loading and layout', () => {
 
     // Initiative is the default tab: both sections, as tables
     const { partyCol, enemiesCol } = getColumns();
-    expect(within(partyCol).getByText('Theren')).toBeInTheDocument();
-    expect(within(partyCol).getByText('Mira')).toBeInTheDocument();
+    expect(within(getColumns().partyRoster).getByText('Theren')).toBeInTheDocument();
+    expect(within(getColumns().partyRoster).getByText('Mira')).toBeInTheDocument();
     expect(within(enemiesCol).getByText('Ogre')).toBeInTheDocument();
     // the order (incl. companions) lives in the Current Order modal;
     // active + inCombat companion joins initiative, benched companion does not
@@ -124,7 +125,7 @@ describe('CombatPage — loading and layout', () => {
 
     const { partyCol } = getColumns();
     for (const member of defaultPartyData) {
-      expect(within(partyCol).getByText(member.name)).toBeInTheDocument();
+      expect(within(getColumns().partyRoster).getByText(member.name)).toBeInTheDocument();
     }
   });
 
@@ -255,6 +256,41 @@ describe('CombatPage — party actions', () => {
   });
 });
 
+describe('CombatPage — party members sitting a fight out', () => {
+  const presence = () => within(getColumns().partyCol).getByRole('group', { name: 'In this fight' });
+
+  it('toggling a member out removes them (and their companions) from the fight and persists it', async () => {
+    const fetchMock = mockFetch();
+    render(<CombatPage />);
+    await settle();
+    fetchMock.mockClear();
+
+    fireEvent.click(within(presence()).getByRole('button', { name: 'Theren' }));
+    expect(within(presence()).getByRole('button', { name: 'Theren' })).toHaveAttribute('aria-pressed', 'false');
+    // gone from the party table, initiative and tab count; still a chip
+    expect(within(getColumns().partyRoster).queryByText('Theren')).not.toBeInTheDocument();
+    expect(screen.queryByText('Wolfy')).not.toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /^Party & Allies/ })).toHaveTextContent('1');
+
+    await act(async () => { vi.advanceTimersByTime(1100); });
+    await flush();
+    const body = JSON.parse(postCalls(fetchMock, '/api/encounter').at(-1)[1].body);
+    expect(body.absentPartyIds).toEqual(['p1']);
+    // the party file itself is untouched
+    expect(postCalls(fetchMock, '/api/party')).toHaveLength(0);
+  });
+
+  it('loads saved absentees and can bring them back', async () => {
+    mockFetch({ '/api/encounter': jsonResponse({ ...activeEncounter, absentPartyIds: ['p2'] }) });
+    render(<CombatPage />);
+    await settle();
+
+    expect(within(getColumns().partyRoster).queryByText('Mira')).not.toBeInTheDocument();
+    fireEvent.click(within(presence()).getByRole('button', { name: 'Mira' }));
+    expect(within(getColumns().partyRoster).getByText('Mira')).toBeInTheDocument();
+  });
+});
+
 describe('CombatPage — enemies and encounters', () => {
   it('clearing enemies empties the list and DELETEs the persisted encounter', async () => {
     const fetchMock = mockFetch();
@@ -341,7 +377,7 @@ describe('CombatPage — Initiative / Party / Enemies tabs', () => {
     showTab('Party & Allies');
     expect(screen.getByRole('tab', { name: /^Party & Allies/ })).toHaveAttribute('aria-selected', 'true');
     expect(getColumns().initCol).toBeNull();
-    expect(within(getColumns().partyCol).getByText('Theren')).toBeInTheDocument();
+    expect(within(getColumns().partyRoster).getByText('Theren')).toBeInTheDocument();
     expect(getColumns().enemiesCol).toBeNull();
     expect(screen.queryByRole('table')).not.toBeInTheDocument();
     expect(localStorage.getItem('dm-combat-view-mode')).toBe('party');

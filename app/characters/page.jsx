@@ -70,7 +70,7 @@ export default function CharactersPage() {
                 <div key={member.id} className={`p-4 rounded-lg border relative ${member.sourceNpcId || member.isDmNpc ? 'border-amber-800/30 bg-gradient-to-br from-amber-950/20 to-stone-900/60' : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60'}`}>
                   {(member.sourceNpcId || member.isDmNpc) && (
                     <button onClick={() => { if (confirm(`Remove ${member.name} from party?`)) setParty(prev => prev.filter(p => p.id !== member.id)); }}
-                      className="absolute top-2 right-2 w-5 h-5 flex items-center justify-center rounded-full text-xs text-red-400/50 hover:text-red-400 hover:bg-red-900/30" title="Remove from party">×</button>
+                      aria-label={`Remove ${member.name} from party`} className="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-full text-sm text-red-400/80 hover:text-red-300 hover:bg-red-900/40" title="Remove from party (the NPC is kept)">×</button>
                   )}
                   <Link href={`/character?id=${member.id}&type=party`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                     <div className={`p-2 rounded-lg ${member.sourceNpcId || member.isDmNpc ? 'bg-amber-900/50' : 'bg-emerald-900/50'}`}>
@@ -116,8 +116,15 @@ export default function CharactersPage() {
                     </div>
                   </Link>
                   <div className="flex gap-2 mt-3 pt-2 border-t border-stone-700/30">
-                    <button onClick={() => { const copy = { ...npc, id: generateId('npc-init'), initiative: 0, currentHp: npc.currentHp || npc.maxHp, sourceNpcId: npc.id }; setParty(prev => [...(prev || []), copy]); showToast('NPC added to party'); }}
-                      className="flex items-center gap-1 px-2 py-1 rounded text-xs bg-emerald-800/50 hover:bg-emerald-700/50 text-emerald-300"><Icons.Plus /> Add to Party</button>
+                    {/* An NPC in the party is a copy linked by sourceNpcId; removing
+                        it drops only that copy — the NPC itself stays here. */}
+                    {(party || []).some(p => p.sourceNpcId === npc.id) ? (
+                      <button onClick={() => { if (confirm(`Remove ${npc.name} from the party? The NPC is kept.`)) { setParty(prev => prev.filter(p => p.sourceNpcId !== npc.id)); showToast('NPC removed from party'); } }}
+                        className="flex items-center gap-1 px-2 py-1 rounded text-xs bg-stone-700/50 hover:bg-stone-600/50 text-stone-300">Remove from Party</button>
+                    ) : (
+                      <button onClick={() => { const copy = { ...npc, id: generateId('npc-init'), initiative: 0, currentHp: npc.currentHp || npc.maxHp, sourceNpcId: npc.id }; setParty(prev => [...(prev || []), copy]); showToast('NPC added to party'); }}
+                        className="flex items-center gap-1 px-2 py-1 rounded text-xs bg-emerald-800/50 hover:bg-emerald-700/50 text-emerald-300"><Icons.Plus /> Add to Party</button>
+                    )}
                     <button onClick={() => { if (confirm(`Delete ${npc.name}?`)) setDmNpcs(prev => prev.filter(n => n.id !== npc.id)); }}
                       className="flex items-center gap-1 px-2 py-1 rounded text-xs bg-red-900/30 hover:bg-red-800/30 text-red-400">Delete</button>
                   </div>

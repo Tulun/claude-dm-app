@@ -30,6 +30,8 @@ OBSIDIAN_VAULT_PATH=/path/to/vault   # enables the read-only Campaign tab on /dm
 | `npm run build` | Production build (must pass before shipping a change) |
 | `npm test` | Full Vitest suite (must be green before shipping a change) |
 | `npm run test:watch` | Vitest watch mode |
+| `npm run conflux:import -- <export.json>` | Rebuild the Conflux creature list from a new release (see below) |
+| `npm run conflux:groups` | Rebuild the Conflux creature-group index from the newest Individual Links PDF (see below) |
 
 ## Pages
 
@@ -37,7 +39,7 @@ OBSIDIAN_VAULT_PATH=/path/to/vault   # enables the read-only Campaign tab on /dm
 - `/characters` — party roster + DM NPCs
 - `/character?id=…&type=party|dm-npc` — character sheet editor
 - `/encounters` — encounter planner + saved-encounter library
-- `/spellbook`, `/magic-items`, `/templates`, `/classes` — libraries/reference
+- `/spellbook`, `/magic-items`, `/monsters`, `/classes` — libraries/reference
 - `/dm` — session notes, world notes, NPC generator, Obsidian Campaign tab
 
 ## Data & persistence
@@ -46,6 +48,55 @@ OBSIDIAN_VAULT_PATH=/path/to/vault   # enables the read-only Campaign tab on /dm
 SUGGESTIONS.md for the trade-offs). Pages fetch on mount and auto-save with
 debounced POSTs to the API routes under `app/api/`. Treat `data/` as
 production data: never truncate or regenerate it by hand.
+
+## Updating Conflux creatures
+
+The Conflux list (`public/data/conflux-creatures.json`) is generated, not
+hand-edited. When a new Conflux release comes out, download its 5eTools
+export and run:
+
+```bash
+npm run conflux:import -- ~/Desktop/conflux/ConfluxCreatures_1.58_5eTools.json --dry-run
+```
+
+`--dry-run` prints what would change (added / renamed / updated / removed)
+without writing anything. Drop it to write the file, then **restart
+`npm run dev`** (the API caches the list in memory). The new and updated
+creatures show up under **Monsters → Latest Conflux**.
+
+- The release version comes from the file name (`_1.58_`). If a file is
+  named differently, add `--version 1.58`.
+- The `--` matters: without it npm swallows `--dry-run` / `--version`.
+- Existing creature ids are kept (renames included), so links and saved
+  encounters keep working.
+
+### Conflux creature groups
+
+**Monsters → Conflux → By Conflux Group** lists the creatures the way the
+Conflux catalog does — by family ("Aboleths", "Goblins"…) under its sections
+("Aberrations", "Humanoids"…), each with its CR range and a link to the
+family's Homebrewery page. The index (`public/data/conflux-groups.json`) is
+generated from the monthly *Individual Links* PDF. Drop the new month's PDF
+into `~/Desktop/conflux` and, after `conflux:import`, run:
+
+```bash
+npm run conflux:groups -- --dry-run
+```
+
+It picks the newest `…Individual Links….pdf` in that folder (or pass a PDF or
+folder: `npm run conflux:groups -- ~/Downloads/December.pdf`; `CONFLUX_DIR`
+changes the default folder), reads its table of contents, downloads each linked
+Homebrewery doc (cached in `node_modules/.cache/conflux-groups`; `--refresh`
+refetches; a doc that fails to download falls back to last month's copy) and
+matches the stat blocks to the imported creatures by name.
+
+The PDF's layout isn't hard-coded — fonts and columns are worked out from each
+month's file — and the result is compared with the last index written: it
+prints which groups are new or gone, and if the group count or the number of
+placed creatures drops sharply it **writes nothing** and says why (re-run with
+`--force` if the drop is real). Creatures it can't place show under
+"Ungrouped" — usually ones renamed since the last 5eTools export. Drop
+`--dry-run` to write, then restart `npm run dev`.
 
 ## Contributing / working on the code
 

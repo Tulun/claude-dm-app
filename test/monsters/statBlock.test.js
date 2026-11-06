@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   parseAlignment, getInitiativeBonus, getLegendaryUses, splitDescription, splitList, xpForCr, profForCr,
-  toEditForm, fromEditForm, sameTemplate, sourceLabel, isConfluxId, isOfficial, bookLabel, defaultBook, splitLore,
+  toEditForm, fromEditForm, sameTemplate, sourceLabel, isConfluxId, latestConfluxVersion, confluxChange, isOfficial, bookLabel, defaultBook, splitLore,
   habitatsOf, compareHabitats,
 } from '../../app/monsters/statBlock.js';
 import { MM2024_HABITATS } from '../../app/data/monsterHabitats.js';
@@ -173,5 +173,20 @@ describe('habitatsOf — 2024 Monster Manual habitats', () => {
 
   it('sorts Any first, then terrain, then planes', () => {
     expect(['Planar (Abyss)', 'Urban', 'Any', 'Forest'].sort(compareHabitats)).toEqual(['Any', 'Forest', 'Urban', 'Planar (Abyss)']);
+  });
+});
+
+describe('Conflux release stamps', () => {
+  it('latestConfluxVersion compares versions numerically', () => {
+    expect(latestConfluxVersion([{ confluxAdded: '1.9' }, { confluxUpdated: '1.58' }, {}])).toBe('1.58');
+    expect(latestConfluxVersion([{ confluxAdded: '1.58' }, { confluxAdded: '2.0' }])).toBe('2.0');
+    expect(latestConfluxVersion([{}, null])).toBe(null);
+  });
+
+  it('confluxChange reports new / updated only for the given release', () => {
+    expect(confluxChange({ confluxAdded: '1.58' }, '1.58')).toBe('new');
+    expect(confluxChange({ confluxAdded: '1.50', confluxUpdated: '1.58' }, '1.58')).toBe('updated');
+    expect(confluxChange({ confluxAdded: '1.50' }, '1.58')).toBe(null);
+    expect(confluxChange({ confluxAdded: '1.58' }, null)).toBe(null);
   });
 });

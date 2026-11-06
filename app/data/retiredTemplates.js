@@ -39,6 +39,7 @@ export const RETIRED_DEFAULT_IDS = {
   'mm-gas-spore': 'Gas Spore Fungus',
   'mm-faerie-dragon-youth': 'Faerie Dragon Youth',
   'mm-faerie-dragon-adult': 'Faerie Dragon Adult',
+  'mm-faerie-dragon-older': 'Faerie Dragon Adult', // green/blue/indigo/violet → Adult (D&D Beyond conversions table)
   'mm-fire-snake': 'Salamander Fire Snake',
   'mm-half-ogre': 'Ogrillon Ogre',
   'mm-ogrillon': 'Ogrillon Ogre',

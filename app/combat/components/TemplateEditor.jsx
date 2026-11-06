@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { Fragment, useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Icons from '../../components/Icons';
 import { sizeMatches } from '../monsterAbilities';
-import { bookLabel, isOfficial, habitatsOf, compareHabitats } from '../../monsters/statBlock';
-
-const NO_BOOK = 'No book';
+import { bookLabel, isOfficial, habitatsOf, compareHabitats, latestConfluxVersion, confluxChange } from '../../monsters/statBlock';
+import { GROUPINGS, GROUPING_KEYS, groupMonsters, groupAnchorId, groupingKeysFor, NO_BOOK, CREATURE_TYPES as CREATURE_TYPE_OPTIONS } from '../../monsters/groupMonsters';
 
 // CR ordered list for range filter
 const CR_LIST = ['0', '1/8', '1/4', '1/2', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
@@ -24,11 +23,6 @@ const crToNumber = (cr) => {
 const crLabel = (cr) => CR_LABELS[cr] || cr;
 
 const SIZE_OPTIONS = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
-
-const CREATURE_TYPE_OPTIONS = [
-  'Aberration', 'Beast', 'Celestial', 'Construct', 'Dragon', 'Elemental',
-  'Fey', 'Fiend', 'Giant', 'Humanoid', 'Monstrosity', 'Ooze', 'Plant', 'Undead'
-];
 
 // Multi-select dropdown component
 const FilterDropdown = ({ label, options, selected, onToggle, onClear, colorClass = 'purple' }) => {
@@ -224,6 +218,119 @@ const readSavedView = () => {
 // "Small Plant" — size + creature type, whichever exist.
 const typeLine = (t) => [t.size, t.creatureType].filter(Boolean).join(' ');
 
+// Source tabs. 'latest' is the Conflux list narrowed to the newest release's
+// new and updated creatures (see confluxChange in app/monsters/statBlock.js).
+const SOURCE_TABS = [
+  { key: 'default', label: 'Official' },
+  { key: 'conflux', label: 'Conflux' },
+  { key: 'latest', label: 'Latest Conflux' },
+  { key: 'custom', label: 'Custom' },
+];
+const isConfluxTab = (src) => src === 'conflux' || src === 'latest';
+
+// Sidebar "browse by" modes: 'all' is the card/list view; the rest are the
+// book-appendix style grouped indexes (app/monsters/groupMonsters.js).
+// "By Conflux Group" is offered only on the Conflux tabs (groupingKeysFor).
+const BROWSE_MODES = ['all', ...GROUPING_KEYS];
+const sectionAnchorId = (section) => groupAnchorId('conflux-section', section);
+
+// The sidebar's jump list: one row per group — except the Conflux index (700+
+// families), which jumps by catalog section instead.
+const jumpTargets = (mode, groups) => {
+  if (mode !== 'conflux') return groups.map(g => ({ key: g.key, label: g.heading, count: g.monsters.length, anchor: groupAnchorId(mode, g.key) }));
+  const sections = new Map();
+  for (const g of groups) {
+    if (!sections.has(g.section)) sections.set(g.section, { key: g.section, label: g.section, count: 0, anchor: sectionAnchorId(g.section) });
+    sections.get(g.section).count += g.monsters.length;
+  }
+  return [...sections.values()];
+};
+
+const scrollToGroup = (id) => {
+  document.getElementById(id)?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+};
+
+const BrowseSidebar = ({ modes, browseBy, onChange, groups }) => (
+  <aside className="lg:w-56 shrink-0 lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto rounded-xl border border-stone-700/60 bg-stone-900/60" aria-label="Browse monsters">
+    <nav className="py-1">
+      {modes.map(mode => {
+        const active = browseBy === mode;
+        const label = mode === 'all' ? 'All Monsters' : GROUPINGS[mode].label;
+        return (
+          <div key={mode}>
+            <button onClick={() => onChange(mode)} aria-pressed={active}
+              className={`w-full flex items-center justify-between gap-2 px-3 py-2 text-sm text-left border-l-4 ${active ? 'border-amber-600 bg-amber-900/30 text-amber-200 font-semibold' : 'border-transparent text-stone-300 hover:bg-stone-800/70'}`}>
+              <span>{label}</span>
+              {mode !== 'all' && <Icons.ChevronDown className={`w-4 h-4 transition-transform ${active ? '' : '-rotate-90'}`} />}
+            </button>
+            {active && mode !== 'all' && groups.length > 0 && (
+              <ul className="pb-1 bg-stone-950/30">
+                {jumpTargets(mode, groups).map(j => (
+                  <li key={j.key}>
+                    <button onClick={() => scrollToGroup(j.anchor)}
+                      className="w-full flex items-center justify-between gap-2 pl-7 pr-3 py-1 text-xs text-left text-stone-400 hover:text-amber-200 hover:bg-stone-800/50">
+                      <span className="truncate">{j.label}</span>
+                      <span className="text-stone-600">{j.count}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        );
+      })}
+    </nav>
+  </aside>
+);
+
+// One heading per group, names in newspaper columns (top-to-bottom, then
+// across) like the book's appendix lists.
+// Groups that carry a `section` (the Conflux index) get a section heading
+// whenever the section changes, a CR range, and a link to the group's
+// Homebrewery doc (Conflux's own lore + stat block page for the family).
+const GroupedIndex = ({ browseBy, groups, readOnly, latestVersion }) => (
+  <div className="space-y-6">
+    {groups.map((g, i) => (
+      <Fragment key={g.key}>
+      {g.section && g.section !== groups[i - 1]?.section && (
+        <h2 id={sectionAnchorId(g.section)} data-testid="monster-group-section" className="scroll-mt-20 pt-2 text-2xl font-bold text-amber-200 border-b-2 border-amber-700 pb-1">{g.section}</h2>
+      )}
+      <section data-testid="monster-group" aria-labelledby={groupAnchorId(browseBy, g.key)}>
+        <h3 id={groupAnchorId(browseBy, g.key)} className="scroll-mt-20 flex flex-wrap items-baseline gap-x-2 border-b border-amber-800/60 pb-1 mb-2 text-lg font-semibold text-amber-300">
+          {g.heading}<span className="text-xs font-normal text-stone-500">{g.monsters.length}</span>
+          {g.crRange && <span className="text-xs font-normal text-stone-400">CR {g.crRange}</span>}
+          {g.url && (
+            <a href={g.url} target="_blank" rel="noopener noreferrer" className="ml-auto text-xs font-normal text-sky-400 hover:text-amber-200 hover:underline"
+              title="Conflux's page for this group — lore, tactics and every stat block">Homebrewery ↗</a>
+          )}
+        </h3>
+        <ul className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6">
+          {g.monsters.map(t => (
+            <li key={t.id} className="break-inside-avoid py-0.5">
+              <Link href={detailHref(t)} data-testid="group-entry" className="text-sky-300 hover:text-amber-200 hover:underline">{t.name}</Link>
+              {/* CR + badge wrap as one unit — never "CR" on one line and "20" on the next */}
+              <span className="whitespace-nowrap">
+                {browseBy !== 'cr' && t.cr != null && t.cr !== '' && <span className="ml-1.5 text-[11px] text-stone-500">CR {t.cr}</span>}
+                {readOnly && <span className="ml-1.5"><ChangeBadge t={t} version={latestVersion} /></span>}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+      </Fragment>
+    ))}
+  </div>
+);
+
+// "New" / "Updated" chip for a creature that changed in the latest release.
+const ChangeBadge = ({ t, version }) => {
+  const change = confluxChange(t, version);
+  if (!change) return null;
+  return change === 'new'
+    ? <span className="text-xs text-emerald-300 bg-emerald-900/40 px-1.5 py-0.5 rounded" title={`New in Conflux ${version}`}>New</span>
+    : <span className="text-xs text-amber-300 bg-amber-900/40 px-1.5 py-0.5 rounded" title={t.confluxRenamedFrom ? `Updated in Conflux ${version} (was ${t.confluxRenamedFrom})` : `Updated in Conflux ${version}`}>Updated</span>;
+};
+
 // Edit / delete controls shared by both layouts. Conflux entries are read-only.
 const RowActions = ({ t, readOnly, confirming, onAskDelete, onCancelDelete, onDelete }) => {
   if (readOnly) return null;
@@ -261,7 +368,7 @@ const TemplateEditor = ({ templates, onDelete }) => {
   // after the client-side templates fetch, so reading sessionStorage in the
   // initializers can't cause a hydration mismatch.
   const [saved] = useState(readSavedFilters);
-  const [sourceFilter, setSourceFilter] = useState(['default', 'conflux', 'custom'].includes(saved.sourceFilter) ? saved.sourceFilter : 'default');
+  const [sourceFilter, setSourceFilter] = useState(SOURCE_TABS.some(s => s.key === saved.sourceFilter) ? saved.sourceFilter : 'default');
   const [confluxTemplates, setConfluxTemplates] = useState([]);
   const [confluxLoading, setConfluxLoading] = useState(false);
   const [confluxLoaded, setConfluxLoaded] = useState(false);
@@ -273,6 +380,7 @@ const TemplateEditor = ({ templates, onDelete }) => {
   const [selectedCreatureTypes, setSelectedCreatureTypes] = useState(Array.isArray(saved.selectedCreatureTypes) ? saved.selectedCreatureTypes : []);
   const [selectedBooks, setSelectedBooks] = useState(Array.isArray(saved.selectedBooks) ? saved.selectedBooks : []);
   const [selectedHabitats, setSelectedHabitats] = useState(Array.isArray(saved.selectedHabitats) ? saved.selectedHabitats : []);
+  const [browseBy, setBrowseBy] = useState(BROWSE_MODES.includes(saved.browseBy) ? saved.browseBy : 'all');
 
   // Load Conflux creatures on demand
   const loadConflux = () => {
@@ -291,23 +399,31 @@ const TemplateEditor = ({ templates, onDelete }) => {
   // Switch source filter
   const handleSourceChange = (src) => {
     setSourceFilter(src);
-    if (src === 'conflux') loadConflux();
+    if (isConfluxTab(src)) loadConflux();
   };
 
   // A restored Conflux filter needs its data fetched.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- one-shot fetch kick-off on mount
-    if (sourceFilter === 'conflux') loadConflux();
+    if (isConfluxTab(sourceFilter)) loadConflux();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     try {
-      sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({ searchQuery, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats }));
+      sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({ searchQuery, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats, browseBy }));
     } catch { /* storage unavailable — filters just won't persist */ }
-  }, [searchQuery, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats]);
+  }, [searchQuery, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats, browseBy]);
 
   // Get the active template list based on source filter
-  const activeTemplates = sourceFilter === 'conflux' ? confluxTemplates : templates;
+  const latestVersion = useMemo(() => latestConfluxVersion(confluxTemplates), [confluxTemplates]);
+  const latestTemplates = useMemo(() => {
+    const order = { new: 0, updated: 1 };
+    return confluxTemplates
+      .filter(t => confluxChange(t, latestVersion))
+      .sort((a, b) => order[confluxChange(a, latestVersion)] - order[confluxChange(b, latestVersion)]);
+  }, [confluxTemplates, latestVersion]);
+  const activeTemplates = sourceFilter === 'conflux' ? confluxTemplates : sourceFilter === 'latest' ? latestTemplates : templates;
+  const readOnly = isConfluxTab(sourceFilter);
 
   // Get available creature types from active templates
   const availableCreatureTypes = useMemo(() => {
@@ -375,6 +491,12 @@ const TemplateEditor = ({ templates, onDelete }) => {
     });
   }, [activeTemplates, sourceFilter, searchQuery, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats]);
 
+  // The saved choice survives a trip to a tab that doesn't offer it (the
+  // Conflux grouping elsewhere) — it just shows All Monsters meanwhile.
+  const browseModes = useMemo(() => ['all', ...groupingKeysFor(readOnly)], [readOnly]);
+  const activeBrowse = browseModes.includes(browseBy) ? browseBy : 'all';
+  const groups = useMemo(() => (activeBrowse === 'all' ? [] : groupMonsters(filtered, activeBrowse)), [filtered, activeBrowse]);
+
   const clearAllFilters = () => {
     setSearchQuery('');
     setCrMin(null);
@@ -389,7 +511,9 @@ const TemplateEditor = ({ templates, onDelete }) => {
   const hasFilters = searchQuery || crMin !== null || crMax !== null || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || selectedBooks.length > 0 || selectedHabitats.length > 0 || sourceFilter !== 'default';
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col lg:flex-row gap-4">
+    <BrowseSidebar modes={browseModes} browseBy={activeBrowse} onChange={setBrowseBy} groups={groups} />
+    <div className="flex-1 min-w-0 space-y-4">
       {/* Search Bar */}
       <div className="relative">
         <input
@@ -411,14 +535,10 @@ const TemplateEditor = ({ templates, onDelete }) => {
       <div className="flex flex-wrap items-center gap-2">
         {/* Source Filter */}
         <div className="flex gap-1">
-          {[
-            { key: 'default', label: 'Official' },
-            { key: 'conflux', label: 'Conflux' },
-            { key: 'custom', label: 'Custom' },
-          ].map(s => (
+          {SOURCE_TABS.map(s => (
             <button key={s.key} onClick={() => handleSourceChange(s.key)}
               className={`px-3 py-1.5 rounded-lg text-sm ${sourceFilter === s.key ? 'bg-amber-700' : 'bg-stone-700 hover:bg-stone-600'}`}>
-              {s.label}{s.key === 'conflux' && confluxLoading ? '...' : ''}
+              {s.label}{isConfluxTab(s.key) && confluxLoading ? '...' : ''}
             </button>
           ))}
         </div>
@@ -524,12 +644,24 @@ const TemplateEditor = ({ templates, onDelete }) => {
         </div>
       )}
 
+      {sourceFilter === 'latest' && confluxLoaded && (
+        <div className="rounded-lg border border-emerald-800/50 bg-emerald-950/30 px-3 py-2 text-sm text-stone-300">
+          {latestVersion ? (
+            <>
+              <span className="font-semibold text-emerald-300">Conflux {latestVersion}</span>
+              {' — '}{latestTemplates.filter(t => confluxChange(t, latestVersion) === 'new').length} new,{' '}
+              {latestTemplates.filter(t => confluxChange(t, latestVersion) === 'updated').length} updated
+            </>
+          ) : 'No release changes recorded yet — run scripts/convert-conflux.mjs on a new Conflux export.'}
+        </div>
+      )}
+
       <div className="flex items-center justify-between gap-2">
         <div className="text-xs text-stone-500">
           {filtered.length} monster{filtered.length !== 1 ? 's' : ''}
           {filtered.length !== activeTemplates.length && ` (filtered from ${activeTemplates.length})`}
         </div>
-        <div className="flex rounded-lg bg-stone-800 p-0.5" role="group" aria-label="Layout">
+        {activeBrowse === 'all' && <div className="flex rounded-lg bg-stone-800 p-0.5" role="group" aria-label="Layout">
           {[
             { key: 'cards', label: 'Card view', Icon: Icons.ViewGrid },
             { key: 'list', label: 'List view', Icon: Icons.ViewList },
@@ -539,10 +671,12 @@ const TemplateEditor = ({ templates, onDelete }) => {
               <Icon />
             </button>
           ))}
-        </div>
+        </div>}
       </div>
 
-      {viewMode === 'cards' ? (
+      {activeBrowse !== 'all' ? (
+        <GroupedIndex browseBy={activeBrowse} groups={groups} readOnly={readOnly} latestVersion={latestVersion} />
+      ) : viewMode === 'cards' ? (
         <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((t) => {
             const book = bookLabel(t);
@@ -563,8 +697,9 @@ const TemplateEditor = ({ templates, onDelete }) => {
                   <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1">
                     {book && <span className="text-xs text-sky-300 bg-sky-900/30 px-1.5 py-0.5 rounded" title="Source book">{book}</span>}
                     {t.legendaryActions?.length > 0 && <span className="text-xs text-purple-400 bg-purple-900/30 px-1.5 py-0.5 rounded">Legendary</span>}
+                    {readOnly && <ChangeBadge t={t} version={latestVersion} />}
                   </div>
-                  <RowActions t={t} readOnly={sourceFilter === 'conflux'} confirming={deleteConfirmId === t.id}
+                  <RowActions t={t} readOnly={readOnly} confirming={deleteConfirmId === t.id}
                     onAskDelete={() => setDeleteConfirmId(t.id)} onCancelDelete={() => setDeleteConfirmId(null)}
                     onDelete={() => { onDelete(t.id); setDeleteConfirmId(null); }} />
                 </div>
@@ -588,7 +723,8 @@ const TemplateEditor = ({ templates, onDelete }) => {
               <div className="flex shrink-0 items-center gap-2">
                 {bookLabel(t) && <span className="text-xs text-sky-300 bg-sky-900/30 px-1.5 py-0.5 rounded" title="Source book">{bookLabel(t)}</span>}
                 {t.legendaryActions?.length > 0 && <span className="text-xs text-purple-400 bg-purple-900/30 px-1.5 py-0.5 rounded">Legendary</span>}
-                <RowActions t={t} readOnly={sourceFilter === 'conflux'} confirming={deleteConfirmId === t.id}
+                {readOnly && <ChangeBadge t={t} version={latestVersion} />}
+                <RowActions t={t} readOnly={readOnly} confirming={deleteConfirmId === t.id}
                   onAskDelete={() => setDeleteConfirmId(t.id)} onCancelDelete={() => setDeleteConfirmId(null)}
                   onDelete={() => { onDelete(t.id); setDeleteConfirmId(null); }} />
               </div>
@@ -596,6 +732,7 @@ const TemplateEditor = ({ templates, onDelete }) => {
           ))}
         </div>
       )}
+    </div>
     </div>
   );
 };

@@ -45,8 +45,8 @@ describe('defaultEnemyTemplates', () => {
     }
   });
 
-  it('retired 2014 ids: 40 retired, the 2014 Goblin is gone and its 2024 rename stays', () => {
-    expect(Object.keys(RETIRED_DEFAULT_IDS)).toHaveLength(40);
+  it('retired 2014 ids: 41 retired, the 2014 Goblin is gone and its 2024 rename stays', () => {
+    expect(Object.keys(RETIRED_DEFAULT_IDS)).toHaveLength(41);
     expect(byName('Goblin')).toBeUndefined();
     expect(byName('Goblin Warrior')).toMatchObject({ edition: '2024' });
   });

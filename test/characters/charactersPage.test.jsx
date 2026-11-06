@@ -139,6 +139,29 @@ describe('CharactersPage — DM NPC management', () => {
     expect(saved.some((p) => p.id === 'dm-npc-1')).toBe(false);
   });
 
+  it('an NPC already in the party offers Remove from Party, which drops only the copy', async () => {
+    const fetchMock = mockFetch({
+      partyData: [...party, { ...npcs[0], id: 'npc-init-1', sourceNpcId: 'dm-npc-1' }],
+    });
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    render(<CharactersPage />);
+    await settle();
+    fetchMock.mockClear();
+
+    expect(screen.queryByText('Add to Party')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByText('Remove from Party'));
+
+    // the NPC card stays; the button flips back to Add
+    expect(screen.getAllByText('Bartender Olm')).toHaveLength(1);
+    expect(screen.getByText('Add to Party')).toBeInTheDocument();
+
+    await act(async () => { vi.advanceTimersByTime(1100); });
+    await flush();
+    const savedParty = JSON.parse(postCalls(fetchMock, '/api/party').at(-1)[1].body);
+    expect(savedParty.map((p) => p.id)).toEqual(['p1']);
+    expect(postCalls(fetchMock, '/api/dm-npcs')).toHaveLength(0);
+  });
+
   it('deletes an NPC after confirmation', async () => {
     mockFetch();
     vi.spyOn(window, 'confirm').mockReturnValue(true);

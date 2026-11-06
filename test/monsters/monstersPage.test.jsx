@@ -20,10 +20,19 @@ const templates = [
 ];
 
 const jsonResponse = (data, ok = true) => ({ ok, json: async () => data });
+const conflux = [
+  { id: 'cc-old-ooze', name: 'Old Ooze', source: 'conflux', cr: '2', ac: 8, maxHp: 30, speed: 10, traits: [], actions: [], confluxAdded: '1.50',
+    confluxGroups: [{ name: 'Oozes', section: 'Oozes', cr: '0-20', url: 'https://homebrewery.naturalcrit.com/share/oozes', order: 9 }] },
+  { id: 'cc-gazer', name: 'Gazer', source: 'conflux', cr: '1/2', ac: 13, maxHp: 13, speed: 0, traits: [], actions: [], confluxUpdated: '1.58',
+    confluxGroups: [{ name: 'Beholders', section: 'Aberrations', cr: '½-24', url: 'https://homebrewery.naturalcrit.com/share/beholders', order: 2 }] },
+  { id: 'cc-carrion-ghoul', name: 'Carrion Ghoul', source: 'conflux', cr: '3', ac: 13, maxHp: 40, speed: 30, traits: [], actions: [], confluxUpdated: '1.58', confluxRenamedFrom: 'Fleshseeker Ghoul' },
+  { id: 'cc-river-otter', name: 'River Otter', source: 'conflux', cr: '0', ac: 12, maxHp: 4, speed: 20, traits: [], actions: [], confluxAdded: '1.58' },
+];
 function mockFetch({ fail = false } = {}) {
   const fn = vi.fn(async (url, opts = {}) => {
     if (opts.method === 'POST') return jsonResponse({ success: true });
     if (fail) return jsonResponse(null, false);
+    if (String(url).includes('source=conflux')) return jsonResponse(conflux);
     return jsonResponse(templates);
   });
   global.fetch = fn;
@@ -185,6 +194,36 @@ describe('Monsters library page', () => {
     }
   });
 
+  it('Latest Conflux tab lists only the newest release, new before updated, read-only', async () => {
+    mockFetch();
+    render(<MonstersPage />);
+    await settle();
+    fireEvent.click(screen.getByRole('button', { name: 'Latest Conflux' }));
+    await settle();
+    const rows = screen.getAllByTestId('template-row');
+    expect(rows.map(r => r.querySelector('a').textContent)).toEqual([
+      expect.stringContaining('River Otter'), expect.stringContaining('Gazer'), expect.stringContaining('Carrion Ghoul'),
+    ]);
+    expect(screen.queryByText('Old Ooze')).not.toBeInTheDocument();
+    expect(screen.getByText(/Conflux 1\.58/).parentElement.textContent).toMatch(/1 new, 2 updated/);
+    expect(rows[0].textContent).toContain('New');
+    expect(rows[2].textContent).toContain('Updated');
+    expect(screen.getByTitle('Updated in Conflux 1.58 (was Fleshseeker Ghoul)')).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /^Edit / })).not.toBeInTheDocument();
+  });
+
+  it('the full Conflux tab badges the latest changes too', async () => {
+    mockFetch();
+    render(<MonstersPage />);
+    await settle();
+    fireEvent.click(screen.getByRole('button', { name: 'Conflux' }));
+    await settle();
+    const ooze = screen.getAllByTestId('template-row').find(r => r.textContent.includes('Old Ooze'));
+    const otter = screen.getAllByTestId('template-row').find(r => r.textContent.includes('River Otter'));
+    expect(ooze.textContent).not.toMatch(/New|Updated/);
+    expect(otter.textContent).toContain('New');
+  });
+
   it('ignores leading/trailing spaces in the search', async () => {
     mockFetch();
     render(<MonstersPage />);
@@ -192,5 +231,64 @@ describe('Monsters library page', () => {
     fireEvent.change(screen.getByPlaceholderText('Search monsters by name...'), { target: { value: '  Beholder ' } });
     expect(screen.getByText('Beholder')).toBeInTheDocument();
     expect(screen.queryByText('Aboleth')).not.toBeInTheDocument();
+  });
+
+  it('sidebar swaps the main view to a grouped index (by creature type) and back', async () => {
+    mockFetch();
+    render(<MonstersPage />);
+    await settle();
+    fireEvent.click(screen.getByRole('button', { name: 'By Creature Type' }));
+    expect(screen.queryAllByTestId('template-row')).toHaveLength(0);
+    const groups = screen.getAllByTestId('monster-group');
+    expect(groups.map(g => g.querySelector('h3').textContent)).toEqual(['Aberration2', 'Dragon1']);
+    expect(groups[0].textContent.indexOf('Aboleth')).toBeLessThan(groups[0].textContent.indexOf('Beholder'));
+    expect(screen.getByRole('link', { name: 'Kobold Scale' })).toHaveAttribute('href', '/monsters/mm-kobold');
+    // Sidebar lists the groups as jump links; the layout toggle is hidden
+    expect(screen.getByRole('button', { name: /^Aberration/ })).toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: 'Layout' })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'All Monsters' }));
+    expect(screen.getAllByTestId('template-row')).toHaveLength(3);
+  });
+
+  it('grouped index honours the search and is remembered per tab', async () => {
+    mockFetch();
+    const { unmount } = render(<MonstersPage />);
+    await settle();
+    fireEvent.click(screen.getByRole('button', { name: 'By Challenge Rating' }));
+    fireEvent.change(screen.getByPlaceholderText(/Search monsters/), { target: { value: 'b' } });
+    expect(screen.getAllByTestId('monster-group').map(g => g.querySelector('h3').textContent)).toEqual(['CR 11', 'CR 101', 'CR 131']);
+    unmount();
+    render(<MonstersPage />);
+    await settle();
+    expect(screen.getByRole('button', { name: 'By Challenge Rating' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getAllByTestId('monster-group')).toHaveLength(3);
+  });
+
+  it('Conflux tabs add a "By Conflux Group" index: catalog sections, CR range and a Homebrewery link per group', async () => {
+    mockFetch();
+    render(<MonstersPage />);
+    await settle();
+    // Not offered on the Official tab
+    expect(screen.queryByRole('button', { name: 'By Conflux Group' })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Conflux' }));
+    await settle();
+    fireEvent.click(screen.getByRole('button', { name: 'By Conflux Group' }));
+    // Catalog order (Aberrations before Oozes), creatures with no group last
+    expect(screen.getAllByTestId('monster-group-section').map(h => h.textContent)).toEqual(['Aberrations', 'Oozes', 'Ungrouped']);
+    const groups = screen.getAllByTestId('monster-group');
+    expect(groups.map(g => g.querySelector('h3').firstChild.textContent)).toEqual(['Beholders', 'Oozes', 'Ungrouped']);
+    expect(groups[0].textContent).toContain('CR ½-24');
+    expect(screen.getAllByRole('link', { name: /Homebrewery/ })[0]).toHaveAttribute('href', 'https://homebrewery.naturalcrit.com/share/beholders');
+    expect(groups[2].textContent).toMatch(/River Otter.*Carrion Ghoul/); // CR order within a group
+    // The sidebar jumps by section, not by every group
+    expect(screen.getByRole('button', { name: /^Aberrations/ })).toBeInTheDocument();
+
+    // Back on Official the choice falls back to All Monsters (and is kept for Conflux)
+    fireEvent.click(screen.getByRole('button', { name: 'Official' }));
+    expect(screen.getAllByTestId('template-row').length).toBeGreaterThan(0);
+    fireEvent.click(screen.getByRole('button', { name: 'Conflux' }));
+    await settle();
+    expect(screen.getByRole('button', { name: 'By Conflux Group' })).toHaveAttribute('aria-pressed', 'true');
   });
 });

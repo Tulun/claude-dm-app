@@ -292,6 +292,37 @@ describe('GET /api/templates?source=conflux', () => {
     expect(third).toEqual(fakeCreatures);
   });
 
+  it('joins conflux-groups.json onto the creatures as confluxGroups (catalog order kept); no file = creatures as-is', async () => {
+    fs.mkdirSync(publicDataDir, { recursive: true });
+    fs.writeFileSync(CONFLUX_FILE(), JSON.stringify(fakeCreatures));
+    const plain = await (await (await freshRoute()).GET(getRequest('?source=conflux'))).json();
+    expect(plain).toEqual(fakeCreatures);
+
+    fs.writeFileSync(path.join(publicDataDir, 'conflux-groups.json'), JSON.stringify({ groups: [
+      { section: 'Aberrations', name: 'Wisps', cr: '1-5', url: 'https://homebrewery.naturalcrit.com/share/w', members: ['conflux-1'] },
+      { section: 'Beasts', name: 'Odd Beasts', cr: '1-9', url: 'https://homebrewery.naturalcrit.com/share/b', members: ['conflux-1', 'gone-id'] },
+    ] }));
+    const joined = await (await (await freshRoute()).GET(getRequest('?source=conflux'))).json();
+    expect(joined[0].confluxGroups).toEqual([
+      { name: 'Wisps', section: 'Aberrations', cr: '1-5', url: 'https://homebrewery.naturalcrit.com/share/w', order: 0 },
+      { name: 'Odd Beasts', section: 'Beasts', cr: '1-9', url: 'https://homebrewery.naturalcrit.com/share/b', order: 1 },
+    ]);
+    expect(joined[1]).toEqual(fakeCreatures[1]);
+    // The source file is never modified
+    expect(JSON.parse(fs.readFileSync(CONFLUX_FILE(), 'utf8'))).toEqual(fakeCreatures);
+  });
+
+  it('a corrupt conflux-groups.json is ignored (creatures still served)', async () => {
+    fs.mkdirSync(publicDataDir, { recursive: true });
+    fs.writeFileSync(CONFLUX_FILE(), JSON.stringify(fakeCreatures));
+    fs.writeFileSync(path.join(publicDataDir, 'conflux-groups.json'), '{ not json');
+    const err = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const r = await freshRoute();
+    expect(await (await r.GET(getRequest('?source=conflux'))).json()).toEqual(fakeCreatures);
+    expect(err).toHaveBeenCalled();
+    err.mockRestore();
+  });
+
   it('conflux creatures are excluded from the default (unfiltered) listing', async () => {
     const r = await freshRoute();
     fs.mkdirSync(publicDataDir, { recursive: true });

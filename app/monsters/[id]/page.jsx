@@ -138,7 +138,8 @@ function MonsterDetail() {
   const handleSave = async () => {
     if (!form || !String(form.name).trim()) { showToast('A name is required', TOAST_ERROR_DURATION_MS); return; }
     if (isNew || fromConflux) {
-      const built = fromEditForm(form, isNew ? {} : template);
+      // confluxGroups is joined on at read time by GET /api/templates — never persist it.
+      const { confluxGroups: _derived, ...built } = fromEditForm(form, isNew ? {} : template);
       const created = { ...built, traits: built.traits || [], actions: built.actions || [], id: generateId('tpl'), source: 'custom' };
       if (await persist([...templates, created])) {
         setEditing(false);

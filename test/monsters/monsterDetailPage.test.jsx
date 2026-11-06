@@ -29,7 +29,8 @@ const beholder = {
   legendaryActions: [{ name: 'Chomp', description: 'The beholder makes two Bite attacks.' }],
 };
 const goblin = { id: 'tpl-goblin', name: 'Goblin Boss', source: 'custom', ac: 15, maxHp: 21, cr: '1', traits: [], actions: [] };
-const conflux = [{ id: 'cc-aboleth-hatchling', name: 'Aboleth Hatchling', source: 'conflux', ac: 14, maxHp: 7, cr: '1', traits: [], actions: [] }];
+const conflux = [{ id: 'cc-aboleth-hatchling', name: 'Aboleth Hatchling', source: 'conflux', ac: 14, maxHp: 7, cr: '1', traits: [], actions: [],
+  confluxGroups: [{ name: 'Aboleths', section: 'Aberrations', cr: '1-20', url: 'https://homebrewery.naturalcrit.com/share/vGP7cAZLUtKf', order: 0 }] }];
 
 const jsonResponse = (data, ok = true) => ({ ok, status: ok ? 200 : 500, json: async () => data });
 
@@ -294,6 +295,7 @@ describe('Monster detail page — create, duplicate, delete, Conflux', () => {
     await settle();
     expect(screen.getByRole('heading', { name: 'Aboleth Hatchling' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Delete monster' })).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Aboleths/ })).toHaveAttribute('href', 'https://homebrewery.naturalcrit.com/share/vGP7cAZLUtKf');
 
     fireEvent.click(screen.getByRole('button', { name: /Edit/ }));
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: /Save as Copy/ })); });
@@ -302,5 +304,6 @@ describe('Monster detail page — create, duplicate, delete, Conflux', () => {
     expect(body).toHaveLength(3);
     expect(body[2]).toMatchObject({ name: 'Aboleth Hatchling', source: 'custom' });
     expect(body[2].id).toMatch(/^tpl-/);
+    expect(body[2]).not.toHaveProperty('confluxGroups'); // derived at read time, never persisted
   });
 });

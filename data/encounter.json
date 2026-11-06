@@ -170,10 +170,11 @@
     "enemy-1791137377523-0w4wx79mb",
     "companion-party-1770062695464-1770655770144"
   ],
+  "absentPartyIds": [],
   "combatActive": true,
   "round": 2,
-  "turnIndex": 5,
-  "turnId": "enemy-1792607321609-6n5zr6ya1",
+  "turnIndex": 0,
+  "turnId": "party-1770431961400",
   "interrupt": null,
   "reactionsUsed": {},
   "turnUsage": {

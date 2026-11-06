@@ -18,7 +18,7 @@ stat blocks, 5etools `XMM` data. Matched by name, ignoring case and punctuation.
 **Coverage is complete.** The 53 that were on older stats at the second pass
 are all re-imported (Beholder now tagged `MM 2024`). The 179 imports include 5
 monsters that were already SRD 5.2.1 built-ins (Archmage, Mage, Ogre, Sahuagin
-Warrior, Salamander) — re-importing those was harmless. On top of the 503, 17
+Warrior, Salamander) — re-importing those was harmless. On top of the 503, 16
 older built-ins have no 2024 Monster Manual version at all (listed further
 down) and 8 of your custom templates (Topiary Golem Ornamental, the Gnoll
 Abyssal set, Lizardfolk Bloodeye, etc.) aren't from the Monster Manual.
@@ -72,40 +72,45 @@ update re-adds it (see "Renamed in 2024: 2014 version removed" below).
 - **CR 25:** Colossus
 
 
-## Not in the 2024 Monster Manual (17)
+## Not in the 2024 Monster Manual (16)
 
 These only exist in older books, so the app's stats are as current as they
 get. Tag them with their book (`MM 2014`, `MPMM`) via **Source book** if you
 want the library's Book filter to reflect that — the automatic label calls
 every untagged older built-in `MM 2014`.
 
-| Monster | CR | Latest official stat block | Note |
+The **2024 stand-in** column is D&D Beyond's official "Stat Block Conversions"
+table (MM 2024 → Monster Lists): a different, generic 2024 creature to run in
+its place. These aren't renames, so the old template stays.
+
+| Monster | CR | Latest official stat block | 2024 stand-in |
 |---|---|---|---|
-| Drow | 1/4 | MM 2014 |  |
-| Lizardfolk | 1/2 | MM 2014 |  |
-| Orc | 1/2 | MM 2014 |  |
-| Duergar | 1 | MM 2014 (variants in MPMM) |  |
-| Faerie Dragon (Older) | 1 | MM 2014 | 2024 has only Youth and Adult |
-| Guard Drake | 2 | MPMM (orig. Volo's) |  |
-| Lizardfolk Shaman | 2 | MM 2014 | closest 2024: Lizardfolk Geomancer |
-| Orog | 2 | MM 2014 |  |
-| Bugbear Chief | 3 | MM 2014 | closest 2024: Bugbear Stalker |
-| Girallon | 4 | MPMM (orig. Volo's) |  |
-| Orc War Chief | 4 | MM 2014 |  |
-| Redcap | 4 | MPMM (orig. Volo's) |  |
-| Yuan-ti Mind Whisperer | 4 | MPMM (orig. Volo's) |  |
-| Drow Mage | 7 | MM 2014 |  |
-| Gray Render | 12 | MPMM (orig. Volo's) |  |
-| Ki-rin | 12 | MPMM (orig. Volo's) |  |
-| Vampire Spellcaster | 15 | MM 2014 (Vampire variant) | 2024 Vampire Umbral Lord is also CR 15 but a different block |
+| Drow | 1/4 | MM 2014 | Priest Acolyte |
+| Lizardfolk | 1/2 | MM 2014 | Scout |
+| Orc | 1/2 | MM 2014 | Tough |
+| Duergar | 1 | MM 2014 (variants in MPMM) | Spy |
+| Guard Drake | 2 | MPMM (orig. Volo's) | — |
+| Lizardfolk Shaman | 2 | MM 2014 | Lizardfolk Geomancer |
+| Orog | 2 | MM 2014 | Berserker |
+| Bugbear Chief | 3 | MM 2014 | none listed (our guess: Bugbear Stalker) |
+| Girallon | 4 | MPMM (orig. Volo's) | — |
+| Orc War Chief | 4 | MM 2014 | Tough Boss |
+| Redcap | 4 | MPMM (orig. Volo's) | — |
+| Yuan-ti Mind Whisperer | 4 | MPMM (orig. Volo's) | — |
+| Drow Mage | 7 | MM 2014 | Bandit Deceiver (your import) |
+| Gray Render | 12 | MPMM (orig. Volo's) | — |
+| Ki-rin | 12 | MPMM (orig. Volo's) | — |
+| Vampire Spellcaster | 15 | MM 2014 (Vampire variant) | none listed (Vampire Umbral Lord is also CR 15 but a different block) |
 
 The "latest official stat block" column is from book knowledge, not checked
 against a source; that none of these are in the 2024 Monster Manual is checked.
+The stand-in column was checked against the D&D Beyond table on 2026-11-06; it
+lists no stand-in for the MPMM monsters, Bugbear Chief or Vampire Spellcaster.
 
 ## Renamed in 2024: 2014 version removed
 
 Rule: when a monster was renamed in 2024 and the 2024 version is in the list
-under its new name, the 2014 template is removed. The 40 below are retired —
+under its new name, the 2014 template is removed. The 41 below are retired —
 gone from the built-in list and listed in `app/data/retiredTemplates.js`, so an
 update can never bring them back. The templates route removes a retired
 template from `data/templates.json` on every load and save, but only if you
@@ -146,6 +151,7 @@ Every 2024 rename is now covered — no renamed 2014 template is left.
 | Gas Spore | Gas Spore Fungus (your import) |
 | Faerie Dragon (Youth) | Faerie Dragon Youth (your import) |
 | Faerie Dragon (Adult) | Faerie Dragon Adult (your import) |
+| Faerie Dragon (Older) | Faerie Dragon Adult (your import; green/blue/indigo/violet per D&D Beyond) |
 | Fire Snake | Salamander Fire Snake (your import) |
 | Half-Ogre | Ogrillon Ogre (your import) |
 | Ogrillon | Ogrillon Ogre (your import) |
@@ -157,7 +163,12 @@ Every 2024 rename is now covered — no renamed 2014 template is left.
 | Cyclops | Cyclops Sentry (your import) |
 | Grick Alpha | Grick Ancient (your import) |
 
-Rows without "(your import)" are SRD 5.2.1 built-ins.
+Rows without "(your import)" are SRD 5.2.1 built-ins. Checked against D&D
+Beyond's "Stat Block Conversions" table on 2026-11-06: every row matches. The
+table has no row for Yuan-ti Malison (the 2024 book kept the name and split it
+into three types), and its other renames — Aarakocra, Adult Blue Dracolich,
+Androsphinx, Merfolk, Monodrone, Poisonous Snake, Quaggoth Spore Servant,
+Tribal Warrior, Young Red Shadow Dragon — were never built-ins here.
 
 ## New in 2024, built in from SRD 5.2.1
 

@@ -140,7 +140,9 @@ template. Pinned by the "v12 → v13" and "v13 → v14" blocks in
   `castingTime` key. Sync failures are logged, never thrown — the spell save still succeeds.
 - **GET /api/templates** caches `public/data/conflux-creatures.json` in module memory
   for the process lifetime (`confluxCache`) — editing that file requires a dev-server
-  restart. This bullet is the CANONICAL description of the conflux cache (dm-app-map
+  restart. The cached copy already has `public/data/conflux-groups.json` joined on
+  (`confluxGroups`; a missing or corrupt groups file just leaves it off), so
+  regenerating the groups needs the same restart. This bullet is the CANONICAL description of the conflux cache (dm-app-map
   and debugging-playbook point here). The route also runs its migration inside GET,
   so a plain GET can rewrite `templates.json`.
 

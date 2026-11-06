@@ -150,6 +150,17 @@ export default function StatBlockView({ template: t, compact = false, stickyTop 
   const details = (
     <div className="space-y-4">
       <ChipRow label="Habitat" items={habitatsOf(t)} chip="bg-lime-950/40 border border-lime-800/50 text-lime-200" labelClass="text-lime-500" />
+      {t.confluxGroups?.length > 0 && (
+        <div>
+          <div className="text-[11px] uppercase tracking-wider font-semibold mb-1 text-sky-500">Conflux group</div>
+          <div className="flex flex-wrap gap-1">
+            {t.confluxGroups.map(g => (
+              <a key={g.url || g.name} href={g.url} target="_blank" rel="noopener noreferrer" title={`${g.section} — open Conflux's page for this group`}
+                className="px-2 py-0.5 rounded text-sm bg-sky-950/40 border border-sky-800/50 text-sky-200 hover:text-amber-200 hover:border-amber-700">{g.name} ↗</a>
+            ))}
+          </div>
+        </div>
+      )}
       <ChipRow label="Skills" items={splitList(t.skills)} chip="bg-stone-800 text-stone-200" />
       {(senses.senses.length > 0 || senses.passive != null) && (
         <div>
