@@ -2,7 +2,10 @@ import { describe, it, expect } from 'vitest';
 import {
   parseAlignment, getInitiativeBonus, getLegendaryUses, splitDescription, splitList, xpForCr, profForCr,
   toEditForm, fromEditForm, sameTemplate, sourceLabel, isConfluxId, isOfficial, bookLabel, defaultBook, splitLore,
+  habitatsOf, compareHabitats,
 } from '../../app/templates/statBlock.js';
+import { MM2024_HABITATS } from '../../app/data/monsterHabitats.js';
+import { defaultEnemyTemplates } from '../../app/data/defaultEnemyTemplates.js';
 
 const beholder = {
   id: 'mm-beholder', name: 'Beholder', size: 'Large', creatureType: 'Aberration', ac: 18, maxHp: 190,
@@ -131,5 +134,44 @@ describe('edit form round trip', () => {
     const form = toEditForm(beholder);
     form.actions[0].name = 'Changed';
     expect(beholder.actions[0].name).toBe('Bite');
+  });
+});
+
+describe('habitatsOf — 2024 Monster Manual habitats', () => {
+  it('covers all 503 MM 2024 stat blocks; the "Any" list matches the book\'s Any Habitat table (65)', () => {
+    expect(Object.keys(MM2024_HABITATS)).toHaveLength(503);
+    const any = Object.keys(MM2024_HABITATS).filter(n => MM2024_HABITATS[n].includes('Any'));
+    expect(any).toHaveLength(65);
+    for (const n of ['Commoner', 'Crawling Claw', 'Homunculus', 'Priest Acolyte', 'Tough Boss', 'Lich', 'Colossus', 'Warrior Infantry']) {
+      expect(any, n).toContain(n);
+    }
+  });
+
+  it('every 2024 built-in gets habitats by name', () => {
+    const srd = defaultEnemyTemplates.filter(t => t.edition === '2024');
+    expect(srd.filter(t => habitatsOf(t).length === 0).map(t => t.name)).toEqual([]);
+    expect(habitatsOf(srd.find(t => t.name === 'Pit Fiend'))).toEqual(['Planar (Nine Hells)']);
+  });
+
+  it('an MM 2024 import gets habitats by name (ignoring case/punctuation); other books get none', () => {
+    expect(habitatsOf({ id: 'imported-1', name: 'violet fungus necrohulk', source: 'custom', book: 'MM 2024' }).length).toBeGreaterThan(0);
+    expect(habitatsOf({ id: 'imported-2', name: 'Lich', source: 'custom', book: 'Homebrew' })).toEqual([]);
+    expect(habitatsOf({ id: 'mm-orc', name: 'Orc', source: 'mm' })).toEqual([]); // MM 2014 built-in
+    expect(habitatsOf({ id: 'cc-1', name: 'Lich', source: 'conflux' })).toEqual([]);
+  });
+
+  it('a monster keeps every habitat it is listed under, with the book-table corrections applied', () => {
+    expect(MM2024_HABITATS['Troll']).toEqual(['Arctic', 'Forest', 'Hill', 'Mountain', 'Swamp', 'Underdark']);
+    expect(MM2024_HABITATS['Ice Mephit']).toEqual(['Arctic', 'Planar (Elemental Planes)']);
+    expect(MM2024_HABITATS['Plesiosaurus']).toEqual(['Coastal', 'Underwater']); // not Arctic
+    expect(MM2024_HABITATS['Stone Giant']).toEqual(['Hill', 'Mountain', 'Underdark']);
+  });
+
+  it("a template's own habitats win over the lookup", () => {
+    expect(habitatsOf({ id: 'tpl-1', name: 'Lich', book: 'MM 2024', habitats: ['Urban'] })).toEqual(['Urban']);
+  });
+
+  it('sorts Any first, then terrain, then planes', () => {
+    expect(['Planar (Abyss)', 'Urban', 'Any', 'Forest'].sort(compareHabitats)).toEqual(['Any', 'Forest', 'Urban', 'Planar (Abyss)']);
   });
 });

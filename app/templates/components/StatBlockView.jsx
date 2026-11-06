@@ -5,6 +5,7 @@ import { getModNum, formatMod } from '../../utils/rules';
 import { formatSpeeds, parseSavingThrows, parseSenses, splitDefenses, parseUsage, abilityLabel } from '../../combat/monsterAbilities';
 import { StatText } from '../../combat/components/MonsterAbilities';
 import {
+  habitatsOf,
   ABILITY_KEYS, SECTIONS, parseAlignment, getInitiativeBonus, getLegendaryUses, splitDescription, splitList, splitLore,
 } from '../statBlock';
 
@@ -148,6 +149,7 @@ export default function StatBlockView({ template: t, compact = false, stickyTop 
 
   const details = (
     <div className="space-y-4">
+      <ChipRow label="Habitat" items={habitatsOf(t)} chip="bg-lime-950/40 border border-lime-800/50 text-lime-200" labelClass="text-lime-500" />
       <ChipRow label="Skills" items={splitList(t.skills)} chip="bg-stone-800 text-stone-200" />
       {(senses.senses.length > 0 || senses.passive != null) && (
         <div>

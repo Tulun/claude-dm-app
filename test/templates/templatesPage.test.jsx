@@ -104,6 +104,17 @@ describe('Templates library page', () => {
     expect(screen.getByText('Kobold Scale')).toBeInTheDocument();
   });
 
+  it('filters by 2024 habitat (MM 2024 stat blocks only)', async () => {
+    mockFetch();
+    render(<TemplatesPage />);
+    await settle();
+    fireEvent.click(screen.getByRole('button', { name: /^Habitat/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'Underdark' }));
+    expect(screen.getAllByTestId('template-row').map(r => r.textContent).join()).toContain('Aboleth');
+    expect(screen.getAllByTestId('template-row')).toHaveLength(1);
+    expect(screen.getByText('Underdark', { selector: 'span' })).toBeInTheDocument();
+  });
+
   it('a monster imported from an official book is listed under Official, not Custom', async () => {
     templates.push({ id: 'imported-9', name: 'Githyanki Knight', source: 'custom', book: 'MM 2024', cr: '8', ac: 18, maxHp: 117, speed: 30, traits: [], actions: [] });
     try {

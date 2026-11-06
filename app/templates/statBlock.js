@@ -3,6 +3,7 @@
 // form. Display-only parsing — nothing here changes how combat reads a
 // template. Ability math comes from app/utils/rules.js (never a local getMod).
 import { getModNum } from '../utils/rules';
+import { MM2024_HABITATS } from '../data/monsterHabitats';
 
 export const ABILITY_KEYS = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 
@@ -61,6 +62,23 @@ const has2024Markers = (t) =>
   /\b(Initiative [+-−]\d|Legendary Action Uses:)/i.test(String(t.notes ?? ''));
 
 export const bookLabel = (t) => String(t?.book ?? '').trim() || defaultBook(t);
+
+// Habitats ("Any", "Forest", "Planar (Abyss)", …). A template's own
+// `habitats` array wins; otherwise a 2024 Monster Manual stat block (built-in
+// or imported, i.e. bookLabel "MM 2024") gets the book's habitats by name from
+// app/data/monsterHabitats.js. Derived at read time — nothing is written to disk.
+const normName = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+const HABITATS_BY_NAME = new Map(Object.entries(MM2024_HABITATS).map(([n, h]) => [normName(n), h]));
+
+export const habitatsOf = (t) => {
+  if (Array.isArray(t?.habitats) && t.habitats.length) return t.habitats;
+  if (bookLabel(t) !== 'MM 2024') return [];
+  return HABITATS_BY_NAME.get(normName(t.name)) ?? [];
+};
+
+// Filter/display order: "Any" first, then terrain habitats, then the planes.
+export const compareHabitats = (a, b) =>
+  (b === 'Any') - (a === 'Any') || a.startsWith('Planar') - b.startsWith('Planar') || a.localeCompare(b);
 
 // "Alignment: Lawful Evil. Initiative +12 (22). …" → "Lawful Evil".
 export const parseAlignment = (notes) => {

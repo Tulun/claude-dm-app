@@ -603,3 +603,7 @@ context costs:
 - [x] **Import Monster: closing mid-parse no longer drops the parse** (2026-11-06) —
   `handleClose` skips its reset while `isParsing`, so reopening shows
   "Parsing stat block..." and then the result.
+- [x] **2024 habitats** (2026-11-06) — all 503 MM 2024 stat blocks carry the
+  book's habitats (multiple per monster), shown on the monster page and
+  filterable in the library. Lookup in `app/data/monsterHabitats.js`, applied by
+  `habitatsOf`; checked against the book's 12 habitat tables.

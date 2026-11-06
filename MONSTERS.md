@@ -23,6 +23,14 @@ older built-ins have no 2024 Monster Manual version at all (listed further
 down) and 8 of your custom templates (Topiary Golem Ornamental, the Gnoll
 Abyssal set, Lizardfolk Bloodeye, etc.) aren't from the Monster Manual.
 
+## Habitats
+
+Every 2024 stat block shows its habitats (from the book's habitat tables) on
+its monster page, and the library has a **Habitat** filter. They come from
+[app/data/monsterHabitats.js](app/data/monsterHabitats.js) by name, so a new
+`MM 2024` import picks them up automatically. Older (2014 / other-book)
+templates have none.
+
 ## How to update one
 
 Screenshot its stat block from your Monster Manual on D&D Beyond and drop it

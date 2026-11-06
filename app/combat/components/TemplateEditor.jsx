@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Icons from '../../components/Icons';
 import { sizeMatches } from '../monsterAbilities';
-import { bookLabel, isOfficial } from '../../templates/statBlock';
+import { bookLabel, isOfficial, habitatsOf, compareHabitats } from '../../templates/statBlock';
 
 const NO_BOOK = 'No book';
 
@@ -38,6 +38,7 @@ const FilterDropdown = ({ label, options, selected, onToggle, onClear, colorClas
     blue: { bg: 'bg-blue-700', badge: 'bg-blue-900', button: 'bg-blue-600' },
     green: { bg: 'bg-emerald-700', badge: 'bg-emerald-900', button: 'bg-emerald-600' },
     sky: { bg: 'bg-sky-700', badge: 'bg-sky-900', button: 'bg-sky-600' },
+    lime: { bg: 'bg-lime-800', badge: 'bg-lime-950', button: 'bg-lime-700' },
   };
   const c = colors[colorClass] || colors.purple;
 
@@ -236,6 +237,7 @@ const TemplateEditor = ({ templates, onDelete }) => {
   const [selectedSizes, setSelectedSizes] = useState(Array.isArray(saved.selectedSizes) ? saved.selectedSizes : []);
   const [selectedCreatureTypes, setSelectedCreatureTypes] = useState(Array.isArray(saved.selectedCreatureTypes) ? saved.selectedCreatureTypes : []);
   const [selectedBooks, setSelectedBooks] = useState(Array.isArray(saved.selectedBooks) ? saved.selectedBooks : []);
+  const [selectedHabitats, setSelectedHabitats] = useState(Array.isArray(saved.selectedHabitats) ? saved.selectedHabitats : []);
 
   // Load Conflux creatures on demand
   const loadConflux = () => {
@@ -265,9 +267,9 @@ const TemplateEditor = ({ templates, onDelete }) => {
   }, []);
   useEffect(() => {
     try {
-      sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({ searchQuery, filter, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks }));
+      sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({ searchQuery, filter, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats }));
     } catch { /* storage unavailable — filters just won't persist */ }
-  }, [searchQuery, filter, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks]);
+  }, [searchQuery, filter, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats]);
 
   // Get the active template list based on source filter
   const activeTemplates = sourceFilter === 'conflux' ? confluxTemplates : templates;
@@ -288,6 +290,12 @@ const TemplateEditor = ({ templates, onDelete }) => {
   const availableBooks = useMemo(() => {
     const books = new Set((activeTemplates || []).map(t => bookLabel(t) || NO_BOOK));
     return [...books].sort((a, b) => (a === NO_BOOK) - (b === NO_BOOK) || a.localeCompare(b));
+  }, [activeTemplates]);
+
+  // Habitats present in the active list (2024 Monster Manual stat blocks — see habitatsOf).
+  const availableHabitats = useMemo(() => {
+    const habitats = new Set((activeTemplates || []).flatMap(habitatsOf));
+    return [...habitats].sort(compareHabitats);
   }, [activeTemplates]);
 
   const toggleFilter = (setter) => (value) => {
@@ -329,9 +337,12 @@ const TemplateEditor = ({ templates, onDelete }) => {
       // Source book filter
       if (selectedBooks.length > 0 && !selectedBooks.includes(bookLabel(t) || NO_BOOK)) return false;
 
+      // Habitat filter — matches a monster listed under ANY selected habitat
+      if (selectedHabitats.length > 0 && !habitatsOf(t).some(h => selectedHabitats.includes(h))) return false;
+
       return true;
     });
-  }, [activeTemplates, filter, sourceFilter, searchQuery, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks]);
+  }, [activeTemplates, filter, sourceFilter, searchQuery, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats]);
 
   const clearAllFilters = () => {
     setSearchQuery('');
@@ -340,11 +351,12 @@ const TemplateEditor = ({ templates, onDelete }) => {
     setSelectedSizes([]);
     setSelectedCreatureTypes([]);
     setSelectedBooks([]);
+    setSelectedHabitats([]);
     setFilter('all');
     setSourceFilter('default');
   };
 
-  const hasFilters = searchQuery || crMin !== null || crMax !== null || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || selectedBooks.length > 0 || filter !== 'all' || sourceFilter !== 'default';
+  const hasFilters = searchQuery || crMin !== null || crMax !== null || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || selectedBooks.length > 0 || selectedHabitats.length > 0 || filter !== 'all' || sourceFilter !== 'default';
 
   return (
     <div className="space-y-4">
@@ -432,6 +444,18 @@ const TemplateEditor = ({ templates, onDelete }) => {
           />
         )}
 
+        {/* Habitat Filter */}
+        {availableHabitats.length > 0 && (
+          <FilterDropdown
+            label="Habitat"
+            options={availableHabitats}
+            selected={selectedHabitats}
+            onToggle={toggleFilter(setSelectedHabitats)}
+            onClear={() => setSelectedHabitats([])}
+            colorClass="lime"
+          />
+        )}
+
         {hasFilters && (
           <button 
             onClick={clearAllFilters}
@@ -461,6 +485,12 @@ const TemplateEditor = ({ templates, onDelete }) => {
             <span key={`book-${b}`} className="px-2 py-0.5 bg-sky-900/50 text-sky-300 rounded text-xs flex items-center gap-1">
               {b}
               <button onClick={() => toggleFilter(setSelectedBooks)(b)} className="hover:text-white">×</button>
+            </span>
+          ))}
+          {selectedHabitats.map(h => (
+            <span key={`hab-${h}`} className="px-2 py-0.5 bg-lime-900/50 text-lime-300 rounded text-xs flex items-center gap-1">
+              {h}
+              <button onClick={() => toggleFilter(setSelectedHabitats)(h)} className="hover:text-white">×</button>
             </span>
           ))}
           {selectedCreatureTypes.map(ct => (
