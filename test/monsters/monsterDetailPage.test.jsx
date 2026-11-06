@@ -10,10 +10,10 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: nav.push, replace: nav.replace, back: vi.fn() }),
   useParams: () => nav.params,
   useSearchParams: () => new URLSearchParams(nav.search),
-  usePathname: () => `/templates/${nav.params.id}`,
+  usePathname: () => `/monsters/${nav.params.id}`,
 }));
 
-import MonsterDetailPage from '../../app/templates/[id]/page.jsx';
+import MonsterDetailPage from '../../app/monsters/[id]/page.jsx';
 
 const beholder = {
   id: 'mm-beholder', name: 'Beholder', size: 'Large', creatureType: 'Aberration', ac: 18, maxHp: 190,
@@ -236,7 +236,7 @@ describe('Monster detail page — editing', () => {
 });
 
 describe('Monster detail page — create, duplicate, delete, Conflux', () => {
-  it('/templates/new creates a custom template and moves to its page', async () => {
+  it('/monsters/new creates a custom template and moves to its page', async () => {
     nav.params = { id: 'new' };
     const fetchMock = mockFetch();
     render(<MonsterDetailPage />);
@@ -251,7 +251,7 @@ describe('Monster detail page — create, duplicate, delete, Conflux', () => {
     const created = body[2];
     expect(created).toMatchObject({ name: 'Cave Troll', source: 'custom', ac: 10, maxHp: 10, traits: [], actions: [] });
     expect(created.id).toMatch(/^tpl-/);
-    expect(nav.replace).toHaveBeenCalledWith(`/templates/${created.id}`);
+    expect(nav.replace).toHaveBeenCalledWith(`/monsters/${created.id}`);
   });
 
   it('requires a name to create', async () => {
@@ -272,7 +272,7 @@ describe('Monster detail page — create, duplicate, delete, Conflux', () => {
     const copy = postedBody(fetchMock)[2];
     expect(copy).toMatchObject({ name: 'Beholder (Copy)', source: 'custom', ac: 18 });
     expect(copy.id).not.toBe('mm-beholder');
-    expect(nav.push).toHaveBeenCalledWith(`/templates/${copy.id}?edit=1`);
+    expect(nav.push).toHaveBeenCalledWith(`/monsters/${copy.id}?edit=1`);
   });
 
   it('deletes after confirming and returns to the library', async () => {
@@ -284,7 +284,7 @@ describe('Monster detail page — create, duplicate, delete, Conflux', () => {
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Delete Beholder' })); });
     await flush();
     expect(postedBody(fetchMock)).toEqual([goblin]);
-    expect(nav.push).toHaveBeenCalledWith('/templates');
+    expect(nav.push).toHaveBeenCalledWith('/monsters');
   });
 
   it('shows Conflux creatures and saves edits as a custom copy', async () => {

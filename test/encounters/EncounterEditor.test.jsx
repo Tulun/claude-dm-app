@@ -225,15 +225,16 @@ describe('EncounterEditor', () => {
   });
 
   describe('add-monster modal', () => {
-    it('lists non-NPC templates only, with a results count', () => {
+    it('lists every template (no NPC/enemy split), with a results count', () => {
       renderEditor({ encounter: emptyEncounter });
       openAddModal();
       // "Add Monsters" appears as both the modal heading and the confirm button
       expect(screen.getByRole('heading', { name: 'Add Monsters' })).toBeInTheDocument();
-      expect(screen.getByText('2 results')).toBeInTheDocument();
+      expect(screen.getByText('3 results')).toBeInTheDocument();
       expect(screen.getByText('Goblin')).toBeInTheDocument();
       expect(screen.getByText('Ogre')).toBeInTheDocument();
-      expect(screen.queryByText('Friendly Bartender')).not.toBeInTheDocument();
+      // a legacy isNpc flag no longer hides a stat block
+      expect(screen.getByText('Friendly Bartender')).toBeInTheDocument();
     });
 
     it('search filters templates by name', () => {
@@ -268,14 +269,14 @@ describe('EncounterEditor', () => {
       expect(screen.getAllByText('CR 1/4')).toHaveLength(2);
       // Clear All resets filters
       fireEvent.click(screen.getByText('Clear All'));
-      expect(screen.getByText('2 results')).toBeInTheDocument();
+      expect(screen.getByText('3 results')).toBeInTheDocument();
     });
 
     it('Type filter only offers types present in the templates', () => {
       renderEditor({ encounter: emptyEncounter });
       openAddModal();
       fireEvent.click(screen.getByText('Type'));
-      // goblin -> Humanoid, ogre -> Giant, NPC bartender contributes Humanoid (already present)
+      // goblin -> Humanoid, ogre -> Giant, bartender contributes Humanoid (already present)
       expect(screen.getByText('Giant')).toBeInTheDocument();
       expect(screen.getByText('Humanoid')).toBeInTheDocument();
       expect(screen.queryByText('Dragon')).not.toBeInTheDocument();

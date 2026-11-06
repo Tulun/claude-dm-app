@@ -214,7 +214,6 @@ export async function POST(request) {
       legendaryActions: Array.isArray(monsterData.legendaryActions) ? monsterData.legendaryActions : [],
       notes: monsterData.notes || '',
       lore: typeof monsterData.lore === 'string' ? monsterData.lore.trim() : '',
-      isNpc: false,
     };
 
     return NextResponse.json({ success: true, monster: cleanedData });

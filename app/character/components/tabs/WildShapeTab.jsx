@@ -312,7 +312,7 @@ export default function WildShapeTab({ character, onUpdate, templates = [] }) {
         {wildShapeForms.length === 0 ? (
           <div className="text-center py-8 text-stone-500 border border-dashed border-stone-700 rounded-lg">
             <p>No beast forms learned yet.</p>
-            <p className="text-sm mt-1">Add beasts from your templates to use Wild Shape.</p>
+            <p className="text-sm mt-1">Add beasts from your Monsters library to use Wild Shape.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -467,8 +467,8 @@ export default function WildShapeTab({ character, onUpdate, templates = [] }) {
             <div className="flex-1 overflow-y-auto p-4">
               {availableBeasts.length === 0 ? (
                 <div className="text-center py-8 text-stone-500">
-                  <p>No eligible beasts found in templates.</p>
-                  <p className="text-sm mt-1">Add Beast creatures to your Templates tab first.</p>
+                  <p>No eligible beasts found in your Monsters library.</p>
+                  <p className="text-sm mt-1">Add Beast creatures to your Monsters library first.</p>
                 </div>
               ) : (
                 <div className="space-y-2">

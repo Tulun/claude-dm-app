@@ -3,7 +3,7 @@ import {
   parseAlignment, getInitiativeBonus, getLegendaryUses, splitDescription, splitList, xpForCr, profForCr,
   toEditForm, fromEditForm, sameTemplate, sourceLabel, isConfluxId, isOfficial, bookLabel, defaultBook, splitLore,
   habitatsOf, compareHabitats,
-} from '../../app/templates/statBlock.js';
+} from '../../app/monsters/statBlock.js';
 import { MM2024_HABITATS } from '../../app/data/monsterHabitats.js';
 import { defaultEnemyTemplates } from '../../app/data/defaultEnemyTemplates.js';
 

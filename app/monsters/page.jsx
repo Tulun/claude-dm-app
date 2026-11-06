@@ -10,7 +10,7 @@ import ImportMonsterModal from '../combat/components/ImportMonsterModal';
 import { useToast } from '../hooks/useToast';
 import { TOAST_ERROR_DURATION_MS } from '../utils/timings';
 
-export default function TemplatesPage() {
+export default function MonstersPage() {
   const [templates, setTemplates] = useState(null);
   const [saveStatus, showToast] = useToast();
   const [loadFailed, setLoadFailed] = useState(false);
@@ -47,24 +47,24 @@ export default function TemplatesPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 text-stone-100">
       <Navbar />
-      <main className="relative max-w-5xl mx-auto p-4">
+      <main className="relative max-w-7xl mx-auto p-4">
         <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
           <div className="flex flex-wrap items-center gap-2 mb-4">
-            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 mr-auto"><Icons.Book /> Enemy & NPC Templates</h2>
+            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 mr-auto"><Icons.Book /> Monsters</h2>
             <button onClick={reloadTemplates} className="flex items-center gap-1 px-3 py-2 rounded-lg bg-stone-700/50 hover:bg-stone-600/50 text-sm"><Icons.Refresh />Reload</button>
             {templates && (
               <>
                 <button onClick={() => setShowImport(true)} className="px-3 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 text-sm flex items-center gap-1">
                   <Icons.Image /> Import from Image
                 </button>
-                <Link href="/templates/new" className="px-3 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-sm flex items-center gap-1">
-                  <Icons.Plus /> New Template
+                <Link href="/monsters/new" className="px-3 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-sm flex items-center gap-1">
+                  <Icons.Plus /> New Monster
                 </Link>
               </>
             )}
           </div>
           {!templates ? (
-            <div className="text-center py-8 text-stone-500 animate-pulse">Loading templates...</div>
+            <div className="text-center py-8 text-stone-500 animate-pulse">Loading monsters...</div>
           ) : (
             <TemplateEditor
               templates={templates}

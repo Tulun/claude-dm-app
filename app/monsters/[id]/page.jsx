@@ -29,7 +29,7 @@ export default function MonsterDetailPage() {
  * Duplicate each POST the whole templates array (the route's contract) — so
  * there is no auto-save effect and nothing echoes on load.
  *
- * /templates/new opens a blank editor. Conflux creatures (cc-* ids) are
+ * /monsters/new opens a blank editor. Conflux creatures (cc-* ids) are
  * read-only source data: saving an edit creates a Custom copy.
  */
 function MonsterDetail() {
@@ -58,7 +58,7 @@ function MonsterDetail() {
       try {
         const res = await fetch('/api/templates');
         const data = res.ok ? await res.json() : null;
-        if (!Array.isArray(data)) throw new Error('Templates could not be loaded');
+        if (!Array.isArray(data)) throw new Error('Monsters could not be loaded');
         let cc = null;
         if (isConfluxId(id)) {
           const cres = await fetch('/api/templates?source=conflux');
@@ -69,7 +69,7 @@ function MonsterDetail() {
         setTemplates(data);
         setConflux(cc);
       } catch (e) {
-        if (!cancelled) setLoadError(e.message || 'Templates could not be loaded');
+        if (!cancelled) setLoadError(e.message || 'Monsters could not be loaded');
       }
     };
     load();
@@ -96,7 +96,7 @@ function MonsterDetail() {
     setShowPreview(false);
   };
 
-  // Open straight into the editor for /templates/new and ?edit=1 — once per
+  // Open straight into the editor for /monsters/new and ?edit=1 — once per
   // id, so saving (which leaves edit mode before the URL drops ?edit=1)
   // doesn't bounce back into the editor.
   const autoOpenedFor = useRef(null);
@@ -143,7 +143,7 @@ function MonsterDetail() {
       if (await persist([...templates, created])) {
         setEditing(false);
         showToast(fromConflux ? 'Saved as a custom copy' : 'Monster created');
-        router.replace(`/templates/${encodeURIComponent(created.id)}`);
+        router.replace(`/monsters/${encodeURIComponent(created.id)}`);
       }
       return;
     }
@@ -152,27 +152,27 @@ function MonsterDetail() {
     if (await persist(templates.map(t => (t.id === template.id ? updated : t)))) {
       setEditing(false);
       showToast('Saved');
-      if (wantEdit) router.replace(`/templates/${encodeURIComponent(template.id)}`);
+      if (wantEdit) router.replace(`/monsters/${encodeURIComponent(template.id)}`);
     }
   };
 
   const handleCancel = () => {
     if (dirty && !window.confirm('Discard your unsaved changes?')) return;
-    if (isNew) { router.push('/templates'); return; }
+    if (isNew) { router.push('/monsters'); return; }
     setEditing(false);
-    if (wantEdit) router.replace(`/templates/${encodeURIComponent(template.id)}`);
+    if (wantEdit) router.replace(`/monsters/${encodeURIComponent(template.id)}`);
   };
 
   const handleDuplicate = async () => {
     const copy = { ...template, id: generateId('tpl'), name: `${template.name} (Copy)`, source: 'custom' };
     if (await persist([...templates, copy])) {
       showToast('Duplicated');
-      router.push(`/templates/${encodeURIComponent(copy.id)}?edit=1`);
+      router.push(`/monsters/${encodeURIComponent(copy.id)}?edit=1`);
     }
   };
 
   const handleDelete = async () => {
-    if (await persist(templates.filter(t => t.id !== template.id))) router.push('/templates');
+    if (await persist(templates.filter(t => t.id !== template.id))) router.push('/monsters');
   };
 
   // Save shortcut while editing.
@@ -186,7 +186,7 @@ function MonsterDetail() {
   });
 
   const backLink = (
-    <Link href="/templates" className="inline-flex items-center gap-1 text-sm text-stone-400 hover:text-amber-300">
+    <Link href="/monsters" className="inline-flex items-center gap-1 text-sm text-stone-400 hover:text-amber-300">
       <span aria-hidden>←</span> Monster library
     </Link>
   );
@@ -228,9 +228,6 @@ function MonsterDetail() {
     body = (
       <>
         <div className="flex flex-wrap items-center gap-2 mb-4">
-          <span className={`px-2 py-0.5 rounded text-xs font-semibold flex items-center gap-1 ${t.isNpc ? 'bg-emerald-900/50 text-emerald-300' : 'bg-red-900/50 text-red-300'}`}>
-            {t.isNpc ? <><Icons.Shield /> NPC</> : <><Icons.Skull /> Enemy</>}
-          </span>
           <span className="px-2 py-0.5 rounded text-xs bg-stone-800 text-stone-300">{sourceLabel(t)}</span>
           {bookLabel(t) && <span data-testid="book-badge" className="px-2 py-0.5 rounded text-xs bg-sky-900/40 text-sky-300" title="Source book">{bookLabel(t)}</span>}
           {t.legendaryActions?.length > 0 && <span className="px-2 py-0.5 rounded text-xs bg-purple-900/40 text-purple-300">Legendary</span>}
@@ -248,7 +245,7 @@ function MonsterDetail() {
             <button type="button" onClick={() => setConfirmDelete(true)} aria-label="Delete monster" className="px-3 py-2 rounded-lg bg-red-950/60 hover:bg-red-900/60 text-red-300 text-sm flex items-center gap-1.5"><Icons.Trash /></button>
           ))}
         </div>
-        <div className={`rounded-xl border p-5 md:p-7 ${t.isNpc ? 'border-emerald-900/50 bg-emerald-950/10' : 'border-red-900/40 bg-red-950/10'}`}>
+        <div className="rounded-xl border p-5 md:p-7 border-stone-700/60 bg-stone-900/30">
           <StatBlockView template={t} stickyTop={navTop} />
         </div>
       </>

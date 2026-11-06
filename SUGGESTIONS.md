@@ -184,33 +184,49 @@ context costs:
 ---
 
 ## Completed log
+- [x] Renamed the Templates page to Monsters: route `/templates` → `/monsters`
+  (`app/monsters/`, `test/monsters/`; `next.config.mjs` redirects old URLs),
+  navbar and on-screen labels say Monsters. Kept the API (`/api/templates`),
+  `data/templates.json`, component/variable names and storage keys — Nov 2026.
+- [x] Dropped the Enemy/NPC distinction (not a 2024 rules concept): no
+  Enemies/NPCs filter in the library or combat Add Monster modal, the
+  encounter planner no longer hides `isNpc` templates, no Enemy/NPC role
+  toggle in the editor or badge on the monster page, and combat cards are
+  always enemy-red (no teal). The legacy `isNpc` key is left in place on
+  stored templates and built-ins (rewriting it would disturb the built-in
+  fingerprints) but nothing reads or writes it any more — Nov 2026.
+- [x] Template library card view: List/Cards toggle on /monsters (cards are
+  the default; choice kept per browser in localStorage). Cards show name,
+  size + type, a CR badge, book and Legendary chips, edit/delete — no
+  AC/HP/speed; list rows unchanged. Page widened to max-w-7xl, grid up to 4
+  columns — Nov 2026.
 - [x] Book-tagged imports count as official: the library's first source tab
   is now "Official" (was "Monster Manual") and holds built-ins plus any
   template tagged with a book other than Homebrew (`isOfficial` in
-  `app/templates/statBlock.js`); "Custom" is everything else. Monster-page
+  `app/monsters/statBlock.js`); "Custom" is everything else. Monster-page
   source badge reads Built-in / Imported / Custom / Conflux. Persisted
   `source` and the API's `?source=` filter are unchanged — Nov 2026.
 - [x] Monster lore: optional free-text `lore` field (book flavor text).
   `/api/parse-monster` asks the model for it (verbatim, paragraphs split by
   blank lines, headings on their own line) and returns `lore: ''` when the
   screenshots show none; editable in the import review and the monster
-  editor; shown on `/templates/[id]` as a collapsible Lore panel (`splitLore`
-  in `app/templates/statBlock.js` turns short unpunctuated lines into
+  editor; shown on `/monsters/[id]` as a collapsible Lore panel (`splitLore`
+  in `app/monsters/statBlock.js` turns short unpunctuated lines into
   headings). Plain text only — Nov 2026.
 - [x] Source-book tag on templates: free-text `book` field ("MM 2014",
-  "MM 2024", "VGtM", …) editable on `/templates/[id]`, set in the
+  "MM 2024", "VGtM", …) editable on `/monsters/[id]`, set in the
   image-import modal (last value remembered in localStorage), shown as a row
   badge and filterable ("Book" dropdown) in the library. Untagged built-ins
   display a derived book without writing it (`edition: '2024'` or 2024
   markers like an Initiative line → MM 2024, else MM 2014) (`bookLabel` /
-  `defaultBook` in `app/templates/statBlock.js`). Separate from `source` —
+  `defaultBook` in `app/monsters/statBlock.js`). Separate from `source` —
   Nov 2026.
-- [x] Monster detail page `/templates/[id]` (`app/templates/[id]/page.jsx`):
+- [x] Monster detail page `/monsters/[id]` (`app/monsters/[id]/page.jsx`):
   full stat block (vitals, abilities with proficient saves, skills / senses /
   defenses chips, numbered multi-option abilities like Eye Rays as lists,
   to-hit / damage / DC highlights) and an edit mode — form beside a live
   preview, sticky Save bar, reorderable ability entries, CR → XP / PB hints.
-  `/templates/new` creates; Conflux creatures save edits as a Custom copy;
+  `/monsters/new` creates; Conflux creatures save edits as a Custom copy;
   Duplicate / Delete on the page. Library rows now link there (inline
   expand / edit / create removed from `TemplateEditor`); library filters
   persist per tab in sessionStorage. Library page now saves explicitly per

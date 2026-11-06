@@ -150,13 +150,6 @@ export default function StatBlockForm({ form, setForm, bookOptions = [] }) {
               placeholder={defaultBook(form) ? `${defaultBook(form)} (auto)` : 'e.g. MM 2024, VGtM, Homebrew'} />
             <datalist id="book-options">{books.map(b => <option key={b} value={b} />)}</datalist>
           </Field>
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-stone-400 mr-1">Role</span>
-          <button type="button" onClick={() => setForm(f => ({ ...f, isNpc: false }))} aria-pressed={!form.isNpc}
-            className={`px-3 py-1.5 rounded-md text-sm flex items-center gap-1 ${!form.isNpc ? 'bg-red-800 text-red-50' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'}`}><Icons.Skull /> Enemy</button>
-          <button type="button" onClick={() => setForm(f => ({ ...f, isNpc: true }))} aria-pressed={form.isNpc}
-            className={`px-3 py-1.5 rounded-md text-sm flex items-center gap-1 ${form.isNpc ? 'bg-emerald-800 text-emerald-50' : 'bg-stone-800 text-stone-400 hover:bg-stone-700'}`}><Icons.Shield /> NPC</button>
-        </div>
         </div>
       </Card>
 

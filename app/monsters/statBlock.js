@@ -1,4 +1,4 @@
-// Pure helpers for the monster detail page (/templates/[id]): reading a
+// Pure helpers for the monster detail page (/monsters/[id]): reading a
 // template's stat block for display, and converting it to / from the edit
 // form. Display-only parsing — nothing here changes how combat reads a
 // template. Ability math comes from app/utils/rules.js (never a local getMod).
@@ -177,7 +177,7 @@ export const profForCr = (cr) => {
 };
 
 export const BLANK_TEMPLATE = {
-  name: '', size: 'Medium', creatureType: 'Humanoid', isNpc: false,
+  name: '', size: 'Medium', creatureType: 'Humanoid',
   ac: 10, maxHp: 10, hitDice: '1d8', speed: 30, cr: '1', xp: 200, profBonus: 2,
   str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10,
   savingThrows: '', skills: '', senses: '', languages: '',
@@ -197,7 +197,6 @@ export const toEditForm = (t) => {
     form[k] = t[k] == null ? '' : String(t[k]);
   }
   for (const { key } of SECTIONS) form[key] = (t[key] || []).map(a => ({ name: a?.name ?? '', description: a?.description ?? '' }));
-  form.isNpc = !!t.isNpc;
   return form;
 };
 
@@ -232,7 +231,6 @@ export const fromEditForm = (form, original = {}) => {
       .map(a => ({ name: String(a.name ?? '').trim(), description: String(a.description ?? '').trim() }))
       .filter(a => a.name || a.description);
   }
-  out.isNpc = !!form.isNpc;
   for (const k of Object.keys(out)) {
     const v = out[k];
     const empty = v === '' || (Array.isArray(v) && v.length === 0);

@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Icons from '../../components/Icons';
 import { sizeMatches } from '../monsterAbilities';
-import { bookLabel, isOfficial, habitatsOf, compareHabitats } from '../../templates/statBlock';
+import { bookLabel, isOfficial, habitatsOf, compareHabitats } from '../../monsters/statBlock';
 
 const NO_BOOK = 'No book';
 
@@ -211,21 +211,56 @@ const readSavedFilters = () => {
   try { return JSON.parse(sessionStorage.getItem(FILTER_STORAGE_KEY) || 'null') || {}; } catch { return {}; }
 };
 
-const detailHref = (t, edit = false) => `/templates/${encodeURIComponent(t.id)}${edit ? '?edit=1' : ''}`;
+const detailHref = (t, edit = false) => `/monsters/${encodeURIComponent(t.id)}${edit ? '?edit=1' : ''}`;
+
+// List vs card layout is a per-browser preference (survives sessions), unlike
+// the filters, which are per-tab.
+const VIEW_STORAGE_KEY = 'templates-library-view';
+const VIEW_MODES = ['cards', 'list'];
+const readSavedView = () => {
+  try { const v = localStorage.getItem(VIEW_STORAGE_KEY); return VIEW_MODES.includes(v) ? v : 'cards'; } catch { return 'cards'; }
+};
+
+// "Small Plant" — size + creature type, whichever exist.
+const typeLine = (t) => [t.size, t.creatureType].filter(Boolean).join(' ');
+
+// Edit / delete controls shared by both layouts. Conflux entries are read-only.
+const RowActions = ({ t, readOnly, confirming, onAskDelete, onCancelDelete, onDelete }) => {
+  if (readOnly) return null;
+  return (
+    <div className="flex shrink-0 items-center gap-2">
+      <Link href={detailHref(t, true)} aria-label={`Edit ${t.name}`} className="p-2 rounded bg-stone-700/50 hover:bg-stone-600/50"><Icons.Edit /></Link>
+      {confirming ? (
+        <>
+          <button onClick={onCancelDelete} className="px-2 py-1 rounded bg-stone-700 text-xs">Cancel</button>
+          <button onClick={onDelete} className="px-2 py-1 rounded bg-red-700 text-xs">Delete</button>
+        </>
+      ) : (
+        <button onClick={onAskDelete} aria-label={`Delete ${t.name}`} className="p-2 rounded bg-red-900/30 hover:bg-red-800/50 text-red-400"><Icons.Trash /></button>
+      )}
+    </div>
+  );
+};
 
 /**
- * The monster library list: search + filters, one row per template. A row
- * opens the monster's own page (/templates/[id]), which owns viewing and
- * editing; this list only browses and deletes. Creating (New Template /
- * Import from Image) lives in the page header (app/templates/page.jsx).
+ * The monster library list: search + filters, one card (default) or row per
+ * template — the List/Cards toggle is remembered per browser. Cards show only
+ * type, CR and book; the list rows add AC / HP / speed. An entry
+ * opens the monster's own page (/monsters/[id]), which owns viewing and
+ * editing; this list only browses and deletes. Creating (New Monster /
+ * Import from Image) lives in the page header (app/monsters/page.jsx).
  */
 const TemplateEditor = ({ templates, onDelete }) => {
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [viewMode, setViewMode] = useState(readSavedView);
+  const changeView = (mode) => {
+    setViewMode(mode);
+    try { localStorage.setItem(VIEW_STORAGE_KEY, mode); } catch { /* storage unavailable — choice just won't persist */ }
+  };
   // Filters start from the per-tab saved copy. TemplateEditor only mounts
   // after the client-side templates fetch, so reading sessionStorage in the
   // initializers can't cause a hydration mismatch.
   const [saved] = useState(readSavedFilters);
-  const [filter, setFilter] = useState(['all', 'enemies', 'npcs'].includes(saved.filter) ? saved.filter : 'all');
   const [sourceFilter, setSourceFilter] = useState(['default', 'conflux', 'custom'].includes(saved.sourceFilter) ? saved.sourceFilter : 'default');
   const [confluxTemplates, setConfluxTemplates] = useState([]);
   const [confluxLoading, setConfluxLoading] = useState(false);
@@ -267,9 +302,9 @@ const TemplateEditor = ({ templates, onDelete }) => {
   }, []);
   useEffect(() => {
     try {
-      sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({ searchQuery, filter, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats }));
+      sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({ searchQuery, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats }));
     } catch { /* storage unavailable — filters just won't persist */ }
-  }, [searchQuery, filter, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats]);
+  }, [searchQuery, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats]);
 
   // Get the active template list based on source filter
   const activeTemplates = sourceFilter === 'conflux' ? confluxTemplates : templates;
@@ -304,10 +339,6 @@ const TemplateEditor = ({ templates, onDelete }) => {
 
   const filtered = useMemo(() => {
     return (activeTemplates || []).filter(t => {
-      // Type filter (NPC vs Enemy)
-      if (filter === 'enemies' && t.isNpc) return false;
-      if (filter === 'npcs' && !t.isNpc) return false;
-      
       // Official (built-ins + book-tagged imports) vs Custom (everything else)
       if (sourceFilter === 'custom' && isOfficial(t)) return false;
       if (sourceFilter === 'default' && !isOfficial(t)) return false;
@@ -342,7 +373,7 @@ const TemplateEditor = ({ templates, onDelete }) => {
 
       return true;
     });
-  }, [activeTemplates, filter, sourceFilter, searchQuery, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats]);
+  }, [activeTemplates, sourceFilter, searchQuery, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats]);
 
   const clearAllFilters = () => {
     setSearchQuery('');
@@ -352,11 +383,10 @@ const TemplateEditor = ({ templates, onDelete }) => {
     setSelectedCreatureTypes([]);
     setSelectedBooks([]);
     setSelectedHabitats([]);
-    setFilter('all');
     setSourceFilter('default');
   };
 
-  const hasFilters = searchQuery || crMin !== null || crMax !== null || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || selectedBooks.length > 0 || selectedHabitats.length > 0 || filter !== 'all' || sourceFilter !== 'default';
+  const hasFilters = searchQuery || crMin !== null || crMax !== null || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || selectedBooks.length > 0 || selectedHabitats.length > 0 || sourceFilter !== 'default';
 
   return (
     <div className="space-y-4">
@@ -366,7 +396,7 @@ const TemplateEditor = ({ templates, onDelete }) => {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search templates by name..."
+          placeholder="Search monsters by name..."
           className="w-full bg-stone-800 border border-stone-700 rounded-lg px-4 py-2 pl-10 text-sm focus:outline-none focus:border-amber-600"
         />
         <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -393,14 +423,6 @@ const TemplateEditor = ({ templates, onDelete }) => {
           ))}
         </div>
 
-        <div className="w-px h-6 bg-stone-700" />
-
-        {/* Type Filter */}
-        <div className="flex gap-1">
-          {['all', 'enemies', 'npcs'].map(f => (
-            <button key={f} onClick={() => setFilter(f)} className={`px-3 py-1.5 rounded-lg text-sm capitalize ${filter === f ? 'bg-amber-700' : 'bg-stone-700 hover:bg-stone-600'}`}>{f}</button>
-          ))}
-        </div>
 
         <div className="w-px h-6 bg-stone-700" />
 
@@ -502,44 +524,78 @@ const TemplateEditor = ({ templates, onDelete }) => {
         </div>
       )}
 
-      <div className="text-xs text-stone-500">
-        {filtered.length} template{filtered.length !== 1 ? 's' : ''}
-        {filtered.length !== activeTemplates.length && ` (filtered from ${activeTemplates.length})`}
+      <div className="flex items-center justify-between gap-2">
+        <div className="text-xs text-stone-500">
+          {filtered.length} monster{filtered.length !== 1 ? 's' : ''}
+          {filtered.length !== activeTemplates.length && ` (filtered from ${activeTemplates.length})`}
+        </div>
+        <div className="flex rounded-lg bg-stone-800 p-0.5" role="group" aria-label="Layout">
+          {[
+            { key: 'cards', label: 'Card view', Icon: Icons.ViewGrid },
+            { key: 'list', label: 'List view', Icon: Icons.ViewList },
+          ].map(({ key, label, Icon }) => (
+            <button key={key} onClick={() => changeView(key)} aria-label={label} aria-pressed={viewMode === key} title={label}
+              className={`p-1.5 rounded-md ${viewMode === key ? 'bg-amber-700 text-white' : 'text-stone-400 hover:text-stone-200'}`}>
+              <Icon />
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="space-y-2">
-        {filtered.map((t) => (
-          <div key={t.id} data-testid="template-row" className={`group flex items-center gap-2 rounded-lg border pr-3 transition-colors ${t.isNpc ? 'bg-emerald-950/30 border-emerald-900/50 hover:border-emerald-700/70' : 'bg-red-950/30 border-red-900/50 hover:border-red-700/70'}`}>
-            <Link href={detailHref(t)} className="flex flex-1 min-w-0 items-center gap-3 p-3">
-              <div className={`shrink-0 p-2 rounded ${t.isNpc ? 'bg-emerald-900/50' : 'bg-red-900/50'}`}>{t.isNpc ? <Icons.Shield /> : <Icons.Skull />}</div>
-              <div className="min-w-0">
-                <div className="font-medium group-hover:text-amber-200">{t.name}</div>
-                <div className="text-xs text-stone-400 truncate">
-                  {(t.size || t.creatureType) && <span className="italic">{t.size} {t.creatureType} • </span>}
-                  CR {t.cr} • AC {t.ac} • HP {t.maxHp}{t.hitDice && ` (${t.hitDice})`} • {t.speed}{typeof t.speed === 'number' ? ' ft.' : ''}
+      {viewMode === 'cards' ? (
+        <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filtered.map((t) => {
+            const book = bookLabel(t);
+            const type = typeLine(t);
+            return (
+              <div key={t.id} data-testid="template-row" className="group flex flex-col rounded-xl border bg-stone-800/40 border-stone-700/60 hover:border-amber-700/70 transition-colors">
+                <Link href={detailHref(t)} className="flex flex-1 items-start gap-3 p-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold leading-snug line-clamp-2 group-hover:text-amber-200">{t.name}</div>
+                    {type && <div className="text-xs italic text-stone-400 truncate mt-0.5">{type}</div>}
+                  </div>
+                  <div className="shrink-0 text-center rounded-lg bg-stone-900/60 border border-stone-700/60 px-2 py-1 min-w-[2.75rem]" title="Challenge rating">
+                    <div className="text-[9px] uppercase tracking-wider text-stone-500 leading-none">CR</div>
+                    <div className="text-sm font-bold text-amber-300 leading-tight">{crLabel(String(t.cr ?? '—'))}</div>
+                  </div>
+                </Link>
+                <div className="flex items-center gap-2 border-t border-stone-800/80 px-3 py-2 min-h-[2.75rem]">
+                  <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1">
+                    {book && <span className="text-xs text-sky-300 bg-sky-900/30 px-1.5 py-0.5 rounded" title="Source book">{book}</span>}
+                    {t.legendaryActions?.length > 0 && <span className="text-xs text-purple-400 bg-purple-900/30 px-1.5 py-0.5 rounded">Legendary</span>}
+                  </div>
+                  <RowActions t={t} readOnly={sourceFilter === 'conflux'} confirming={deleteConfirmId === t.id}
+                    onAskDelete={() => setDeleteConfirmId(t.id)} onCancelDelete={() => setDeleteConfirmId(null)}
+                    onDelete={() => { onDelete(t.id); setDeleteConfirmId(null); }} />
                 </div>
               </div>
-            </Link>
-            <div className="flex shrink-0 items-center gap-2">
-              {bookLabel(t) && <span className="text-xs text-sky-300 bg-sky-900/30 px-1.5 py-0.5 rounded" title="Source book">{bookLabel(t)}</span>}
-              {t.legendaryActions?.length > 0 && <span className="text-xs text-purple-400 bg-purple-900/30 px-1.5 py-0.5 rounded">Legendary</span>}
-              {sourceFilter !== 'conflux' && (
-                <>
-                  <Link href={detailHref(t, true)} aria-label={`Edit ${t.name}`} className="p-2 rounded bg-stone-700/50 hover:bg-stone-600/50"><Icons.Edit /></Link>
-                  {deleteConfirmId === t.id ? (
-                    <>
-                      <button onClick={() => setDeleteConfirmId(null)} className="px-2 py-1 rounded bg-stone-700 text-xs">Cancel</button>
-                      <button onClick={() => { onDelete(t.id); setDeleteConfirmId(null); }} className="px-2 py-1 rounded bg-red-700 text-xs">Delete</button>
-                    </>
-                  ) : (
-                    <button onClick={() => setDeleteConfirmId(t.id)} aria-label={`Delete ${t.name}`} className="p-2 rounded bg-red-900/30 hover:bg-red-800/50 text-red-400"><Icons.Trash /></button>
-                  )}
-                </>
-              )}
+            );
+          })}
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {filtered.map((t) => (
+            <div key={t.id} data-testid="template-row" className="group flex items-center gap-2 rounded-lg border pr-3 bg-stone-800/40 border-stone-700/60 hover:border-amber-700/70 transition-colors">
+              <Link href={detailHref(t)} className="flex flex-1 min-w-0 items-center gap-3 p-3">
+                <div className="min-w-0">
+                  <div className="font-medium group-hover:text-amber-200">{t.name}</div>
+                  <div className="text-xs text-stone-400 truncate">
+                    {(t.size || t.creatureType) && <span className="italic">{t.size} {t.creatureType} • </span>}
+                    CR {t.cr} • AC {t.ac} • HP {t.maxHp}{t.hitDice && ` (${t.hitDice})`} • {t.speed}{typeof t.speed === 'number' ? ' ft.' : ''}
+                  </div>
+                </div>
+              </Link>
+              <div className="flex shrink-0 items-center gap-2">
+                {bookLabel(t) && <span className="text-xs text-sky-300 bg-sky-900/30 px-1.5 py-0.5 rounded" title="Source book">{bookLabel(t)}</span>}
+                {t.legendaryActions?.length > 0 && <span className="text-xs text-purple-400 bg-purple-900/30 px-1.5 py-0.5 rounded">Legendary</span>}
+                <RowActions t={t} readOnly={sourceFilter === 'conflux'} confirming={deleteConfirmId === t.id}
+                  onAskDelete={() => setDeleteConfirmId(t.id)} onCancelDelete={() => setDeleteConfirmId(null)}
+                  onDelete={() => { onDelete(t.id); setDeleteConfirmId(null); }} />
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

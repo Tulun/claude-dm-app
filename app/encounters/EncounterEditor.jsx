@@ -147,7 +147,6 @@ const EncounterEditor = ({
 
   const filteredTemplates = useMemo(() => {
     return templates
-      .filter(t => !t.isNpc)
       .filter(t => selectedCRs.length === 0 || selectedCRs.includes(String(t.cr)))
       .filter(t => selectedSizes.length === 0 || selectedSizes.includes(t.size))
       .filter(t => {

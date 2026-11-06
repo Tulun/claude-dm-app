@@ -117,7 +117,6 @@ const FilterDropdown = ({ label, options, selected, onToggle, onClear, colorClas
 
 export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
   const [selectedMonsters, setSelectedMonsters] = useState({}); // { templateId: quantity }
-  const [typeFilter, setTypeFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCRs, setSelectedCRs] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
@@ -154,10 +153,6 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
 
   const filtered = useMemo(() => {
     return (templates || []).filter(t => {
-      // Type filter (NPC vs Enemy)
-      if (typeFilter === 'enemies' && t.isNpc) return false;
-      if (typeFilter === 'npcs' && !t.isNpc) return false;
-      
       // Search filter
       if (searchQuery.trim() && !t.name.toLowerCase().includes(searchQuery.trim().toLowerCase())) return false;
       
@@ -172,7 +167,7 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
       
       return true;
     });
-  }, [templates, typeFilter, searchQuery, selectedCRs, selectedSizes, selectedCreatureTypes]);
+  }, [templates, searchQuery, selectedCRs, selectedSizes, selectedCreatureTypes]);
 
   if (!isOpen) return null;
 
@@ -234,10 +229,9 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
     setSelectedCRs([]);
     setSelectedSizes([]);
     setSelectedCreatureTypes([]);
-    setTypeFilter('all');
   };
 
-  const hasFilters = searchQuery || selectedCRs.length > 0 || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || typeFilter !== 'all';
+  const hasFilters = searchQuery || selectedCRs.length > 0 || selectedSizes.length > 0 || selectedCreatureTypes.length > 0;
 
   return (
     <Modal onClose={handleClose}>
@@ -271,15 +265,6 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
 
           {/* Filters Row */}
           <div className="flex flex-wrap items-center gap-2 mt-3">
-            {/* Type Filter */}
-            <div className="flex gap-1">
-              {['all', 'enemies', 'npcs'].map((f) => (
-                <button key={f} onClick={() => setTypeFilter(f)} className={`px-3 py-1 rounded-lg text-sm capitalize ${typeFilter === f ? 'bg-amber-700' : 'bg-stone-700 hover:bg-stone-600'}`}>{f}</button>
-              ))}
-            </div>
-
-            <div className="w-px h-6 bg-stone-700" />
-
             {/* CR Filter */}
             <FilterDropdown
               label="CR"
@@ -363,7 +348,7 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
                   key={t.id} 
                   className={`rounded-lg text-left transition-colors ${
                     isSelected 
-                      ? (t.isNpc ? 'bg-emerald-900/40 border-2 border-emerald-500' : 'bg-red-900/40 border-2 border-red-500')
+                      ? 'bg-red-900/40 border-2 border-red-500'
                       : 'bg-stone-800 border border-stone-700 hover:border-stone-500'
                   }`}
                 >
@@ -372,7 +357,7 @@ export const AddEnemyModal = ({ isOpen, onClose, onAdd, templates }) => {
                     className="w-full p-3 text-left"
                   >
                     <div className="flex items-center gap-2">
-                      {t.isNpc ? <Icons.Shield /> : <Icons.Skull />}
+                      <Icons.Skull />
                       <span className="font-medium">{t.name}</span>
                       {t.edition === '2024' && <span className="text-[10px] text-sky-300 bg-sky-900/30 px-1 rounded" title="2024 stat block (SRD 5.2.1)">2024</span>}
                       {isSelected && <span className="ml-auto text-xs bg-green-900/50 text-green-300 px-1.5 py-0.5 rounded">✓</span>}

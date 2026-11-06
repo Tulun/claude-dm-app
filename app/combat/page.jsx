@@ -199,7 +199,7 @@ export default function CombatPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(templates),
       }).then(() => {
-        showToast('Templates saved');
+        showToast('Monsters saved');
       }).catch(console.error);
     }, SAVE_DEBOUNCE_MS);
     return () => clearTimeout(timeout);

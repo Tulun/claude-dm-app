@@ -29,7 +29,7 @@ export default function Navbar({ saveStatus }) {
     if (pathname === '/characters') return 'characters';
     if (pathname === '/character') return 'characters';
     if (pathname === '/encounters') return 'encounters';
-    if (pathname === '/templates' || pathname?.startsWith('/templates/')) return 'templates';
+    if (pathname === '/monsters' || pathname?.startsWith('/monsters/')) return 'monsters';
     if (pathname === '/spellbook') return 'spellbook';
     if (pathname === '/magic-items') return 'magic-items';
     if (pathname === '/dm') return 'dm';
@@ -44,7 +44,7 @@ export default function Navbar({ saveStatus }) {
     { key: 'combat', label: 'Combat', href: '/combat', icon: Icons.Sword },
     { key: 'characters', label: 'Characters', href: '/characters', icon: Icons.Shield },
     { key: 'encounters', label: 'Encounters', href: '/encounters', icon: Icons.Scroll },
-    { key: 'templates', label: 'Templates', href: '/templates', icon: Icons.Book },
+    { key: 'monsters', label: 'Monsters', href: '/monsters', icon: Icons.Book },
     { key: 'dm', label: 'DM', href: '/dm', icon: Icons.Crown },
   ];
 

@@ -5,7 +5,7 @@
 // Urban); five entries were corrected to match the book. A monster can have
 // several habitats.
 // Keyed by the book's monster name; read through habitatsOf() in
-// app/templates/statBlock.js, which applies it to 2024 templates by name.
+// app/monsters/statBlock.js, which applies it to 2024 templates by name.
 export const MM2024_HABITATS = {
   "Aarakocra Aeromancer": ["Mountain","Planar (Elemental Plane of Air)"],
   "Aarakocra Skirmisher": ["Mountain","Planar (Elemental Plane of Air)"],

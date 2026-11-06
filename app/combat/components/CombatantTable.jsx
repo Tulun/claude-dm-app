@@ -80,7 +80,7 @@ const CombatantRow = ({ character, isEnemy, onUpdate, onRemove, templates }) => 
   const rowTint = isDead
     ? 'opacity-60'
     : isEnemy
-      ? (character.isNpc ? 'hover:bg-teal-950/30' : 'hover:bg-red-950/30')
+      ? 'hover:bg-red-950/30'
       : 'hover:bg-emerald-950/30';
 
   return (

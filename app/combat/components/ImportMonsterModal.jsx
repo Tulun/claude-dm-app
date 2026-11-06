@@ -4,7 +4,7 @@ import { useState, useRef, useMemo } from 'react';
 import Icons from '../../components/Icons';
 import Modal from '../../components/Modal';
 import { getMod } from '../../utils/rules';
-import { BOOK_OPTIONS } from '../../templates/statBlock';
+import { BOOK_OPTIONS } from '../../monsters/statBlock';
 
 // Must match MAX_IMAGES in app/api/parse-monster/route.js
 const MAX_IMAGES = 6;
@@ -472,7 +472,7 @@ const ImportMonsterModal = ({ isOpen, onClose, onImport, onUpdate, templates = [
                   </div>
 
                   <div className="text-xs text-stone-500">
-                    Note: Traits, Actions, and other stat block sections can be edited after import in the Templates tab.
+                    Note: Traits, Actions, and other stat block sections can be edited after import on the Monsters page.
                   </div>
                 </div>
               ) : (

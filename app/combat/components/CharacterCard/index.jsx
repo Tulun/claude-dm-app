@@ -66,19 +66,14 @@ const CharacterCard = ({ character, isEnemy, onUpdate, onRemove, onDuplicate, on
   
   const spellcastingInfo = parseSpellcasting(character);
   const enemySaves = isEnemy ? parseSavingThrows(character.savingThrows) : null;
-  const isNpc = character.isNpc;
-
-
-  // Determine card colors - NPCs get teal, enemies get red, party gets emerald
+  // Card colors - enemies get red, party gets emerald
   const cardColors = isDead 
     ? 'border-red-900/50 bg-stone-900/30 opacity-60' 
     : isEnemy 
-      ? (isNpc 
-          ? 'border-teal-800/50 bg-gradient-to-br from-teal-950/40 to-stone-900/60' 
-          : 'border-red-800/50 bg-gradient-to-br from-red-950/40 to-stone-900/60')
+      ? 'border-red-800/50 bg-gradient-to-br from-red-950/40 to-stone-900/60'
       : 'border-emerald-800/50 bg-gradient-to-br from-emerald-950/40 to-stone-900/60';
   
-  const iconBgColor = isEnemy ? (isNpc ? 'bg-teal-900/50' : 'bg-red-900/50') : 'bg-emerald-900/50';
+  const iconBgColor = isEnemy ? 'bg-red-900/50' : 'bg-emerald-900/50';
 
   // `stretch` (party grid only): the card fills its grid row and the collapsed
   // stat bar anchors to the bottom (mt-auto), so side-by-side cards line up
