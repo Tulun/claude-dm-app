@@ -40,4 +40,13 @@ export const RETIRED_DEFAULT_IDS = {
   'mm-faerie-dragon-youth': 'Faerie Dragon Youth',
   'mm-faerie-dragon-adult': 'Faerie Dragon Adult',
   'mm-fire-snake': 'Salamander Fire Snake',
+  'mm-half-ogre': 'Ogrillon Ogre',
+  'mm-ogrillon': 'Ogrillon Ogre',
+  'mm-thri-kreen': 'Thri-kreen Marauder',
+  'mm-yuan-ti-pureblood': 'Yuan-ti Infiltrator',
+  'mm-sahuagin-priestess': 'Sahuagin Priest',
+  'mm-yuan-ti-malison': 'Yuan-ti Malison (Type 1 / 2 / 3)',
+  'mm-lizard-king': 'Lizardfolk Sovereign',
+  'mm-cyclops': 'Cyclops Sentry',
+  'mm-grick-alpha': 'Grick Ancient',
 };

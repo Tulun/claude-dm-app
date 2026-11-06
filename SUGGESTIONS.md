@@ -146,11 +146,10 @@ context costs:
 
 ## 5. Bigger ideas (feature-adjacent)
 
-- [ ] **2024 Monster Manual coverage: 65 to add, 68 to update** (snapshot
-  2026-11-05) — every one of the 503 MM 2024 stat blocks is accounted for in
-  `MONSTERS.md`. Import case by case via Import Monster (screenshot from the
-  user's own Monster Manual); retire the 2014 id when importing a rename. Possible polish: have Import Monster set
-  `edition: '2024'` when it updates an existing template.
+- [ ] **2024 Monster Manual coverage: 53 left to update** (snapshot
+  2026-11-05, second pass) — all 503 MM 2024 stat blocks are in the app; 53
+  same-name built-ins still carry older stats. List in `MONSTERS.md`. Re-import
+  case by case via Import Monster (Update Existing).
 - [ ] **Use 2024 initiative bonuses** — SRD templates now carry `initiativeBonus`
   (e.g. Hobgoblin Captain +4 vs DEX +2) but enemy initiative still rolls off DEX.
 - [ ] **Per-monster legendary action uses** — SRD templates carry
@@ -231,9 +230,9 @@ context costs:
   beholder): modal holds an ordered, reorderable list (max 6);
   `/api/parse-monster` accepts `{ images: [...] }` (legacy `{ image }` still
   works) and sends them in one call with a merge-these-pieces prompt — Nov 2026.
-- [x] Renamed 2014 built-ins retired once the 2024 version is in the app (31:
-  22 with an SRD built-in replacement — Goblin, Kobold, Thug, … — plus 9 the
-  user imported — Modrons, Bullywug, Gas Spore, Faerie Dragons, Fire Snake).
+- [x] Renamed 2014 built-ins retired once the 2024 version is in the app (40:
+  22 with an SRD built-in replacement — Goblin, Kobold, Thug, … — plus 18 the
+  user imported — Modrons, Bullywug, Cyclops, Yuan-ti, Half-Ogre/Ogrillon, …).
   `app/data/retiredTemplates.js`; the templates route drops unedited saved
   copies on every GET/POST (edited copies kept). `MONSTERS.md` now lists all 503
   MM 2024 stat blocks by status — Nov 2026.
