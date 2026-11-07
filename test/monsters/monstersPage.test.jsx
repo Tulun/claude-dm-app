@@ -124,6 +124,29 @@ describe('Monsters library page', () => {
     expect(screen.getByText('Underdark', { selector: 'span' })).toBeInTheDocument();
   });
 
+  it('Flee Mortals monsters have their own tab, off Official and Custom, with no By Book index', async () => {
+    templates.push({ id: 'fm-test-brute', name: 'Testbeast Brute', source: 'custom', book: 'Flee Mortals', size: 'Large', creatureType: 'Monstrosity', cr: '4', ac: 15, maxHp: 60, speed: 30, traits: [], actions: [] });
+    try {
+      mockFetch();
+      render(<MonstersPage />);
+      await settle();
+      expect(screen.queryByText('Testbeast Brute')).not.toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'By Book' })).toBeInTheDocument();
+      // A book picked on Official doesn't hide everything on the Flee Mortals tab
+      fireEvent.click(screen.getByRole('button', { name: /^Book/ }));
+      fireEvent.click(screen.getByRole('button', { name: 'VGtM' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Flee Mortals' }));
+      expect(screen.getAllByTestId('template-row').map(r => r.textContent)).toEqual([expect.stringContaining('Testbeast Brute')]);
+      expect(screen.queryByRole('button', { name: 'By Book' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /^Book/ })).not.toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: 'Custom' }));
+      expect(screen.queryByText('Testbeast Brute')).not.toBeInTheDocument();
+      expect(screen.getByText('Goblin Boss')).toBeInTheDocument();
+    } finally {
+      templates.pop();
+    }
+  });
+
   it('a monster imported from an official book is listed under Official, not Custom', async () => {
     templates.push({ id: 'imported-9', name: 'Githyanki Knight', source: 'custom', book: 'MM 2024', cr: '8', ac: 18, maxHp: 117, speed: 30, traits: [], actions: [] });
     try {
@@ -194,12 +217,14 @@ describe('Monsters library page', () => {
     }
   });
 
-  it('Latest Conflux tab lists only the newest release, new before updated, read-only', async () => {
+  it('the Conflux tab\'s Latest filter lists only the newest release, new before updated, read-only', async () => {
     mockFetch();
     render(<MonstersPage />);
     await settle();
-    fireEvent.click(screen.getByRole('button', { name: 'Latest Conflux' }));
+    expect(screen.queryByRole('button', { name: /^Latest/ })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Conflux' }));
     await settle();
+    fireEvent.click(screen.getByRole('button', { name: 'Latest (1.58)' }));
     const rows = screen.getAllByTestId('template-row');
     expect(rows.map(r => r.querySelector('a').textContent)).toEqual([
       expect.stringContaining('River Otter'), expect.stringContaining('Gazer'), expect.stringContaining('Carrion Ghoul'),
@@ -210,6 +235,20 @@ describe('Monsters library page', () => {
     expect(rows[2].textContent).toContain('Updated');
     expect(screen.getByTitle('Updated in Conflux 1.58 (was Fleshseeker Ghoul)')).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /^Edit / })).not.toBeInTheDocument();
+    // Toggling it off brings back the whole list
+    fireEvent.click(screen.getByRole('button', { name: 'Latest (1.58)' }));
+    expect(screen.getByText('Old Ooze')).toBeInTheDocument();
+  });
+
+  it('a saved filter from the old Latest Conflux tab restores as Conflux + Latest', async () => {
+    sessionStorage.setItem('templates-library-filters', JSON.stringify({ sourceFilter: 'latest' }));
+    mockFetch();
+    render(<MonstersPage />);
+    await settle();
+    await settle();
+    expect(screen.getByRole('button', { name: 'Latest (1.58)' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.queryByText('Old Ooze')).not.toBeInTheDocument();
+    expect(screen.getByText('River Otter')).toBeInTheDocument();
   });
 
   it('the full Conflux tab badges the latest changes too', async () => {
@@ -273,6 +312,8 @@ describe('Monsters library page', () => {
     expect(screen.queryByRole('button', { name: 'By Conflux Group' })).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Conflux' }));
     await settle();
+    // Conflux creatures carry no book, so no By Book index
+    expect(screen.queryByRole('button', { name: 'By Book' })).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'By Conflux Group' }));
     // Catalog order (Aberrations before Oozes), creatures with no group last
     expect(screen.getAllByTestId('monster-group-section').map(h => h.textContent)).toEqual(['Aberrations', 'Oozes', 'Ungrouped']);

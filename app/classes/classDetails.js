@@ -118,8 +118,8 @@ export const CLASS_DETAILS = {
     ],
   },
   fighter: {
-    skillChoices: 'Choose 2: Acrobatics, Animal Handling, Athletics, History, Insight, Intimidation, Perception, or Survival',
-    startingEquipment: 'Choose A or B: (A) Chain Mail, Greatsword, Flail, 8 Javelins, Dungeoneer\'s Pack, and 4 GP; or (B) 175 GP',
+    skillChoices: 'Choose 2: Acrobatics, Animal Handling, Athletics, History, Insight, Intimidation, Perception, Persuasion, or Survival',
+    startingEquipment: 'Choose A, B, or C: (A) Chain Mail, Greatsword, Flail, 8 Javelins, Dungeoneer\'s Pack, and 4 GP; (B) Studded Leather Armor, Scimitar, Shortsword, Longbow, 20 Arrows, Quiver, Dungeoneer\'s Pack, and 11 GP; or (C) 155 GP',
     multiclass: { requirements: 'STR 13 or DEX 13', gains: 'Hit Point Die, proficiency with Martial weapons and Shields' },
     tableColumns: ['Second Wind', 'Weapon Mastery'],
     levelTable: [
@@ -175,7 +175,7 @@ export const CLASS_DETAILS = {
   },
   paladin: {
     skillChoices: 'Choose 2: Athletics, Insight, Intimidation, Medicine, Persuasion, or Religion',
-    startingEquipment: 'Choose A, B, or C: (A) Chain Mail, Shield, Longsword, 6 Javelins, Holy Symbol, Priest\'s Pack, and 9 GP; (B) 150 GP',
+    startingEquipment: 'Choose A or B: (A) Chain Mail, Shield, Longsword, 6 Javelins, Holy Symbol, Priest\'s Pack, and 9 GP; or (B) 150 GP',
     multiclass: { requirements: 'STR 13 and CHA 13', gains: 'Hit Point Die, proficiency with Martial weapons and Shields' },
     tableColumns: ['Channel Divinity', 'Spell Prep.', '1st', '2nd', '3rd', '4th', '5th'],
     levelTable: [
@@ -314,7 +314,7 @@ export const CLASS_DETAILS = {
     ],
   },
   wizard: {
-    skillChoices: 'Choose 2: Arcana, History, Insight, Investigation, Medicine, or Religion',
+    skillChoices: 'Choose 2: Arcana, History, Insight, Investigation, Medicine, Nature, or Religion',
     startingEquipment: 'Choose A or B: (A) 2 Daggers, Arcane Focus, Robe, Spellbook, Scholar\'s Pack, and 5 GP; or (B) 55 GP',
     multiclass: { requirements: 'INT 13', gains: 'Hit Point Die' },
     tableColumns: ['Cantrips', '1st', '2nd', '3rd', '4th', '5th'],

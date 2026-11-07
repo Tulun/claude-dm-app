@@ -146,6 +146,35 @@ context costs:
 
 ## 5. Bigger ideas (feature-adjacent)
 
+- [ ] **Character creator follow-ups** — (1) the combat page's quick
+  `AddPartyModal` (`app/combat/components/Modals.jsx`) is still the old flat form;
+  decide whether to keep it as the mid-combat quick add or link to
+  `/characters/new`. (2) Multi-select class features (Weapon Mastery, Invocations,
+  Metamagic) and feat spells (Magic Initiate) are still chosen on the sheet.
+  (3) Artificer creation rules live in `EXTRA_CLASS_RULES` because the /classes
+  reference data has no Artificer; the spellbook has no Artificer spells.
+  (4) Resource `recharge` is saved but the sheet doesn't show or use it yet (a
+  Short/Long Rest button could reset by it).
+
+- [ ] **SpellsTab prepared-spell cap is 2014-style** — `calculateMaxPrepared` in
+  `app/character/components/tabs/SpellsTab.jsx` uses level + ability mod (and only
+  Cleric/Druid/Paladin/Wizard); 2024 uses fixed per-level counts, now canonical in
+  `getSpellcastingLimits` (`app/utils/spellcasting.js`). Switching changes a sheet
+  behavior — check for a pinning test first.
+
+- [ ] **`CLASS_DETAILS` level-table errors** (`app/classes/classDetails.js`, shown on
+  /classes): Druid Wild Shape reaches 4 at level 16 (2024: 17); Paladin Channel
+  Divinity reaches 3 at 10 and 4 at 19 (2024: 3 at 11, never 4); the Ranger
+  "Favored Enemy" column holds dice, not uses; slot columns stop at 5th level.
+  The creator doesn't read these (it uses `classResources.js` / `spellcasting.js`).
+
+- [ ] **Flee, Mortals! mechanics in combat** — the 278 imported FM monsters work
+  as ordinary stat blocks, but the book's own rules are text only: **minions**
+  (any damage from an attack or failed save drops them to 0; group attacks),
+  and **villain actions** (stored as legendary actions at 1/round — the tracker
+  doesn't know each is once per encounter). FM conditions (dazed, horrified,
+  flanked…) aren't in the condition picker. Detect via the `Minion` trait /
+  `Villain Action` name prefix written by `scripts/import-flee-mortals.mjs`.
 - [ ] **30 Conflux creatures sit in "Ungrouped"** (Nov 2026 `conflux:groups` run) —
   mostly renamed since the 1.58 export or living only in the Cobra Codex docs under
   other names (Uchuulon, Cult Fanatic of the … NPCs). Next 5eTools export should
@@ -190,6 +219,22 @@ context costs:
 ---
 
 ## Completed log
+- [x] **Character creation stepper** (Nov 2026) — `/characters/new?type=party|dm-npc`
+  replaces the flat New DM NPC / Add Party Member modals with a full-page
+  D&D Beyond-style build: Basics → Class (level, subclass, class skills,
+  single-choice class features) → Background (2024: skills, tool, origin feat,
+  +2/+1 or +1/+1/+1) → Species (2024 PHB, lineages, Human skill + feat) →
+  Abilities (standard array / point buy / manual + 4d6 roll) → Equipment (class
+  A/B/C + background package or 50 GP → real weapon/armor inventory items, AC
+  computed) → Details (alignment, languages, personality/ideals/bonds/flaws) →
+  Review (fixed or manual HP). Only the name is required ("Create now").
+  Follow-up (same month): multiclass rows in the Class step, a Spells step that
+  appears for caster classes (2024 cantrip/prepared counts, slot-level cap), and a
+  Resources step seeding class/species/feat uses + spell slots (editable, with
+  custom rows); new canonical `app/utils/spellcasting.js`.
+  Pure logic in `app/characters/creation/buildCharacter.js`; class rules are
+  parsed from `CLASS_DETAILS` strings (fixed Fighter/Paladin/Wizard 2024 errors
+  there); BACKGROUNDS gained `tool` + `equipment`.
 - [x] **By Conflux Group** index on the Conflux library tabs: Conflux's own
   families (Aboleths, Goblins…) under the catalog's sections, CR range +
   Homebrewery link per family; the monster page links its group(s).
@@ -652,6 +697,16 @@ context costs:
 - [x] **Import Monster: closing mid-parse no longer drops the parse** (2026-11-06) —
   `handleClose` skips its reset while `isParsing`, so reopening shows
   "Parsing stat block..." and then the result.
+- [x] **Flee, Mortals! import** (2026-11-06) — `npm run fm:import` parses the
+  user's MCDM PDF locally and added 278 stat blocks (book `Flee Mortals`) to
+  `data/templates.json`; 7 already hand-imported (the Gnoll Abyssal set,
+  Abyssal Hyena, Lizardfolk Bloodeye) were skipped. Follow-ups: minion rules
+  (one-hit death, group attacks) and villain actions are plain text in combat —
+  see §5. Follow-up (2026-11-07): Flee Mortals got its own library tab —
+  Official is now Wizards of the Coast only (`librarySection` in
+  `app/monsters/statBlock.js`), and By Book is hidden on the Conflux tabs and
+  the Flee Mortals tab. Same day: the Latest Conflux tab became a **Latest**
+  filter toggle on the Conflux tab.
 - [x] **2024 habitats** (2026-11-06) — all 503 MM 2024 stat blocks carry the
   book's habitats (multiple per monster), shown on the monster page and
   filterable in the library. Lookup in `app/data/monsterHabitats.js`, applied by

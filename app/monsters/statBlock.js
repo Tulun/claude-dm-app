@@ -50,21 +50,34 @@ export const confluxChange = (t, version) => {
 
 const isBuiltIn = (t) => String(t?.id ?? '').startsWith('mm-') && t?.source !== 'custom';
 
-// Official stat block = a built-in, or anything tagged with a real book
-// (every book except "Homebrew") — e.g. a monster imported from the 2024
-// Monster Manual. Drives the library's Official / Custom tabs.
+// MCDM's Flee, Mortals! — third-party, so it has its own library tab rather
+// than sitting under Official. Must match BOOK in scripts/import-flee-mortals.mjs.
+export const FLEE_MORTALS = 'Flee Mortals';
+export const isFleeMortals = (t) => {
+  if (isConfluxId(t?.id) || t?.source === 'conflux') return false;
+  return String(t?.book ?? '').trim().toLowerCase() === FLEE_MORTALS.toLowerCase();
+};
+
+// Official stat block = Wizards of the Coast: a built-in, or anything tagged
+// with a real book other than "Homebrew" and Flee Mortals — e.g. a monster
+// imported from the 2024 Monster Manual. Drives the library's Official /
+// Flee Mortals / Custom tabs (librarySection).
 export const isOfficial = (t) => {
   if (isConfluxId(t?.id) || t?.source === 'conflux') return false;
   if (isBuiltIn(t)) return true;
+  if (isFleeMortals(t)) return false;
   const book = String(t?.book ?? '').trim();
   return !!book && !/^homebrew$/i.test(book);
 };
+
+// Which saved-library tab a (non-Conflux) template is listed under.
+export const librarySection = (t) => (isOfficial(t) ? 'official' : isFleeMortals(t) ? 'fm' : 'custom');
 
 // Where the template came from — for the header badge (the book has its own).
 export const sourceLabel = (t) => {
   if (isConfluxId(t?.id) || t?.source === 'conflux') return 'Conflux';
   if (isBuiltIn(t)) return 'Built-in';
-  return isOfficial(t) ? 'Imported' : 'Custom';
+  return isOfficial(t) || isFleeMortals(t) ? 'Imported' : 'Custom';
 };
 
 // Which book a stat block comes from ("MM 2014", "MM 2024", "VGtM", …) —
@@ -72,7 +85,7 @@ export const sourceLabel = (t) => {
 // built-in / Conflux / custom and drives the library's source tabs and the
 // built-in migration). Untagged built-ins fall back to their edition (or 2024
 // markers) so the library labels them without writing anything to disk.
-export const BOOK_OPTIONS = ['MM 2014', 'MM 2024', 'MPMM', 'VGtM', 'MToF', 'FToD', 'BGG', 'Homebrew'];
+export const BOOK_OPTIONS = ['MM 2014', 'MM 2024', 'MPMM', 'VGtM', 'MToF', 'FToD', 'BGG', FLEE_MORTALS, 'Homebrew'];
 
 export const defaultBook = (t) => {
   if (!t || isConfluxId(t.id) || t.source === 'conflux') return null;

@@ -32,6 +32,7 @@ OBSIDIAN_VAULT_PATH=/path/to/vault   # enables the read-only Campaign tab on /dm
 | `npm run test:watch` | Vitest watch mode |
 | `npm run conflux:import -- <export.json>` | Rebuild the Conflux creature list from a new release (see below) |
 | `npm run conflux:groups` | Rebuild the Conflux creature-group index from the newest Individual Links PDF (see below) |
+| `npm run fm:import -- "<Flee, Mortals! PDF>"` | Import the Flee, Mortals! stat blocks from your own PDF into the monster library (see below) |
 
 ## Pages
 
@@ -49,6 +50,33 @@ SUGGESTIONS.md for the trade-offs). Pages fetch on mount and auto-save with
 debounced POSTs to the API routes under `app/api/`. Treat `data/` as
 production data: never truncate or regenerate it by hand.
 
+## Importing Flee, Mortals! (MCDM)
+
+With your own copy of the *Flee, Mortals!* PDF, every monster stat block can go
+into the monster library in one pass — parsed locally from the PDF's text, no
+AI or network:
+
+```bash
+npm run fm:import -- "~/Desktop/dnd-manuals/Flee, Mortals! The MCDM Monster Book v1.1.pdf" --dry-run
+```
+
+Drop `--dry-run` to write `data/templates.json` (the previous copy is kept as
+`data/templates.json.bak`), then reload any open Monsters page — an open page
+saves its whole list back and would otherwise drop the new monsters.
+
+- Monsters get the book **Flee Mortals**, ids `fm-<name>`, and show on the
+  library's own **Flee Mortals** tab (Official is Wizards of the Coast only); role (Brute, Minion, Solo…) and alignment go in the notes.
+  XP is the book's own (minions are worth far less than their CR).
+- **Villain actions** become legendary actions named `Villain Action 1: …`
+  at 1 per round; the "three villain actions…" rule text goes in the notes.
+  **Utility spells** become a `Spellcasting (Utility Spells)` trait the combat
+  tracker reads.
+- Re-running only adds what's missing: already-imported `fm-*` monsters keep
+  your edits (`--force` overwrites them). A monster you'd already added by hand
+  as a custom template (same name, no book) is skipped, not duplicated.
+- Retainers and beastheart companions (level-scaled, no CR) and the optional
+  feature tables are skipped. `--verbose` lists everything skipped.
+
 ## Updating Conflux creatures
 
 The Conflux list (`public/data/conflux-creatures.json`) is generated, not
@@ -62,7 +90,7 @@ npm run conflux:import -- ~/Desktop/conflux/ConfluxCreatures_1.58_5eTools.json -
 `--dry-run` prints what would change (added / renamed / updated / removed)
 without writing anything. Drop it to write the file, then **restart
 `npm run dev`** (the API caches the list in memory). The new and updated
-creatures show up under **Monsters → Latest Conflux**.
+creatures show up under **Monsters → Conflux → Latest**.
 
 - The release version comes from the file name (`_1.58_`). If a file is
   named differently, add `--version 1.58`.

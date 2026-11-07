@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   parseAlignment, getInitiativeBonus, getLegendaryUses, splitDescription, splitList, xpForCr, profForCr,
-  toEditForm, fromEditForm, sameTemplate, sourceLabel, isConfluxId, latestConfluxVersion, confluxChange, isOfficial, bookLabel, defaultBook, splitLore,
+  toEditForm, fromEditForm, sameTemplate, sourceLabel, isConfluxId, latestConfluxVersion, confluxChange, isOfficial, isFleeMortals, librarySection, bookLabel, defaultBook, splitLore,
   habitatsOf, compareHabitats,
 } from '../../app/monsters/statBlock.js';
 import { MM2024_HABITATS } from '../../app/data/monsterHabitats.js';
@@ -58,6 +58,16 @@ describe('stat block display helpers', () => {
     expect(isOfficial(beholder)).toBe(true);
     expect(isOfficial({ id: 'cc-x', book: 'MM 2024' })).toBe(false);
     expect(sourceLabel({ id: 'cc-aboleth' })).toBe('Conflux');
+    // Flee Mortals (MCDM) is third-party: its own tab, not Official.
+    const fm = { id: 'fm-angulotl-needler', source: 'custom', book: 'Flee Mortals' };
+    expect(isOfficial(fm)).toBe(false);
+    expect(isFleeMortals(fm)).toBe(true);
+    expect(isFleeMortals({ id: 'tpl-1', book: ' flee mortals ' })).toBe(true);
+    expect(isFleeMortals({ id: 'cc-x', book: 'Flee Mortals' })).toBe(false);
+    expect(sourceLabel(fm)).toBe('Imported');
+    expect(librarySection(fm)).toBe('fm');
+    expect(librarySection(beholder)).toBe('official');
+    expect(librarySection({ id: 'tpl-1', book: 'Homebrew' })).toBe('custom');
     expect(isConfluxId('cc-aboleth')).toBe(true);
     expect(isConfluxId('mm-aboleth')).toBe(false);
   });

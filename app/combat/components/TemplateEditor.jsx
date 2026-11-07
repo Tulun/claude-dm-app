@@ -4,7 +4,7 @@ import { Fragment, useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Icons from '../../components/Icons';
 import { sizeMatches } from '../monsterAbilities';
-import { bookLabel, isOfficial, habitatsOf, compareHabitats, latestConfluxVersion, confluxChange } from '../../monsters/statBlock';
+import { bookLabel, librarySection, habitatsOf, compareHabitats, latestConfluxVersion, confluxChange } from '../../monsters/statBlock';
 import { GROUPINGS, GROUPING_KEYS, groupMonsters, groupAnchorId, groupingKeysFor, NO_BOOK, CREATURE_TYPES as CREATURE_TYPE_OPTIONS } from '../../monsters/groupMonsters';
 
 // CR ordered list for range filter
@@ -218,15 +218,18 @@ const readSavedView = () => {
 // "Small Plant" — size + creature type, whichever exist.
 const typeLine = (t) => [t.size, t.creatureType].filter(Boolean).join(' ');
 
-// Source tabs. 'latest' is the Conflux list narrowed to the newest release's
-// new and updated creatures (see confluxChange in app/monsters/statBlock.js).
+// Source tabs. The Conflux tab has a "Latest" filter that narrows it to the
+// newest release's new and updated creatures (confluxChange in
+// app/monsters/statBlock.js) — it used to be a tab of its own ('latest').
+// 'default' (Official = Wizards of the Coast books), 'fm' and 'custom' split
+// the saved library by librarySection; the two Conflux tabs are read-only.
 const SOURCE_TABS = [
   { key: 'default', label: 'Official' },
+  { key: 'fm', label: 'Flee Mortals' },
   { key: 'conflux', label: 'Conflux' },
-  { key: 'latest', label: 'Latest Conflux' },
   { key: 'custom', label: 'Custom' },
 ];
-const isConfluxTab = (src) => src === 'conflux' || src === 'latest';
+const isConfluxTab = (src) => src === 'conflux';
 
 // Sidebar "browse by" modes: 'all' is the card/list view; the rest are the
 // book-appendix style grouped indexes (app/monsters/groupMonsters.js).
@@ -368,7 +371,9 @@ const TemplateEditor = ({ templates, onDelete }) => {
   // after the client-side templates fetch, so reading sessionStorage in the
   // initializers can't cause a hydration mismatch.
   const [saved] = useState(readSavedFilters);
-  const [sourceFilter, setSourceFilter] = useState(SOURCE_TABS.some(s => s.key === saved.sourceFilter) ? saved.sourceFilter : 'default');
+  // A saved 'latest' (the old Latest Conflux tab) restores as Conflux + the Latest filter.
+  const [sourceFilter, setSourceFilter] = useState(saved.sourceFilter === 'latest' ? 'conflux' : SOURCE_TABS.some(s => s.key === saved.sourceFilter) ? saved.sourceFilter : 'default');
+  const [latestOnly, setLatestOnly] = useState(saved.sourceFilter === 'latest' || saved.latestOnly === true);
   const [confluxTemplates, setConfluxTemplates] = useState([]);
   const [confluxLoading, setConfluxLoading] = useState(false);
   const [confluxLoaded, setConfluxLoaded] = useState(false);
@@ -410,9 +415,9 @@ const TemplateEditor = ({ templates, onDelete }) => {
   }, []);
   useEffect(() => {
     try {
-      sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({ searchQuery, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats, browseBy }));
+      sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({ searchQuery, sourceFilter, latestOnly, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats, browseBy }));
     } catch { /* storage unavailable — filters just won't persist */ }
-  }, [searchQuery, sourceFilter, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats, browseBy]);
+  }, [searchQuery, sourceFilter, latestOnly, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats, browseBy]);
 
   // Get the active template list based on source filter
   const latestVersion = useMemo(() => latestConfluxVersion(confluxTemplates), [confluxTemplates]);
@@ -422,8 +427,13 @@ const TemplateEditor = ({ templates, onDelete }) => {
       .filter(t => confluxChange(t, latestVersion))
       .sort((a, b) => order[confluxChange(a, latestVersion)] - order[confluxChange(b, latestVersion)]);
   }, [confluxTemplates, latestVersion]);
-  const activeTemplates = sourceFilter === 'conflux' ? confluxTemplates : sourceFilter === 'latest' ? latestTemplates : templates;
   const readOnly = isConfluxTab(sourceFilter);
+  // The tab's own list — the Book / Habitat / type filters offer only what it holds.
+  const activeTemplates = useMemo(() => {
+    if (sourceFilter === 'conflux') return latestOnly ? latestTemplates : confluxTemplates;
+    const section = sourceFilter === 'default' ? 'official' : sourceFilter;
+    return (templates || []).filter(t => librarySection(t) === section);
+  }, [sourceFilter, latestOnly, confluxTemplates, latestTemplates, templates]);
 
   // Get available creature types from active templates
   const availableCreatureTypes = useMemo(() => {
@@ -442,6 +452,8 @@ const TemplateEditor = ({ templates, onDelete }) => {
     const books = new Set((activeTemplates || []).map(t => bookLabel(t) || NO_BOOK));
     return [...books].sort((a, b) => (a === NO_BOOK) - (b === NO_BOOK) || a.localeCompare(b));
   }, [activeTemplates]);
+  // A book picked on another tab doesn't apply here (its dropdown may be hidden).
+  const activeBooks = useMemo(() => selectedBooks.filter(b => availableBooks.includes(b)), [selectedBooks, availableBooks]);
 
   // Habitats present in the active list (2024 Monster Manual stat blocks — see habitatsOf).
   const availableHabitats = useMemo(() => {
@@ -455,10 +467,6 @@ const TemplateEditor = ({ templates, onDelete }) => {
 
   const filtered = useMemo(() => {
     return (activeTemplates || []).filter(t => {
-      // Official (built-ins + book-tagged imports) vs Custom (everything else)
-      if (sourceFilter === 'custom' && isOfficial(t)) return false;
-      if (sourceFilter === 'default' && !isOfficial(t)) return false;
-      
       // Search filter
       if (searchQuery.trim() && !t.name.toLowerCase().includes(searchQuery.trim().toLowerCase())) return false;
       
@@ -482,18 +490,18 @@ const TemplateEditor = ({ templates, onDelete }) => {
       }
       
       // Source book filter
-      if (selectedBooks.length > 0 && !selectedBooks.includes(bookLabel(t) || NO_BOOK)) return false;
+      if (activeBooks.length > 0 && !activeBooks.includes(bookLabel(t) || NO_BOOK)) return false;
 
       // Habitat filter — matches a monster listed under ANY selected habitat
       if (selectedHabitats.length > 0 && !habitatsOf(t).some(h => selectedHabitats.includes(h))) return false;
 
       return true;
     });
-  }, [activeTemplates, sourceFilter, searchQuery, crMin, crMax, selectedSizes, selectedCreatureTypes, selectedBooks, selectedHabitats]);
+  }, [activeTemplates, searchQuery, crMin, crMax, selectedSizes, selectedCreatureTypes, activeBooks, selectedHabitats]);
 
   // The saved choice survives a trip to a tab that doesn't offer it (the
   // Conflux grouping elsewhere) — it just shows All Monsters meanwhile.
-  const browseModes = useMemo(() => ['all', ...groupingKeysFor(readOnly)], [readOnly]);
+  const browseModes = useMemo(() => ['all', ...groupingKeysFor(readOnly, { singleBook: sourceFilter === 'fm' })], [readOnly, sourceFilter]);
   const activeBrowse = browseModes.includes(browseBy) ? browseBy : 'all';
   const groups = useMemo(() => (activeBrowse === 'all' ? [] : groupMonsters(filtered, activeBrowse)), [filtered, activeBrowse]);
 
@@ -505,10 +513,11 @@ const TemplateEditor = ({ templates, onDelete }) => {
     setSelectedCreatureTypes([]);
     setSelectedBooks([]);
     setSelectedHabitats([]);
+    setLatestOnly(false);
     setSourceFilter('default');
   };
 
-  const hasFilters = searchQuery || crMin !== null || crMax !== null || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || selectedBooks.length > 0 || selectedHabitats.length > 0 || sourceFilter !== 'default';
+  const hasFilters = searchQuery || crMin !== null || crMax !== null || selectedSizes.length > 0 || selectedCreatureTypes.length > 0 || activeBooks.length > 0 || selectedHabitats.length > 0 || latestOnly || sourceFilter !== 'default';
 
   return (
     <div className="flex flex-col lg:flex-row gap-4">
@@ -586,6 +595,15 @@ const TemplateEditor = ({ templates, onDelete }) => {
           />
         )}
 
+        {/* Conflux: only the newest release's new + updated creatures */}
+        {readOnly && (
+          <button onClick={() => setLatestOnly(v => !v)} aria-pressed={latestOnly}
+            title={latestVersion ? `Only creatures new or updated in Conflux ${latestVersion}` : 'No release changes recorded yet'}
+            className={`px-3 py-1.5 rounded-lg text-sm ${latestOnly ? 'bg-emerald-800 text-emerald-100' : 'bg-stone-700 hover:bg-stone-600'}`}>
+            Latest{latestVersion ? ` (${latestVersion})` : ''}
+          </button>
+        )}
+
         {/* Habitat Filter */}
         {availableHabitats.length > 0 && (
           <FilterDropdown
@@ -623,7 +641,7 @@ const TemplateEditor = ({ templates, onDelete }) => {
               <button onClick={() => toggleFilter(setSelectedSizes)(size)} className="hover:text-white">×</button>
             </span>
           ))}
-          {selectedBooks.map(b => (
+          {activeBooks.map(b => (
             <span key={`book-${b}`} className="px-2 py-0.5 bg-sky-900/50 text-sky-300 rounded text-xs flex items-center gap-1">
               {b}
               <button onClick={() => toggleFilter(setSelectedBooks)(b)} className="hover:text-white">×</button>
@@ -644,7 +662,7 @@ const TemplateEditor = ({ templates, onDelete }) => {
         </div>
       )}
 
-      {sourceFilter === 'latest' && confluxLoaded && (
+      {readOnly && latestOnly && confluxLoaded && (
         <div className="rounded-lg border border-emerald-800/50 bg-emerald-950/30 px-3 py-2 text-sm text-stone-300">
           {latestVersion ? (
             <>

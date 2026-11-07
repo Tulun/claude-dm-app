@@ -20,6 +20,7 @@ with debounced POSTs.
 - `npm run dev` · `npm run build` · `npm test` (vitest run) · `npm run test:watch`
 - `npm run conflux:import -- <ConfluxCreatures_X.YY_5eTools.json> [--dry-run]` — regenerate the Conflux list (details: `dm-app-map` skill § Data)
 - `npm run conflux:groups [-- <pdf or folder>] [--dry-run] [--force]` — regenerate the Conflux creature-group index from the newest Individual Links PDF in ~/Desktop/conflux (same section)
+- `npm run fm:import -- "<Flee, Mortals! PDF>" [--dry-run] [--force]` — import the book's stat blocks into `data/templates.json` (details: `dm-app-map` skill § Data)
 - `npm run lint` (0 errors expected) · `npm run format:check` (Prettier configured; no mass-reformat has been run)
 
 ## Non-negotiables

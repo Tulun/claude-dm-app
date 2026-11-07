@@ -1479,14 +1479,14 @@
     "companionsEnabled": false
   },
   {
-    "id": "npc-init-1775957421593",
+    "id": "npc-init-1794062878238-ysw0qhebp",
     "name": "Vesna Alraed",
     "class": "Ranger",
     "level": 3,
     "ac": 10,
     "maxHp": 31,
     "currentHp": 31,
-    "initiative": 5,
+    "initiative": -1,
     "speed": 30,
     "str": 12,
     "dex": 16,
@@ -1544,7 +1544,6 @@
     "classFeatures": {
       "Ranger:Fighting Style": "Dueling"
     },
-    "sourceNpcId": "dm-npc-1775612806598",
-    "tempHp": 0
+    "sourceNpcId": "dm-npc-1775612806598"
   }
 ]

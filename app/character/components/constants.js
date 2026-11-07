@@ -1312,24 +1312,26 @@ export const CLASS_FEATURES = {
   },
 };
 
-// 2024 D&D Backgrounds with their skill proficiencies and origin feats
+// 2024 D&D Backgrounds: skill proficiencies, origin feat, ability-score options,
+// tool proficiency, and starting equipment package (A; the alternative is 50 GP).
+// The character-creation stepper (app/characters/creation) reads all of these.
 export const BACKGROUNDS = [
-  { name: 'Acolyte', skills: ['Insight', 'Religion'], feat: 'Magic Initiate (Cleric)', abilities: ['INT', 'WIS', 'CHA'] },
-  { name: 'Artisan', skills: ['Investigation', 'Persuasion'], feat: 'Crafter', abilities: ['STR', 'DEX', 'INT'] },
-  { name: 'Charlatan', skills: ['Deception', 'Sleight of Hand'], feat: 'Skilled', abilities: ['DEX', 'CON', 'CHA'] },
-  { name: 'Criminal', skills: ['Sleight of Hand', 'Stealth'], feat: 'Alert', abilities: ['DEX', 'CON', 'INT'] },
-  { name: 'Entertainer', skills: ['Acrobatics', 'Performance'], feat: 'Musician', abilities: ['STR', 'DEX', 'CHA'] },
-  { name: 'Farmer', skills: ['Animal Handling', 'Nature'], feat: 'Tough', abilities: ['STR', 'CON', 'WIS'] },
-  { name: 'Guard', skills: ['Athletics', 'Perception'], feat: 'Alert', abilities: ['STR', 'CON', 'WIS'] },
-  { name: 'Guide', skills: ['Stealth', 'Survival'], feat: 'Magic Initiate (Druid)', abilities: ['DEX', 'CON', 'WIS'] },
-  { name: 'Hermit', skills: ['Medicine', 'Religion'], feat: 'Healer', abilities: ['INT', 'WIS', 'CHA'] },
-  { name: 'Merchant', skills: ['Animal Handling', 'Persuasion'], feat: 'Lucky', abilities: ['CON', 'INT', 'CHA'] },
-  { name: 'Noble', skills: ['History', 'Persuasion'], feat: 'Skilled', abilities: ['STR', 'INT', 'CHA'] },
-  { name: 'Sage', skills: ['Arcana', 'History'], feat: 'Magic Initiate (Wizard)', abilities: ['CON', 'INT', 'WIS'] },
-  { name: 'Sailor', skills: ['Acrobatics', 'Perception'], feat: 'Tavern Brawler', abilities: ['STR', 'DEX', 'WIS'] },
-  { name: 'Scribe', skills: ['Investigation', 'Perception'], feat: 'Skilled', abilities: ['DEX', 'INT', 'WIS'] },
-  { name: 'Soldier', skills: ['Athletics', 'Intimidation'], feat: 'Savage Attacker', abilities: ['STR', 'DEX', 'CON'] },
-  { name: 'Wayfarer', skills: ['Insight', 'Stealth'], feat: 'Lucky', abilities: ['DEX', 'WIS', 'CHA'] },
+  { name: 'Acolyte', skills: ['Insight', 'Religion'], feat: 'Magic Initiate (Cleric)', abilities: ['INT', 'WIS', 'CHA'], tool: 'Calligrapher\'s Supplies', equipment: 'Calligrapher\'s Supplies, Book (prayers), Holy Symbol, Parchment (10 sheets), Robe, and 8 GP' },
+  { name: 'Artisan', skills: ['Investigation', 'Persuasion'], feat: 'Crafter', abilities: ['STR', 'DEX', 'INT'], tool: 'Artisan\'s Tools', equipment: 'Artisan\'s Tools, 2 Pouches, Traveler\'s Clothes, and 32 GP' },
+  { name: 'Charlatan', skills: ['Deception', 'Sleight of Hand'], feat: 'Skilled', abilities: ['DEX', 'CON', 'CHA'], tool: 'Forgery Kit', equipment: 'Forgery Kit, Costume, Fine Clothes, and 15 GP' },
+  { name: 'Criminal', skills: ['Sleight of Hand', 'Stealth'], feat: 'Alert', abilities: ['DEX', 'CON', 'INT'], tool: 'Thieves\' Tools', equipment: '2 Daggers, Thieves\' Tools, Crowbar, 2 Pouches, Traveler\'s Clothes, and 16 GP' },
+  { name: 'Entertainer', skills: ['Acrobatics', 'Performance'], feat: 'Musician', abilities: ['STR', 'DEX', 'CHA'], tool: 'Musical Instrument', equipment: 'Musical Instrument, 2 Costumes, Mirror, Perfume, Traveler\'s Clothes, and 11 GP' },
+  { name: 'Farmer', skills: ['Animal Handling', 'Nature'], feat: 'Tough', abilities: ['STR', 'CON', 'WIS'], tool: 'Carpenter\'s Tools', equipment: 'Sickle, Carpenter\'s Tools, Healer\'s Kit, Iron Pot, Shovel, Traveler\'s Clothes, and 30 GP' },
+  { name: 'Guard', skills: ['Athletics', 'Perception'], feat: 'Alert', abilities: ['STR', 'CON', 'WIS'], tool: 'Gaming Set', equipment: 'Spear, Light Crossbow, 20 Bolts, Gaming Set, Hooded Lantern, Manacles, Quiver, Traveler\'s Clothes, and 12 GP' },
+  { name: 'Guide', skills: ['Stealth', 'Survival'], feat: 'Magic Initiate (Druid)', abilities: ['DEX', 'CON', 'WIS'], tool: 'Cartographer\'s Tools', equipment: 'Shortbow, 20 Arrows, Cartographer\'s Tools, Bedroll, Quiver, Tent, Traveler\'s Clothes, and 3 GP' },
+  { name: 'Hermit', skills: ['Medicine', 'Religion'], feat: 'Healer', abilities: ['INT', 'WIS', 'CHA'], tool: 'Herbalism Kit', equipment: 'Quarterstaff, Herbalism Kit, Bedroll, Book (philosophy), Lamp, Oil (3 flasks), Traveler\'s Clothes, and 16 GP' },
+  { name: 'Merchant', skills: ['Animal Handling', 'Persuasion'], feat: 'Lucky', abilities: ['CON', 'INT', 'CHA'], tool: 'Navigator\'s Tools', equipment: 'Navigator\'s Tools, 2 Pouches, Traveler\'s Clothes, and 22 GP' },
+  { name: 'Noble', skills: ['History', 'Persuasion'], feat: 'Skilled', abilities: ['STR', 'INT', 'CHA'], tool: 'Gaming Set', equipment: 'Gaming Set, Fine Clothes, Perfume, and 29 GP' },
+  { name: 'Sage', skills: ['Arcana', 'History'], feat: 'Magic Initiate (Wizard)', abilities: ['CON', 'INT', 'WIS'], tool: 'Calligrapher\'s Supplies', equipment: 'Quarterstaff, Calligrapher\'s Supplies, Book (history), Parchment (8 sheets), Robe, and 8 GP' },
+  { name: 'Sailor', skills: ['Acrobatics', 'Perception'], feat: 'Tavern Brawler', abilities: ['STR', 'DEX', 'WIS'], tool: 'Navigator\'s Tools', equipment: 'Dagger, Navigator\'s Tools, Rope, Traveler\'s Clothes, and 20 GP' },
+  { name: 'Scribe', skills: ['Investigation', 'Perception'], feat: 'Skilled', abilities: ['DEX', 'INT', 'WIS'], tool: 'Calligrapher\'s Supplies', equipment: 'Calligrapher\'s Supplies, Fine Clothes, Lamp, Oil (3 flasks), Parchment (12 sheets), and 23 GP' },
+  { name: 'Soldier', skills: ['Athletics', 'Intimidation'], feat: 'Savage Attacker', abilities: ['STR', 'DEX', 'CON'], tool: 'Gaming Set', equipment: 'Spear, Shortbow, 20 Arrows, Gaming Set, Healer\'s Kit, Quiver, Traveler\'s Clothes, and 14 GP' },
+  { name: 'Wayfarer', skills: ['Insight', 'Stealth'], feat: 'Lucky', abilities: ['DEX', 'WIS', 'CHA'], tool: 'Thieves\' Tools', equipment: '2 Daggers, Thieves\' Tools, Gaming Set, Bedroll, 2 Pouches, Traveler\'s Clothes, and 16 GP' },
 ];
 
 export const ADVANTAGE_OPTIONS = [

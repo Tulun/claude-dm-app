@@ -83,35 +83,13 @@ describe('CharactersPage — loading', () => {
 });
 
 describe('CharactersPage — DM NPC management', () => {
-  it('creates a new NPC through the form and persists it', async () => {
-    const fetchMock = mockFetch();
-    const { container } = render(<CharactersPage />);
+  it('links Add and New NPC to the full-page creator', async () => {
+    mockFetch();
+    render(<CharactersPage />);
     await settle();
-    fetchMock.mockClear();
 
-    fireEvent.click(screen.getByText('New NPC'));
-    fireEvent.change(container.querySelector('input[name="npcName"]'), { target: { value: 'Captain Reva' } });
-    fireEvent.change(container.querySelector('input[name="npcClass"]'), { target: { value: 'Fighter' } });
-    fireEvent.change(container.querySelector('input[name="npcHP"]'), { target: { value: '30' } });
-
-    // jsdom does not implement named property access on forms (form.npcName),
-    // which the submit handler relies on — shim it the way browsers behave.
-    const form = container.querySelector('form');
-    for (const el of form.elements) {
-      if (el.name) form[el.name] = el;
-    }
-    fireEvent.click(screen.getByText('Create NPC'));
-
-    expect(screen.getByText('Captain Reva')).toBeInTheDocument();
-
-    await act(async () => { vi.advanceTimersByTime(1100); });
-    await flush();
-
-    const saves = postCalls(fetchMock, '/api/dm-npcs');
-    expect(saves).toHaveLength(1);
-    const saved = JSON.parse(saves[0][1].body);
-    const reva = saved.find((n) => n.name === 'Captain Reva');
-    expect(reva).toMatchObject({ class: 'Fighter', maxHp: 30, currentHp: 30, isDmNpc: true, level: 1 });
+    expect(screen.getByText('Add').closest('a')).toHaveAttribute('href', '/characters/new?type=party');
+    expect(screen.getByText('New NPC').closest('a')).toHaveAttribute('href', '/characters/new?type=dm-npc');
   });
 
   it('adds an NPC to the party as a linked copy', async () => {

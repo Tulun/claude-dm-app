@@ -72,8 +72,14 @@ describe('groupMonsters — Conflux groups', () => {
   });
 
   it('is offered only on the Conflux tabs', () => {
-    expect(groupingKeysFor(true)).toEqual(GROUPING_KEYS);
+    expect(groupingKeysFor(true)).toContain('conflux');
     expect(groupingKeysFor(false)).not.toContain('conflux');
     expect(groupingKeysFor(false)).toContain('habitat');
+  });
+
+  it('By Book is left off the Conflux tabs (no books) and single-book tabs', () => {
+    expect(groupingKeysFor(false)).toContain('book');
+    expect(groupingKeysFor(true)).toEqual(GROUPING_KEYS.filter(k => k !== 'book'));
+    expect(groupingKeysFor(false, { singleBook: true })).toEqual(['habitat', 'type', 'cr']);
   });
 });

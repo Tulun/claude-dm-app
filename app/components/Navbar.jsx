@@ -26,7 +26,7 @@ export default function Navbar({ saveStatus }) {
   // Determine active page from pathname
   const getActivePage = () => {
     if (pathname === '/combat') return 'combat';
-    if (pathname === '/characters') return 'characters';
+    if (pathname === '/characters' || pathname?.startsWith('/characters/')) return 'characters';
     if (pathname === '/character') return 'characters';
     if (pathname === '/encounters') return 'encounters';
     if (pathname === '/monsters' || pathname?.startsWith('/monsters/')) return 'monsters';

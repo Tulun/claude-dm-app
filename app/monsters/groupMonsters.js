@@ -66,6 +66,7 @@ export const GROUPINGS = {
   },
   book: {
     label: 'By Book',
+    byBook: true,
     keys: (t) => [bookLabel(t) || NO_BOOK],
     compare: (a, b) => (a === NO_BOOK) - (b === NO_BOOK) || a.localeCompare(b),
   },
@@ -108,8 +109,14 @@ export const groupMonsters = (list, groupBy) => {
   });
 };
 
-// Groupings offered for a source tab — the Conflux one only on Conflux tabs.
-export const groupingKeysFor = (isConflux) => GROUPING_KEYS.filter(k => isConflux || !GROUPINGS[k].confluxOnly);
+// Groupings offered for a source tab — the Conflux one only on Conflux tabs;
+// By Book never there (Conflux creatures carry no book) nor on a single-book
+// tab (Flee Mortals), where it would be one group of everything.
+export const groupingKeysFor = (isConflux, { singleBook = false } = {}) => GROUPING_KEYS.filter(k => {
+  if (GROUPINGS[k].confluxOnly) return isConflux;
+  if (GROUPINGS[k].byBook) return !isConflux && !singleBook;
+  return true;
+});
 
 // DOM id for a group heading (sidebar jump links target it).
 export const groupAnchorId = (groupBy, key) =>

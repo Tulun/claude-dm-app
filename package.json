@@ -12,7 +12,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "conflux:import": "node scripts/convert-conflux.mjs",
-    "conflux:groups": "node scripts/conflux-groups.mjs"
+    "conflux:groups": "node scripts/conflux-groups.mjs",
+    "fm:import": "node scripts/import-flee-mortals.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.74.0",

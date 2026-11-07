@@ -138,6 +138,22 @@ change.
 
 Do not mix the 2014 daily budget with the 2024 per-encounter thresholds.
 
+## Character spellcasting progression — `app/utils/spellcasting.js` (canonical)
+
+2024 PHB tables for PCs: `getSpellSlots(classes)` (shared Multiclass
+Spellcaster table; a LONE half/third caster rounds up — that reproduces the
+Paladin / Eldritch Knight tables — while multiclassed half casters round up and
+third casters round down), `getPactMagic(warlockLevel)` (slots, slot level,
+Mystic Arcanum), `getSpellcastingLimits({ name, level, subclass })` (cantrips,
+prepared count, max spell level, spell list — EK/AT use Wizard),
+`spellcastingAbilityFor`, and `toCharacterSpell` (spellbook entry → character
+spell instance; `castingTime` → `castTime`). The class-reference
+`CLASS_DETAILS.levelTable` stops at 5th-level slots and several resource
+columns are wrong — never compute slots or uses from it. Default class
+resources (Rage, Channel Divinity, Wild Shape…) live in
+`app/characters/creation/classResources.js`. NOTE: the sheet's SpellsTab still
+uses a 2014-style prepared formula (level + mod) — see SUGGESTIONS.md.
+
 ## Stat-block spellcasting parsing
 
 `parseSpellcasting(character)` in
@@ -157,6 +173,7 @@ trait/action text (names containing "spellcasting"), falling back to
 ## Do NOT
 
 - Do NOT write a new local `getMod`/`formatMod`/prof-bonus — import from `app/utils/rules.js`. There are no sanctioned local copies.
+- Do NOT hand-roll spell-slot / cantrip / prepared-count tables — use `app/utils/spellcasting.js`.
 - Do NOT add temp AC inside any AC helper used by the combat card — it double-counts (see trap above).
 - Do NOT assume `getMod` returns a number — check the import; `constants.js`'s is a number, everyone else's is a string.
 - Do NOT change the getModNum input coercion (junk → 10, real 0 → −5) without updating the pinned characterization tests and SUGGESTIONS.md.

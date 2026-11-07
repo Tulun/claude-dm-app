@@ -4,9 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Icons from '../components/Icons';
 import Navbar from '../components/Navbar';
-import Modal from '../components/Modal';
 import { defaultPartyData } from '../components/defaultData';
-import { AddPartyModal } from '../combat/components/Modals';
 import { getCalculatedAC } from '../utils/acCalculation';
 import { generateId } from '../utils/generateId';
 import { useToast } from '../hooks/useToast';
@@ -15,8 +13,6 @@ import { SAVE_ARM_DELAY_MS, SAVE_DEBOUNCE_MS } from '../utils/timings';
 export default function CharactersPage() {
   const [party, setParty] = useState(null);
   const [dmNpcs, setDmNpcs] = useState([]);
-  const [showAddParty, setShowAddParty] = useState(false);
-  const [showAddNpc, setShowAddNpc] = useState(false);
   const [saveStatus, showToast] = useToast();
   // Saving stays disabled until the initial load settles, so loading data
   // never echoes an unchanged copy back to the API.
@@ -59,7 +55,7 @@ export default function CharactersPage() {
         <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-emerald-400 flex items-center gap-2"><Icons.Shield /> Party Members</h2>
-            <button onClick={() => setShowAddParty(true)} className="flex items-center gap-1 px-3 py-2 rounded-lg bg-emerald-800/50 hover:bg-emerald-700/50 text-emerald-300 text-sm"><Icons.Plus />Add</button>
+            <Link href="/characters/new?type=party" className="flex items-center gap-1 px-3 py-2 rounded-lg bg-emerald-800/50 hover:bg-emerald-700/50 text-emerald-300 text-sm"><Icons.Plus />Add</Link>
           </div>
           <p className="text-stone-400 text-sm mb-6">Click on a character to view and edit their full details.</p>
           {!party ? (
@@ -97,7 +93,7 @@ export default function CharactersPage() {
         <div className="bg-stone-900/50 border border-stone-700/50 rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2"><Icons.Crown /> DM NPCs</h2>
-            <button onClick={() => setShowAddNpc(true)} className="flex items-center gap-1 px-3 py-2 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.Plus />New NPC</button>
+            <Link href="/characters/new?type=dm-npc" className="flex items-center gap-1 px-3 py-2 rounded-lg bg-amber-800/50 hover:bg-amber-700/50 text-amber-300 text-sm"><Icons.Plus />New NPC</Link>
           </div>
           <p className="text-stone-400 text-sm mb-6">Character-like NPCs separate from the party. Click to edit, or add them to initiative.</p>
           {dmNpcs.length > 0 ? (
@@ -138,41 +134,6 @@ export default function CharactersPage() {
 
         {saveStatus && <div className="fixed bottom-4 right-4 bg-emerald-900/90 text-emerald-200 px-4 py-2 rounded-lg text-sm animate-pulse">{saveStatus}</div>}
       </main>
-
-      <AddPartyModal isOpen={showAddParty} onClose={() => setShowAddParty(false)} onSave={(m) => { setParty(prev => [...(prev || []), m]); }} />
-
-      {showAddNpc && (
-        <Modal onClose={() => setShowAddNpc(false)}>
-          <div className="bg-stone-900 border border-stone-700 rounded-xl w-full max-w-md p-6">
-            <h2 className="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2"><Icons.Crown /> New DM NPC</h2>
-            <form onSubmit={(e) => { e.preventDefault(); const f = e.target;
-              const npc = { id: generateId('dm-npc'), name: f.npcName.value, class: f.npcClass.value, level: parseInt(f.npcLevel.value) || 1, ac: parseInt(f.npcAC.value) || 10, maxHp: parseInt(f.npcHP.value) || 10, currentHp: parseInt(f.npcHP.value) || 10, initiative: 0, speed: parseInt(f.npcSpeed.value) || 30, str: parseInt(f.npcStr.value) || 10, dex: parseInt(f.npcDex.value) || 10, con: parseInt(f.npcCon.value) || 10, int: parseInt(f.npcInt.value) || 10, wis: parseInt(f.npcWis.value) || 10, cha: parseInt(f.npcCha.value) || 10, notes: f.npcNotes.value, isDmNpc: true, resources: [], inventory: [], spells: [], features: [], feats: [], skillProficiencies: {}, saveProficiencies: {} };
-              setDmNpcs(prev => [...prev, npc]); setShowAddNpc(false);
-            }} className="space-y-3">
-              <div><label className="text-xs text-stone-400">Name *</label><input name="npcName" required className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" autoFocus /></div>
-              <div className="grid grid-cols-3 gap-3">
-                <div><label className="text-xs text-stone-400">Class / Role</label><input name="npcClass" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" placeholder="Fighter" /></div>
-                <div><label className="text-xs text-stone-400">Level</label><input name="npcLevel" type="number" defaultValue="1" min="1" max="20" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" /></div>
-                <div><label className="text-xs text-stone-400">Speed</label><input name="npcSpeed" type="number" defaultValue="30" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" /></div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div><label className="text-xs text-stone-400">AC</label><input name="npcAC" type="number" defaultValue="10" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" /></div>
-                <div><label className="text-xs text-stone-400">Max HP</label><input name="npcHP" type="number" defaultValue="10" className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600" /></div>
-              </div>
-              <div><label className="text-xs text-stone-400">Ability Scores</label>
-                <div className="grid grid-cols-6 gap-2 mt-1">
-                  {['Str','Dex','Con','Int','Wis','Cha'].map(s => (<div key={s} className="text-center"><div className="text-[10px] text-stone-500 uppercase">{s}</div><input name={`npc${s}`} type="number" defaultValue="10" min="1" max="30" className="w-full bg-stone-800 border border-stone-700 rounded px-1 py-1 text-sm text-center focus:outline-none focus:border-amber-600" /></div>))}
-                </div>
-              </div>
-              <div><label className="text-xs text-stone-400">Notes</label><textarea name="npcNotes" rows={2} className="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-600 resize-none" placeholder="Personality, role, connections..." /></div>
-              <div className="flex gap-2 pt-2">
-                <button type="submit" className="flex-1 py-2 rounded bg-amber-700 hover:bg-amber-600 text-sm font-medium">Create NPC</button>
-                <button type="button" onClick={() => setShowAddNpc(false)} className="px-4 py-2 rounded bg-stone-700 hover:bg-stone-600 text-sm">Cancel</button>
-              </div>
-            </form>
-          </div>
-        </Modal>
-      )}
     </div>
   );
 }

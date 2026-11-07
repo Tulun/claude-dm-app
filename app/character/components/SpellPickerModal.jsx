@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import Icons from '../../components/Icons';
 import Modal from '../../components/Modal';
 import { abbreviateCastTime, getLevelLabel } from '../../utils/spellFormat';
-import { generateId } from '../../utils/generateId';
+import { toCharacterSpell } from '../../utils/spellcasting';
 
 const SCHOOLS = ['Abjuration', 'Conjuration', 'Divination', 'Enchantment', 'Evocation', 'Illusion', 'Necromancy', 'Transmutation'];
 const CLASSES = ['Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger', 'Sorcerer', 'Warlock', 'Wizard'];
@@ -81,22 +81,8 @@ export default function SpellPickerModal({ isOpen, onClose, onAddSpells, charact
   };
 
   const handleAddSpells = () => {
-    // Convert spellbook spells to character spell format
-    const spellsToAdd = selectedSpells.map(spell => ({
-      id: generateId('spell'), // Unique ID for character's spell list
-      sourceId: spell.id, // Reference to spellbook spell
-      name: spell.name,
-      level: spell.level,
-      school: spell.school,
-      castTime: spell.castingTime,
-      range: spell.range,
-      components: spell.components,
-      duration: spell.duration,
-      description: spell.description,
-      higherLevels: spell.higherLevels,
-      concentration: spell.concentration,
-      ritual: spell.ritual
-    }));
+    // Convert spellbook spells to character spell format (castingTime → castTime)
+    const spellsToAdd = selectedSpells.map(spell => toCharacterSpell(spell));
     
     onAddSpells(spellsToAdd);
     setSelectedSpells([]);
